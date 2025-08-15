@@ -20,4 +20,20 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  base: '/DemoForTTO/',
+  build: {
+    outDir: 'dist',
+    assetsDir: './',
+    rollupOptions: {
+      output: {
+        // 确保资源路径包含仓库名
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.fileName?.endsWith('.css')) {
+            return 'assets/[name]-[hash].css';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    }
+  }
 })

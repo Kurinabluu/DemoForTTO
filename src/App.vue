@@ -1,4 +1,8 @@
 <script setup>
+// 搜索相关数据
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Search, Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+
 function onNavClick(event) {
   const clickedElement = event.currentTarget;
   const btnsContainer = clickedElement.closest('.btns');
@@ -11,17 +15,106 @@ function onNavClick(event) {
   clickedElement.classList.add('clicked');
 }
 
-// 自动收集 `src/assets/img` 目录下所有 jpg 图片作为轮播图来源
-const modules = import.meta.glob('@/assets/img/*.jpg', { eager: true });
-const slides = Object.values(modules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
+// 轮播图图片源：PC 使用 newbn*.jpg；手机/平板仅使用 newbn1.jpg
+// const desktopModules = import.meta.glob('@/assets/img/newbn*.{jpg,JPG,jpeg,JPEG}', { eager: true });
+const desktopModules = import.meta.glob('@/assets/img/footer*.{jpg,JPG,jpeg,JPEG}', { eager: true });
+// const desktopModules = import.meta.glob('@/assets/img/newbn*.jpg', { eager: true });
+const desktopSlides = Object.entries(desktopModules)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, mod]) => (typeof mod === 'string' ? mod : mod.default))
+  .filter(Boolean);
+// const desktopSlides = Object.values(desktopModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
 
-// 搜索相关数据
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Search, Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+// 移动端同样展示 4 张轮播图
+const mobileSlides = desktopSlides
+
+const footerModules = import.meta.glob('@/assets/img/footer*.jpg', { eager: true });
+const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
+
 
 const searchText = ref('')
-const popularTags = ref(['塔斯马尼亚', '霍巴特', '摇篮山', '酒杯湾', '亚瑟港', '布鲁尼岛'])
+const popularTags = ref([
+  '自助游/自驾游参考信息',
+  '单项旅游项目',
+  '全日固定行程专车团',
+  '多日固定行程专车团',
+  '私人定制专属行程',
+  '私人定制专属专车司导',
+  '包车服务（司导）',
+  '旅游管家服务'
+])
 const isDialogVisible = ref(false)
+
+// 响应式选择轮播图（<=1024 为手机/平板）与高度
+const slidesRef = ref([])
+const carouselHeight = ref('800px')
+const isMobileOrTablet = ref(typeof window !== 'undefined' ? window.innerWidth <= 1024 : false)
+const selectSlides = () => {
+  const isMobile = isMobileOrTablet.value
+  slidesRef.value = (isMobile ? mobileSlides : desktopSlides).filter(Boolean)
+  if (!isMobile) {
+    carouselHeight.value = '800px'
+  } else {
+    // 手机/平板高度适配
+    const w = typeof window !== 'undefined' ? window.innerWidth : 1024
+    carouselHeight.value = w <= 768 ? '420px' : '600px'
+  }
+}
+const handleResizeForSlides = () => {
+  if (typeof window === 'undefined') return
+  const next = window.innerWidth <= 1024
+  if (next !== isMobileOrTablet.value) {
+    isMobileOrTablet.value = next
+    selectSlides()
+  } else {
+    // 同一类别也需要根据宽度微调高度
+    selectSlides()
+  }
+}
+
+// 轮播图引用与触摸滑动支持（手机/平板）
+const carouselRef = ref(null)
+const currentSlideIndex = ref(0)
+let touchStartX = 0
+let touchStartY = 0
+let touchDeltaX = 0
+let touchDeltaY = 0
+
+function onTouchStart(e) {
+  const t = e.touches && e.touches[0]
+  if (!t) return
+  touchStartX = t.clientX
+  touchStartY = t.clientY
+  touchDeltaX = 0
+  touchDeltaY = 0
+}
+
+function onTouchMove(e) {
+  const t = e.touches && e.touches[0]
+  if (!t) return
+  touchDeltaX = t.clientX - touchStartX
+  touchDeltaY = t.clientY - touchStartY
+}
+
+function onTouchEnd() {
+  const horizontal = Math.abs(touchDeltaX) > Math.abs(touchDeltaY)
+  const distance = Math.abs(touchDeltaX)
+  const MIN_SWIPE = 50
+  if (horizontal && distance >= MIN_SWIPE) {
+    if (touchDeltaX < 0) {
+      // 左滑，下一张
+      carouselRef.value && carouselRef.value.next && carouselRef.value.next()
+    } else {
+      // 右滑，上一张
+      carouselRef.value && carouselRef.value.prev && carouselRef.value.prev()
+    }
+  }
+}
+
+// 轮播图切换事件处理
+function onCarouselChange(index) {
+  currentSlideIndex.value = index
+}
 
 // 电梯导航相关
 const showElevator = ref(false)
@@ -63,10 +156,13 @@ const scrollToBottom = () => {
 // 监听滚动事件
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  selectSlides()
+  window.addEventListener('resize', handleResizeForSlides)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResizeForSlides)
 })
 </script>
 
@@ -80,23 +176,36 @@ onUnmounted(() => {
             <li class="pointer clicked" @click="onNavClick">网站首页</li>
             <li class="pointer" @click="onNavClick">精品路线</li>
             <li class="pointer" @click="onNavClick">行业新闻</li>
-            <li class="pointer" @click="onNavClick">服务优势</li>
+            <li class="pointer" @click="onNavClick">八大服务</li>
             <li class="pointer" @click="onNavClick">联系我们</li>
           </ul>
-          <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i>
+          <!-- <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i> -->
         </span>
       </el-header>
 
       <el-main>
         <!-- 轮播图 -->
-        <el-carousel height="800px" autoplay arrow="always" interval="3000" indicator-position="none" class="carousel">
-          <el-carousel-item v-for="(src, idx) in slides" :key="idx">
-            <img :src="src" alt="slide" class="slide-img" />
-          </el-carousel-item>
-        </el-carousel>
-        <!-- 搜索 -->
-        <div class="img-mask">
-          <div class="search">
+        <div class="carousel-container" @touchstart.passive="onTouchStart" @touchmove.passive="onTouchMove"
+          @touchend="onTouchEnd">
+          <!-- 背景图片层 -->
+          <div class="carousel-background">
+            <img :src="slidesRef[currentSlideIndex]" alt="background" class="background-img" />
+          </div>
+          <!-- 毛玻璃层 -->
+          <div class="glass-overlay"></div>
+
+          <el-carousel ref="carouselRef" :height="carouselHeight" :autoplay="true" arrow="always" :interval="3000"
+            :loop="true" indicator-position="none" class="carousel" @change="onCarouselChange">
+            <el-carousel-item v-for="(src, idx) in slidesRef" :key="idx">
+              <img :src="src" alt="slide" class="slide-img" />
+              <div class="carousel-text">
+                <h1>到世界的尽头<br>与自然与人文相遇<br>TASMANIA</h1>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+
+          <!-- 固定搜索框 -->
+          <div class="search-fixed">
             <el-card class="search-card" shadow="hover">
               <div class="search-container">
                 <el-input v-model="searchText" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
@@ -122,7 +231,8 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="content-box center">
-          Coming Soon...
+          <div class="tourism-title">塔州旅游</div>
+          <div class="coming-soon">Coming Soon...</div>
         </div>
       </el-main>
 
@@ -164,7 +274,7 @@ onUnmounted(() => {
           <!-- 最新资讯 -->
           <div class="footer-section">
             <div class="section-title">
-              <h3>领巴最新资讯</h3>
+              <h3>塔州最新资讯</h3>
               <div class="title-underline"></div>
             </div>
             <div class="news-content">
@@ -183,7 +293,7 @@ onUnmounted(() => {
               <div class="nav-item">网站首页 <span>Home</span></div>
               <div class="nav-item">精品路线 <span>Tourist route</span></div>
               <div class="nav-item">行业新闻 <span>News center</span></div>
-              <div class="nav-item">服务优势 <span>Advantage</span></div>
+              <div class="nav-item">八大服务 <span>Service</span></div>
               <div class="nav-item">关于我们 <span>About us</span></div>
               <div class="nav-item">联系我们 <span>Contact us</span></div>
             </div>
@@ -196,10 +306,20 @@ onUnmounted(() => {
               <div class="title-underline"></div>
             </div>
             <div class="route-grid">
-              <div class="route-item" v-for="(src, idx) in slides" :key="idx">
+              <div class="route-item" v-for="(src, idx) in footerSlides" :key="idx">
                 <img :src="src" alt="route" class="route-img" />
               </div>
             </div>
+          </div>
+          <div class="web-msg">
+            <div class="important-msg">
+              <ul>
+                <li>条款与条件</li>
+                <li>隐私政策</li>
+              </ul>
+            </div>
+            <div class="declaration center">TasmaniaTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>
+            <div class="copyright center">© 2025 TasmaniaTrips.Online 保留所有权利。</div>
           </div>
         </div>
       </el-footer>
@@ -244,8 +364,8 @@ onUnmounted(() => {
   .el-header {
     position: sticky;
     top: 0;
-    height: 100px;
-    line-height: 100px;
+    height: 70px;
+    line-height: 70px;
     // background-color: #39c5bb;
     color: #333;
     z-index: 888;
@@ -270,7 +390,7 @@ onUnmounted(() => {
 
         li {
           width: 70px;
-          height: 70px;
+          height: 55px;
           margin-left: 20px;
         }
 
@@ -278,8 +398,8 @@ onUnmounted(() => {
 
       i {
         display: inline-block;
-        height: 70px;
-        line-height: 100px;
+        height: 40px;
+        line-height: 70px;
         margin-left: 20px;
         font-size: 14px;
       }
@@ -293,21 +413,106 @@ onUnmounted(() => {
     padding: 0;
     // height: auto;
 
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .carousel-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+
+      .background-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(8px);
+        transform: scale(1.1);
+      }
+    }
+
+    .glass-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 2;
+      pointer-events: none;
+    }
+
     .carousel {
       position: relative;
+      z-index: 3;
 
       .slide-img {
         display: block;
         width: 100%;
         height: 800px;
-        object-fit: cover;
+        //object-fit: cover;
+        object-fit: contain;
         z-index: 100;
+      }
+
+      :deep(.el-carousel__item) {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      :deep(.el-carousel__arrow--left) {
+        left: 0
+      }
+
+      :deep(.el-carousel__arrow--right) {
+        right: 0
+      }
+
+      .carousel-text {
+        position: absolute;
+        inset: 0;
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #FFF;
+        pointer-events: none;
+
+        h1 {
+          font-size: 48px;
+          font-weight: 600;
+          line-height: 1.35;
+          margin: 0;
+          color: #FFFEF2;
+          text-align: center;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          padding: 16px 32px;
+          border-radius: 8px;
+          letter-spacing: 18px;
+        }
       }
 
       :deep(.el-carousel__arrow) {
         color: #fff;
-        width: 50px;
-        height: 80px;
+        width: 120px;
+        // height: 56px;
+        height: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background: transparent;
         border: none;
       }
@@ -317,70 +522,72 @@ onUnmounted(() => {
       :deep(.el-carousel__arrow svg) {
         width: 40px;
         height: 40px;
+        // font-size:28px;
         font-size: 40px;
         font-weight: 900;
       }
 
     }
 
-    .img-mask {
+    .search-fixed {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: 100%;
+      padding: 0 20px;
       position: relative;
-      height: 120px;
-      background-color: rgba(255, 255, 255, 1);
-      box-shadow: 0 -30px 85px 110px rgba(255, 255, 255, 1);
-      z-index: 888;
+      z-index: 4;
 
-      .search {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-        width: 100%;
-        padding: 0 20px;
+      .search-card {
+        max-width: 800px;
+        margin: 0 auto;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
-        .search-card {
-          max-width: 800px;
-          margin: 0 auto;
-          border-radius: 12px;
-          border: none;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        .search-container {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 16px;
 
-          .search-container {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
+          .search-input {
+            flex: 1;
 
-            .search-input {
-              flex: 1;
-
-              :deep(.el-input__wrapper) {
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-              }
-            }
-
-            .search-btn {
+            :deep(.el-input__wrapper) {
               border-radius: 8px;
-              padding: 0 24px;
-              font-weight: 500;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             }
           }
 
-          .search-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+          .search-btn {
+            border-radius: 8px;
+            padding: 0 24px;
+            font-weight: 500;
+          }
+        }
 
-            .tag-item {
-              cursor: pointer;
-              border-radius: 6px;
-              transition: all 0.3s ease;
+        .search-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          width: 100%;
 
-              &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-              }
+          .tag-item {
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            flex: 1 1 auto;
+            min-width: fit-content;
+            text-align: center;
+            white-space: normal;
+            padding: 8px 12px;
+            line-height: 1.4;
+
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             }
           }
         }
@@ -388,37 +595,36 @@ onUnmounted(() => {
     }
 
     .content-box {
-      height: 800px;
+      height: 300px;
       color: #101010;
-      font-size: 100px;
-      font-weight: 700;
-      line-height: 800px;
-      font-style: italic;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      letter-spacing: 15px;
+
+      .tourism-title {
+        font-size: 48px;
+        font-weight: 700;
+        font-style: italic;
+      }
+
+      .coming-soon {
+        font-size: 36px;
+        font-weight: 700;
+        font-style: italic;
+      }
     }
   }
 
   .el-footer {
-    height: 500px;
-    // background-color: skyblue;
+    height: 620px;
+    background-color: #f8f9fa;
     color: #333;
     /* Added background color for footer */
-    padding: 40px 0;
-    background-image: url('@/assets/img/footerbg1.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    padding: 24px 0 0;
     position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 1;
-    }
 
     .footer-content {
       position: relative;
@@ -426,18 +632,17 @@ onUnmounted(() => {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 2fr;
       gap: 30px;
-      max-width: 1200px;
+      max-width: 1600px;
       margin: 0 auto;
       padding: 0 20px;
       height: 100%;
       align-items: center;
-      color: #D9D9D9;
+      color: #333;
 
       .footer-section {
         // background-color: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
         padding: 25px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         text-align: left;
         height: 400px;
         display: flex;
@@ -625,6 +830,48 @@ onUnmounted(() => {
           }
         }
       }
+
+      .web-msg {
+        grid-column: 1 / -1;
+        width: 100%;
+        max-width: 1200px;
+        margin: 10px auto 0;
+        padding-top: 14px;
+        border-top: 1px solid #e6e6e6;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.6;
+
+        .important-msg {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 6px;
+
+          ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          li {
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s ease;
+
+            &:hover {
+              color: #111827;
+            }
+          }
+        }
+
+        .declaration,
+        .copyright {
+          text-align: center;
+          color: #6b7280;
+        }
+      }
     }
   }
 }
@@ -676,6 +923,279 @@ onUnmounted(() => {
       font-size: 20px !important;
       color: #609AB1 !important;
     }
+  }
+}
+
+/* 响应式适配：平板（768px-1024px） */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .el-container {
+    .el-header {
+      height: 64px;
+      line-height: 64px;
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .btns {
+        right: 16px;
+
+        .ul-css {
+          li {
+            width: auto;
+            margin-left: 12px;
+            height: 48px;
+          }
+        }
+      }
+    }
+
+    .el-main {
+      .carousel {
+        .slide-img {
+          height: 600px;
+        }
+
+        :deep(.el-carousel__arrow) {
+          display: flex !important;
+          width: 56px;
+          //height: 56px;
+          height: 100%;
+          top: 50%;
+          transform: translateY(-50%);
+          // background: rgba(0, 0, 0, 0.25);
+          background: transparent;
+          // border-radius: 50%;
+          z-index: 210;
+        }
+
+        .carousel-text {
+          padding: 0 20px;
+
+          h1 {
+            font-size: 36px;
+            line-height: 1.3;
+            letter-spacing: 12px;
+          }
+        }
+      }
+
+      .search-fixed {
+        bottom: 16px;
+
+        .search-card {
+          max-width: 720px;
+        }
+      }
+
+      .content-box {
+        height: 240px;
+
+        .tourism-title {
+          font-size: 36px;
+        }
+
+        .coming-soon {
+          font-size: 28px;
+        }
+      }
+    }
+
+    .el-footer {
+      height: auto;
+      min-height: 620px;
+
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 0 16px;
+        height: auto;
+      }
+
+      .footer-section {
+        height: auto;
+        padding: 12px 0;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .web-msg {
+        max-width: 90%;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+/* 响应式适配：手机（<=768px） */
+@media (max-width: 768px) {
+  .el-container {
+    .el-header {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      height: auto;
+      line-height: 1.4;
+      padding: 8px 12px;
+
+      .logo {
+        font-size: 18px;
+        text-align: left;
+      }
+
+      .btns {
+        position: static !important;
+        right: auto;
+        width: 100%;
+        margin-top: 6px;
+
+        .ul-css {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 8px;
+          overflow: visible;
+          white-space: normal;
+
+          li {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: 40px;
+            margin-left: 0;
+            padding: 0 6px;
+          }
+        }
+
+        i {
+          display: none;
+        }
+      }
+    }
+
+    .el-main {
+      .carousel {
+        .slide-img {
+          height: 420px;
+        }
+
+        :deep(.el-carousel__arrow) {
+          display: flex !important;
+          width: 60px;
+          height: 100%;
+          top: 50%;
+          transform: translateY(-50%);
+          // background: rgba(0, 0, 0, 0.25);
+          background: transparent;
+          // border-radius: 50%;
+          z-index: 210;
+        }
+
+        .carousel-text {
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 12px;
+
+          h1 {
+            font-size: 26px;
+            line-height: 1.3;
+            letter-spacing: 6px;
+            text-align: center;
+          }
+        }
+      }
+
+      .search-fixed {
+        position: static;
+        transform: none;
+        z-index: auto;
+        width: 100%;
+        padding: 8px 12px 0;
+
+        .search-card {
+          max-width: 95vw;
+          margin-top: 8px;
+        }
+
+        .search-container {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .search-btn {
+          width: 100%;
+        }
+
+        .search-tags {
+          gap: 6px;
+        }
+
+        .tag-item {
+          padding: 6px 10px;
+          line-height: 1.3;
+          font-size: 12px;
+        }
+      }
+
+      .content-box {
+        height: 200px;
+
+        .tourism-title {
+          font-size: 28px;
+        }
+
+        .coming-soon {
+          font-size: 22px;
+        }
+      }
+    }
+
+    .el-footer {
+      height: auto !important;
+      min-height: 680px;
+      padding: 16px 0 16px;
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 12px;
+        height: auto;
+      }
+
+      .footer-section {
+        height: auto;
+        padding: 8px 0;
+      }
+
+      .route-grid {
+        grid-template-columns: repeat(3, 1fr);
+
+        .route-img {
+          width: 72px;
+          height: 72px;
+        }
+      }
+
+      .web-msg {
+        max-width: 92%;
+        margin-top: 12px;
+        font-size: 11px;
+
+        .important-msg ul {
+          gap: 14px;
+        }
+      }
+    }
+  }
+
+  /* 移动端隐藏电梯导航，避免遮挡 */
+  .elevator-nav {
+    display: none !important;
   }
 }
 </style>
