@@ -268,7 +268,7 @@ onUnmounted(() => {
                 <el-icon>
                   <Message />
                 </el-icon>
-                <span>zanchen7@gmail.com</span>
+                <span>tto.operator@gmail.com</span>
               </div>
             </div>
           </div>
@@ -646,9 +646,18 @@ onUnmounted(() => {
       .footer-section {
         // background-color: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
-        padding: 25px 0;
+
+        padding: {
+          top: 25px;
+        }
+
+        margin: {
+          bottom: 25px;
+        }
+
         text-align: left;
-        height: 400px;
+        // height: 400px;
+        height: 420px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
