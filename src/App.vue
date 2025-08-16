@@ -244,7 +244,7 @@ onUnmounted(() => {
               <!-- <div class="logo-circle">
                 <span class="logo-text">LINGBA</span>
               </div> -->
-              <div class="company-name">TASMANIATRIPS.ONLINE</div>
+              <div class="company-name">TasmaniaTrips.Online</div>
             </div>
             <div class="about-text">
               旅游是一种社会行为，古已有之。中国是史上最早出现旅游活动的国家之一。从春秋战国时期孔子“周游列国”到明朝徐霞客写下了《游大理日记》、《三峡》、
@@ -256,7 +256,7 @@ onUnmounted(() => {
                 <el-icon>
                   <Location />
                 </el-icon>
-                <span>1/18 WENDOVER PLACE NOW TOWN,TASMANIA 7008 Australia.</span>
+                <span>1/18 WENDOVER PLACE NOW TOWN,TASMANIA 7008 AUSTRALIA.</span>
               </div>
               <div class="contact-item">
                 <el-icon>
@@ -652,7 +652,8 @@ onUnmounted(() => {
         }
 
         margin: {
-          bottom: 25px;
+          bottom: 25px; //增加适配
+
         }
 
         text-align: left;
