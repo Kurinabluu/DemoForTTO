@@ -28,7 +28,7 @@ const desktopSlides = Object.entries(desktopModules)
 // 移动端同样展示 4 张轮播图
 const mobileSlides = desktopSlides
 
-const footerModules = import.meta.glob('@/assets/img/footer*.jpg', { eager: true });
+const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
 const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
 
 
@@ -203,35 +203,35 @@ onUnmounted(() => {
               </div>
             </el-carousel-item>
           </el-carousel>
+        </div>
 
-          <!-- 固定搜索框 -->
-          <div class="search-fixed">
-            <el-card class="search-card" shadow="hover">
-              <div class="search-container">
-                <el-input v-model="searchText" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
-                  <template #prefix>
-                    <el-icon>
-                      <Search />
-                    </el-icon>
-                  </template>
-                </el-input>
-                <el-button type="primary" size="large" class="search-btn" @click="isDialogVisible = true">
+        <!-- 固定搜索框 -->
+        <div class="search-fixed">
+          <el-card class="search-card" shadow="hover">
+            <div class="search-container">
+              <el-input v-model="searchText" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
+                <template #prefix>
                   <el-icon>
                     <Search />
                   </el-icon>
-                  搜索
-                </el-button>
-              </div>
-              <div class="search-tags">
-                <el-tag v-for="tag in popularTags" :key="tag" class="tag-item" @click="searchText = tag">
-                  {{ tag }}
-                </el-tag>
-              </div>
-            </el-card>
-          </div>
+                </template>
+              </el-input>
+              <el-button type="primary" size="large" class="search-btn" @click="isDialogVisible = true">
+                <el-icon>
+                  <Search />
+                </el-icon>
+                搜索
+              </el-button>
+            </div>
+            <div class="search-tags">
+              <el-tag v-for="tag in popularTags" :key="tag" class="tag-item" @click="searchText = tag">
+                {{ tag }}
+              </el-tag>
+            </div>
+          </el-card>
         </div>
         <div class="content-box center">
-          <div class="tourism-title">塔州旅游</div>
+          <div class="tourism-title">塔州旅行在线<br>（塔旅在线）</div>
           <div class="coming-soon">Coming Soon...</div>
         </div>
       </el-main>
@@ -244,29 +244,31 @@ onUnmounted(() => {
               <!-- <div class="logo-circle">
                 <span class="logo-text">LINGBA</span>
               </div> -->
-              <div class="company-name">LINGBA TOURISM</div>
+              <div class="company-name">TASMANIATRIPS.ONLINE</div>
             </div>
             <div class="about-text">
-              旅游是一种社会行为，古已有之。中国是世界上最早出现旅游活动的国家之一，早在春秋战国时期，就有"孔子周游列国"的记载。
+              旅游是一种社会行为，古已有之。中国是史上最早出现旅游活动的国家之一。从春秋战国时期孔子“周游列国”到明朝徐霞客写下了《游大理日记》、《三峡》、
+              《游雁荡山日记》等等的宝贵游记。现在社会，随着我国经济和国力的增强，人们出游的需求与日俱增，本公司便是有感于此创立，意为人民的出行提供专业、
+              适宜的行程安排，提供有适时又又温度的服务，提供安全、安心的后勤服务和保障。此祝所有游者健康、平安、喜乐、祥和。
             </div>
             <div class="contact-info">
               <div class="contact-item">
                 <el-icon>
                   <Location />
                 </el-icon>
-                <span>北京市海淀区解放路01号领巴大厦</span>
+                <span>1/18 WENDOVER PLACE NOW TOWN,TASMANIA 7008 Australia.</span>
               </div>
               <div class="contact-item">
                 <el-icon>
                   <Phone />
                 </el-icon>
-                <span>010-66666666</span>
+                <span>0488 388 188</span>
               </div>
               <div class="contact-item">
                 <el-icon>
                   <Message />
                 </el-icon>
-                <span>lingba@Lingba.com</span>
+                <span>zanchen7@gmail.com</span>
               </div>
             </div>
           </div>
@@ -278,9 +280,10 @@ onUnmounted(() => {
               <div class="title-underline"></div>
             </div>
             <div class="news-content">
-              伊朗波鲁埃新建攀岩建筑项目，由"新浪潮"建筑公司承建，位于伊朗最高峰前，项目总投资约500万美元，预计明年完工。
+              <!-- 伊朗波鲁埃新建攀岩建筑项目，由"新浪潮"建筑公司承建，位于伊朗最高峰前，项目总投资约500万美元，预计明年完工。 -->
+              2025塔斯马尼亚亮点：1月杜松子酒节狂欢，4-9月惠灵顿山追极光，每周六萨拉曼卡市集淘宝。
             </div>
-            <div class="news-date">2023-12-20</div>
+            <div class="news-date">{{ new Date().toLocaleDateString() }}</div>
           </div>
 
           <!-- 快速导航 -->
@@ -530,15 +533,15 @@ onUnmounted(() => {
     }
 
     .search-fixed {
-      position: absolute;
-      bottom: 20px;
+      // position: absolute;
+      position: relative;
+      // bottom: 20px;
+      top: 40px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
       width: 100%;
       padding: 0 20px;
-      position: relative;
-      z-index: 4;
 
       .search-card {
         max-width: 800px;
@@ -603,6 +606,7 @@ onUnmounted(() => {
       align-items: center;
       gap: 20px;
       letter-spacing: 15px;
+      margin-top: 40px;
 
       .tourism-title {
         font-size: 48px;
@@ -951,6 +955,7 @@ onUnmounted(() => {
     }
 
     .el-main {
+
       .carousel {
         .slide-img {
           height: 600px;
@@ -1077,6 +1082,23 @@ onUnmounted(() => {
     }
 
     .el-main {
+      .carousel-container {
+        height: auto;
+        /* 移动端使用自适应高度 */
+        overflow: visible;
+        /* 允许搜索框溢出显示 */
+      }
+
+      .carousel-background {
+        height: 420px;
+        /* 与轮播图高度一致 */
+      }
+
+      .glass-overlay {
+        height: 420px;
+        /* 与轮播图高度一致 */
+      }
+
       .carousel {
         .slide-img {
           height: 420px;
@@ -1116,6 +1138,7 @@ onUnmounted(() => {
         z-index: auto;
         width: 100%;
         padding: 8px 12px 0;
+        top: auto;
 
         .search-card {
           max-width: 95vw;
@@ -1144,6 +1167,8 @@ onUnmounted(() => {
 
       .content-box {
         height: 200px;
+        margin-top: 20px;
+        /* 移动端减少间距 */
 
         .tourism-title {
           font-size: 28px;
