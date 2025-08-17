@@ -189,7 +189,7 @@ onUnmounted(() => {
           @touchend="onTouchEnd">
           <!-- 背景图片层 -->
           <div class="carousel-background">
-            <img :src="slidesRef[currentSlideIndex]" alt="background" class="background-img" />
+            <img :src="slidesRef[currentSlideIndex]" alt="background" class="background-img" :key="currentSlideIndex" />
           </div>
           <!-- 毛玻璃层 -->
           <div class="glass-overlay"></div>
@@ -232,7 +232,7 @@ onUnmounted(() => {
         </div>
         <div class="content-box center">
           <div class="tourism-title">塔州旅行在线<br>（塔旅在线）</div>
-          <div class="coming-soon">Coming Soon...</div>
+          <div class="coming-soon">COMING SOON...</div>
         </div>
       </el-main>
 
@@ -247,9 +247,12 @@ onUnmounted(() => {
               <div class="company-name">TasmaniaTrips.Online</div>
             </div>
             <div class="about-text">
-              旅游是一种社会行为，古已有之。中国是史上最早出现旅游活动的国家之一。从春秋战国时期孔子“周游列国”到明朝徐霞客写下了《游大理日记》、《三峡》、
-              《游雁荡山日记》等等的宝贵游记。现在社会，随着我国经济和国力的增强，人们出游的需求与日俱增，本公司便是有感于此创立，意为人民的出行提供专业、
-              适宜的行程安排，提供有适时又又温度的服务，提供安全、安心的后勤服务和保障。此祝所有游者健康、平安、喜乐、祥和。
+              旅游是一种社会行为，古已有之。
+              <!-- 古今中外，史上很早就出现了旅游活动， -->
+              中国是史上最早出现旅游活动的国家之一。从春秋战国时期孔子“周游列国”到明朝徐霞客写下了《游大理日记》、《三峡》、
+              《游雁荡山日记》等等的宝贵游记。现代社会，随着世界经济的增长和科技的进步，人们出游的需求与日俱增，
+              本公司便是有感于此而创立，立意为人民的出行提供专业、
+              适宜的行程安排，提供适时又有温度的服务，提供安全、安心的保障和后勤服务。诚会天下游者，祝所有游者健康、平安、喜乐、祥和、旅途愉快。
             </div>
             <div class="contact-info">
               <div class="contact-item">
@@ -615,7 +618,7 @@ onUnmounted(() => {
       }
 
       .coming-soon {
-        font-size: 36px;
+        font-size: 43px;
         font-weight: 700;
         font-style: italic;
       }
@@ -966,6 +969,13 @@ onUnmounted(() => {
 
     .el-main {
 
+      .carousel-background {
+        .background-img {
+          transition: all 0.8s ease-in-out;
+          opacity: 1;
+        }
+      }
+
       .carousel {
         .slide-img {
           height: 600px;
@@ -1102,6 +1112,11 @@ onUnmounted(() => {
       .carousel-background {
         height: 420px;
         /* 与轮播图高度一致 */
+
+        .background-img {
+          transition: all 0.8s ease-in-out;
+          opacity: 1;
+        }
       }
 
       .glass-overlay {
