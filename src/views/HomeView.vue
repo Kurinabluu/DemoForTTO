@@ -19,9 +19,6 @@ const desktopSlides = Object.entries(desktopModules)
 // 移动端同样展示 4 张轮播图
 const mobileSlides = desktopSlides
 
-const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
-const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
-
 const searchText = ref('')
 const popularTags = ref([
     '自助游/自驾游参考信息',

@@ -1,6 +1,7 @@
 <script setup>
 // 搜索相关数据
 import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { ref } from 'vue'
 import HomeView from '@/views/HomeView.vue';
 
 function onNavClick(event) {
@@ -15,19 +16,34 @@ function onNavClick(event) {
     clickedElement.classList.add('clicked');
 }
 
+// 联系我们弹窗
+const isContactDialogVisible = ref(false)
+function openContactDialog() {
+    isContactDialogVisible.value = true
+}
+function closeContactDialog() {
+    isContactDialogVisible.value = false
+}
+const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
+const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
 </script>
 
 <template>
     <el-container>
         <el-header class="fs15 bgfff">
-            <span class="logo fowe7 no-select pointer">TasmaniaTrips.Online</span>
+            <span class="logo fowe7 no-select pointer">
+                <RouterLink to="/DemoForTTO">TasmaniaTrips.Online</RouterLink>
+            </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer clicked" @click="onNavClick">网站首页</li>
+                    <li class="pointer clicked" @click="onNavClick" to="/DemoForTTO">
+                        <RouterLink to="/DemoForTTO">网站首页</RouterLink>
+                    </li>
                     <li class="pointer" @click="onNavClick">精品路线</li>
                     <li class="pointer" @click="onNavClick">行业新闻</li>
                     <li class="pointer" @click="onNavClick">八大服务</li>
-                    <li class="pointer" @click="onNavClick">联系我们</li>
+                    <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
+                    <li class="pointer" @click="openContactDialog()">联系我们</li>
                 </ul>
                 <!-- <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i> -->
             </span>
@@ -35,6 +51,42 @@ function onNavClick(event) {
 
         <!-- <HomeView /> -->
         <RouterView />
+
+        <!-- 联系我们弹窗 -->
+        <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
+            @close="closeContactDialog">
+            <template #header>
+                <div style="font-weight:700; letter-spacing:2px; color:#101010;">联系我们</div>
+            </template>
+            <div class="contact-modal">
+                <div class="contact-modal-info">
+                    <div class="item">
+                        <el-icon>
+                            <Phone />
+                        </el-icon>
+                        <span>电话：0488 388 188</span>
+                    </div>
+                    <div class="item">
+                        <el-icon>
+                            <Message />
+                        </el-icon>
+                        <span>邮箱：tto.operator@gmail.com（24 小时受理）</span>
+                    </div>
+                    <div class="item">
+                        <el-icon>
+                            <Location />
+                        </el-icon>
+                        <span>地址：1/18 WENDOVER PLACE NEW TOWN, TAS 7008, Australia</span>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                    <el-button @click="closeContactDialog">关闭</el-button>
+                    <el-button type="primary" @click="closeContactDialog">确定</el-button>
+                </div>
+            </template>
+        </el-dialog>
 
         <el-footer>
             <div class="footer-content">
@@ -97,12 +149,14 @@ function onNavClick(event) {
                         <div class="title-underline"></div>
                     </div>
                     <div class="nav-links">
-                        <div class="nav-item">网站首页 <span>Home</span></div>
+                        <div class="nav-item">
+                            <RouterLink to="/DemoForTTO">网站首页 <span>Home</span></RouterLink>
+                        </div>
                         <div class="nav-item">精品路线 <span>Tourist route</span></div>
                         <div class="nav-item">行业新闻 <span>News center</span></div>
                         <div class="nav-item">八大服务 <span>Service</span></div>
                         <div class="nav-item">关于我们 <span>About us</span></div>
-                        <div class="nav-item">联系我们 <span>Contact us</span></div>
+                        <div class="nav-item" @click="openContactDialog">联系我们 <span>Contact us</span></div>
                     </div>
                 </div>
 
@@ -121,7 +175,9 @@ function onNavClick(event) {
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
-                            <li>免责条款</li>
+                            <li>
+                                <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink>
+                            </li>
                             <li>隐私政策</li>
                             <li>条款与条件</li>
                         </ul>
@@ -450,6 +506,11 @@ function onNavClick(event) {
                             color: #111827;
                         }
                     }
+
+                    a:hover {
+                        color: #111827
+                    }
+
                 }
 
                 .declaration,
@@ -461,6 +522,95 @@ function onNavClick(event) {
         }
     }
 
+}
+
+/* 联系我们弹窗样式 */
+.contact-modal {
+    color: #333;
+
+    .contact-modal-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+
+            .el-icon {
+                font-size: 18px;
+                color: #609AB1;
+            }
+        }
+    }
+}
+
+/* 弹窗自适配：避免小屏右侧空白（Element Plus 默认居中，但内容宽度固定时会有视觉偏移）*/
+@media (min-width: 769px) and (max-width: 1024px) {
+    :deep(.contact-dialog) {
+        .el-dialog {
+            width: 480px !important;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    :deep(.contact-dialog) {
+        .el-dialog {
+            width: 92vw !important;
+            margin: 0 auto !important;
+        }
+
+        .el-dialog__body {
+            padding: 14px 16px !important;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    :deep(.contact-dialog) {
+        .el-dialog {
+            width: 95vw !important;
+        }
+
+        .el-dialog__header {
+            padding: 12px 14px !important;
+        }
+
+        .el-dialog__body {
+            padding: 12px 14px !important;
+        }
+
+        .el-dialog__footer {
+            padding: 10px 14px !important;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    :deep(.contact-dialog) {
+        .el-dialog {
+            width: 96vw !important;
+        }
+
+        .el-dialog__header {
+            padding: 10px 12px !important;
+        }
+
+        .el-dialog__body {
+            padding: 10px 12px !important;
+        }
+
+        .el-dialog__footer {
+            padding: 8px 12px !important;
+        }
+
+        .contact-modal .item {
+            font-size: 13px;
+        }
+    }
 }
 
 /* 响应式适配：平板（768px-1024px） */
