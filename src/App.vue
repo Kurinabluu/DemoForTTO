@@ -40,25 +40,17 @@ const scrollToBottom = () => {
   })
 }
 
-// 首次访问免责声明弹窗（不使用本地存储，初次渲染后即弹出）
-const showDisclaimerModal = ref(false)
-const acceptDisclaimer = () => {
-  showDisclaimerModal.value = false
-}
-const rejectDisclaimer = () => {
-  showDisclaimerModal.value = false
-  // 尝试关闭页面，不行则跳转空白页
-  window.close()
-  // setTimeout(() => {
-  //   if (!document.hidden) {
-  //     location.replace('about:blank')
-  //   }
-  // }, 200)
+
+//温馨提示弹窗
+const showTipsModal = ref(false)
+const acceptTips = () => {
+  showTipsModal.value = false
 }
 
 onMounted(() => {
   // 首次渲染完成后展示弹窗
-  showDisclaimerModal.value = true
+  // showDisclaimerModal.value = true
+  showTipsModal.value = true
 })
 
 </script>
@@ -68,19 +60,18 @@ onMounted(() => {
   <!-- <Layout /> -->
   <RouterView />
 
-  <!-- 首次访问免责声明弹窗 -->
-  <el-dialog v-model="showDisclaimerModal" append-to-body align-center width="520px" :close-on-click-modal="false"
+  <!-- 温馨提示声明弹窗 -->
+  <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
     :show-close="false">
     <template #header>
-      <div style="font-weight:700; letter-spacing:2px; color:#101010;">免责条款提示</div>
+      <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>
     <div style="color:#333; line-height:1.8; text-align:justify;">
-      温馨提示：本站内容不构成任何旅行或行程建议。因浏览而产生的旅行或行程主意请您自行判断并承担决定责任。
+      温馨提示，由于本网站仍在建立之中，内容仍未完善，因此本网站的内容不构成任何建议，敬请谅解。
     </div>
     <template #footer>
       <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <el-button @click="rejectDisclaimer">不同意</el-button>
-        <el-button type="primary" @click="acceptDisclaimer">同意并继续访问</el-button>
+        <el-button type="primary" @click="acceptTips">确定</el-button>
       </div>
     </template>
   </el-dialog>

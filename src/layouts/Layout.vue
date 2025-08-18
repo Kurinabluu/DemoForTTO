@@ -26,6 +26,25 @@ function closeContactDialog() {
 }
 const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
 const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
+
+
+
+// 首次访问免责声明弹窗（不使用本地存储，初次渲染后即弹出）
+const showDisclaimerModal = ref(false)
+
+const acceptDisclaimer = () => {
+    showDisclaimerModal.value = false
+}
+const rejectDisclaimer = () => {
+    showDisclaimerModal.value = false
+    // 尝试关闭页面，不行则跳转空白页
+    window.close()
+    // setTimeout(() => {
+    //   if (!document.hidden) {
+    //     location.replace('about:blank')
+    //   }
+    // }, 200)
+}
 </script>
 
 <template>
@@ -175,8 +194,10 @@ const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === '
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
-                            <li>
-                                <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink>
+                            <li @click="showDisclaimerModal = true">
+                                <!-- showDisclaimerModal -->
+                                <!-- <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink> -->
+                                免责条款
                             </li>
                             <li>隐私政策</li>
                             <li>条款与条件</li>
@@ -188,6 +209,22 @@ const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === '
             </div>
         </el-footer>
 
+        <!-- 免责声明弹窗 -->
+        <el-dialog v-model="showDisclaimerModal" append-to-body align-center width="520px" :close-on-click-modal="false"
+            :show-close="false">
+            <template #header>
+                <div style="font-weight:700; letter-spacing:2px; color:#101010;">免责条款提示</div>
+            </template>
+            <div style="color:#333; line-height:1.8; text-align:justify;">
+                本网站之全部内容，不对任何本网站的使用者（以下简称使用者）构成任何的旅行建议或行程建议。
+                使用者因浏览本网站而决定产生的旅行主意或行程主意由使用者自主判断和决定，本网站与其运营公司不对这些决定负任何责任。
+            </div>
+            <template #footer>
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                    <el-button type="primary" @click="acceptDisclaimer">确定</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </el-container>
 </template>
 
