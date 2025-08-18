@@ -49,11 +49,11 @@ const rejectDisclaimer = () => {
   showDisclaimerModal.value = false
   // 尝试关闭页面，不行则跳转空白页
   window.close()
-  setTimeout(() => {
-    if (!document.hidden) {
-      location.replace('about:blank')
-    }
-  }, 200)
+  // setTimeout(() => {
+  //   if (!document.hidden) {
+  //     location.replace('about:blank')
+  //   }
+  // }, 200)
 }
 
 onMounted(() => {

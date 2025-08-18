@@ -82,7 +82,7 @@ const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === '
             </div>
             <template #footer>
                 <div style="display:flex; justify-content:flex-end; gap:8px;">
-                    <el-button @click="closeContactDialog">关闭</el-button>
+                    <!-- <el-button @click="closeContactDialog">关闭</el-button> -->
                     <el-button type="primary" @click="closeContactDialog">确定</el-button>
                 </div>
             </template>
