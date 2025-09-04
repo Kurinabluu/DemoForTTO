@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
+import TourDialog from '@/components/TourDialog.vue'
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -22,15 +23,73 @@ const mobileSlides = desktopSlides
 const searchText = ref('')
 const popularTags = ref([
     '自助游/自驾游参考信息',
-    '单项旅游项目',
-    '全日固定行程专车团',
-    '多日固定行程专车团',
-    '私人定制专属行程',
-    '私人定制专属专车司导',
-    '包车服务（司导）',
-    '旅游管家服务'
+    '独立成团（不限人数）',
+    '包车服务（专车+司导）',
+    '有偿行程定制',
+    '一日游',
+    '多日游',
+    '全程管家服务',
+    '个性定制服务'
 ])
 const isDialogVisible = ref(false)
+
+// 标签激活与文案数据
+const activeTag = ref(popularTags.value[0])
+
+const scenicPlaces = [
+    '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
+    '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区',
+    '罗斯小镇', '塔基恩森林', '哈兹山脉', '高登大坝', '湖区自驾环线', '塔斯曼拱门', '魔鬼厨房', '蜜蜂农场',
+    '小企鹅栖息地', '薰衣草庄园', '亚麻湾步道', '月亮湾', '海角灯塔', '西海岸公路', '蓝湖', '荒野步道'
+]
+
+function seededRandom(seed) {
+    let x = Math.sin(seed) * 10000
+    return x - Math.floor(x)
+}
+
+function generateItemsByTag(tag) {
+    const items = []
+    for (let i = 0; i < 32; i++) {
+        const r = seededRandom(i + tag.length)
+        const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
+        const place = scenicPlaces[idx]
+        const styles = ['环线', '观景', '徒步', '日落', '海岸', '森林', '瀑布', '轻装']
+        const style = styles[Math.floor(seededRandom(idx + i) * styles.length) % styles.length]
+        items.push({
+            title: `${place} 自驾·${style}`,
+            sub: tag.includes('一日游') || tag.includes('多日游') ? '灵感路线' : '自驾灵感',
+        })
+    }
+    return items
+}
+
+const gridItems = ref(generateItemsByTag(activeTag.value))
+
+function onClickTag(tag) {
+    activeTag.value = tag
+    searchText.value = tag
+    gridItems.value = generateItemsByTag(tag)
+}
+
+// 弹窗控制
+const isTourDialogVisible = ref(false)
+const dialogTitle = ref('大堡礁单日游')
+const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
+
+function openTourDialog(item) {
+    dialogTitle.value = item?.title || '大堡礁单日游'
+    // 轮换几张本地图片作为示意
+    const pics = [
+        new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+    ]
+    const idx = Math.floor(Math.random() * pics.length)
+    dialogBanner.value = pics[idx]
+    isTourDialogVisible.value = true
+}
 
 // 响应式选择轮播图（<=1024 为手机/平板）与高度
 const slidesRef = ref([])
@@ -127,7 +186,7 @@ onUnmounted(() => {
             <!-- 毛玻璃层 -->
             <div class="glass-overlay"></div>
 
-            <el-carousel ref="carouselRef" :height="carouselHeight" :autoplay="true" arrow="always" :interval="3000"
+            <el-carousel ref="carouselRef" :height="carouselHeight" :autoplay="false" arrow="always" :interval="3000"
                 :loop="true" indicator-position="none" class="carousel" @change="onCarouselChange">
                 <el-carousel-item v-for="(src, idx) in slidesRef" :key="idx">
                     <img :src="src" alt="slide" class="slide-img" />
@@ -158,15 +217,24 @@ onUnmounted(() => {
                     </el-button>
                 </div>
                 <div class="search-tags">
-                    <el-tag v-for="tag in popularTags" :key="tag" class="tag-item" @click="searchText = tag">
+                    <div v-for="tag in popularTags" :key="tag" class="tag-pill" :class="{ active: activeTag === tag }"
+                        @click="onClickTag(tag)">
                         {{ tag }}
-                    </el-tag>
+                    </div>
                 </div>
             </el-card>
         </div>
-        <div class="content-box center">
-            <div class="tourism-title">塔州旅行在线<br>（塔旅在线）</div>
-            <div class="coming-soon">COMING SOON...</div>
+        <!-- <div class="content-box center"> -->
+        <div class="content-box">
+            <!-- <div class="tourism-title">塔州旅行在线<br>（塔旅在线）</div> -->
+            <div class="coming-grid">
+                <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
+                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.title }}</div>
+                    <div class="card-sub">{{ item.sub }}</div>
+                </div>
+            </div>
+            <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
         </div>
     </el-main>
 </template>
@@ -295,6 +363,8 @@ onUnmounted(() => {
     }
 
     .search-fixed {
+        display: flex;
+        justify-content: center;
         // position: absolute;
         position: relative;
         // bottom: 20px;
@@ -302,20 +372,27 @@ onUnmounted(() => {
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
-        width: 100%;
+        // width: 100%;
         padding: 0 20px;
 
+        :deep(.el-card__body) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .search-card {
-            max-width: 800px;
-            margin: 0 auto;
+            // max-width: 1000px;
+            // margin: 0 auto;
             border-radius: 12px;
             border: none;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            // box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
             .search-container {
                 display: flex;
                 gap: 12px;
-                margin-bottom: 16px;
+                width: 800px;
+                margin-bottom: 30px;
 
                 .search-input {
                     flex: 1;
@@ -323,6 +400,9 @@ onUnmounted(() => {
                     :deep(.el-input__wrapper) {
                         border-radius: 8px;
                         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                        height: 48px;
+                        padding: 6px 14px;
+                        font-size: 15px;
                     }
                 }
 
@@ -330,37 +410,44 @@ onUnmounted(() => {
                     border-radius: 8px;
                     padding: 0 24px;
                     font-weight: 500;
+                    height: 48px;
                 }
             }
 
             .search-tags {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                width: 1200px;
 
-                .tag-item {
+                .tag-pill {
                     cursor: pointer;
-                    border-radius: 6px;
-                    transition: all 0.3s ease;
-                    flex: 1 1 auto;
-                    min-width: fit-content;
+                    border-radius: 10px;
+                    transition: all 0.2s ease;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0 10px;
                     text-align: center;
-                    white-space: normal;
-                    padding: 8px 12px;
-                    line-height: 1.4;
+                    background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+                    // color: #1f2937;
+                    color: #3b82f6;
+                    user-select: none;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03) inset;
+                }
 
-                    &:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                    }
+                .active {
+                    background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
+                    color: #fff;
+                    box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
                 }
             }
         }
     }
 
     .content-box {
-        height: 300px;
+        height: auto;
         color: #101010;
         display: flex;
         flex-direction: column;
@@ -368,7 +455,7 @@ onUnmounted(() => {
         align-items: center;
         gap: 20px;
         letter-spacing: 15px;
-        margin-top: 40px;
+        margin-top: 90px;
 
         .tourism-title {
             font-size: 48px;
@@ -376,10 +463,45 @@ onUnmounted(() => {
             font-style: italic;
         }
 
-        .coming-soon {
-            font-size: 43px;
-            font-weight: 700;
-            font-style: italic;
+        .coming-grid {
+            width: 90%;
+            // max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 8px 20px 40px;
+
+            img {
+                height: 90%;
+            }
+        }
+
+        .coming-card {
+            // height: 160px;
+            border-radius: 12px;
+            // background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            // align-items: center;
+            // text-align: center;
+            padding: 12px;
+            // box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: #6b7280;
+            letter-spacing: 2px;
         }
     }
 }
@@ -426,6 +548,8 @@ onUnmounted(() => {
             }
 
             .search-fixed {
+                display: flex;
+                justify-content: center;
                 bottom: 16px;
 
                 .search-card {
