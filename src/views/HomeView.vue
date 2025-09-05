@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
+import ServiceShowcase from '@/views/ServiceShowcase.vue'
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -31,6 +32,113 @@ const popularTags = ref([
     '全程管家服务',
     '个性定制服务'
 ])
+
+// 服务类型 -> 统一组件的配置
+const serviceConfigs = {
+    '独立成团（不限人数）': {
+        heroTitle: '独立成团专属体验',
+        heroDesc: '不限人数，完全按需，专属导游团队为您服务。',
+        features: ['不限人数 灵活成团', '专属导游全程陪同', '个性化行程定制', '灵活时间安排', '专属车辆与设备'],
+        packagesTitle: '独立成团套餐',
+        packages: [
+            { id: 1, title: '小团定制', description: '2-6人小团，灵活安排，专属导游服务' },
+            { id: 2, title: '中团定制', description: '7-15人中团，专业导游，舒适体验' },
+            { id: 3, title: '大团定制', description: '16人以上大团，专业团队，全程保障' }
+        ],
+        advantagesTitle: '独立成团服务优势',
+        advantages: [
+            { id: 1, title: '灵活成团', description: '不限人数 随时成团', icon: 'el-icon-user-solid' },
+            { id: 2, title: '专属服务', description: '专属导游全程陪同', icon: 'el-icon-service' },
+            { id: 3, title: '个性定制', description: '完全按需定制行程', icon: 'el-icon-setting' },
+            { id: 4, title: '品质保障', description: '专业团队品质服务', icon: 'el-icon-medal' }
+        ],
+        contactTitle: '获取独立成团服务',
+        contactIntro: '如需了解详情或预约独立成团服务，请联系我们的专属顾问'
+    },
+    '包车服务（专车+司导）': {
+        heroTitle: '专车包车服务体验',
+        heroDesc: '专车+司导，舒适便捷，贴心相伴，安全省心。',
+        features: ['专业司机导游服务', '舒适豪华车辆', '灵活路线规划', '24小时服务支持', '全程贴心服务'],
+        packagesTitle: '包车服务套餐',
+        packages: [
+            { id: 1, title: '经济包车', description: '经济型车辆，专业司机，基础保障' },
+            { id: 2, title: '舒适包车', description: '舒适型车辆，经验司导，贴心服务' },
+            { id: 3, title: '豪华包车', description: '豪华车型，资深司导，尊享体验' }
+        ],
+        advantagesTitle: '包车服务优势',
+        advantages: [
+            { id: 1, title: '专业司机', description: '经验丰富的专业司机', icon: 'el-icon-user' },
+            { id: 2, title: '舒适车辆', description: '多种车型选择', icon: 'el-icon-truck' },
+            { id: 3, title: '灵活路线', description: '根据需求定制路线', icon: 'el-icon-location' },
+            { id: 4, title: '贴心服务', description: '全程贴心专业服务', icon: 'el-icon-service' }
+        ],
+        contactTitle: '获取包车服务',
+        contactIntro: '如需了解详情或预约包车服务，请联系我们的专属顾问'
+    },
+    '有偿行程定制': {
+        heroTitle: '有偿行程定制体验',
+        heroDesc: '专业规划师为您量身打造专属塔州之旅。',
+        features: ['一对一专业规划师', '个性化行程设计', '详细行程安排', '全程跟踪服务', '专业建议与支持'],
+        packagesTitle: '行程定制套餐',
+        packages: [
+            { id: 1, title: '基础定制', description: '基础行程规划，含主要景点与住宿建议' },
+            { id: 2, title: '深度定制', description: '含交通、餐饮、活动等详细安排' },
+            { id: 3, title: '豪华定制', description: '全方位定制，专属导游与特殊体验' }
+        ],
+        advantagesTitle: '行程定制服务优势',
+        advantages: [
+            { id: 1, title: '专业规划', description: '专业规划师团队', icon: 'el-icon-edit' },
+            { id: 2, title: '个性定制', description: '完全按需定制', icon: 'el-icon-setting' },
+            { id: 3, title: '详细安排', description: '细致到每一步', icon: 'el-icon-document' },
+            { id: 4, title: '全程跟踪', description: '出行期间持续支持', icon: 'el-icon-view' }
+        ],
+        contactTitle: '获取行程定制服务',
+        contactIntro: '如需了解详情或预约行程定制服务，请联系我们的专属顾问'
+    },
+    '全程管家服务': {
+        heroTitle: '全方位生活管家体验',
+        heroDesc: '从日常事务到特殊需求，专业管家团队让您无忧。',
+        features: ['一对一专属管家服务', '全方位生活需求规划', '专属活动与特殊安排', '24小时紧急支持', 'VIP特权与优先服务'],
+        packagesTitle: '管家服务套餐',
+        packages: [
+            { id: 1, title: '基础管家', description: '日常事务管理，采购与预约' },
+            { id: 2, title: '高级管家', description: '家庭活动与特殊安排' },
+            { id: 3, title: '尊享管家', description: '24小时专属管家与私人助理' }
+        ],
+        advantagesTitle: '管家服务优势',
+        advantages: [
+            { id: 1, title: '专业保障', description: '资深管家服务团队', icon: 'el-icon-shield' },
+            { id: 2, title: '全面服务', description: '全方位生活需求', icon: 'el-icon-chat-dot-round' },
+            { id: 3, title: '私人服务', description: '一对一专线管家', icon: 'el-icon-user' },
+            { id: 4, title: '尊享特权', description: '优先服务与特权', icon: 'el-icon-star-on' }
+        ],
+        contactTitle: '获取专属管家服务',
+        contactIntro: '如需了解详情或预约管家服务，请联系我们的专属顾问'
+    },
+    '个性定制服务': {
+        heroTitle: '个性定制服务体验',
+        heroDesc: '按兴趣与需求打造独一无二的旅程。',
+        features: ['创意定制方案', '特殊需求满足', '独特体验设计', '灵活调整服务', '专属活动安排'],
+        packagesTitle: '个性定制套餐',
+        packages: [
+            { id: 1, title: '创意定制', description: '基础创意方案，满足特殊兴趣' },
+            { id: 2, title: '深度定制', description: '独特体验与活动的深度方案' },
+            { id: 3, title: '极致定制', description: '专属活动与特殊安排' }
+        ],
+        advantagesTitle: '个性定制优势',
+        advantages: [
+            { id: 1, title: '创意设计', description: '专业创意团队', icon: 'el-icon-magic-stick' },
+            { id: 2, title: '个性定制', description: '完全个性定制', icon: 'el-icon-setting' },
+            { id: 3, title: '独特体验', description: '独特体验设计', icon: 'el-icon-star-on' },
+            { id: 4, title: '灵活服务', description: '灵活调整服务', icon: 'el-icon-refresh' }
+        ],
+        contactTitle: '获取个性定制服务',
+        contactIntro: '如需了解详情或预约个性定制服务，请联系我们的专属顾问'
+    }
+}
+
+// 当前显示的服务配置
+const currentServiceConfig = ref(null)
 const isDialogVisible = ref(false)
 
 // 标签激活与文案数据
@@ -69,7 +177,15 @@ const gridItems = ref(generateItemsByTag(activeTag.value))
 function onClickTag(tag) {
     activeTag.value = tag
     searchText.value = tag
-    gridItems.value = generateItemsByTag(tag)
+
+    // 检查是否是服务类型标签
+    if (serviceConfigs[tag]) {
+        currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
+    } else {
+        // 显示景点网格
+        currentServiceConfig.value = null
+        gridItems.value = generateItemsByTag(tag)
+    }
 }
 
 // 弹窗控制
@@ -224,16 +340,20 @@ onUnmounted(() => {
                 </div>
             </el-card>
         </div>
-        <!-- <div class="content-box center"> -->
+        <!-- 内容区域 -->
         <div class="content-box">
-            <!-- <div class="tourism-title">塔州旅行在线<br>（塔旅在线）</div> -->
-            <div class="coming-grid">
+            <!-- 服务组件区域 -->
+            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
+
+            <!-- 景点网格区域 -->
+            <div v-else class="coming-grid">
                 <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
                     <img src="@/assets/img/footer1.jpg" alt="" class="w100">
                     <div class="card-title">{{ item.title }}</div>
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div>
+
             <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
         </div>
     </el-main>
@@ -474,6 +594,17 @@ onUnmounted(() => {
             img {
                 height: 90%;
             }
+        }
+
+        .service-title {
+            align-self: flex-start;
+            margin-left: 20px;
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0;
+            /* 去除字距 */
+            color: #111827;
         }
 
         .coming-card {

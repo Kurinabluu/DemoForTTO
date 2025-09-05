@@ -93,7 +93,7 @@ const rejectDisclaimer = () => {
                     </div>
                     <div class="item">
                         <el-icon>
-                            <Location />
+                            <i></i>
                         </el-icon>
                         <span>地址：1/18 WENDOVER PLACE NEW TOWN, TAS 7008, Australia</span>
                     </div>
@@ -143,12 +143,20 @@ const rejectDisclaimer = () => {
                             <el-icon>
                                 <Message />
                             </el-icon>
-                            <span>tto.operator@gmail.com（业务用邮箱）</span>
+                            <!-- <span>tto.operator@gmail.com（业务用邮箱）</span> -->
+                            <span>tto.advisory@gmail.com（咨询用邮箱）</span>
                         </div>
                         <div class="contact-item">
-                            <el-icon />
-                            <span>example@gmail.com（咨询用邮箱）</span>
+                            <el-icon>
+                                <i></i>
+                            </el-icon>
+                            <!-- <span>tto.operator@gmail.com（业务用邮箱）</span> -->
+                            <span>TasmaniaTrips（欢迎添加微信咨询）</span>
                         </div>
+                        <!-- <div class="contact-item">
+                            <el-icon />
+                            <span>tto.advisory@gmail.com（咨询用邮箱）</span>
+                        </div> -->
                     </div>
                 </div>
 
@@ -246,13 +254,13 @@ const rejectDisclaimer = () => {
 
 
     .el-header {
-        // position: sticky;
+        position: sticky;
         top: 0;
         height: 70px;
         line-height: 70px;
         // background-color: #39c5bb;
         color: #333;
-        z-index: 888;
+        z-index: 89999;
 
         .logo,
         .btns {
@@ -430,6 +438,12 @@ const rejectDisclaimer = () => {
                             font-size: 18px;
                             color: #609AB1;
                         }
+
+                        i {
+                            width: 1em;
+                            height: 1em;
+                            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
+                        }
                     }
                 }
 
@@ -584,6 +598,7 @@ const rejectDisclaimer = () => {
                 font-size: 18px;
                 color: #609AB1;
             }
+
         }
     }
 }
@@ -871,6 +886,12 @@ const rejectDisclaimer = () => {
                                 word-break: break-word;
                                 hyphens: auto;
                             }
+
+                            i {
+                                width: 1em;
+                                height: 1em;
+                                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
+                            }
                         }
                     }
                 }
@@ -1031,6 +1052,12 @@ const rejectDisclaimer = () => {
 
                             span {
                                 word-break: break-all;
+                            }
+
+                            i {
+                                width: 1em;
+                                height: 1em;
+                                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
                             }
                         }
                     }
