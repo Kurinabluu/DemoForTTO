@@ -148,7 +148,10 @@ const scenicPlaces = [
     '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
     '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区',
     '罗斯小镇', '塔基恩森林', '哈兹山脉', '高登大坝', '湖区自驾环线', '塔斯曼拱门', '魔鬼厨房', '蜜蜂农场',
-    '小企鹅栖息地', '薰衣草庄园', '亚麻湾步道', '月亮湾', '海角灯塔', '西海岸公路', '蓝湖', '荒野步道'
+    '小企鹅栖息地', '薰衣草庄园', '亚麻湾步道', '月亮湾', '海角灯塔', '西海岸公路', '蓝湖', '荒野步道',
+    '威灵顿山', '萨拉曼卡市场', '塔斯马尼亚皇家植物园', '卡斯卡德啤酒厂', '塔斯马尼亚博物馆', '萨拉曼卡艺术中心',
+    '塔斯马尼亚海事博物馆', '塔斯马尼亚艺术画廊', '塔斯马尼亚野生动物园', '塔斯马尼亚薰衣草农场', '塔斯马尼亚蜂蜜农场',
+    '塔斯马尼亚奶酪工厂', '塔斯马尼亚威士忌酒厂', '塔斯马尼亚苹果园', '塔斯马尼亚樱桃园', '塔斯马尼亚草莓园'
 ]
 
 function seededRandom(seed) {
@@ -162,11 +165,25 @@ function generateItemsByTag(tag) {
         const r = seededRandom(i + tag.length)
         const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
         const place = scenicPlaces[idx]
-        const styles = ['环线', '观景', '徒步', '日落', '海岸', '森林', '瀑布', '轻装']
-        const style = styles[Math.floor(seededRandom(idx + i) * styles.length) % styles.length]
+
+        let subTitle = ''
+        if (tag.includes('一日游')) {
+            const dayTripThemes = ['经典一日游', '自然探索', '文化体验', '海岸风光', '山景徒步', '历史遗迹']
+            const themeIdx = Math.floor(seededRandom(idx + i + 100) * dayTripThemes.length) % dayTripThemes.length
+            subTitle = dayTripThemes[themeIdx]
+        } else if (tag.includes('多日游')) {
+            const multiDayThemes = ['深度探索', '环岛之旅', '自然奇观', '文化深度游', '摄影之旅', '生态体验']
+            const themeIdx = Math.floor(seededRandom(idx + i + 200) * multiDayThemes.length) % multiDayThemes.length
+            subTitle = multiDayThemes[themeIdx]
+        } else {
+            const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
+            const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
+            subTitle = driveThemes[themeIdx]
+        }
+
         items.push({
-            title: `${place} 自驾·${style}`,
-            sub: tag.includes('一日游') || tag.includes('多日游') ? '灵感路线' : '自驾灵感',
+            title: `${place}`,
+            sub: subTitle,
         })
     }
     return items
@@ -574,7 +591,7 @@ onUnmounted(() => {
         justify-content: center;
         align-items: center;
         gap: 20px;
-        letter-spacing: 15px;
+        // letter-spacing: 15px;
         margin-top: 90px;
 
         .tourism-title {
@@ -682,14 +699,24 @@ onUnmounted(() => {
                 display: flex;
                 justify-content: center;
                 bottom: 16px;
+                margin-bottom: 20px;
 
                 .search-card {
                     max-width: 720px;
                 }
+
+                .search-container {
+                    width: 100%;
+                }
+
+                .search-tags {
+                    grid-template-columns: repeat(4, 1fr);
+                    width: 100%;
+                }
             }
 
             .content-box {
-                height: 240px;
+                // height: 240px;
 
                 .tourism-title {
                     font-size: 36px;
@@ -766,8 +793,9 @@ onUnmounted(() => {
                 transform: none;
                 z-index: auto;
                 width: 100%;
-                padding: 8px 12px 0;
+                padding: 8px 12px 20px;
                 top: auto;
+                // margin-bottom: 20px;
 
                 .search-card {
                     max-width: 95vw;
@@ -777,6 +805,11 @@ onUnmounted(() => {
                 .search-container {
                     flex-direction: column;
                     gap: 8px;
+                    width: 100%;
+                }
+
+                .search-input {
+                    width: 100%;
                 }
 
                 .search-btn {
@@ -785,9 +818,11 @@ onUnmounted(() => {
 
                 .search-tags {
                     gap: 6px;
+                    grid-template-columns: repeat(2, 1fr);
+                    width: 100%;
                 }
 
-                .tag-item {
+                .tag-pill {
                     padding: 6px 10px;
                     line-height: 1.3;
                     font-size: 12px;
@@ -795,8 +830,9 @@ onUnmounted(() => {
             }
 
             .content-box {
-                height: 200px;
-                margin-top: 20px;
+                height: auto;
+                margin-top: 0;
+                padding-top: 20px;
                 /* 移动端减少间距 */
 
                 .tourism-title {
@@ -832,13 +868,18 @@ onUnmounted(() => {
             }
 
             .search-fixed {
-                padding: 6px 8px 0;
+                padding: 6px 8px 20px;
+                margin-bottom: 20px;
 
                 .search-card {
                     max-width: 98vw;
                 }
 
-                .tag-item {
+                .search-tags {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .tag-pill {
                     padding: 4px 8px;
                     font-size: 11px;
                     line-height: 1.2;
@@ -846,18 +887,19 @@ onUnmounted(() => {
             }
 
             .content-box {
-                height: 160px;
-                margin-top: 16px;
+                height: auto;
+                margin-top: 30px;
+                padding-top: 20px;
                 gap: 16px;
 
                 .tourism-title {
                     font-size: 24px;
-                    letter-spacing: 10px;
+                    // letter-spacing: 10px;
                 }
 
                 .coming-soon {
                     font-size: 18px;
-                    letter-spacing: 10px;
+                    // letter-spacing: 10px;
                 }
             }
         }
@@ -885,13 +927,18 @@ onUnmounted(() => {
             }
 
             .search-fixed {
-                padding: 4px 6px 0;
+                padding: 4px 6px 20px;
+                margin-bottom: 20px;
 
                 .search-card {
                     max-width: 99vw;
                 }
 
-                .tag-item {
+                .search-tags {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .tag-pill {
                     padding: 3px 6px;
                     font-size: 10px;
                     line-height: 1.1;
@@ -899,8 +946,9 @@ onUnmounted(() => {
             }
 
             .content-box {
-                height: 140px;
-                margin-top: 12px;
+                height: auto;
+                margin-top: 30px;
+                padding-top: 20px;
                 gap: 12px;
 
                 .tourism-title {

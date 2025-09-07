@@ -65,40 +65,13 @@
         </div>
 
         <!-- 咨询弹窗 -->
-        <el-dialog v-model="consultationDialogVisible" title="咨询方式" width="400px" center :close-on-click-modal="false">
-            <div class="consultation-content">
-                <div class="consultation-item">
-                    <i class="contact-icon phone-icon"></i>
-                    <div class="contact-details">
-                        <div class="contact-label">电话咨询</div>
-                        <div class="contact-value">(+61)0488 388 188</div>
-                    </div>
-                </div>
-                <div class="consultation-item">
-                    <i class="contact-icon email-icon"></i>
-                    <div class="contact-details">
-                        <div class="contact-label">邮件咨询</div>
-                        <div class="contact-value">tto.advisory@gmail.com</div>
-                    </div>
-                </div>
-                <div class="consultation-item">
-                    <i class="contact-icon wechat-icon"></i>
-                    <div class="contact-details">
-                        <div class="contact-label">微信咨询</div>
-                        <div class="contact-value">TasmaniaTrips</div>
-                        <div class="contact-note">欢迎加微咨询</div>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <el-button type="primary" @click="consultationDialogVisible = false">确定</el-button>
-            </template>
-        </el-dialog>
+        <ContactDialog v-model:visible="consultationDialogVisible" />
     </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import ContactDialog from '@/components/ContactDialog.vue'
 
 // 接收配置
 const props = defineProps({
@@ -370,40 +343,12 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
     }
 
-    .consultation-content .consultation-item {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    .consultation-content .consultation-item:last-child {
-        border-bottom: none;
-    }
-
-    .contact-label {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 4px;
-    }
-
-    .contact-value {
-        font-size: 16px;
-        color: #333;
-        font-weight: 500;
-    }
-
-    .contact-note {
-        font-size: 12px;
-        color: #999;
-        margin-top: 2px;
-    }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
     .service-showcase {
         padding: 30px 15px;
+        margin-top: 20px;
     }
 
     .service-showcase .hero-image {
@@ -415,7 +360,7 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
     }
 
     .service-showcase .packages-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(1, 1fr);
         gap: 20px;
     }
 }
@@ -423,6 +368,7 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
 @media (max-width: 768px) {
     .service-showcase {
         padding: 20px 15px;
+        margin-top: 20px;
     }
 
     .service-showcase .hero-content {
@@ -455,6 +401,7 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
 @media (max-width: 375px) {
     .service-showcase {
         padding: 15px 10px;
+        margin-top: 20px;
     }
 
     .service-showcase .hero-image {
