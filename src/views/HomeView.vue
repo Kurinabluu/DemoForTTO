@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
 import ServiceShowcase from '@/views/ServiceShowcase.vue'
@@ -23,14 +23,16 @@ const mobileSlides = desktopSlides
 
 const searchText = ref('')
 const popularTags = ref([
-    '自助游/自驾游参考信息',
-    '独立成团（不限人数）',
-    '包车服务（专车+司导）',
-    '有偿行程定制',
-    '一日游',
-    '多日游',
-    '全程管家服务',
+    '自助游/自驾游免费信息',
+    // '独立成团（不限人数）',
+    '代订门票及旅游项目',
+    '包车服务（独立成团+专车+司导）',
+    '全程旅游管家服务',
+    '待定',
+    '一日游（固定行程）',
+    '多日游（固定行程）',
     '个性定制服务'
+    // '有偿行程定制',
 ])
 
 // 服务类型 -> 统一组件的配置
@@ -55,7 +57,7 @@ const serviceConfigs = {
         contactTitle: '获取独立成团服务',
         contactIntro: '如需了解详情或预约独立成团服务，请联系我们的专属顾问'
     },
-    '包车服务（专车+司导）': {
+    '包车服务（独立成团+专车+司导）': {
         heroTitle: '专车包车服务体验',
         heroDesc: '专车+司导，舒适便捷，贴心相伴，安全省心。',
         features: ['专业司机导游服务', '舒适豪华车辆', '灵活路线规划', '24小时服务支持', '全程贴心服务'],
@@ -95,7 +97,7 @@ const serviceConfigs = {
         contactTitle: '获取行程定制服务',
         contactIntro: '如需了解详情或预约行程定制服务，请联系我们的专属顾问'
     },
-    '全程管家服务': {
+    '全程旅游管家服务': {
         heroTitle: '全方位生活管家体验',
         heroDesc: '从日常事务到特殊需求，专业管家团队让您无忧。',
         features: ['一对一专属管家服务', '全方位生活需求规划', '专属活动与特殊安排', '24小时紧急支持', 'VIP特权与优先服务'],
@@ -143,6 +145,31 @@ const isDialogVisible = ref(false)
 
 // 标签激活与文案数据
 const activeTag = ref(popularTags.value[0])
+
+// 子导航（仅用于“自助游/自驾游免费信息”）
+// - 需求：在景点列表上方显示横向导航（景点/餐厅/住宿/特别活动）和搜索框，默认“景点”
+// - 点击切换：
+//   1) 选“景点”：下方维持原有景点网格
+//   2) 选“餐厅/住宿”：下方卡片标题改为对应文案（不改子标题，作为示例）
+//   3) 选“特别活动”：不显示网格，仅显示“待修改”占位
+const subNavTabs = ['景点', '餐厅', '住宿', '特别活动']
+const subTab = ref('景点')
+const subSearch = ref('') // 子导航搜索框（当前不触发搜索，仅作输入框占位）
+
+// 仅当激活标签为“自助游/自驾游免费信息”且未展示服务组件时，才显示子导航
+const showFreeTripSubnav = computed(() => activeTag.value === '自助游/自驾游免费信息' && !currentServiceConfig.value)
+
+function onClickSubTab(tab) {
+    subTab.value = tab
+}
+
+// 当切换到非“自助游/自驾游免费信息”时，重置子导航到默认“景点”
+watch(activeTag, (next) => {
+    if (next !== '自助游/自驾游免费信息') {
+        subTab.value = '景点'
+        subSearch.value = ''
+    }
+})
 
 const scenicPlaces = [
     '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
@@ -362,13 +389,35 @@ onUnmounted(() => {
             <!-- 服务组件区域 -->
             <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
 
-            <!-- 景点网格区域 -->
-            <div v-else class="coming-grid">
+            <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
+            <div v-if="showFreeTripSubnav" class="free-trip-subnav">
+                <!-- 横向Tab列表 -->
+                <ul class="free-subnav-tabs">
+                    <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
+                        @click="onClickSubTab(t)">{{ t }}</li>
+                </ul>
+                <!-- 简单搜索框（仅占位，不触发真实搜索） -->
+                <div class="free-subnav-search">
+                    <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿..." size="large" clearable />
+                </div>
+            </div>
+
+            <!-- 景点网格区域（默认显示；当子导航切到“特别活动”时隐藏） -->
+            <div v-if="!showFreeTripSubnav || subTab !== '特别活动'" class="coming-grid">
                 <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
                     <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
+                    <!-- 当子导航选中为餐厅/住宿时，标题改为对应文案；景点保持原有标题 -->
+                    <div class="card-title" v-if="subTab === '景点'">{{ item.title }}</div>
+                    <div class="card-title" v-else-if="subTab === '餐厅'">餐厅</div>
+                    <div class="card-title" v-else-if="subTab === '住宿'">住宿</div>
+                    <div class="card-title" v-else>景点</div>
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
+            </div>
+
+            <!-- 特别活动：不展示网格，仅显示“待修改” -->
+            <div v-else class="special-activities-placeholder">
+                待修改
             </div>
 
             <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
@@ -651,6 +700,50 @@ onUnmounted(() => {
             color: #6b7280;
             letter-spacing: 2px;
         }
+
+        /* 自助游/自驾游免费信息 子导航容器 */
+        .free-trip-subnav {
+            width: 90%;
+            /* 与下面网格等宽 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 20px;
+        }
+
+        /* 横向Tab列表 */
+        .free-subnav-tabs {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 12px;
+        }
+
+        .free-subnav-tab {
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: #fff;
+            color: #3b82f6;
+            border: 1px solid #e5e7eb;
+            transition: all .2s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .free-subnav-tab.active {
+            background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+        }
+
+        /* 子搜索框：与Tab在同一行，右对齐 */
+        .free-subnav-search {
+            flex: 0 0 320px;
+        }
     }
 }
 
@@ -724,6 +817,16 @@ onUnmounted(() => {
 
                 .coming-soon {
                     font-size: 28px;
+
+                    .free-trip-subnav {
+                        width: 100%;
+                        padding: 0 16px;
+                        gap: 12px;
+                    }
+
+                    .free-subnav-search {
+                        flex-basis: 260px;
+                    }
                 }
             }
         }
@@ -841,6 +944,25 @@ onUnmounted(() => {
 
                 .coming-soon {
                     font-size: 22px;
+
+                    /* 子导航：移动端折两行（上：Tabs，下：搜索） */
+                    .free-trip-subnav {
+                        width: 100%;
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 10px;
+                        padding: 0 12px;
+                    }
+
+                    .free-subnav-tabs {
+                        overflow-x: auto;
+                        padding-bottom: 4px;
+                        scrollbar-width: thin;
+                    }
+
+                    .free-subnav-search {
+                        flex: none;
+                    }
                 }
             }
         }
@@ -899,7 +1021,17 @@ onUnmounted(() => {
 
                 .coming-soon {
                     font-size: 18px;
+
                     // letter-spacing: 10px;
+                    .free-trip-subnav {
+                        padding: 0 10px;
+                        gap: 8px;
+                    }
+
+                    .free-subnav-tab {
+                        padding: 8px 12px;
+                        font-size: 12px;
+                    }
                 }
             }
         }
@@ -959,6 +1091,11 @@ onUnmounted(() => {
                 .coming-soon {
                     font-size: 16px;
                     letter-spacing: 8px;
+
+                    .free-subnav-tab {
+                        padding: 6px 10px;
+                        font-size: 11px;
+                    }
                 }
             }
         }
