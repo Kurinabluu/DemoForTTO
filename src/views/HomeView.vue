@@ -153,8 +153,9 @@ const activeTag = ref(popularTags.value[0])
 //   2) 选“餐厅/住宿”：下方卡片标题改为对应文案（不改子标题，作为示例）
 //   3) 选“特别活动”：不显示网格，仅显示“待修改”占位
 const subNavTabs = ['景点', '餐厅', '住宿', '特别活动']
-const subTab = ref('景点')
-const subSearch = ref('') // 子导航搜索框（当前不触发搜索，仅作输入框占位）
+const subTab = ref(null)
+const subSearch = ref('')
+const committedKeyword = ref('')
 
 // 仅当激活标签为“自助游/自驾游免费信息”且未展示服务组件时，才显示子导航
 const showFreeTripSubnav = computed(() => activeTag.value === '自助游/自驾游免费信息' && !currentServiceConfig.value)
@@ -168,6 +169,13 @@ watch(activeTag, (next) => {
     if (next !== '自助游/自驾游免费信息') {
         subTab.value = '景点'
         subSearch.value = ''
+    }
+})
+
+// 当进入“自助游/自驾游免费信息”时，默认不选中任何分组
+watch(activeTag, (next) => {
+    if (next === '自助游/自驾游免费信息') {
+        subTab.value = null
     }
 })
 
@@ -217,6 +225,45 @@ function generateItemsByTag(tag) {
 }
 
 const gridItems = ref(generateItemsByTag(activeTag.value))
+
+// 衍生出餐厅/住宿/特别活动的示例数据（与景点同样基于 scenicPlaces 派生，便于演示真实搜索）
+const restaurantItems = ref(
+    scenicPlaces.slice(0, 28).map((name, i) => ({ title: `${name} 美食餐厅`, sub: ['当地特色', '海鲜料理', '家庭餐馆', '酒庄餐厅'][i % 4] }))
+)
+const hotelItems = ref(
+    scenicPlaces.slice(10, 38).map((name, i) => ({ title: `${name} 舒适民宿`, sub: ['海景房', '市中心', '亲子友好', '度假小屋'][i % 4] }))
+)
+// const activityItems = ref(
+//     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
+// )
+
+// 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
+const scenicFiltered = computed(() =>
+    (committedKeyword.value || '').trim()
+        ? gridItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+        : gridItems.value
+)
+const restaurantFiltered = computed(() =>
+    (committedKeyword.value || '').trim()
+        ? restaurantItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+        : restaurantItems.value
+)
+const hotelFiltered = computed(() =>
+    (committedKeyword.value || '').trim()
+        ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+        : hotelItems.value
+)
+// const activityFiltered = computed(() =>
+//     (committedKeyword.value || '').trim()
+//         ? activityItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+//         : activityItems.value
+// )
+
+function doSubSearch() {
+    const kw = (subSearch.value || '').trim()
+    if (!kw) return
+    committedKeyword.value = kw
+}
 
 function onClickTag(tag) {
     activeTag.value = tag
@@ -393,17 +440,179 @@ onUnmounted(() => {
             <div v-if="showFreeTripSubnav" class="free-trip-subnav">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
+                    <!-- 默认不选中：提供“全部”入口使状态清晰 -->
+                    <li class="free-subnav-tab" :class="{ active: !subTab }" @click="onClickSubTab(null)">全部</li>
                     <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
                         @click="onClickSubTab(t)">{{ t }}</li>
                 </ul>
                 <!-- 简单搜索框（仅占位，不触发真实搜索） -->
                 <div class="free-subnav-search">
-                    <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿..." size="large" clearable />
+                    <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
+                        @keyup.enter="doSubSearch" />
+                </div>
+                <el-button type="primary" class="free-subnav-search-btn" size="large" @click="doSubSearch">
+                    <el-icon>
+                        <Search />
+                    </el-icon>
+                    搜索
+                </el-button>
+            </div>
+
+            <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格） -->
+            <div v-if="showFreeTripSubnav && !subTab && !(committedKeyword?.trim())" class="search-result-wrapper">
+                <div class="result-section">
+                    <h3 class="section-heading">景点</h3>
+                    <div class="coming-grid">
+                        <div v-for="(item, i) in gridItems" :key="'sc-d-' + i" class="coming-card"
+                            @click="openTourDialog(item)">
+                            <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                            <div class="card-title">{{ item.title }}</div>
+                            <div class="card-sub">{{ item.sub }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-section">
+                    <h3 class="section-heading">餐厅</h3>
+                    <div class="coming-grid">
+                        <div v-for="(item, i) in restaurantItems" :key="'rt-d-' + i" class="coming-card"
+                            @click="openTourDialog(item)">
+                            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                            <div class="card-title">{{ item.title }}</div>
+                            <div class="card-sub">{{ item.sub }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-section">
+                    <h3 class="section-heading">住宿</h3>
+                    <div class="coming-grid">
+                        <div v-for="(item, i) in hotelItems" :key="'ht-d-' + i" class="coming-card"
+                            @click="openTourDialog(item)">
+                            <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                            <div class="card-title">{{ item.title }}</div>
+                            <div class="card-sub">{{ item.sub }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-section">
+                    <h3 class="section-heading">特别活动</h3>
+                    <div class="coming-grid">
+                        <!-- <div v-for="(item, i) in activityItems" :key="'ac-d-' + i" class="coming-card"
+                            @click="openTourDialog(item)">
+                            <img src="@/assets/img/footer4.jpg" alt="" class="w100">
+                            <div class="card-title">{{ item.title }}</div>
+                            <div class="card-sub">{{ item.sub }}</div>
+                        </div> -->
+                        <!-- 待修改 -->
+
+                    </div>
                 </div>
             </div>
 
-            <!-- 景点网格区域（默认显示；当子导航切到“特别活动”时隐藏） -->
-            <div v-if="!showFreeTripSubnav || subTab !== '特别活动'" class="coming-grid">
+            <!-- 搜索结果区：不影响下方原有景点网格 -->
+            <div v-if="showFreeTripSubnav && (committedKeyword?.trim())" class="search-result-wrapper">
+                <!-- 未选中任何：渲染四个分区，带标题 -->
+                <template v-if="!subTab">
+                    <div class="result-section">
+                        <h3 class="section-heading">景点</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in scenicFiltered" :key="'sc-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section">
+                        <h3 class="section-heading">餐厅</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in restaurantFiltered" :key="'rt-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section">
+                        <h3 class="section-heading">住宿</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in hotelFiltered" :key="'ht-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section">
+                        <h3 class="section-heading">特别活动</h3>
+                        <div class="coming-grid">
+                            <!-- <div v-for="(item, i) in activityFiltered" :key="'ac-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer4.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div> -->
+                            <!-- 待修改 -->
+
+                        </div>
+                    </div>
+                </template>
+                <!-- 已选中某类：仅渲染该分区，带标题 -->
+                <template v-else>
+                    <div class="result-section" v-if="subTab === '景点'">
+                        <h3 class="section-heading">景点</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section" v-else-if="subTab === '餐厅'">
+                        <h3 class="section-heading">餐厅</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section" v-else-if="subTab === '住宿'">
+                        <h3 class="section-heading">住宿</h3>
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-section" v-else>
+                        <h3 class="section-heading">特别活动</h3>
+                        <div class="coming-grid">
+                            <!-- <div v-for="(item, i) in activityFiltered" :key="'ac2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer4.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div> -->
+                            <!-- 待修改 -->
+
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- 底部景点网格：仅在未进入“自助游/自驾游免费信息”或当前子选项为景点时展示，避免重复 -->
+            <div v-if="!showFreeTripSubnav || subTab === '景点' || subTab === '餐厅' || subTab === '住宿'"
+                class="coming-grid">
                 <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
                     <img src="@/assets/img/footer1.jpg" alt="" class="w100">
                     <!-- 当子导航选中为餐厅/住宿时，标题改为对应文案；景点保持原有标题 -->
@@ -414,7 +623,7 @@ onUnmounted(() => {
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div>
-
+            <!-- 待修改----------------------------------------------------，0918问题：搜索后会把其他网格也显示出来，记得修复。只显示搜索结果就好 -->
             <!-- 特别活动：不展示网格，仅显示“待修改” -->
             <div v-else class="special-activities-placeholder">
                 待修改
@@ -655,7 +864,8 @@ onUnmounted(() => {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            padding: 8px 20px 40px;
+            // padding: 8px 20px 40px;
+            padding: 8px 0 40px;
 
             img {
                 height: 90%;
@@ -744,6 +954,42 @@ onUnmounted(() => {
         .free-subnav-search {
             flex: 0 0 320px;
         }
+
+        .free-subnav-search-btn {
+            flex: 0 0 auto;
+            height: 40px;
+        }
+
+        .search-result-wrapper {
+            width: 90%;
+            padding: 0 0 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .coming-grid {
+                width: auto;
+                padding-bottom: 0;
+            }
+        }
+
+        .result-section {
+            width: 100%;
+        }
+
+        .section-heading {
+            margin: 10px 0 8px 4px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .empty-tip {
+            text-align: center;
+            color: #6b7280;
+            font-size: 18px;
+            padding: 16px 0 8px;
+        }
     }
 }
 
@@ -826,6 +1072,11 @@ onUnmounted(() => {
 
                     .free-subnav-search {
                         flex-basis: 260px;
+                    }
+
+                    .free-subnav-search-btn {
+                        height: 40px;
+                        padding: 0 12px;
                     }
                 }
             }
@@ -963,6 +1214,11 @@ onUnmounted(() => {
                     .free-subnav-search {
                         flex: none;
                     }
+
+                    .free-subnav-search-btn {
+                        width: 100%;
+                        height: 40px;
+                    }
                 }
             }
         }
@@ -1096,9 +1352,30 @@ onUnmounted(() => {
                         padding: 6px 10px;
                         font-size: 11px;
                     }
+
+                    .free-subnav-search-btn {
+                        height: 36px;
+                        font-size: 12px;
+                    }
                 }
             }
         }
+    }
+}
+
+:deep(.no-result-dialog) {
+    .el-dialog__body {
+        padding-top: 6px;
+    }
+}
+
+.no-result-body {
+    color: #374151;
+    line-height: 1.8;
+
+    .kw {
+        color: #2563eb;
+        font-weight: 700;
     }
 }
 </style>
