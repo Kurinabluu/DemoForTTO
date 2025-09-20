@@ -233,9 +233,9 @@ const restaurantItems = ref(
 const hotelItems = ref(
     scenicPlaces.slice(10, 38).map((name, i) => ({ title: `${name} 舒适民宿`, sub: ['海景房', '市中心', '亲子友好', '度假小屋'][i % 4] }))
 )
-// const activityItems = ref(
-//     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
-// )
+const activityItems = ref(
+    scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
+)
 
 // 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
 const scenicFiltered = computed(() =>
@@ -253,15 +253,19 @@ const hotelFiltered = computed(() =>
         ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
         : hotelItems.value
 )
-// const activityFiltered = computed(() =>
-//     (committedKeyword.value || '').trim()
-//         ? activityItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-//         : activityItems.value
-// )
+const activityFiltered = computed(() =>
+    (committedKeyword.value || '').trim()
+        ? activityItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+        : activityItems.value
+)
 
 function doSubSearch() {
     const kw = (subSearch.value || '').trim()
-    if (!kw) return
+    if (!kw) {
+        // 清空搜索时重置
+        committedKeyword.value = ''
+        return
+    }
     committedKeyword.value = kw
 }
 
@@ -445,10 +449,10 @@ onUnmounted(() => {
                     <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
                         @click="onClickSubTab(t)">{{ t }}</li>
                 </ul>
-                <!-- 简单搜索框（仅占位，不触发真实搜索） -->
+                <!-- 搜索框 -->
                 <div class="free-subnav-search">
                     <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
-                        @keyup.enter="doSubSearch" />
+                        @keyup.enter="doSubSearch" @clear="doSubSearch" />
                 </div>
                 <el-button type="primary" class="free-subnav-search-btn" size="large" @click="doSubSearch">
                     <el-icon>
@@ -496,14 +500,12 @@ onUnmounted(() => {
                 <div class="result-section">
                     <h3 class="section-heading">特别活动</h3>
                     <div class="coming-grid">
-                        <!-- <div v-for="(item, i) in activityItems" :key="'ac-d-' + i" class="coming-card"
+                        <div v-for="(item, i) in activityItems" :key="'ac-d-' + i" class="coming-card"
                             @click="openTourDialog(item)">
                             <img src="@/assets/img/footer4.jpg" alt="" class="w100">
                             <div class="card-title">{{ item.title }}</div>
                             <div class="card-sub">{{ item.sub }}</div>
-                        </div> -->
-                        <!-- 待修改 -->
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -514,118 +516,152 @@ onUnmounted(() => {
                 <template v-if="!subTab">
                     <div class="result-section">
                         <h3 class="section-heading">景点</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in scenicFiltered" :key="'sc-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="scenicFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in scenicFiltered" :key="'sc-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section">
                         <h3 class="section-heading">餐厅</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in restaurantFiltered" :key="'rt-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="restaurantFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in restaurantFiltered" :key="'rt-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section">
                         <h3 class="section-heading">住宿</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in hotelFiltered" :key="'ht-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="hotelFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in hotelFiltered" :key="'ht-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section">
                         <h3 class="section-heading">特别活动</h3>
-                        <div class="coming-grid">
-                            <!-- <div v-for="(item, i) in activityFiltered" :key="'ac-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer4.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
-                            </div> -->
-                            <!-- 待修改 -->
-
-                        </div>
+                        <template v-if="activityFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in activityFiltered" :key="'ac-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer4.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
+                            </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                 </template>
                 <!-- 已选中某类：仅渲染该分区，带标题 -->
                 <template v-else>
                     <div class="result-section" v-if="subTab === '景点'">
                         <h3 class="section-heading">景点</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="scenicFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section" v-else-if="subTab === '餐厅'">
                         <h3 class="section-heading">餐厅</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="restaurantFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section" v-else-if="subTab === '住宿'">
                         <h3 class="section-heading">住宿</h3>
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                        <template v-if="hotelFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                     <div class="result-section" v-else>
                         <h3 class="section-heading">特别活动</h3>
-                        <div class="coming-grid">
-                            <!-- <div v-for="(item, i) in activityFiltered" :key="'ac2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer4.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
-                            </div> -->
-                            <!-- 待修改 -->
-
-                        </div>
+                        <template v-if="activityFiltered.length">
+                            <div class="coming-grid">
+                                <div v-for="(item, i) in activityFiltered" :key="'ac2-' + i" class="coming-card"
+                                    @click="openTourDialog(item)">
+                                    <img src="@/assets/img/footer4.jpg" alt="" class="w100">
+                                    <div class="card-title">{{ item.title }}</div>
+                                    <div class="card-sub">{{ item.sub }}</div>
+                                </div>
+                            </div>
+                        </template>
+                        <div v-else class="empty-tip">没有搜索结果</div>
                     </div>
                 </template>
             </div>
 
-            <!-- 底部景点网格：仅在未进入“自助游/自驾游免费信息”或当前子选项为景点时展示，避免重复 -->
-            <div v-if="!showFreeTripSubnav || subTab === '景点' || subTab === '餐厅' || subTab === '住宿'"
-                class="coming-grid">
+            <!-- 底部网格：仅在未进入"自助游/自驾游免费信息"或当前子选项为景点时展示，避免重复 -->
+            <!-- <div v-if="!showFreeTripSubnav || subTab === '景点'" class="coming-grid">
                 <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
                     <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                    <!-- 当子导航选中为餐厅/住宿时，标题改为对应文案；景点保持原有标题 -->
-                    <div class="card-title" v-if="subTab === '景点'">{{ item.title }}</div>
-                    <div class="card-title" v-else-if="subTab === '餐厅'">餐厅</div>
-                    <div class="card-title" v-else-if="subTab === '住宿'">住宿</div>
-                    <div class="card-title" v-else>景点</div>
+                    <div class="card-title">{{ item.title }}</div>
+                    <div class="card-sub">{{ item.sub }}</div>
+                </div>
+            </div> -->
+
+            <!-- 餐厅网格：仅在选中餐厅时显示 -->
+            <div v-if="showFreeTripSubnav && subTab === '餐厅' && !(committedKeyword?.trim())" class="coming-grid">
+                <div v-for="(item, i) in restaurantItems" :key="'rt-bottom-' + i" class="coming-card"
+                    @click="openTourDialog(item)">
+                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.title }}</div>
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div>
-            <!-- 待修改----------------------------------------------------，0918问题：搜索后会把其他网格也显示出来，记得修复。只显示搜索结果就好 -->
-            <!-- 特别活动：不展示网格，仅显示“待修改” -->
-            <div v-else class="special-activities-placeholder">
+
+            <!-- 住宿网格：仅在选中住宿时显示 -->
+            <div v-if="showFreeTripSubnav && subTab === '住宿' && !(committedKeyword?.trim())" class="coming-grid">
+                <div v-for="(item, i) in hotelItems" :key="'ht-bottom-' + i" class="coming-card"
+                    @click="openTourDialog(item)">
+                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.title }}</div>
+                    <div class="card-sub">{{ item.sub }}</div>
+                </div>
+            </div>
+            <!-- 特别活动：不展示网格，仅显示"待修改" -->
+            <div v-if="showFreeTripSubnav && subTab === '特别活动'" class="special-activities-placeholder">
                 待修改
             </div>
 
