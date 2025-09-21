@@ -28,7 +28,7 @@ const popularTags = ref([
     '代订门票及旅游项目',
     '包车服务（独立成团+专车+司导）',
     '全程旅游管家服务',
-    '待定',
+    '地接地陪服务',
     '一日游（固定行程）',
     '多日游（固定行程）',
     '个性定制服务'
@@ -136,7 +136,47 @@ const serviceConfigs = {
         ],
         contactTitle: '获取个性定制服务',
         contactIntro: '如需了解详情或预约个性定制服务，请联系我们的专属顾问'
-    }
+    },
+    '地接地陪服务': {
+        heroTitle: '地接地陪服务',
+        heroDesc: '地接地陪服务',
+        features: ['地接地陪服务', '地接地陪服务', '地接地陪服务', '地接地陪服务', '地接地陪服务'],
+        packagesTitle: '地接地陪服务',
+        packages: [
+            { id: 1, title: '地接地陪服务', description: '地接地陪服务' },
+            { id: 2, title: '地接地陪服务', description: '地接地陪服务' },
+            { id: 3, title: '地接地陪服务', description: '地接地陪服务' }
+        ],
+        advantagesTitle: '地接地陪服务',
+        advantages: [
+            { id: 1, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-magic-stick' },
+            { id: 2, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-setting' },
+            { id: 3, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-star-on' },
+            { id: 4, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-refresh' }
+        ],
+        contactTitle: '获取地接地陪服务',
+        contactIntro: '如需了解详情或预约地接地陪服务，请联系我们的专属顾问'
+    },
+    '代订门票及旅游项目': {
+        heroTitle: '代订门票及旅游项目',
+        heroDesc: '代订门票及旅游项目',
+        features: ['代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目'],
+        packagesTitle: '代订门票及旅游项目',
+        packages: [
+            { id: 1, title: '代订门票及旅游项目', description: '代订门票及旅游项目' },
+            { id: 2, title: '代订门票及旅游项目', description: '代订门票及旅游项目' },
+            { id: 3, title: '代订门票及旅游项目', description: '代订门票及旅游项目' }
+        ],
+        advantagesTitle: '代订门票及旅游项目',
+        advantages: [
+            { id: 1, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-magic-stick' },
+            { id: 2, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-setting' },
+            { id: 3, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-star-on' },
+            { id: 4, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-refresh' }
+        ],
+        contactTitle: '获取代订门票及旅游项目',
+        contactIntro: '如需了解详情或预约代订门票及旅游项目，请联系我们的专属顾问'
+    },
 }
 
 // 当前显示的服务配置
@@ -194,6 +234,7 @@ function seededRandom(seed) {
     return x - Math.floor(x)
 }
 
+
 function generateItemsByTag(tag) {
     const items = []
     for (let i = 0; i < 32; i++) {
@@ -202,11 +243,11 @@ function generateItemsByTag(tag) {
         const place = scenicPlaces[idx]
 
         let subTitle = ''
-        if (tag.includes('一日游')) {
+        if (tag.includes('一日游（固定行程）')) {
             const dayTripThemes = ['经典一日游', '自然探索', '文化体验', '海岸风光', '山景徒步', '历史遗迹']
             const themeIdx = Math.floor(seededRandom(idx + i + 100) * dayTripThemes.length) % dayTripThemes.length
             subTitle = dayTripThemes[themeIdx]
-        } else if (tag.includes('多日游')) {
+        } else if (tag.includes('多日游（固定行程）')) {
             const multiDayThemes = ['深度探索', '环岛之旅', '自然奇观', '文化深度游', '摄影之旅', '生态体验']
             const themeIdx = Math.floor(seededRandom(idx + i + 200) * multiDayThemes.length) % multiDayThemes.length
             subTitle = multiDayThemes[themeIdx]
@@ -273,8 +314,8 @@ function onClickTag(tag) {
     activeTag.value = tag
     searchText.value = tag
 
-    // 检查是否是服务类型标签
-    if (serviceConfigs[tag]) {
+    // 检查是否是服务类型标签（排除一日游和多日游）
+    if (serviceConfigs[tag] && tag !== '一日游' && tag !== '多日游') {
         currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
     } else {
         // 显示景点网格
@@ -640,7 +681,15 @@ onUnmounted(() => {
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div> -->
-
+            <!-- 景点网格：仅在选中景点时显示 -->
+            <div v-if="showFreeTripSubnav && subTab === '景点' && !(committedKeyword?.trim())" class="coming-grid">
+                <div v-for="(item, i) in scenicFiltered" :key="'rt-bottom-' + i" class="coming-card"
+                    @click="openTourDialog(item)">
+                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.title }}</div>
+                    <div class="card-sub">{{ item.sub }}</div>
+                </div>
+            </div>
             <!-- 餐厅网格：仅在选中餐厅时显示 -->
             <div v-if="showFreeTripSubnav && subTab === '餐厅' && !(committedKeyword?.trim())" class="coming-grid">
                 <div v-for="(item, i) in restaurantItems" :key="'rt-bottom-' + i" class="coming-card"
@@ -660,9 +709,149 @@ onUnmounted(() => {
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div>
-            <!-- 特别活动：不展示网格，仅显示"待修改" -->
-            <div v-if="showFreeTripSubnav && subTab === '特别活动'" class="special-activities-placeholder">
-                待修改
+            <!-- 特别活动：信息展示区域 -->
+            <div v-if="showFreeTripSubnav && subTab === '特别活动'" class="special-activities-section">
+                <div class="activities-header">
+                    <h2 class="activities-title">塔斯马尼亚特别活动</h2>
+                    <p class="activities-subtitle">实时特色活动与极光天气信息</p>
+                </div>
+
+                <div class="activities-grid">
+                    <!-- 极光观测信息 -->
+                    <div class="activity-card aurora-card">
+                        <div class="activity-image">
+                            <img src="@/assets/img/footer1.jpg" alt="极光观测" class="activity-img">
+                            <div class="activity-badge aurora-badge">极光预报</div>
+                        </div>
+                        <div class="activity-content">
+                            <h3 class="activity-title">极光观测最佳时机</h3>
+                            <div class="activity-info">
+                                <div class="info-item">
+                                    <span class="info-label">今晚概率：</span>
+                                    <span class="info-value high">85%</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">最佳时间：</span>
+                                    <span class="info-value">22:00-02:00</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">推荐地点：</span>
+                                    <span class="info-value">摇篮山国家公园</span>
+                                </div>
+                            </div>
+                            <div class="weather-note">
+                                <i class="weather-icon">🌌</i>
+                                <span>天气晴朗，极光活动强烈，观测条件极佳</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 薰衣草节活动 -->
+                    <div class="activity-card lavender-card">
+                        <div class="activity-image">
+                            <img src="@/assets/img/footer2.jpg" alt="薰衣草节" class="activity-img">
+                            <div class="activity-badge event-badge">节庆活动</div>
+                        </div>
+                        <div class="activity-content">
+                            <h3 class="activity-title">塔斯马尼亚薰衣草节</h3>
+                            <div class="activity-info">
+                                <div class="info-item">
+                                    <span class="info-label">活动时间：</span>
+                                    <span class="info-value">12月15日-1月31日</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">开放时间：</span>
+                                    <span class="info-value">09:00-17:00</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">活动地点：</span>
+                                    <span class="info-value">薰衣草庄园</span>
+                                </div>
+                            </div>
+                            <div class="activity-description">
+                                体验紫色花海，品尝薰衣草美食，购买纯天然薰衣草产品
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 观鲸季节 -->
+                    <div class="activity-card whale-card">
+                        <div class="activity-image">
+                            <img src="@/assets/img/footer3.jpg" alt="观鲸活动" class="activity-img">
+                            <div class="activity-badge season-badge">季节性活动</div>
+                        </div>
+                        <div class="activity-content">
+                            <h3 class="activity-title">座头鲸迁徙观鲸</h3>
+                            <div class="activity-info">
+                                <div class="info-item">
+                                    <span class="info-label">最佳季节：</span>
+                                    <span class="info-value">5月-11月</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">今日概率：</span>
+                                    <span class="info-value high">92%</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">出发地点：</span>
+                                    <span class="info-value">霍巴特港口</span>
+                                </div>
+                            </div>
+                            <div class="activity-description">
+                                近距离观赏座头鲸迁徙，专业导游讲解，包含摄影指导
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 星空观测 -->
+                    <div class="activity-card stargazing-card">
+                        <div class="activity-image">
+                            <img src="@/assets/img/footer4.jpg" alt="星空观测" class="activity-img">
+                            <div class="activity-badge night-badge">夜间活动</div>
+                        </div>
+                        <div class="activity-content">
+                            <h3 class="activity-title">南半球星空观测</h3>
+                            <div class="activity-info">
+                                <div class="info-item">
+                                    <span class="info-label">观测条件：</span>
+                                    <span class="info-value excellent">极佳</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">最佳时间：</span>
+                                    <span class="info-value">20:30-23:00</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">推荐地点：</span>
+                                    <span class="info-value">威灵顿山</span>
+                                </div>
+                            </div>
+                            <div class="weather-note">
+                                <i class="weather-icon">⭐</i>
+                                <span>无云天气，能见度极佳，可观测南十字星座</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activities-footer">
+                    <div class="update-info">
+                        <i class="update-icon">🔄</i>
+                        <span>信息每2小时更新一次</span>
+                    </div>
+                    <div class="contact-info">
+                        <span>获取最新活动信息，请联系我们的专业顾问</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 一日游、多日游网格显示 -->
+            <div v-if="!currentServiceConfig && (activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
+                class="coming-grid">
+                <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card"
+                    @click="openTourDialog(item)">
+                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.title }}</div>
+                    <div class="card-sub">{{ item.sub }}</div>
+                </div>
             </div>
 
             <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
@@ -1015,7 +1204,8 @@ onUnmounted(() => {
 
         .section-heading {
             margin: 10px 0 8px 4px;
-            font-size: 18px;
+            // font-size: 18px;
+            font-size: 28px;
             font-weight: 700;
             color: #111827;
         }
@@ -1025,6 +1215,196 @@ onUnmounted(() => {
             color: #6b7280;
             font-size: 18px;
             padding: 16px 0 8px;
+        }
+
+        /* 特别活动样式 */
+        .special-activities-section {
+            width: 90%;
+            padding: 20px 0;
+        }
+
+        .activities-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .activities-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .activities-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .activity-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .activity-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .activity-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .activity-card:hover .activity-img {
+            transform: scale(1.05);
+        }
+
+        .activity-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .aurora-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .event-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .season-badge {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .night-badge {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .activity-content {
+            padding: 20px;
+        }
+
+        .activity-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .activity-info {
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .info-value.high {
+            color: #059669;
+            font-weight: 700;
+        }
+
+        .info-value.excellent {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        .activity-description {
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.6;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .weather-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #059669;
+            background: #ecfdf5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .weather-icon {
+            font-size: 16px;
+        }
+
+        .activities-footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .update-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .update-icon {
+            font-size: 16px;
+        }
+
+        .contact-info {
+            font-size: 14px;
+            color: #4b5563;
         }
     }
 }
@@ -1114,6 +1494,50 @@ onUnmounted(() => {
                         height: 40px;
                         padding: 0 12px;
                     }
+                }
+
+                /* 特别活动平板端适配 */
+                .special-activities-section {
+                    width: 95%;
+                    padding: 15px 0;
+                }
+
+                .activities-title {
+                    font-size: 28px;
+                }
+
+                .activities-subtitle {
+                    font-size: 15px;
+                }
+
+                .activities-grid {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+
+                .activity-image {
+                    height: 180px;
+                }
+
+                .activity-content {
+                    padding: 16px;
+                }
+
+                .activity-title {
+                    font-size: 16px;
+                }
+
+                .info-label,
+                .info-value {
+                    font-size: 13px;
+                }
+
+                .activity-description {
+                    font-size: 13px;
+                }
+
+                .weather-note {
+                    font-size: 12px;
                 }
             }
         }
@@ -1256,6 +1680,92 @@ onUnmounted(() => {
                         height: 40px;
                     }
                 }
+
+                /* 特别活动移动端适配 */
+                .special-activities-section {
+                    width: 95%;
+                    padding: 10px 0;
+                }
+
+                .activities-header {
+                    margin-bottom: 20px;
+                }
+
+                .activities-title {
+                    font-size: 24px;
+                    letter-spacing: 1px;
+                }
+
+                .activities-subtitle {
+                    font-size: 14px;
+                }
+
+                .activities-grid {
+                    grid-template-columns: 1fr;
+                    gap: 16px;
+                    margin-bottom: 20px;
+                }
+
+                .activity-image {
+                    height: 160px;
+                }
+
+                .activity-badge {
+                    top: 8px;
+                    right: 8px;
+                    padding: 4px 8px;
+                    font-size: 10px;
+                }
+
+                .activity-content {
+                    padding: 12px;
+                }
+
+                .activity-title {
+                    font-size: 15px;
+                    margin-bottom: 12px;
+                }
+
+                .activity-info {
+                    margin-bottom: 12px;
+                }
+
+                .info-item {
+                    margin-bottom: 6px;
+                    padding: 2px 0;
+                }
+
+                .info-label,
+                .info-value {
+                    font-size: 12px;
+                }
+
+                .activity-description {
+                    font-size: 12px;
+                    padding: 10px;
+                }
+
+                .weather-note {
+                    font-size: 11px;
+                    padding: 8px 10px;
+                }
+
+                .weather-icon {
+                    font-size: 14px;
+                }
+
+                .activities-footer {
+                    padding: 15px;
+                }
+
+                .update-info {
+                    font-size: 12px;
+                    margin-bottom: 8px;
+                }
+
+                .contact-info {
+                    font-size: 12px;
+                }
             }
         }
     }
@@ -1393,6 +1903,75 @@ onUnmounted(() => {
                         height: 36px;
                         font-size: 12px;
                     }
+                }
+
+                /* 特别活动超小屏幕适配 */
+                .special-activities-section {
+                    width: 98%;
+                    padding: 8px 0;
+                }
+
+                .activities-title {
+                    font-size: 20px;
+                }
+
+                .activities-subtitle {
+                    font-size: 13px;
+                }
+
+                .activities-grid {
+                    gap: 12px;
+                }
+
+                .activity-image {
+                    height: 140px;
+                }
+
+                .activity-badge {
+                    top: 6px;
+                    right: 6px;
+                    padding: 3px 6px;
+                    font-size: 9px;
+                }
+
+                .activity-content {
+                    padding: 10px;
+                }
+
+                .activity-title {
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                }
+
+                .info-item {
+                    margin-bottom: 4px;
+                }
+
+                .info-label,
+                .info-value {
+                    font-size: 11px;
+                }
+
+                .activity-description {
+                    font-size: 11px;
+                    padding: 8px;
+                }
+
+                .weather-note {
+                    font-size: 10px;
+                    padding: 6px 8px;
+                }
+
+                .activities-footer {
+                    padding: 12px;
+                }
+
+                .update-info {
+                    font-size: 11px;
+                }
+
+                .contact-info {
+                    font-size: 11px;
                 }
             }
         }

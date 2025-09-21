@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 
@@ -14,6 +14,13 @@ const handleScroll = () => {
   const documentHeight = document.documentElement.scrollHeight
   const carouselHeight = 800 // 轮播图高度
   const threshold = carouselHeight * 2 / 3 // 约533px
+
+  // 移动端和平板端不显示电梯导航
+  const isMobileOrTablet = window.innerWidth <= 1024
+  if (isMobileOrTablet) {
+    showElevator.value = false
+    return
+  }
 
   // 滚动超过2/3轮播图高度时显示电梯导航
   const shouldShow = scrollTop > threshold
@@ -47,10 +54,27 @@ const acceptTips = () => {
   showTipsModal.value = false
 }
 
+// 窗口大小变化处理
+const handleResize = () => {
+  // 窗口大小变化时重新判断是否显示电梯导航
+  handleScroll()
+}
+
 onMounted(() => {
   // 首次渲染完成后展示弹窗
   // showDisclaimerModal.value = true
   showTipsModal.value = true
+
+  // 添加滚动事件监听器
+  window.addEventListener('scroll', handleScroll)
+  // 添加窗口大小变化监听器
+  window.addEventListener('resize', handleResize)
+})
+
+// 组件卸载时清理事件监听器
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
 })
 
 </script>
@@ -148,6 +172,13 @@ onMounted(() => {
       font-size: 20px !important;
       color: #609AB1 !important;
     }
+  }
+}
+
+// 移动端和平板端隐藏电梯导航
+@media (max-width: 1024px) {
+  .elevator-nav {
+    display: none !important;
   }
 }
 </style>
