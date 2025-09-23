@@ -14,7 +14,8 @@ const dialogVisible = computed({
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="false" align-center class="contact-dialog">
+    <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
+        :z-index="9800">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>

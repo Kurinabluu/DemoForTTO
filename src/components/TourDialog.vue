@@ -122,7 +122,8 @@ const routeInfo = computed(() => getRouteInfo(props.title))
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center>
+    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center
+        :z-index="9500">
         <template #header>
             <div class="dlg-title">{{ title }}</div>
         </template>
@@ -171,6 +172,7 @@ const routeInfo = computed(() => getRouteInfo(props.title))
     :deep(.el-dialog__body) {
         padding: 0 0 8px 0;
     }
+
 }
 
 .dlg-title {

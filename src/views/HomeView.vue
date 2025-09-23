@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
+import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import ServiceShowcase from '@/views/ServiceShowcase.vue'
 
 // 轮播图切换事件处理
@@ -193,7 +194,7 @@ const activeTag = ref(popularTags.value[0])
 //   2) 选“餐厅/住宿”：下方卡片标题改为对应文案（不改子标题，作为示例）
 //   3) 选“特别活动”：不显示网格，仅显示“待修改”占位
 const subNavTabs = ['景点', '餐厅', '住宿', '特别活动']
-const subTab = ref(null)
+const subTab = ref('景点')
 const subSearch = ref('')
 const committedKeyword = ref('')
 
@@ -209,13 +210,15 @@ watch(activeTag, (next) => {
     if (next !== '自助游/自驾游免费信息') {
         subTab.value = '景点'
         subSearch.value = ''
+    } else {
+        subTab.value = '景点'
     }
 })
 
-// 当进入“自助游/自驾游免费信息”时，默认不选中任何分组
+// 进入“自助游/自驾游免费信息”默认选中“景点”
 watch(activeTag, (next) => {
     if (next === '自助游/自驾游免费信息') {
-        subTab.value = null
+        subTab.value = '景点'
     }
 })
 
@@ -274,6 +277,67 @@ const restaurantItems = ref(
 const hotelItems = ref(
     scenicPlaces.slice(10, 38).map((name, i) => ({ title: `${name} 舒适民宿`, sub: ['海景房', '市中心', '亲子友好', '度假小屋'][i % 4] }))
 )
+
+// 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
+const placeGroups = [
+    { name: '菲欣拿国家公园', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
+    { name: '摇篮山', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
+    { name: '火焰湾', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
+    { name: '酒杯湾', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
+    { name: '玛丽亚岛', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
+    { name: '塔斯曼半岛', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
+    { name: '布鲁尼岛', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
+    { name: '霍巴特', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
+    { name: '朗塞斯顿', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
+    { name: '比切诺', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
+    { name: '圣海伦斯', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
+    { name: '斯坦利', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
+    { name: '里士满', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
+    { name: '亚瑟港', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
+    { name: '德文波特', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
+]
+
+// 地点-列表弹窗
+const isPlaceListVisible = ref(false)
+const listPlaceName = ref('')
+const listItemType = ref('餐厅')
+const listItems = ref([])
+
+function openPlaceList(placeName, itemType) {
+    listPlaceName.value = placeName
+    listItemType.value = itemType
+    const baseImg = itemType === '餐厅'
+        ? new URL('@/assets/img/footer2.jpg', import.meta.url).href
+        : new URL('@/assets/img/footer3.jpg', import.meta.url).href
+    const items = []
+    for (let i = 0; i < 24; i++) {
+        // 字母在此-------------------------------------------------------------
+        const label = String.fromCharCode(65 + (i % 26))
+        const title = itemType === '餐厅' ? `餐厅名${label}` : `住宿名${label}`
+        items.push({ title, img: baseImg })
+    }
+    listItems.value = items
+    isPlaceListVisible.value = true
+}
+
+function onSelectPlaceItem(item) {
+    dialogTitle.value = `${listPlaceName.value} · ${item.title}`
+    dialogBanner.value = listItemType.value === '餐厅'
+        ? new URL('@/assets/img/footer2.jpg', import.meta.url).href
+        : new URL('@/assets/img/footer3.jpg', import.meta.url).href
+    isTourDialogVisible.value = true
+}
+
+// 一日游子导航
+const dayTripTabs = ['景点一日游', '主题一日游', '定制一日游']
+const dayTripTab = ref(dayTripTabs[0])
+const dayTripCopyMap = {
+    '景点一日游': '精选经典景点路线，省心直达热门目的地',
+    '主题一日游': '围绕自然、人文、美食等主题深度体验',
+    '定制一日游': '按需定制专属行程，灵活时间与路线',
+}
+function onClickDayTripTab(t) { dayTripTab.value = t }
+const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTag.value === '一日游（固定行程）')
 const activityItems = ref(
     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
 )
@@ -485,8 +549,6 @@ onUnmounted(() => {
             <div v-if="showFreeTripSubnav" class="free-trip-subnav">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
-                    <!-- 默认不选中：提供“全部”入口使状态清晰 -->
-                    <li class="free-subnav-tab" :class="{ active: !subTab }" @click="onClickSubTab(null)">全部</li>
                     <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
                         @click="onClickSubTab(t)">{{ t }}</li>
                 </ul>
@@ -504,7 +566,7 @@ onUnmounted(() => {
             </div>
 
             <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格） -->
-            <div v-if="showFreeTripSubnav && !subTab && !(committedKeyword?.trim())" class="search-result-wrapper">
+            <div v-if="showFreeTripSubnav && false && !(committedKeyword?.trim())" class="search-result-wrapper">
                 <div class="result-section">
                     <h3 class="section-heading">景点</h3>
                     <div class="coming-grid">
@@ -690,23 +752,23 @@ onUnmounted(() => {
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
             </div>
-            <!-- 餐厅网格：仅在选中餐厅时显示 -->
+            <!-- 餐厅网格：地点分组入口 -->
             <div v-if="showFreeTripSubnav && subTab === '餐厅' && !(committedKeyword?.trim())" class="coming-grid">
-                <div v-for="(item, i) in restaurantItems" :key="'rt-bottom-' + i" class="coming-card"
-                    @click="openTourDialog(item)">
-                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
+                <div v-for="(g, i) in placeGroups" :key="'rt-place-' + i" class="coming-card"
+                    @click="openPlaceList(g.name, '餐厅')">
+                    <img :src="g.img" alt="" class="w100">
+                    <div class="card-title">{{ g.name }}</div>
+                    <div class="card-sub">餐厅分布</div>
                 </div>
             </div>
 
-            <!-- 住宿网格：仅在选中住宿时显示 -->
+            <!-- 住宿网格：地点分组入口 -->
             <div v-if="showFreeTripSubnav && subTab === '住宿' && !(committedKeyword?.trim())" class="coming-grid">
-                <div v-for="(item, i) in hotelItems" :key="'ht-bottom-' + i" class="coming-card"
-                    @click="openTourDialog(item)">
-                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
+                <div v-for="(g, i) in placeGroups" :key="'ht-place-' + i" class="coming-card"
+                    @click="openPlaceList(g.name, '住宿')">
+                    <img :src="g.img" alt="" class="w100">
+                    <div class="card-title">{{ g.name }}</div>
+                    <div class="card-sub">住宿分布</div>
                 </div>
             </div>
             <!-- 特别活动：信息展示区域 -->
@@ -843,6 +905,16 @@ onUnmounted(() => {
                 </div>
             </div>
 
+            <!-- 一日游子导航 -->
+            <div v-if="showDayTripSubnav" class="free-trip-subnav" style="margin-top: -10px;">
+                <ul class="free-subnav-tabs">
+                    <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab" :class="{ active: dayTripTab === t }"
+                        @click="onClickDayTripTab(t)">{{ t }}</li>
+                </ul>
+                <div class="free-subnav-search" style="text-align:right;color:#6b7280;line-height:40px;">{{
+                    dayTripCopyMap[dayTripTab] }}</div>
+            </div>
+
             <!-- 一日游、多日游网格显示 -->
             <div v-if="!currentServiceConfig && (activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
                 class="coming-grid">
@@ -855,6 +927,8 @@ onUnmounted(() => {
             </div>
 
             <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
+            <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
+                :items="listItems" @select="onSelectPlaceItem" />
         </div>
     </el-main>
 </template>

@@ -260,7 +260,7 @@ const rejectDisclaimer = () => {
         line-height: 70px;
         // background-color: #39c5bb;
         color: #333;
-        z-index: 89999;
+        z-index: 8999;
 
         .logo,
         .btns {
