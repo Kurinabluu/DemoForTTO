@@ -69,6 +69,7 @@ const visibleItems = computed(() => props.items.slice(0, visibleLimit.value))
                         <div class="grid-item" v-for="(it, idx) in visibleItems" :key="idx" @click="onSelect(it)">
                             <img :src="it.img" alt="thumb" class="thumb" />
                             <div class="name">{{ it.title }}</div>
+                            <div class="en-name">{{ it.enTitle }}</div>
                         </div>
                     </div>
                 </div>

@@ -58,7 +58,8 @@ const rejectDisclaimer = () => {
                     <li class="pointer clicked" @click="onNavClick" to="/DemoForTTO">
                         <RouterLink to="/DemoForTTO">网站首页</RouterLink>
                     </li>
-                    <li class="pointer" @click="onNavClick">精品路线</li>
+                    <!-- 特别推荐页面考虑跳转【免费信息】中的“特别活动” -->
+                    <li class="pointer" @click="onNavClick">特别推荐</li>
                     <li class="pointer" @click="onNavClick">行业新闻</li>
                     <li class="pointer" @click="onNavClick">八大服务</li>
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->

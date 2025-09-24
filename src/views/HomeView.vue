@@ -278,30 +278,75 @@ const hotelItems = ref(
     scenicPlaces.slice(10, 38).map((name, i) => ({ title: `${name} 舒适民宿`, sub: ['海景房', '市中心', '亲子友好', '度假小屋'][i % 4] }))
 )
 
-// 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
-const placeGroups = [
-    { name: '菲欣拿国家公园', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
-    { name: '摇篮山', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
-    { name: '火焰湾', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
-    { name: '酒杯湾', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
-    { name: '玛丽亚岛', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
-    { name: '塔斯曼半岛', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
-    { name: '布鲁尼岛', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
-    { name: '霍巴特', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
-    { name: '朗塞斯顿', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
-    { name: '比切诺', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
-    { name: '圣海伦斯', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
-    { name: '斯坦利', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href },
-    { name: '里士满', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href },
-    { name: '亚瑟港', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href },
-    { name: '德文波特', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href },
-]
-
 // 地点-列表弹窗
 const isPlaceListVisible = ref(false)
 const listPlaceName = ref('')
 const listItemType = ref('餐厅')
 const listItems = ref([])
+
+// 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
+const placeGroups = [
+    {
+        name: `菲欣拿国家公园 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `摇篮山 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `火焰湾 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `酒杯湾 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `玛丽亚岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `塔斯曼半岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `布鲁尼岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `霍巴特 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `朗塞斯顿 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `比切诺 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `圣海伦斯 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `斯坦利 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `里士满 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `亚瑟港 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+    {
+        name: `德文波特 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+    },
+]
 
 function openPlaceList(placeName, itemType) {
     listPlaceName.value = placeName
@@ -314,7 +359,9 @@ function openPlaceList(placeName, itemType) {
         // 字母在此-------------------------------------------------------------
         const label = String.fromCharCode(65 + (i % 26))
         const title = itemType === '餐厅' ? `餐厅名${label}` : `住宿名${label}`
-        items.push({ title, img: baseImg })
+        //英文标题
+        const enTitle = itemType === '餐厅' ? `Restaurant${label}` : `Hotel${label}`
+        items.push({ title, img: baseImg, enTitle })
     }
     listItems.value = items
     isPlaceListVisible.value = true
@@ -758,7 +805,8 @@ onUnmounted(() => {
                     @click="openPlaceList(g.name, '餐厅')">
                     <img :src="g.img" alt="" class="w100">
                     <div class="card-title">{{ g.name }}</div>
-                    <div class="card-sub">餐厅分布</div>
+                    <!-- <div class="card-sub">餐厅分布</div> -->
+                    <div class="card-sub">{{ g.enName }}</div>
                 </div>
             </div>
 
@@ -768,7 +816,8 @@ onUnmounted(() => {
                     @click="openPlaceList(g.name, '住宿')">
                     <img :src="g.img" alt="" class="w100">
                     <div class="card-title">{{ g.name }}</div>
-                    <div class="card-sub">住宿分布</div>
+                    <!-- <div class="card-sub">住宿分布</div> -->
+                    <div class="card-sub">{{ g.enName }}</div>
                 </div>
             </div>
             <!-- 特别活动：信息展示区域 -->
