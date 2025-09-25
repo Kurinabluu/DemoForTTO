@@ -62,11 +62,11 @@ const serviceConfigs = {
         heroTitle: '专车包车服务体验',
         heroDesc: '专车+司导，舒适便捷，贴心相伴，安全省心。',
         features: ['专业司机导游服务', '舒适豪华车辆', '灵活路线规划', '24小时服务支持', '全程贴心服务'],
-        packagesTitle: '包车服务套餐',
+        packagesTitle: '包车服务',
         packages: [
-            { id: 1, title: '经济包车', description: '经济型车辆，专业司机，基础保障' },
-            { id: 2, title: '舒适包车', description: '舒适型车辆，经验司导，贴心服务' },
-            { id: 3, title: '豪华包车', description: '豪华车型，资深司导，尊享体验' }
+            { id: 1, title: 'XX包车', description: '描述描述描述' },
+            { id: 2, title: 'XX包车', description: '描述描述描述' },
+            { id: 3, title: 'XX包车', description: '描述描述描述' }
         ],
         advantagesTitle: '包车服务优势',
         advantages: [
@@ -287,64 +287,64 @@ const listItems = ref([])
 // 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
 const placeGroups = [
     {
-        name: `菲欣拿国家公园 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `菲欣拿国家公园 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `摇篮山 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `摇篮山 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `火焰湾 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `火焰湾 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `酒杯湾 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `酒杯湾 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `玛丽亚岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `玛丽亚岛 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `塔斯曼半岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `塔斯曼半岛 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `布鲁尼岛 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `布鲁尼岛 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `霍巴特 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `霍巴特 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `朗塞斯顿 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `朗塞斯顿 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `比切诺 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `比切诺 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `圣海伦斯 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `圣海伦斯 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `斯坦利 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `斯坦利 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `里士满 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `里士满 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `亚瑟港 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `亚瑟港 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
     {
-        name: `德文波特 周边${listItemType.value == '餐厅' ? '餐厅' : '住宿'}`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `${listItemType.value == '餐厅' ? '餐厅' : '住宿'}名（待修改） surrounding`
+        name: `德文波特 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        enName: `名（待修改） surrounding`
     },
 ]
 
@@ -612,8 +612,8 @@ onUnmounted(() => {
                 </el-button>
             </div>
 
-            <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格） -->
-            <div v-if="showFreeTripSubnav && false && !(committedKeyword?.trim())" class="search-result-wrapper">
+            <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格），这里有啥用来着？--------------------- -->
+            <!-- <div v-if="showFreeTripSubnav && false && !(committedKeyword?.trim())" class="search-result-wrapper">
                 <div class="result-section">
                     <h3 class="section-heading">景点</h3>
                     <div class="coming-grid">
@@ -658,7 +658,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- 搜索结果区：不影响下方原有景点网格 -->
             <div v-if="showFreeTripSubnav && (committedKeyword?.trim())" class="search-result-wrapper">
@@ -804,9 +804,9 @@ onUnmounted(() => {
                 <div v-for="(g, i) in placeGroups" :key="'rt-place-' + i" class="coming-card"
                     @click="openPlaceList(g.name, '餐厅')">
                     <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}</div>
+                    <div class="card-title">{{ g.name }}餐厅</div>
                     <!-- <div class="card-sub">餐厅分布</div> -->
-                    <div class="card-sub">{{ g.enName }}</div>
+                    <div class="card-sub">餐厅{{ g.enName }}</div>
                 </div>
             </div>
 
@@ -815,9 +815,9 @@ onUnmounted(() => {
                 <div v-for="(g, i) in placeGroups" :key="'ht-place-' + i" class="coming-card"
                     @click="openPlaceList(g.name, '住宿')">
                     <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}</div>
+                    <div class="card-title">{{ g.name }}住宿</div>
                     <!-- <div class="card-sub">住宿分布</div> -->
-                    <div class="card-sub">{{ g.enName }}</div>
+                    <div class="card-sub">住宿{{ g.enName }}</div>
                 </div>
             </div>
             <!-- 特别活动：信息展示区域 -->
