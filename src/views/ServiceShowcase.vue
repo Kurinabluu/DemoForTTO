@@ -48,6 +48,7 @@
                     <h3 class="advantage-title">{{ a.title }}</h3>
                     <p class="advantage-description">{{ a.description }}</p>
                 </div>
+                <!-- <img src="../assets/img/carType.png" alt="" style="float: left;width: 80%;height: 80%;"> -->
             </div>
         </div>
 

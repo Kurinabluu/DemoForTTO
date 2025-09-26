@@ -59,21 +59,21 @@ const serviceConfigs = {
         contactIntro: '如需了解详情或预约独立成团服务，请联系我们的专属顾问'
     },
     '包车服务（独立成团+专车+司导）': {
-        heroTitle: '专车包车服务体验',
-        heroDesc: '专车+司导，舒适便捷，贴心相伴，安全省心。',
-        features: ['专业司机导游服务', '舒适豪华车辆', '灵活路线规划', '24小时服务支持', '全程贴心服务'],
+        heroTitle: '专车座驾，您的移动休息室，您的专属节奏',
+        heroDesc: '在塔斯马尼亚，最美的风景往往藏在徒步难以抵达之处。景点分散、班次有限、徒步距离遥远，这些因素导致太多旅行者与心仪的美景失之交臂。选择包车服务，TTO为您提供您的私密天地、您的移动探索基地，让您尽情放松休息、存放物品。遇到心动风景即可停靠，发现有趣地点随时前往。TTO提供的不只是车辆，更是打开塔斯马尼亚最美一面的钥匙，让您的旅途不再留下“如果当时能去那里就好了”的遗憾。TTO将这一切变为可能！',
+        features: ['多种专业车型应对满足任意需求', '司导具备本地知识，提供本地人才知道的隐藏景点信息', '行程节奏自由掌控', '全天候私密空间', '24小时服务支持'],
         packagesTitle: '包车服务',
         packages: [
             { id: 1, title: 'XX包车', description: '描述描述描述' },
             { id: 2, title: 'XX包车', description: '描述描述描述' },
             { id: 3, title: 'XX包车', description: '描述描述描述' }
         ],
-        advantagesTitle: '包车服务优势',
+        advantagesTitle: '多种车型任你挑选',
         advantages: [
-            { id: 1, title: '专业司机', description: '经验丰富的专业司机', icon: 'el-icon-user' },
-            { id: 2, title: '舒适车辆', description: '多种车型选择', icon: 'el-icon-truck' },
-            { id: 3, title: '灵活路线', description: '根据需求定制路线', icon: 'el-icon-location' },
-            { id: 4, title: '贴心服务', description: '全程贴心专业服务', icon: 'el-icon-service' }
+            { id: 1, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-user' },
+            { id: 2, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-truck' },
+            { id: 3, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-location' },
+            { id: 4, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-service' }
         ],
         contactTitle: '获取包车服务',
         contactIntro: '如需了解详情或预约包车服务，请联系我们的专属顾问'
