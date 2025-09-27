@@ -70,10 +70,22 @@ const serviceConfigs = {
         ],
         advantagesTitle: '多种车型任你挑选',
         advantages: [
-            { id: 1, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-user' },
-            { id: 2, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-truck' },
-            { id: 3, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-location' },
-            { id: 4, title: '劳斯莱斯', description: 'XX座，blabla', icon: 'el-icon-service' }
+            {
+                id: 1, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
+                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
+            },
+            {
+                id: 2, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
+                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
+            },
+            {
+                id: 3, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
+                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
+            },
+            {
+                id: 4, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
+                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
+            }
         ],
         contactTitle: '获取包车服务',
         contactIntro: '如需了解详情或预约包车服务，请联系我们的专属顾问'
@@ -378,11 +390,11 @@ function onSelectPlaceItem(item) {
 // 一日游子导航
 const dayTripTabs = ['景点一日游', '主题一日游', '定制一日游']
 const dayTripTab = ref(dayTripTabs[0])
-const dayTripCopyMap = {
-    '景点一日游': '精选经典景点路线，省心直达热门目的地',
-    '主题一日游': '围绕自然、人文、美食等主题深度体验',
-    '定制一日游': '按需定制专属行程，灵活时间与路线',
-}
+// const dayTripCopyMap = {
+//     '景点一日游': '精选经典景点路线，省心直达热门目的地',
+//     '主题一日游': '围绕自然、人文、美食等主题深度体验',
+//     '定制一日游': '按需定制专属行程，灵活时间与路线',
+// }
 function onClickDayTripTab(t) { dayTripTab.value = t }
 const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTag.value === '一日游（固定行程）')
 const activityItems = ref(
@@ -960,8 +972,8 @@ onUnmounted(() => {
                     <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab" :class="{ active: dayTripTab === t }"
                         @click="onClickDayTripTab(t)">{{ t }}</li>
                 </ul>
-                <div class="free-subnav-search" style="text-align:right;color:#6b7280;line-height:40px;">{{
-                    dayTripCopyMap[dayTripTab] }}</div>
+                <!-- <div class="free-subnav-search" style="text-align:right;color:#6b7280;line-height:40px;">{{
+                    dayTripCopyMap[dayTripTab] }}</div> -->
             </div>
 
             <!-- 一日游、多日游网格显示 -->

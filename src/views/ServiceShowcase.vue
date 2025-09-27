@@ -33,6 +33,10 @@
                     <div class="package-content">
                         <h3 class="package-title">{{ p.title }}</h3>
                         <p class="package-description">{{ p.description }}</p>
+                        <span class="package-price">
+                            <i class="package-num">100</i>
+                            <i class="package-text">¥ /人</i>
+                        </span>
                         <button class="consult-btn flri" @click="openConsultationDialog">立即咨询</button>
                     </div>
                 </div>
@@ -44,14 +48,29 @@
             <h2 class="section-title">{{ config.advantagesTitle }}</h2>
             <div class="advantages-flex">
                 <div class="advantage-item" v-for="a in config.advantages" :key="a.id">
-                    <div class="advantage-icon"><i :class="a.icon"></i></div>
-                    <h3 class="advantage-title">{{ a.title }}</h3>
-                    <p class="advantage-description">{{ a.description }}</p>
+                    <div class="advantage-detail">
+                        <div class="advantage-icon">
+                            <!-- <i :class="a.icon"></i> -->
+                            <!-- 待修改成动态值----------------------- -->
+                            <img src="../assets/img/carService/carType.png" alt="车辆图片">
+                        </div>
+                        <h3 class="advantage-title">{{ a.title }}</h3>
+                        <p class="advantage-description">{{ a.description }}</p>
+                    </div>
+                    <div class="advantage-condition">
+                        <div class="advantage-icon">
+                            <!-- <i :class="a.icon"></i> -->
+                            <!-- 待修改成动态值----------------------- -->
+                            <img src="../assets/img/carService/condition.png" alt="">
+                        </div>
+                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
+                        <p class="advantage-description">{{ a.conDes }}</p>
+                    </div>
                 </div>
-                <!-- <img src="../assets/img/carType.png" alt="" style="float: left;width: 80%;height: 80%;"> -->
+                <!-- <img src="../assets/img/condition.png" alt="" style="float: left;width: 80%;height: 80%;"> -->
             </div>
         </div>
-
+        <!-- 目前是包车服务中 -->
         <!-- 联系方式区域 -->
         <div class="contact-section">
             <h2 class="section-title">{{ config.contactTitle }}</h2>
@@ -222,6 +241,13 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
 
     .package-content {
         padding: 24px;
+
+        .package-price {
+            .package-num {
+                font-size: 24px;
+                margin-right: 5px;
+            }
+        }
     }
 
     .package-title {
@@ -270,17 +296,26 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
 
     .advantage-item {
         text-align: center;
+
+        .advantage-condition {
+            margin-top: 20px
+        }
     }
 
     .advantage-icon {
-        width: 80px;
-        height: 80px;
-        background: #3b82f6;
+        // width: 80px;
+        // height: 80px;
+        // background: #3b82f6;
+        // background: url('../assets/img/carType.png') no-repeat center;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 20px;
+
+        img {
+            width: 300px;
+        }
     }
 
     .advantage-icon i {

@@ -27,7 +27,7 @@ const routes = [
       },
       {
         path: 'DemoForTTO/disclaimer',
-        component: () => import('@/views/Disclaimer.vue'),
+        component: () => import('@/components/Disclaimer.vue'),
       }
     ]
   }
