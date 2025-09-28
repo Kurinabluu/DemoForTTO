@@ -862,9 +862,19 @@ onUnmounted(() => {
                                     <span class="info-value">摇篮山国家公园</span>
                                 </div>
                             </div>
-                            <div class="weather-note">
-                                <i class="weather-icon">🌌</i>
-                                <span>天气晴朗，极光活动强烈，观测条件极佳</span>
+                            <div class="tags">
+                                <div class="weather-note">
+                                    <i class="weather-icon">🌌</i>
+                                    <span>天气晴朗</span>
+                                </div>
+                                <div class="weather-note">
+                                    <i class="weather-icon">🌌</i>
+                                    <span>极光</span>
+                                </div>
+                                <div class="weather-note">
+                                    <i class="weather-icon">🌌</i>
+                                    <span>观测条件极佳</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -891,8 +901,16 @@ onUnmounted(() => {
                                     <span class="info-value">薰衣草庄园</span>
                                 </div>
                             </div>
-                            <div class="activity-description">
-                                体验紫色花海，品尝薰衣草美食，购买纯天然薰衣草产品
+                            <div class="tags">
+                                <div class="activity-description">
+                                    紫色花海
+                                </div>
+                                <div class="activity-description">
+                                    薰衣草美食
+                                </div>
+                                <div class="activity-description">
+                                    纯天然薰衣草产品
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -919,8 +937,16 @@ onUnmounted(() => {
                                     <span class="info-value">霍巴特港口</span>
                                 </div>
                             </div>
-                            <div class="activity-description">
-                                近距离观赏座头鲸迁徙，专业导游讲解，包含摄影指导
+                            <div class="tags">
+                                <div class="activity-description">
+                                    座头鲸迁徙
+                                </div>
+                                <div class="activity-description">
+                                    专业导游讲解
+                                </div>
+                                <div class="activity-description">
+                                    摄影指导
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -947,9 +973,19 @@ onUnmounted(() => {
                                     <span class="info-value">威灵顿山</span>
                                 </div>
                             </div>
-                            <div class="weather-note">
-                                <i class="weather-icon">⭐</i>
-                                <span>无云天气，能见度极佳，可观测南十字星座</span>
+                            <div class="tags">
+                                <div class="weather-note">
+                                    <i class="weather-icon">⭐</i>
+                                    <span>无云天气</span>
+                                </div>
+                                <div class="weather-note">
+                                    <i class="weather-icon">⭐</i>
+                                    <span>能见度极佳</span>
+                                </div>
+                                <div class="weather-note">
+                                    <i class="weather-icon">⭐</i>
+                                    <span>南十字星座</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1379,7 +1415,7 @@ onUnmounted(() => {
 
         .activities-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 30px;
         }
@@ -1399,7 +1435,7 @@ onUnmounted(() => {
 
         .activity-image {
             position: relative;
-            height: 200px;
+            height: 300px;
             overflow: hidden;
         }
 
@@ -1445,6 +1481,17 @@ onUnmounted(() => {
 
         .activity-content {
             padding: 20px;
+
+            .tags {
+                display: flex;
+                column-gap: 10px;
+
+                .tags>div {
+                    width: 100px;
+                    height: 30px;
+                    line-height: 30px;
+                }
+            }
         }
 
         .activity-title {

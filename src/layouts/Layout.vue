@@ -207,6 +207,7 @@ const rejectDisclaimer = () => {
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
+                            <li>退款政策</li>
                             <li @click="showDisclaimerModal = true">
                                 <!-- showDisclaimerModal -->
                                 <!-- <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink> -->
