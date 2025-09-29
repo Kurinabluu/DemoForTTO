@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
+import { useNavStore } from '@/stores/nav'
 
 // 电梯导航相关
 const showElevator = ref(false)
@@ -54,6 +55,12 @@ const acceptTips = () => {
   showTipsModal.value = false
 }
 
+//敬请期待对话框
+// const isDialogVisible = ref(false)
+
+// 定义获取导航状态存储
+const navStore = useNavStore()
+
 // 窗口大小变化处理
 const handleResize = () => {
   // 窗口大小变化时重新判断是否显示电梯导航
@@ -66,9 +73,75 @@ onMounted(() => {
   showTipsModal.value = true
 
   // 添加滚动事件监听器
-  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', () => {
+    handleScroll()
+    // 保存滚动位置
+    navStore.saveScroll(window.scrollY)
+  })
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
+
+  // 非首次进入时，恢复用户上次选择的服务、子导航和滚动位置
+  if (!navStore.isFirstVisit()) {
+    // 延迟执行，确保DOM已完全渲染
+    setTimeout(() => {
+      const selectedService = navStore.selectedService
+      const selectedSubNav = navStore.selectedSubNav
+      const savedScrollY = navStore.lastScrollY
+
+      // 获取设备类型，用于适配导航栏高度
+      const isMobile = window.innerWidth <= 768
+      const navHeight = isMobile ? 60 : 80 // 移动端导航栏高度较小
+
+      // 如果有选中的服务，则查找并点击该服务标签
+      if (selectedService) {
+        const serviceTag = document.querySelector(`.tag-pill[data-service="${selectedService}"]`)
+        if (serviceTag) {
+          serviceTag.click()
+
+          // 如果有保存的滚动位置，则恢复到保存的位置
+          // 否则滚动到搜索标签区域
+          if (savedScrollY > 100) {
+            // 延迟恢复滚动位置，确保服务内容已加载
+            setTimeout(() => {
+              window.scrollTo({
+                top: savedScrollY,
+                behavior: 'smooth'
+              })
+            }, 500)
+          } else {
+            // 滚动到搜索标签区域（考虑导航栏高度）
+            const searchSection = document.querySelector('.search-fixed')
+            if (searchSection) {
+              const targetPosition = searchSection.offsetTop - navHeight
+              window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+              })
+            }
+          }
+        }
+      } else if (savedScrollY > 100) {
+        // 如果没有选中的服务，但有保存的滚动位置，则直接恢复滚动位置
+        window.scrollTo({
+          top: savedScrollY,
+          behavior: 'smooth'
+        })
+      }
+
+      // 如果有选中的子导航，则查找并点击该子导航标签
+      if (selectedSubNav) {
+        // 延迟执行，确保服务已加载完成
+        setTimeout(() => {
+          // 查找自助游/自驾游免费信息的子导航和一日游的子导航
+          const subNavTabs = document.querySelectorAll(`.free-subnav-tabs .free-subnav-tab[data-tab="${selectedSubNav}"]`)
+          if (subNavTabs && subNavTabs.length > 0) {
+            subNavTabs[0].click()
+          }
+        }, 500)
+      }
+    }, 1000)
+  }
 })
 
 // 组件卸载时清理事件监听器

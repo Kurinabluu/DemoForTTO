@@ -4,6 +4,13 @@ import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import ServiceShowcase from '@/views/ServiceShowcase.vue'
+import { useNavStore } from '@/stores/nav'
+
+// 组件挂载时执行
+onMounted(() => {
+    // 标记首次访问完成
+    useNavStore().markFirstVisitDone()
+})
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -215,6 +222,9 @@ const showFreeTripSubnav = computed(() => activeTag.value === '自助游/自驾�
 
 function onClickSubTab(tab) {
     subTab.value = tab
+
+    // 保存用户选择的子导航
+    useNavStore().saveSelectedSubNav(tab)
 }
 
 // 当切换到非“自助游/自驾游免费信息”时，重置子导航到默认“景点”
@@ -395,7 +405,12 @@ const dayTripTab = ref(dayTripTabs[0])
 //     '主题一日游': '围绕自然、人文、美食等主题深度体验',
 //     '定制一日游': '按需定制专属行程，灵活时间与路线',
 // }
-function onClickDayTripTab(t) { dayTripTab.value = t }
+function onClickDayTripTab(t) {
+    dayTripTab.value = t
+
+    // 保存用户选择的子导航
+    useNavStore().saveSelectedSubNav(t)
+}
 const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTag.value === '一日游（固定行程）')
 const activityItems = ref(
     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
@@ -445,6 +460,9 @@ function onClickTag(tag) {
         currentServiceConfig.value = null
         gridItems.value = generateItemsByTag(tag)
     }
+
+    // 保存用户选择的服务
+    useNavStore().saveSelectedService(tag)
 }
 
 // 弹窗控制
@@ -593,7 +611,7 @@ onUnmounted(() => {
                 </div>
                 <div class="search-tags">
                     <div v-for="tag in popularTags" :key="tag" class="tag-pill" :class="{ active: activeTag === tag }"
-                        @click="onClickTag(tag)">
+                        @click="onClickTag(tag)" :data-service="tag">
                         {{ tag }}
                     </div>
                 </div>
@@ -609,7 +627,7 @@ onUnmounted(() => {
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
                     <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
-                        @click="onClickSubTab(t)">{{ t }}</li>
+                        @click="onClickSubTab(t)" :data-tab="t">{{ t }}</li>
                 </ul>
                 <!-- 搜索框 -->
                 <div class="free-subnav-search">
@@ -1006,7 +1024,7 @@ onUnmounted(() => {
             <div v-if="showDayTripSubnav" class="free-trip-subnav" style="margin-top: -10px;">
                 <ul class="free-subnav-tabs">
                     <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab" :class="{ active: dayTripTab === t }"
-                        @click="onClickDayTripTab(t)">{{ t }}</li>
+                        @click="onClickDayTripTab(t)" :data-tab="t">{{ t }}</li>
                 </ul>
                 <!-- <div class="free-subnav-search" style="text-align:right;color:#6b7280;line-height:40px;">{{
                     dayTripCopyMap[dayTripTab] }}</div> -->

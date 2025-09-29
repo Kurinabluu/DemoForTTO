@@ -3,13 +3,17 @@ import { defineStore } from 'pinia'
 const STORAGE_KEYS = {
     firstVisit: 'tto_first_visit_done',
     lastPath: 'tto_last_path',
-    lastScrollY: 'tto_last_scroll_y'
+    lastScrollY: 'tto_last_scroll_y',
+    selectedService: 'tto_selected_service',
+    selectedSubNav: 'tto_selected_subnav'
 }
 
 export const useNavStore = defineStore('nav', {
     state: () => ({
         lastPath: localStorage.getItem(STORAGE_KEYS.lastPath) || '',
-        lastScrollY: Number(localStorage.getItem(STORAGE_KEYS.lastScrollY) || 0)
+        lastScrollY: Number(localStorage.getItem(STORAGE_KEYS.lastScrollY) || 0),
+        selectedService: localStorage.getItem(STORAGE_KEYS.selectedService) || '',
+        selectedSubNav: localStorage.getItem(STORAGE_KEYS.selectedSubNav) || ''
     }),
     actions: {
         markFirstVisitDone() {
@@ -26,6 +30,22 @@ export const useNavStore = defineStore('nav', {
             const val = Math.max(0, Number(y || 0))
             this.lastScrollY = val
             localStorage.setItem(STORAGE_KEYS.lastScrollY, String(val))
+        },
+        saveSelectedService(serviceName) {
+            this.selectedService = serviceName
+            localStorage.setItem(STORAGE_KEYS.selectedService, serviceName || '')
+        },
+        saveSelectedSubNav(subNavName) {
+            this.selectedSubNav = subNavName
+            localStorage.setItem(STORAGE_KEYS.selectedSubNav, subNavName || '')
+        },
+        clearSelectedService() {
+            this.selectedService = ''
+            localStorage.removeItem(STORAGE_KEYS.selectedService)
+        },
+        clearSelectedSubNav() {
+            this.selectedSubNav = ''
+            localStorage.removeItem(STORAGE_KEYS.selectedSubNav)
         }
     }
 })
