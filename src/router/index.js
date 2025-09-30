@@ -25,10 +25,13 @@ const routes = [
         component: () => import('@/views/HomeView.vue'),
 
       },
-      {
-        path: 'DemoForTTO/disclaimer',
-        component: () => import('@/components/Disclaimer.vue'),
-      }
+      // {
+      //   path: 'DemoForTTO/disclaimer',
+      //   component: () => import('@/components/Disclaimer.vue'),
+      // }
+      // {
+      // path:'DemoForTTO/'
+      // }
     ]
   }
 

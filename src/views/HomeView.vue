@@ -4,6 +4,7 @@ import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import ServiceShowcase from '@/views/ServiceShowcase.vue'
+import ServicesNav from '@/components/ServicesNav.vue'
 import { useNavStore } from '@/stores/nav'
 
 // 组件挂载时执行
@@ -179,8 +180,8 @@ const serviceConfigs = {
     },
     '代订门票及旅游项目': {
         heroTitle: '代订门票及旅游项目',
-        heroDesc: '代订门票及旅游项目',
-        features: ['代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目', '代订门票及旅游项目'],
+        heroDesc: '在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO为您提供全程无忧的代订服务：TTO为您打点的，不止是预订，更是宝贵的旅行时间。省下的1小时入住等待，意味着多一次海岸线漫步；省下的30分钟餐厅等位，足以静享一杯本地葡萄酒的日落时光。让我们做您的“时间管理者”，让旅程因从容而倍加深刻。从景点预约到特色活动，从餐饮安排到交通接驳，所有需要提前规划、排队等待的琐事，TTO为您全程打理。您要做的，只是沉浸在世界遗产的壮美之中——把沟通的时间留给霍巴特港口的夕阳，把排队的时间留给菲欣纳国家公园的徒步，把准备的精力完全投入到与袋熊的不期而遇。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。',
+        features: ['高效时间管理', '全程预约托管', '全程无忧代办', '即时畅行接入', '即时确认保障'],
         packagesTitle: '代订门票及旅游项目',
         packages: [
             { id: 1, title: '代订门票及旅游项目', description: '代订门票及旅游项目' },
@@ -590,33 +591,9 @@ onUnmounted(() => {
             </el-carousel>
         </div>
 
-        <!-- 固定搜索框 -->
-        <div class="search-fixed">
-            <el-card class="search-card" shadow="hover">
-                <div class="search-container">
-                    <el-input v-model="searchText" placeholder="搜索目的地、景点、路线..." class="search-input" size="large"
-                        clearable>
-                        <template #prefix>
-                            <el-icon>
-                                <Search />
-                            </el-icon>
-                        </template>
-                    </el-input>
-                    <el-button type="primary" size="large" class="search-btn" @click="isDialogVisible = true">
-                        <el-icon>
-                            <Search />
-                        </el-icon>
-                        搜索
-                    </el-button>
-                </div>
-                <div class="search-tags">
-                    <div v-for="tag in popularTags" :key="tag" class="tag-pill" :class="{ active: activeTag === tag }"
-                        @click="onClickTag(tag)" :data-service="tag">
-                        {{ tag }}
-                    </div>
-                </div>
-            </el-card>
-        </div>
+        <!-- 固定搜索框 - 使用ServicesNav组件 -->
+        <ServicesNav v-model="searchText" :popular-tags="popularTags" :active-tag="activeTag" @tag-click="onClickTag"
+            @search="isDialogVisible = true" />
         <!-- 内容区域 -->
         <div class="content-box">
             <!-- 服务组件区域 -->
@@ -1171,89 +1148,7 @@ onUnmounted(() => {
 
     }
 
-    .search-fixed {
-        display: flex;
-        justify-content: center;
-        // position: absolute;
-        position: relative;
-        // bottom: 20px;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        // width: 100%;
-        padding: 0 20px;
-
-        :deep(.el-card__body) {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .search-card {
-            // max-width: 1000px;
-            // margin: 0 auto;
-            border-radius: 12px;
-            border: none;
-            // box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-            .search-container {
-                display: flex;
-                gap: 12px;
-                width: 800px;
-                margin-bottom: 30px;
-
-                .search-input {
-                    flex: 1;
-
-                    :deep(.el-input__wrapper) {
-                        border-radius: 8px;
-                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                        height: 48px;
-                        padding: 6px 14px;
-                        font-size: 15px;
-                    }
-                }
-
-                .search-btn {
-                    border-radius: 8px;
-                    padding: 0 24px;
-                    font-weight: 500;
-                    height: 48px;
-                }
-            }
-
-            .search-tags {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 12px;
-                width: 1200px;
-
-                .tag-pill {
-                    cursor: pointer;
-                    border-radius: 10px;
-                    transition: all 0.2s ease;
-                    height: 40px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 0 10px;
-                    text-align: center;
-                    background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-                    // color: #1f2937;
-                    color: #3b82f6;
-                    user-select: none;
-                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03) inset;
-                }
-
-                .active {
-                    background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
-                    color: #fff;
-                    box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
-                }
-            }
-        }
-    }
+    // .search-fixed相关样式已移至ServicesNav.vue组件中
 
     .content-box {
         height: auto;
