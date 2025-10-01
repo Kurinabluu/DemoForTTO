@@ -61,6 +61,7 @@
                         <div class="advantage-icon">
                             <!-- <i :class="a.icon"></i> -->
                             <!-- 待修改成动态值----------------------- -->
+                            <!-- v-if="condition" -->
                             <img src="../assets/img/carService/condition.png" alt="">
                         </div>
                         <h3 class="advantage-title">{{ a.conTitle }}</h3>
