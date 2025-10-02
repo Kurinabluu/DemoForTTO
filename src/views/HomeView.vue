@@ -600,7 +600,7 @@ onUnmounted(() => {
             <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
 
             <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
-            <div v-if="showFreeTripSubnav" class="free-trip-subnav">
+            <div v-if="showFreeTripSubnav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
                     <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
@@ -998,7 +998,7 @@ onUnmounted(() => {
             </div>
 
             <!-- 一日游子导航 -->
-            <div v-if="showDayTripSubnav" class="free-trip-subnav" style="margin-top: -10px;">
+            <div v-if="showDayTripSubnav" class="free-trip-subnav center" style="margin-top: -10px;">
                 <ul class="free-subnav-tabs">
                     <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab" :class="{ active: dayTripTab === t }"
                         @click="onClickDayTripTab(t)" :data-tab="t">{{ t }}</li>
@@ -1233,8 +1233,10 @@ onUnmounted(() => {
 
         /* 横向Tab列表 */
         .free-subnav-tabs {
-            display: flex;
-            list-style: none;
+            // display: flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            // list-style: none;
             margin: 0;
             padding: 0;
             gap: 12px;
@@ -1508,7 +1510,6 @@ onUnmounted(() => {
 @media (min-width: 769px) and (max-width: 1024px) {
     .el-container {
         .el-main {
-
             .carousel-background {
                 .background-img {
                     transition: all 0.8s ease-in-out;
@@ -1545,51 +1546,61 @@ onUnmounted(() => {
                 }
             }
 
-            .search-fixed {
-                display: flex;
-                justify-content: center;
-                bottom: 16px;
-                margin-bottom: 20px;
+            // .search-fixed {
+            //     display: flex;
+            //     justify-content: center;
+            //     bottom: 16px;
+            //     margin-bottom: 20px;
 
-                .search-card {
-                    max-width: 720px;
-                }
+            //     .search-card {
+            //         max-width: 720px;
+            //     }
 
-                .search-container {
-                    width: 100%;
-                }
+            //     .search-container {
+            //         width: 100%;
+            //     }
 
-                .search-tags {
-                    grid-template-columns: repeat(4, 1fr);
-                    width: 100%;
-                }
-            }
+            //     .search-tags {
+            //         grid-template-columns: repeat(4, 1fr);
+            //         width: 100%;
+            //     }
+            // }
 
             .content-box {
+
                 // height: 240px;
+                .free-trip-subnav {
+                    width: 95%;
+                    flex: 10px;
+                    // padding: 0;
+
+                    .free-subnav-search-btn {
+                        flex: 0;
+                    }
+                }
 
                 .tourism-title {
                     font-size: 36px;
                 }
 
-                .coming-soon {
-                    font-size: 28px;
+                // .coming-soon {
+                //     font-size: 28px;
 
-                    .free-trip-subnav {
-                        width: 100%;
-                        padding: 0 16px;
-                        gap: 12px;
-                    }
+                //     .free-trip-subnav {
+                //         width: 100%;
+                //         padding: 0 16px;
+                //         gap: 12px;
+                //     }
 
-                    .free-subnav-search {
-                        flex-basis: 260px;
-                    }
+                //     .free-subnav-search {
+                //         flex-basis: 260px;
+                //     }
 
-                    .free-subnav-search-btn {
-                        height: 40px;
-                        padding: 0 12px;
-                    }
-                }
+                //     .free-subnav-search-btn {
+                //         height: 40px;
+                //         padding: 0 12px;
+                //     }
+                // }
 
                 /* 特别活动平板端适配 */
                 .special-activities-section {
@@ -1697,84 +1708,99 @@ onUnmounted(() => {
                 }
             }
 
-            .search-fixed {
-                position: static;
-                transform: none;
-                z-index: auto;
-                width: 100%;
-                padding: 8px 12px 20px;
-                top: auto;
-                // margin-bottom: 20px;
+            // .search-fixed {
+            //     position: static;
+            //     transform: none;
+            //     z-index: auto;
+            //     width: 100%;
+            //     padding: 8px 12px 20px;
+            //     top: auto;
+            //     // margin-bottom: 20px;
 
-                .search-card {
-                    max-width: 95vw;
-                    margin-top: 8px;
-                }
+            //     .search-card {
+            //         max-width: 95vw;
+            //         margin-top: 8px;
+            //     }
 
-                .search-container {
-                    flex-direction: column;
-                    gap: 8px;
-                    width: 100%;
-                }
+            //     .search-container {
+            //         flex-direction: column;
+            //         gap: 8px;
+            //         width: 100%;
+            //     }
 
-                .search-input {
-                    width: 100%;
-                }
+            //     .search-input {
+            //         width: 100%;
+            //     }
 
-                .search-btn {
-                    width: 100%;
-                }
+            //     .search-btn {
+            //         width: 100%;
+            //     }
 
-                .search-tags {
-                    gap: 6px;
-                    grid-template-columns: repeat(2, 1fr);
-                    width: 100%;
-                }
+            //     .search-tags {
+            //         gap: 6px;
+            //         grid-template-columns: repeat(2, 1fr);
+            //         width: 100%;
+            //     }
 
-                .tag-pill {
-                    padding: 6px 10px;
-                    line-height: 1.3;
-                    font-size: 12px;
-                }
-            }
+            //     .tag-pill {
+            //         padding: 6px 10px;
+            //         line-height: 1.3;
+            //         font-size: 12px;
+            //     }
+            // }
 
             .content-box {
                 height: auto;
                 margin-top: 0;
+                // ----------------------待注释
                 padding-top: 20px;
                 /* 移动端减少间距 */
+
+                .free-trip-subnav {
+                    flex-direction: column;
+                    padding: 0;
+
+                    .free-subnav-search,
+                    .free-subnav-search-btn {
+                        width: 100%
+                    }
+
+                    .free-subnav-search {
+                        flex: 0
+                    }
+                }
 
                 .tourism-title {
                     font-size: 28px;
                 }
 
-                .coming-soon {
-                    font-size: 22px;
+                // .coming-soon {
+                //     font-size: 22px;
 
-                    /* 子导航：移动端折两行（上：Tabs，下：搜索） */
-                    .free-trip-subnav {
-                        width: 100%;
-                        flex-direction: column;
-                        align-items: stretch;
-                        gap: 10px;
-                        padding: 0 12px;
-                    }
+                //     /* 子导航：移动端折两行（上：Tabs，下：搜索） */
+                //     .free-trip-subnav {
+                //         width: 100%;
+                //         flex-direction: column;
+                //         align-items: stretch;
+                //         gap: 10px;
+                //         padding: 0 12px;
+                //     }
 
-                    .free-subnav-tabs {
-                        overflow-x: auto;
-                        padding-bottom: 4px;
-                        scrollbar-width: thin;
-                    }
+                //     .free-subnav-tabs {
+                //         overflow-x: auto;
+                //         padding-bottom: 4px;
+                //         scrollbar-width: thin;
+                //     }
 
-                    .free-subnav-search {
-                        flex: none;
-                    }
+                //     .free-subnav-search {
+                //         flex: none;
+                //     }
 
-                    .free-subnav-search-btn {
-                        width: 100%;
-                        height: 40px;
-                    }
-                }
+                //     .free-subnav-search-btn {
+                //         width: 100%;
+                //         height: 40px;
+                //     }
+                // }
 
                 /* 特别活动移动端适配 */
                 .special-activities-section {
@@ -1886,28 +1912,28 @@ onUnmounted(() => {
                 }
             }
 
-            .search-fixed {
-                padding: 6px 8px 20px;
-                margin-bottom: 20px;
+            // .search-fixed {
+            //     padding: 6px 8px 20px;
+            //     margin-bottom: 20px;
 
-                .search-card {
-                    max-width: 98vw;
-                }
+            //     .search-card {
+            //         max-width: 98vw;
+            //     }
 
-                .search-tags {
-                    grid-template-columns: repeat(2, 1fr);
-                }
+            //     .search-tags {
+            //         grid-template-columns: repeat(2, 1fr);
+            //     }
 
-                .tag-pill {
-                    padding: 4px 8px;
-                    font-size: 11px;
-                    line-height: 1.2;
-                }
-            }
+            //     .tag-pill {
+            //         padding: 4px 8px;
+            //         font-size: 11px;
+            //         line-height: 1.2;
+            //     }
+            // }
 
             .content-box {
                 height: auto;
-                margin-top: 30px;
+                // margin-top: 30px;
                 padding-top: 20px;
                 gap: 16px;
 
@@ -1916,20 +1942,20 @@ onUnmounted(() => {
                     // letter-spacing: 10px;
                 }
 
-                .coming-soon {
-                    font-size: 18px;
+                // .coming-soon {
+                //     font-size: 18px;
 
-                    // letter-spacing: 10px;
-                    .free-trip-subnav {
-                        padding: 0 10px;
-                        gap: 8px;
-                    }
+                //     // letter-spacing: 10px;
+                //     .free-trip-subnav {
+                //         padding: 0 10px;
+                //         gap: 8px;
+                //     }
 
-                    .free-subnav-tab {
-                        padding: 8px 12px;
-                        font-size: 12px;
-                    }
-                }
+                //     .free-subnav-tab {
+                //         padding: 8px 12px;
+                //         font-size: 12px;
+                //     }
+                // }
             }
         }
     }
@@ -1955,28 +1981,28 @@ onUnmounted(() => {
                 }
             }
 
-            .search-fixed {
-                padding: 4px 6px 20px;
-                margin-bottom: 20px;
+            // .search-fixed {
+            //     padding: 4px 6px 20px;
+            //     margin-bottom: 20px;
 
-                .search-card {
-                    max-width: 99vw;
-                }
+            //     .search-card {
+            //         max-width: 99vw;
+            //     }
 
-                .search-tags {
-                    grid-template-columns: repeat(2, 1fr);
-                }
+            //     .search-tags {
+            //         grid-template-columns: repeat(2, 1fr);
+            //     }
 
-                .tag-pill {
-                    padding: 3px 6px;
-                    font-size: 10px;
-                    line-height: 1.1;
-                }
-            }
+            //     .tag-pill {
+            //         padding: 3px 6px;
+            //         font-size: 10px;
+            //         line-height: 1.1;
+            //     }
+            // }
 
             .content-box {
                 height: auto;
-                margin-top: 30px;
+                // margin-top: 30px;
                 padding-top: 20px;
                 gap: 12px;
 
@@ -1985,20 +2011,24 @@ onUnmounted(() => {
                     letter-spacing: 8px;
                 }
 
-                .coming-soon {
-                    font-size: 16px;
-                    letter-spacing: 8px;
-
-                    .free-subnav-tab {
-                        padding: 6px 10px;
-                        font-size: 11px;
-                    }
-
-                    .free-subnav-search-btn {
-                        height: 36px;
-                        font-size: 12px;
-                    }
+                .free-subnav-tabs {
+                    gap: 0
                 }
+
+                // .coming-soon {
+                //     font-size: 16px;
+                //     letter-spacing: 8px;
+
+                //     .free-subnav-tab {
+                //         padding: 6px 10px;
+                //         font-size: 11px;
+                //     }
+
+                //     .free-subnav-search-btn {
+                //         height: 36px;
+                //         font-size: 12px;
+                //     }
+                // }
 
                 /* 特别活动超小屏幕适配 */
                 .special-activities-section {

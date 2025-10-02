@@ -404,8 +404,9 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
 
 @media (max-width: 768px) {
     .service-showcase {
-        padding: 20px 15px;
-        margin-top: 20px;
+        // padding: 20px 15px;
+        padding: 0 15px 20px;
+        // margin-top: 20px;
     }
 
     .service-showcase .hero-content {

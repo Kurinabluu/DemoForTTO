@@ -34,7 +34,7 @@ watch(() => props.modelValue, (newValue) => {
 function onClickTag(tag) {
   // 保存用户选择的服务
   useNavStore().saveSelectedService(tag)
-  
+
   // 通知父组件标签被点击
   emit('tag-click', tag)
 }
@@ -49,8 +49,8 @@ function onSearch() {
   <div class="search-fixed">
     <el-card class="search-card" shadow="hover">
       <div class="search-container">
-        <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large"
-          clearable @update:model-value="emit('update:modelValue', $event)">
+        <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable
+          @update:model-value="emit('update:modelValue', $event)">
           <template #prefix>
             <el-icon>
               <Search />
@@ -65,7 +65,7 @@ function onSearch() {
         </el-button>
       </div>
       <div class="search-tags">
-        <div v-for="tag in popularTags" :key="tag" class="tag-pill" :class="{ active: activeTag === tag }"
+        <div v-for="tag in popularTags" :key="tag" class="tag-pill pointer fs16" :class="{ active: activeTag === tag }"
           @click="onClickTag(tag)" :data-service="tag">
           {{ tag }}
         </div>
@@ -128,11 +128,10 @@ function onSearch() {
       width: 1200px;
 
       .tag-pill {
-        cursor: pointer;
+        display: flex;
         border-radius: 10px;
         transition: all 0.2s ease;
         height: 40px;
-        display: flex;
         align-items: center;
         justify-content: center;
         padding: 0 10px;
@@ -147,6 +146,137 @@ function onSearch() {
         background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
         color: #fff;
         box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+      }
+    }
+  }
+}
+
+/* 响应式适配：平板（768px-1024px） */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .el-container {
+    .el-main {
+      .search-fixed {
+        display: flex;
+        justify-content: center;
+        bottom: 16px;
+        margin-bottom: 20px;
+
+        .search-card {
+          max-width: 720px;
+        }
+
+        .search-container {
+          width: 100%;
+        }
+
+        .search-tags {
+          grid-template-columns: repeat(4, 1fr);
+          width: 100%;
+        }
+
+        .tag-pill {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .el-container {
+    .el-main {
+      .search-fixed {
+        position: static;
+        transform: none;
+        z-index: auto;
+        width: 100%;
+        padding: 8px 12px 20px;
+        top: auto;
+        // margin-bottom: 20px;
+
+        .search-card {
+          max-width: 95vw;
+          margin-top: 8px;
+        }
+
+        .search-container {
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .search-input {
+          width: 100%;
+        }
+
+        .search-btn {
+          width: 100%;
+        }
+
+        .search-tags {
+          gap: 6px;
+          grid-template-columns: repeat(2, 1fr);
+          width: 100%;
+        }
+
+        .tag-pill {
+          padding: 6px 10px;
+          line-height: 1.3;
+          // font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+/* 超小屏幕设备适配（iPhone 4、iPhone 5、iPhone SE等，<=375px） */
+@media (max-width: 375px) {
+  .el-container {
+    .el-main {
+      .search-fixed {
+        padding: 6px 8px 20px;
+        // margin-bottom: 20px;
+
+        .search-card {
+          max-width: 98vw;
+        }
+
+        .search-tags {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .tag-pill {
+          padding: 4px 8px;
+          // font-size: 11px;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+}
+
+/* 极超小屏幕设备适配（iPhone 4等，<=320px） */
+@media (max-width: 320px) {
+  .el-container {
+    .el-main {
+      .search-fixed {
+        // padding: 4px 6px 20px;
+        padding: 4px 6px 0;
+        // margin-bottom: 20px;
+
+        .search-card {
+          max-width: 99vw;
+        }
+
+        .search-tags {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .tag-pill {
+          padding: 3px 6px;
+          font-size: 10px;
+          line-height: 1.1;
+        }
       }
     }
   }
