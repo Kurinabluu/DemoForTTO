@@ -695,14 +695,14 @@ const rejectDisclaimer = () => {
             }
         }
 
-
         .el-footer {
             height: auto;
             min-height: 620px;
 
             .footer-content {
                 grid-template-columns: 1fr 1fr;
-                gap: 24px;
+                // gap: 24px;
+                gap: 80px 24px;
                 padding: 0 16px;
                 height: auto;
             }

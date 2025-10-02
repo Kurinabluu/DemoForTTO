@@ -260,7 +260,6 @@ function seededRandom(seed) {
     return x - Math.floor(x)
 }
 
-
 function generateItemsByTag(tag) {
     const items = []
     for (let i = 0; i < 32; i++) {
@@ -413,9 +412,97 @@ function onClickDayTripTab(t) {
     useNavStore().saveSelectedSubNav(t)
 }
 const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTag.value === '一日游（固定行程）')
-const activityItems = ref(
-    scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
-)
+// const activityItems = ref(
+//     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
+// )
+const activityItems = ref([
+    {
+        title: '极光观测最佳时机',
+        sub: '南半球极光观测体验',
+        location: '摇篮山国家公园',
+        tags: ['天气晴朗', '极光', '观测条件极佳'],
+        badge: '极光预报',
+        cardClass: 'aurora-card',
+        badgeClass: 'aurora-badge',
+        info: [
+            { label: '今晚概率', value: '85%', valueClass: 'high' },
+            { label: '最佳时间', value: '22:00-02:00' },
+            { label: '推荐地点', value: '摇篮山国家公园' }
+        ],
+        tagItems: [
+            { icon: '🌌', text: '天气晴朗' },
+            { icon: '🌌', text: '极光' },
+            { icon: '🌌', text: '观测条件极佳' }
+        ]
+    },
+    {
+        title: '塔斯马尼亚薰衣草节',
+        sub: '紫色花海节庆活动',
+        location: '薰衣草庄园',
+        tags: ['紫色花海', '薰衣草美食', '纯天然薰衣草产品'],
+        badge: '节庆活动',
+        cardClass: 'lavender-card',
+        badgeClass: 'event-badge',
+        info: [
+            { label: '活动时间', value: '12月15日-1月31日' },
+            { label: '开放时间', value: '09:00-17:00' },
+            { label: '活动地点', value: '薰衣草庄园' }
+        ],
+        tagItems: [
+            { text: '紫色花海' },
+            { text: '薰衣草美食' },
+            { text: '纯天然薰衣草产品' }
+        ]
+    },
+    {
+        title: '座头鲸迁徙观鲸',
+        sub: '海洋生物观察',
+        location: '霍巴特港口',
+        tags: ['座头鲸迁徙', '专业导游讲解', '摄影指导'],
+        badge: '季节性活动',
+        cardClass: 'whale-card',
+        badgeClass: 'season-badge',
+        info: [
+            { label: '最佳季节', value: '5月-11月' },
+            { label: '今日概率', value: '92%', valueClass: 'high' },
+            { label: '出发地点', value: '霍巴特港口' }
+        ],
+        tagItems: [
+            { text: '座头鲸迁徙' },
+            { text: '专业导游讲解' },
+            { text: '摄影指导' }
+        ]
+    },
+    {
+        title: '南半球星空观测',
+        sub: '天文观测体验',
+        location: '威灵顿山',
+        tags: ['无云天气', '能见度极佳', '南十字星座'],
+        badge: '夜间活动',
+        cardClass: 'stargazing-card',
+        badgeClass: 'night-badge',
+        info: [
+            { label: '观测条件', value: '极佳', valueClass: 'excellent' },
+            { label: '最佳时间', value: '20:30-23:00' },
+            { label: '推荐地点', value: '威灵顿山' }
+        ],
+        tagItems: [
+            { icon: '⭐', text: '无云天气' },
+            { icon: '⭐', text: '能见度极佳' },
+            { icon: '⭐', text: '南十字星座' }
+        ]
+    }
+])
+// 获取活动图片
+function getActivityImage(index) {
+    const images = [
+        new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+        new URL('@/assets/img/footer4.jpg', import.meta.url).href
+    ]
+    return images[index] || images[0]
+}
 
 // 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
 const scenicFiltered = computed(() =>
@@ -433,11 +520,17 @@ const hotelFiltered = computed(() =>
         ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
         : hotelItems.value
 )
-const activityFiltered = computed(() =>
-    (committedKeyword.value || '').trim()
-        ? activityItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-        : activityItems.value
-)
+
+const activityFiltered = computed(() => {
+    const kw = (committedKeyword.value || '').trim().toLowerCase()
+    if (!kw) return []
+
+    return activityItems.value.filter(item =>
+        item.title.toLowerCase().includes(kw) ||
+        item.location.toLowerCase().includes(kw) ||
+        item.tags.some(tag => tag.toLowerCase().includes(kw))
+    )
+})
 
 function doSubSearch() {
     const kw = (subSearch.value || '').trim()
@@ -621,7 +714,7 @@ onUnmounted(() => {
 
             <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格），这里有啥用来着？--------------------- -->
             <!-- <div v-if="showFreeTripSubnav && false && !(committedKeyword?.trim())" class="search-result-wrapper">
-                <div class="result-section">
+                <div class="w100">
                     <h3 class="section-heading">景点</h3>
                     <div class="coming-grid">
                         <div v-for="(item, i) in gridItems" :key="'sc-d-' + i" class="coming-card"
@@ -632,7 +725,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
-                <div class="result-section">
+                <div class="w100">
                     <h3 class="section-heading">餐厅</h3>
                     <div class="coming-grid">
                         <div v-for="(item, i) in restaurantItems" :key="'rt-d-' + i" class="coming-card"
@@ -643,7 +736,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
-                <div class="result-section">
+                <div class="w100">
                     <h3 class="section-heading">住宿</h3>
                     <div class="coming-grid">
                         <div v-for="(item, i) in hotelItems" :key="'ht-d-' + i" class="coming-card"
@@ -654,7 +747,7 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
-                <div class="result-section">
+                <div class="w100">
                     <h3 class="section-heading">特别活动</h3>
                     <div class="coming-grid">
                         <div v-for="(item, i) in activityItems" :key="'ac-d-' + i" class="coming-card"
@@ -669,124 +762,97 @@ onUnmounted(() => {
 
             <!-- 搜索结果区：不影响下方原有景点网格 -->
             <div v-if="showFreeTripSubnav && (committedKeyword?.trim())" class="search-result-wrapper">
-                <!-- 未选中任何：渲染四个分区，带标题 -->
-                <template v-if="!subTab">
-                    <div class="result-section">
-                        <h3 class="section-heading">景点</h3>
-                        <template v-if="scenicFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in scenicFiltered" :key="'sc-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
+                <div class="w100" v-if="subTab === '景点'">
+                    <h3 class="section-heading">景点</h3>
+                    <template v-if="scenicFiltered.length">
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </template>
+                    <div v-else class="empty-tip">没有搜索结果</div>
+                </div>
+                <div class="w100" v-else-if="subTab === '餐厅'">
+                    <h3 class="section-heading">餐厅</h3>
+                    <template v-if="restaurantFiltered.length">
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </template>
+                    <div v-else class="empty-tip">没有搜索结果</div>
+                </div>
+                <div class="w100" v-else-if="subTab === '住宿'">
+                    <h3 class="section-heading">住宿</h3>
+                    <template v-if="hotelFiltered.length">
+                        <div class="coming-grid">
+                            <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
+                                @click="openTourDialog(item)">
+                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
+                                <div class="card-title">{{ item.title }}</div>
+                                <div class="card-sub">{{ item.sub }}</div>
+                            </div>
+                        </div>
+                    </template>
+                    <div v-else class="empty-tip">没有搜索结果</div>
+                </div>
+                <div class="w100 special-activities-section" v-else>
+                    <template v-if="activityFiltered.length">
+                        <div class="activities-header">
+                            <h2 class="activities-title">塔斯马尼亚特别活动</h2>
+                            <p class="activities-subtitle">实时特色活动与极光天气信息</p>
+                        </div>
+
+                        <div class="activities-grid">
+                            <div v-for="(item, i) in activityFiltered" :key="'ac-filtered-' + i"
+                                :class="['activity-card', item.cardClass]">
+                                <!-- 这里使用特别活动的专属卡片结构 -->
+                                <div class="activity-image">
+                                    <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
+                                    <div :class="['activity-badge', item.badgeClass]">
+                                        {{ item.badge }}
+                                    </div>
+                                </div>
+                                <div class="activity-content">
+                                    <h3 class="activity-title">{{ item.title }}</h3>
+                                    <div class="activity-info">
+                                        <div v-for="(infoItem, infoIndex) in item.info" :key="infoIndex"
+                                            class="info-item">
+                                            <span class="info-label">{{ infoItem.label }}：</span>
+                                            <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="tags">
+                                        <div v-for="(tagItem, tagIndex) in item.tagItems" :key="tagIndex"
+                                            :class="tagItem.icon ? 'weather-note' : 'activity-description'">
+                                            <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
+                                            <span>{{ tagItem.text }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
+                        </div>
+                    </template>
+                    <div v-else class="empty-tip">没有搜索结果</div>
+                    <div class="activities-footer">
+                        <div class="update-info">
+                            <i class="update-icon">🔄</i>
+                            <span>信息每2小时更新一次</span>
+                        </div>
+                        <div class="contact-info">
+                            <span>获取最新活动信息，请联系我们的专业顾问</span>
+                        </div>
                     </div>
-                    <div class="result-section">
-                        <h3 class="section-heading">餐厅</h3>
-                        <template v-if="restaurantFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in restaurantFiltered" :key="'rt-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                    <div class="result-section">
-                        <h3 class="section-heading">住宿</h3>
-                        <template v-if="hotelFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in hotelFiltered" :key="'ht-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                    <div class="result-section">
-                        <h3 class="section-heading">特别活动</h3>
-                        <template v-if="activityFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in activityFiltered" :key="'ac-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer4.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                </template>
-                <!-- 已选中某类：仅渲染该分区，带标题 -->
-                <template v-else>
-                    <div class="result-section" v-if="subTab === '景点'">
-                        <h3 class="section-heading">景点</h3>
-                        <template v-if="scenicFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                    <div class="result-section" v-else-if="subTab === '餐厅'">
-                        <h3 class="section-heading">餐厅</h3>
-                        <template v-if="restaurantFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                    <div class="result-section" v-else-if="subTab === '住宿'">
-                        <h3 class="section-heading">住宿</h3>
-                        <template v-if="hotelFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                    <div class="result-section" v-else>
-                        <h3 class="section-heading">特别活动</h3>
-                        <template v-if="activityFiltered.length">
-                            <div class="coming-grid">
-                                <div v-for="(item, i) in activityFiltered" :key="'ac2-' + i" class="coming-card"
-                                    @click="openTourDialog(item)">
-                                    <img src="@/assets/img/footer4.jpg" alt="" class="w100">
-                                    <div class="card-title">{{ item.title }}</div>
-                                    <div class="card-sub">{{ item.sub }}</div>
-                                </div>
-                            </div>
-                        </template>
-                        <div v-else class="empty-tip">没有搜索结果</div>
-                    </div>
-                </template>
+                </div>
             </div>
 
             <!-- 底部网格：仅在未进入"自助游/自驾游免费信息"或当前子选项为景点时展示，避免重复 -->
@@ -827,159 +893,37 @@ onUnmounted(() => {
                     <div class="card-sub">住宿{{ g.enName }}</div>
                 </div>
             </div>
+
             <!-- 特别活动：信息展示区域 -->
-            <div v-if="showFreeTripSubnav && subTab === '特别活动'" class="special-activities-section">
+            <div v-if="showFreeTripSubnav && subTab === '特别活动' && !(committedKeyword?.trim())"
+                class="special-activities-section">
                 <div class="activities-header">
                     <h2 class="activities-title">塔斯马尼亚特别活动</h2>
                     <p class="activities-subtitle">实时特色活动与极光天气信息</p>
                 </div>
 
                 <div class="activities-grid">
-                    <!-- 极光观测信息 -->
-                    <div class="activity-card aurora-card">
+                    <div v-for="(activity, index) in activityItems" :key="index"
+                        :class="['activity-card', activity.cardClass]">
                         <div class="activity-image">
-                            <img src="@/assets/img/footer1.jpg" alt="极光观测" class="activity-img">
-                            <div class="activity-badge aurora-badge">极光预报</div>
+                            <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
+                            <div :class="['activity-badge', activity.badgeClass]">
+                                {{ activity.badge }}
+                            </div>
                         </div>
                         <div class="activity-content">
-                            <h3 class="activity-title">极光观测最佳时机</h3>
+                            <h3 class="activity-title">{{ activity.title }}</h3>
                             <div class="activity-info">
-                                <div class="info-item">
-                                    <span class="info-label">今晚概率：</span>
-                                    <span class="info-value high">85%</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">最佳时间：</span>
-                                    <span class="info-value">22:00-02:00</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">推荐地点：</span>
-                                    <span class="info-value">摇篮山国家公园</span>
+                                <div v-for="(infoItem, infoIndex) in activity.info" :key="infoIndex" class="info-item">
+                                    <span class="info-label">{{ infoItem.label }}：</span>
+                                    <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value }}</span>
                                 </div>
                             </div>
                             <div class="tags">
-                                <div class="weather-note">
-                                    <i class="weather-icon">🌌</i>
-                                    <span>天气晴朗</span>
-                                </div>
-                                <div class="weather-note">
-                                    <i class="weather-icon">🌌</i>
-                                    <span>极光</span>
-                                </div>
-                                <div class="weather-note">
-                                    <i class="weather-icon">🌌</i>
-                                    <span>观测条件极佳</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 薰衣草节活动 -->
-                    <div class="activity-card lavender-card">
-                        <div class="activity-image">
-                            <img src="@/assets/img/footer2.jpg" alt="薰衣草节" class="activity-img">
-                            <div class="activity-badge event-badge">节庆活动</div>
-                        </div>
-                        <div class="activity-content">
-                            <h3 class="activity-title">塔斯马尼亚薰衣草节</h3>
-                            <div class="activity-info">
-                                <div class="info-item">
-                                    <span class="info-label">活动时间：</span>
-                                    <span class="info-value">12月15日-1月31日</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">开放时间：</span>
-                                    <span class="info-value">09:00-17:00</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">活动地点：</span>
-                                    <span class="info-value">薰衣草庄园</span>
-                                </div>
-                            </div>
-                            <div class="tags">
-                                <div class="activity-description">
-                                    紫色花海
-                                </div>
-                                <div class="activity-description">
-                                    薰衣草美食
-                                </div>
-                                <div class="activity-description">
-                                    纯天然薰衣草产品
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 观鲸季节 -->
-                    <div class="activity-card whale-card">
-                        <div class="activity-image">
-                            <img src="@/assets/img/footer3.jpg" alt="观鲸活动" class="activity-img">
-                            <div class="activity-badge season-badge">季节性活动</div>
-                        </div>
-                        <div class="activity-content">
-                            <h3 class="activity-title">座头鲸迁徙观鲸</h3>
-                            <div class="activity-info">
-                                <div class="info-item">
-                                    <span class="info-label">最佳季节：</span>
-                                    <span class="info-value">5月-11月</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">今日概率：</span>
-                                    <span class="info-value high">92%</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">出发地点：</span>
-                                    <span class="info-value">霍巴特港口</span>
-                                </div>
-                            </div>
-                            <div class="tags">
-                                <div class="activity-description">
-                                    座头鲸迁徙
-                                </div>
-                                <div class="activity-description">
-                                    专业导游讲解
-                                </div>
-                                <div class="activity-description">
-                                    摄影指导
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 星空观测 -->
-                    <div class="activity-card stargazing-card">
-                        <div class="activity-image">
-                            <img src="@/assets/img/footer4.jpg" alt="星空观测" class="activity-img">
-                            <div class="activity-badge night-badge">夜间活动</div>
-                        </div>
-                        <div class="activity-content">
-                            <h3 class="activity-title">南半球星空观测</h3>
-                            <div class="activity-info">
-                                <div class="info-item">
-                                    <span class="info-label">观测条件：</span>
-                                    <span class="info-value excellent">极佳</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">最佳时间：</span>
-                                    <span class="info-value">20:30-23:00</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">推荐地点：</span>
-                                    <span class="info-value">威灵顿山</span>
-                                </div>
-                            </div>
-                            <div class="tags">
-                                <div class="weather-note">
-                                    <i class="weather-icon">⭐</i>
-                                    <span>无云天气</span>
-                                </div>
-                                <div class="weather-note">
-                                    <i class="weather-icon">⭐</i>
-                                    <span>能见度极佳</span>
-                                </div>
-                                <div class="weather-note">
-                                    <i class="weather-icon">⭐</i>
-                                    <span>南十字星座</span>
+                                <div v-for="(tagItem, tagIndex) in activity.tagItems" :key="tagIndex"
+                                    :class="tagItem.icon ? 'weather-note' : 'activity-description'">
+                                    <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
+                                    <span>{{ tagItem.text }}</span>
                                 </div>
                             </div>
                         </div>
@@ -1282,10 +1226,6 @@ onUnmounted(() => {
                 width: auto;
                 padding-bottom: 0;
             }
-        }
-
-        .result-section {
-            width: 100%;
         }
 
         .section-heading {

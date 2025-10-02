@@ -274,7 +274,7 @@ function onSearch() {
 
         .tag-pill {
           padding: 3px 6px;
-          font-size: 10px;
+          font-size: 14px;
           line-height: 1.1;
         }
       }
