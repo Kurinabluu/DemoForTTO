@@ -307,7 +307,7 @@ const listItemType = ref('餐厅')
 const listItems = ref([])
 
 // 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
-const placeGroups = [
+const placeGroups = ref([
     {
         name: `菲欣拿国家公园 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
         enName: `名（待修改） surrounding`
@@ -368,7 +368,7 @@ const placeGroups = [
         name: `德文波特 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
         enName: `名（待修改） surrounding`
     },
-]
+])
 
 function openPlaceList(placeName, itemType) {
     listPlaceName.value = placeName
@@ -505,21 +505,47 @@ function getActivityImage(index) {
 }
 
 // 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
-const scenicFiltered = computed(() =>
-    (committedKeyword.value || '').trim()
-        ? gridItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-        : gridItems.value
-)
-const restaurantFiltered = computed(() =>
-    (committedKeyword.value || '').trim()
-        ? restaurantItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-        : restaurantItems.value
-)
-const hotelFiltered = computed(() =>
-    (committedKeyword.value || '').trim()
-        ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-        : hotelItems.value
-)
+// const scenicFiltered = computed(() =>
+//     (committedKeyword.value || '').trim()
+//         ? gridItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+//         : gridItems.value
+// )
+// const restaurantFiltered = computed(() =>
+//     (committedKeyword.value || '').trim()
+//         ? restaurantItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+//         : restaurantItems.value
+// )
+// const hotelFiltered = computed(() =>
+//     (committedKeyword.value || '').trim()
+//         ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
+//         : hotelItems.value
+// )
+const scenicFiltered = computed(() => {
+    const kw = (committedKeyword.value || '').trim().toLowerCase()
+    if (!kw) return gridItems.value
+
+    return gridItems.value.filter(it =>
+        it.title.toLowerCase().includes(kw)
+    )
+})
+
+const restaurantFiltered = computed(() => {
+    const kw = (committedKeyword.value || '').trim().toLowerCase()
+    if (!kw) return placeGroups.value
+
+    return placeGroups.value.filter(group =>
+        group.name.toLowerCase().includes(kw)
+    )
+})
+
+const hotelFiltered = computed(() => {
+    const kw = (committedKeyword.value || '').trim().toLowerCase()
+    if (!kw) return placeGroups.value
+
+    return placeGroups.value.filter(group =>
+        group.name.toLowerCase().includes(kw)
+    )
+})
 
 const activityFiltered = computed(() => {
     const kw = (committedKeyword.value || '').trim().toLowerCase()
@@ -564,17 +590,19 @@ const isTourDialogVisible = ref(false)
 const dialogTitle = ref('大堡礁单日游')
 const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
 
+// function openTourDialog(item,url) {
 function openTourDialog(item) {
     dialogTitle.value = item?.title || '大堡礁单日游'
     // 轮换几张本地图片作为示意
-    const pics = [
-        new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-    ]
-    const idx = Math.floor(Math.random() * pics.length)
-    dialogBanner.value = pics[idx]
+    // const pics = [
+    //     new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+    //     new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+    //     new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+    //     new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+    // ]
+    // const idx = Math.floor(Math.random() * pics.length)
+    // dialogBanner.value = pics[idx]
+    // dialogBanner.value = url
     isTourDialogVisible.value = true
 }
 
@@ -712,145 +740,95 @@ onUnmounted(() => {
                 </el-button>
             </div>
 
-            <!-- 默认未选择分组且未搜索：渲染四个分区，带标题（不影响下方原有网格），这里有啥用来着？--------------------- -->
-            <!-- <div v-if="showFreeTripSubnav && false && !(committedKeyword?.trim())" class="search-result-wrapper">
-                <div class="w100">
-                    <h3 class="section-heading">景点</h3>
+            <!-- 搜索结果区：不影响下方原有景点网格 -->
+            <template v-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '景点'">
+                <template v-if="scenicFiltered.length">
                     <div class="coming-grid">
-                        <div v-for="(item, i) in gridItems" :key="'sc-d-' + i" class="coming-card"
-                            @click="openTourDialog(item)">
-                            <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                            <div class="card-title">{{ item.title }}</div>
-                            <div class="card-sub">{{ item.sub }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="w100">
-                    <h3 class="section-heading">餐厅</h3>
-                    <div class="coming-grid">
-                        <div v-for="(item, i) in restaurantItems" :key="'rt-d-' + i" class="coming-card"
+                        <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
                             @click="openTourDialog(item)">
                             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
                             <div class="card-title">{{ item.title }}</div>
                             <div class="card-sub">{{ item.sub }}</div>
                         </div>
                     </div>
-                </div>
-                <div class="w100">
-                    <h3 class="section-heading">住宿</h3>
+                </template>
+                <div v-else class="empty-tip">没有搜索结果</div>
+            </template>
+            <!-- 餐厅搜索结果 -->
+            <template v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '餐厅'">
+                <template v-if="restaurantFiltered.length">
                     <div class="coming-grid">
-                        <div v-for="(item, i) in hotelItems" :key="'ht-d-' + i" class="coming-card"
-                            @click="openTourDialog(item)">
-                            <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                            <div class="card-title">{{ item.title }}</div>
-                            <div class="card-sub">{{ item.sub }}</div>
+                        <div v-for="(g, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
+                            @click="openPlaceList(g.name, '餐厅')">
+                            <img :src="g.img" alt="" class="w100">
+                            <div class="card-title">{{ g.name }}餐厅</div>
+                            <div class="card-sub">餐厅{{ g.enName }}</div>
                         </div>
                     </div>
-                </div>
-                <div class="w100">
-                    <h3 class="section-heading">特别活动</h3>
+                </template>
+                <div v-else class="empty-tip">没有搜索结果</div>
+            </template>
+
+            <!-- 住宿搜索结果 -->
+            <template v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '住宿'">
+                <template v-if="hotelFiltered.length">
                     <div class="coming-grid">
-                        <div v-for="(item, i) in activityItems" :key="'ac-d-' + i" class="coming-card"
-                            @click="openTourDialog(item)">
-                            <img src="@/assets/img/footer4.jpg" alt="" class="w100">
-                            <div class="card-title">{{ item.title }}</div>
-                            <div class="card-sub">{{ item.sub }}</div>
+                        <div v-for="(g, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
+                            @click="openPlaceList(g.name, '住宿')">
+                            <img :src="g.img" alt="" class="w100">
+                            <div class="card-title">{{ g.name }}住宿</div>
+                            <div class="card-sub">住宿{{ g.enName }}</div>
                         </div>
                     </div>
-                </div>
-            </div> -->
+                </template>
+                <div v-else class="empty-tip">没有搜索结果</div>
+            </template>
+            <div class="special-activities-section"
+                v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '特别活动'">
+                <template v-if="activityFiltered.length">
+                    <div class="activities-header">
+                        <h2 class="activities-title">塔斯马尼亚特别活动</h2>
+                        <p class="activities-subtitle">实时特色活动与极光天气信息</p>
+                    </div>
 
-            <!-- 搜索结果区：不影响下方原有景点网格 -->
-            <div v-if="showFreeTripSubnav && (committedKeyword?.trim())" class="search-result-wrapper">
-                <div class="w100" v-if="subTab === '景点'">
-                    <h3 class="section-heading">景点</h3>
-                    <template v-if="scenicFiltered.length">
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
+                    <div class="activities-grid">
+                        <div v-for="(item, i) in activityFiltered" :key="'ac-filtered-' + i"
+                            :class="['activity-card', item.cardClass]">
+                            <!-- 这里使用特别活动的专属卡片结构 -->
+                            <div class="activity-image">
+                                <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
+                                <div :class="['activity-badge', item.badgeClass]">
+                                    {{ item.badge }}
+                                </div>
                             </div>
-                        </div>
-                    </template>
-                    <div v-else class="empty-tip">没有搜索结果</div>
-                </div>
-                <div class="w100" v-else-if="subTab === '餐厅'">
-                    <h3 class="section-heading">餐厅</h3>
-                    <template v-if="restaurantFiltered.length">
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in restaurantFiltered" :key="'rt2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
-                            </div>
-                        </div>
-                    </template>
-                    <div v-else class="empty-tip">没有搜索结果</div>
-                </div>
-                <div class="w100" v-else-if="subTab === '住宿'">
-                    <h3 class="section-heading">住宿</h3>
-                    <template v-if="hotelFiltered.length">
-                        <div class="coming-grid">
-                            <div v-for="(item, i) in hotelFiltered" :key="'ht2-' + i" class="coming-card"
-                                @click="openTourDialog(item)">
-                                <img src="@/assets/img/footer3.jpg" alt="" class="w100">
-                                <div class="card-title">{{ item.title }}</div>
-                                <div class="card-sub">{{ item.sub }}</div>
-                            </div>
-                        </div>
-                    </template>
-                    <div v-else class="empty-tip">没有搜索结果</div>
-                </div>
-                <div class="w100 special-activities-section" v-else>
-                    <template v-if="activityFiltered.length">
-                        <div class="activities-header">
-                            <h2 class="activities-title">塔斯马尼亚特别活动</h2>
-                            <p class="activities-subtitle">实时特色活动与极光天气信息</p>
-                        </div>
-
-                        <div class="activities-grid">
-                            <div v-for="(item, i) in activityFiltered" :key="'ac-filtered-' + i"
-                                :class="['activity-card', item.cardClass]">
-                                <!-- 这里使用特别活动的专属卡片结构 -->
-                                <div class="activity-image">
-                                    <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
-                                    <div :class="['activity-badge', item.badgeClass]">
-                                        {{ item.badge }}
+                            <div class="activity-content">
+                                <h3 class="activity-title">{{ item.title }}</h3>
+                                <div class="activity-info">
+                                    <div v-for="(infoItem, infoIndex) in item.info" :key="infoIndex" class="info-item">
+                                        <span class="info-label">{{ infoItem.label }}：</span>
+                                        <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value
+                                        }}</span>
                                     </div>
                                 </div>
-                                <div class="activity-content">
-                                    <h3 class="activity-title">{{ item.title }}</h3>
-                                    <div class="activity-info">
-                                        <div v-for="(infoItem, infoIndex) in item.info" :key="infoIndex"
-                                            class="info-item">
-                                            <span class="info-label">{{ infoItem.label }}：</span>
-                                            <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value
-                                                }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="tags">
-                                        <div v-for="(tagItem, tagIndex) in item.tagItems" :key="tagIndex"
-                                            :class="tagItem.icon ? 'weather-note' : 'activity-description'">
-                                            <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
-                                            <span>{{ tagItem.text }}</span>
-                                        </div>
+                                <div class="tags">
+                                    <div v-for="(tagItem, tagIndex) in item.tagItems" :key="tagIndex"
+                                        :class="tagItem.icon ? 'weather-note' : 'activity-description'">
+                                        <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
+                                        <span>{{ tagItem.text }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </template>
-                    <div v-else class="empty-tip">没有搜索结果</div>
-                    <div class="activities-footer">
-                        <div class="update-info">
-                            <i class="update-icon">🔄</i>
-                            <span>信息每2小时更新一次</span>
-                        </div>
-                        <div class="contact-info">
-                            <span>获取最新活动信息，请联系我们的专业顾问</span>
-                        </div>
+                    </div>
+                </template>
+                <div v-else class="empty-tip">没有搜索结果</div>
+                <div class="activities-footer">
+                    <div class="update-info">
+                        <i class="update-icon">🔄</i>
+                        <span>信息每2小时更新一次</span>
+                    </div>
+                    <div class="contact-info">
+                        <span>获取最新活动信息，请联系我们的专业顾问</span>
                     </div>
                 </div>
             </div>
@@ -867,6 +845,7 @@ onUnmounted(() => {
             <div v-if="showFreeTripSubnav && subTab === '景点' && !(committedKeyword?.trim())" class="coming-grid">
                 <div v-for="(item, i) in scenicFiltered" :key="'rt-bottom-' + i" class="coming-card"
                     @click="openTourDialog(item)">
+                    <!-- 待修改成动态图片 -->
                     <img src="@/assets/img/footer2.jpg" alt="" class="w100">
                     <div class="card-title">{{ item.title }}</div>
                     <div class="card-sub">{{ item.sub }}</div>
@@ -1121,7 +1100,8 @@ onUnmounted(() => {
             padding: 8px 0 40px;
 
             img {
-                height: 90%;
+                // height: 90%;
+                height: 240px;
             }
         }
 
@@ -1213,19 +1193,6 @@ onUnmounted(() => {
         .free-subnav-search-btn {
             flex: 0 0 auto;
             height: 40px;
-        }
-
-        .search-result-wrapper {
-            width: 90%;
-            padding: 0 0 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-
-            .coming-grid {
-                width: auto;
-                padding-bottom: 0;
-            }
         }
 
         .section-heading {
@@ -1486,26 +1453,6 @@ onUnmounted(() => {
                 }
             }
 
-            // .search-fixed {
-            //     display: flex;
-            //     justify-content: center;
-            //     bottom: 16px;
-            //     margin-bottom: 20px;
-
-            //     .search-card {
-            //         max-width: 720px;
-            //     }
-
-            //     .search-container {
-            //         width: 100%;
-            //     }
-
-            //     .search-tags {
-            //         grid-template-columns: repeat(4, 1fr);
-            //         width: 100%;
-            //     }
-            // }
-
             .content-box {
 
                 // height: 240px;
@@ -1522,25 +1469,6 @@ onUnmounted(() => {
                 .tourism-title {
                     font-size: 36px;
                 }
-
-                // .coming-soon {
-                //     font-size: 28px;
-
-                //     .free-trip-subnav {
-                //         width: 100%;
-                //         padding: 0 16px;
-                //         gap: 12px;
-                //     }
-
-                //     .free-subnav-search {
-                //         flex-basis: 260px;
-                //     }
-
-                //     .free-subnav-search-btn {
-                //         height: 40px;
-                //         padding: 0 12px;
-                //     }
-                // }
 
                 /* 特别活动平板端适配 */
                 .special-activities-section {
@@ -1648,52 +1576,10 @@ onUnmounted(() => {
                 }
             }
 
-            // .search-fixed {
-            //     position: static;
-            //     transform: none;
-            //     z-index: auto;
-            //     width: 100%;
-            //     padding: 8px 12px 20px;
-            //     top: auto;
-            //     // margin-bottom: 20px;
-
-            //     .search-card {
-            //         max-width: 95vw;
-            //         margin-top: 8px;
-            //     }
-
-            //     .search-container {
-            //         flex-direction: column;
-            //         gap: 8px;
-            //         width: 100%;
-            //     }
-
-            //     .search-input {
-            //         width: 100%;
-            //     }
-
-            //     .search-btn {
-            //         width: 100%;
-            //     }
-
-            //     .search-tags {
-            //         gap: 6px;
-            //         grid-template-columns: repeat(2, 1fr);
-            //         width: 100%;
-            //     }
-
-            //     .tag-pill {
-            //         padding: 6px 10px;
-            //         line-height: 1.3;
-            //         font-size: 12px;
-            //     }
-            // }
-
             .content-box {
                 height: auto;
                 margin-top: 0;
-                // ----------------------待注释
-                padding-top: 20px;
+                // padding-top: 20px;
                 /* 移动端减少间距 */
 
                 .free-trip-subnav {
@@ -1714,33 +1600,10 @@ onUnmounted(() => {
                     font-size: 28px;
                 }
 
-                // .coming-soon {
-                //     font-size: 22px;
-
-                //     /* 子导航：移动端折两行（上：Tabs，下：搜索） */
-                //     .free-trip-subnav {
-                //         width: 100%;
-                //         flex-direction: column;
-                //         align-items: stretch;
-                //         gap: 10px;
-                //         padding: 0 12px;
-                //     }
-
-                //     .free-subnav-tabs {
-                //         overflow-x: auto;
-                //         padding-bottom: 4px;
-                //         scrollbar-width: thin;
-                //     }
-
-                //     .free-subnav-search {
-                //         flex: none;
-                //     }
-
-                //     .free-subnav-search-btn {
-                //         width: 100%;
-                //         height: 40px;
-                //     }
-                // }
+                .coming-grid {
+                    grid-template-columns: repeat(1, 1fr);
+                    gap: 20px;
+                }
 
                 /* 特别活动移动端适配 */
                 .special-activities-section {

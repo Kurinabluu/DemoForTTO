@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
     visible: { type: Boolean, default: false }
@@ -7,15 +7,38 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible'])
 
+// 设备检测
+const isMobile = ref(false)
+const mobileBreakpoint = 768
+
+const checkDeviceType = () => {
+    isMobile.value = window.innerWidth <= mobileBreakpoint
+}
+
+const handleResize = () => {
+    checkDeviceType()
+}
+onMounted(() => {
+    checkDeviceType()
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
+
 const dialogVisible = computed({
     get: () => props.visible,
     set: (v) => emit('update:visible', v)
 })
+
+// 在手机端启用全屏
+const fullscreen = computed(() => isMobile.value)
 </script>
 
 <template>
     <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
-        :z-index="9800">
+        :z-index="9800" :fullscreen="fullscreen">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>
@@ -47,6 +70,7 @@ const dialogVisible = computed({
 </template>
 
 <style lang="scss" scoped>
+// 显示对iphone4不友好，发现没有320px的适配，待修复
 :deep(.el-dialog) {
     // .el-dialog {
     margin: 0 !important;
@@ -79,6 +103,12 @@ const dialogVisible = computed({
 
 .consultation-content .consultation-item:last-child {
     border-bottom: none;
+}
+
+@media (max-width:768) {
+    .consultation-content {
+        height: 80%;
+    }
 }
 
 .contact-icon {
