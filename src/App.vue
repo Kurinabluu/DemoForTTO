@@ -159,7 +159,7 @@ onUnmounted(() => {
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-    :show-close="false">
+    :show-close="false" :append-to-body="true">
     <template #header>
       <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>

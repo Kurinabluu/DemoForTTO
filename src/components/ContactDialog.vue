@@ -38,7 +38,7 @@ const fullscreen = computed(() => isMobile.value)
 
 <template>
     <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
-        :z-index="9800" :fullscreen="fullscreen">
+        :z-index="9800" :fullscreen="fullscreen" :append-to-body="true" :lock-scroll="true">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>
@@ -71,28 +71,7 @@ const fullscreen = computed(() => isMobile.value)
 
 <style lang="scss" scoped>
 // 显示对iphone4不友好，发现没有320px的适配，待修复
-:deep(.el-dialog) {
-    // .el-dialog {
-    margin: 0 !important;
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 400px;
-    // }
-
-    :deep(.el-dialog__wrapper) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .el-dialog__footer {
-        text-align: right !important;
-    }
-
-}
-
+// :deep(.el-dialog) {
 .consultation-content .consultation-item {
     display: flex;
     align-items: center;
@@ -103,12 +82,6 @@ const fullscreen = computed(() => isMobile.value)
 
 .consultation-content .consultation-item:last-child {
     border-bottom: none;
-}
-
-@media (max-width:768) {
-    .consultation-content {
-        height: 80%;
-    }
 }
 
 .contact-icon {

@@ -224,8 +224,8 @@ const rejectDisclaimer = () => {
         </el-footer>
 
         <!-- 免责声明弹窗 -->
-        <el-dialog v-model="showDisclaimerModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-            :show-close="false">
+        <el-dialog v-model="showDisclaimerModal" align-center width="520px" :close-on-click-modal="false"
+            :show-close="false" :append-to-body="true" :lock-scroll="true">
             <template #header>
                 <div style="font-weight:700; letter-spacing:2px; color:#101010;">免责条款提示</div>
             </template>
@@ -601,72 +601,6 @@ const rejectDisclaimer = () => {
                 color: #609AB1;
             }
 
-        }
-    }
-}
-
-/* 弹窗自适配：避免小屏右侧空白（Element Plus 默认居中，但内容宽度固定时会有视觉偏移）*/
-@media (min-width: 769px) and (max-width: 1024px) {
-    :deep(.contact-dialog) {
-        .el-dialog {
-            width: 480px !important;
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    :deep(.contact-dialog) {
-        .el-dialog {
-            width: 92vw !important;
-            margin: 0 auto !important;
-        }
-
-        .el-dialog__body {
-            padding: 14px 16px !important;
-        }
-    }
-}
-
-@media (max-width: 375px) {
-    :deep(.contact-dialog) {
-        .el-dialog {
-            width: 95vw !important;
-        }
-
-        .el-dialog__header {
-            padding: 12px 14px !important;
-        }
-
-        .el-dialog__body {
-            padding: 12px 14px !important;
-        }
-
-        .el-dialog__footer {
-            padding: 10px 14px !important;
-        }
-    }
-}
-
-@media (max-width: 320px) {
-    :deep(.contact-dialog) {
-        .el-dialog {
-            width: 96vw !important;
-        }
-
-        .el-dialog__header {
-            padding: 10px 12px !important;
-        }
-
-        .el-dialog__body {
-            padding: 10px 12px !important;
-        }
-
-        .el-dialog__footer {
-            padding: 8px 12px !important;
-        }
-
-        .contact-modal .item {
-            font-size: 13px;
         }
     }
 }
@@ -1125,4 +1059,58 @@ const rejectDisclaimer = () => {
         }
     }
 }
-</style>
+
+// 联系我们弹窗
+@media (max-width: 375px) {
+    :deep(.contact-dialog) {
+        .el-dialog__body {
+            padding: 12px 14px !important;
+        }
+
+    }
+}
+
+@media (min-width: 376px) and (max-width:768px) {
+    :deep(.contact-dialog) {
+        .el-dialog__body {
+            height: 88%;
+        }
+    }
+}
+
+@media (max-width: 375px) {
+    :deep(.contact-dialog) {
+        .el-dialog__body {
+            height: 85%;
+        }
+    }
+}
+
+@media (max-width: 320px) {
+    :deep(.contact-dialog) {
+        .el-dialog__body {
+            height: 80%;
+        }
+    }
+}
+
+// :deep(.contact-dialog) {
+//     // .el-dialog {
+//     // width: 400px;
+//     // }
+
+//     // :deep(.el-dialog__wrapper) {
+//     //     display: flex;
+//     //     align-items: center;
+//     //     justify-content: center;
+//     // }
+
+//     // .el-dialog__footer {
+//     //     text-align: right !important;
+//     // }
+
+//     @media (max-width:768px) {
+//         .el-dialog__body {
+//             height: 80%;
+//         }
+//     }</style>

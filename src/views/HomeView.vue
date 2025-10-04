@@ -415,6 +415,112 @@ const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTa
 // const activityItems = ref(
 //     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
 // )
+// 景点一日游数据
+const scenicDayTripItems = [
+    {
+        title: '菲欣拿国家公园一日游',
+        sub: '酒杯湾徒步+葡萄酒庄体验'
+    },
+    {
+        title: '摇篮山一日游',
+        sub: '鸽子湖环湖徒步+野生动物观察'
+    },
+    {
+        title: '亚瑟港历史遗迹一日游',
+        sub: '历史监狱遗址+塔斯曼半岛奇观'
+    },
+    {
+        title: '布鲁尼岛一日游',
+        sub: '南北布鲁尼探险+生蚝品尝'
+    },
+    {
+        title: '火焰湾一日游',
+        sub: '橙色花岗岩+碧蓝海湾探索'
+    },
+    {
+        title: '威灵顿山一日游',
+        sub: '霍巴特全景+皇家植物园游览'
+    },
+    {
+        title: '朗塞斯顿峡谷一日游',
+        sub: '峡谷步道+瀑布观赏+城市探索'
+    },
+    {
+        title: '玛丽亚岛一日游',
+        sub: '野生动物观察+历史遗迹探索'
+    }
+]
+
+// 主题一日游数据
+const themeDayTripItems = [
+    {
+        title: '美食美酒之旅',
+        sub: '酒庄品酒+当地美食体验'
+    },
+    {
+        title: '野生动物探寻',
+        sub: '袋熊+小企鹅+塔斯马尼亚恶魔'
+    },
+    {
+        title: '摄影采风之旅',
+        sub: '专业摄影点+黄金光线捕捉'
+    },
+    {
+        title: '历史文化之旅',
+        sub: '殖民历史+原住民文化探索'
+    },
+    {
+        title: '冒险刺激之旅',
+        sub: '攀岩+速降+野外探险'
+    },
+    {
+        title: '休闲放松之旅',
+        sub: '温泉+水疗+美景欣赏'
+    }
+]
+
+// 定制一日游数据
+const customDayTripItems = [
+    {
+        title: '家庭亲子定制游',
+        sub: '儿童友好活动+安全行程'
+    },
+    {
+        title: '情侣浪漫定制游',
+        sub: '私密行程+浪漫体验'
+    },
+    {
+        title: '朋友结伴定制游',
+        sub: '冒险活动+团体娱乐'
+    },
+    {
+        title: '摄影爱好者定制',
+        sub: '专业摄影路线+黄金时段'
+    },
+    {
+        title: '商务考察定制',
+        sub: '专业导览+商务接待'
+    },
+    {
+        title: '特殊需求定制',
+        sub: '无障碍设施+特殊饮食安排'
+    }
+]
+// 当前显示的一日游项目
+const currentDayTripItems = computed(() => {
+    // 根据当前选中的子导航返回对应的数据
+    switch (dayTripTab.value) {
+        case '景点一日游':
+            return scenicDayTripItems
+        case '主题一日游':
+            return themeDayTripItems
+        case '定制一日游':
+            return customDayTripItems
+        default:
+            return []
+    }
+})
+
 const activityItems = ref([
     {
         title: '极光观测最佳时机',
@@ -921,16 +1027,47 @@ onUnmounted(() => {
             </div>
 
             <!-- 一日游子导航 -->
-            <div v-if="showDayTripSubnav" class="free-trip-subnav center" style="margin-top: -10px;">
-                <ul class="free-subnav-tabs">
-                    <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab" :class="{ active: dayTripTab === t }"
-                        @click="onClickDayTripTab(t)" :data-tab="t">{{ t }}</li>
-                </ul>
-                <!-- <div class="free-subnav-search" style="text-align:right;color:#6b7280;line-height:40px;">{{
-                    dayTripCopyMap[dayTripTab] }}</div> -->
-            </div>
+            <template v-if="showDayTripSubnav">
+                <!-- 简化的子导航，只有标签切换 -->
+                <!-- <div class="free-trip-subnav center" style="margin-top:-10px;"> -->
+                <div class="free-trip-subnav center">
+                    <ul class="free-subnav-tabs">
+                        <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab"
+                            :class="{ active: dayTripTab === t }" @click="onClickDayTripTab(t)" :data-tab="t">
+                            {{ t }}
+                        </li>
+                    </ul>
+                </div>
 
-            <!-- 一日游、多日游网格显示 -->
+                <!-- 一日游内容网格 -->
+                <!-- <div class="day-trip-content"> -->
+                <div class="coming-grid">
+                    <!-- 这里显示当前选中子导航对应的独立数据 -->
+                    <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`"
+                        class="coming-card" @click="openTourDialog(item)">
+                        <!-- 使用统一的图片 -->
+                        <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                        <!-- <img :src="getDayTripImage(dayTripTab, i)" alt="" class="w100"> -->
+                        <div class="card-title">{{ item.title }}</div>
+                        <div class="card-sub">{{ item.sub }}</div>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </template>
+
+            <!-- 多日游网格显示（保持不变） -->
+            <template v-if="!currentServiceConfig && activeTag === '多日游（固定行程）'">
+                <div class="coming-grid">
+                    <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card"
+                        @click="openTourDialog(item)">
+                        <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                        <div class="card-title">{{ item.title }}</div>
+                        <div class="card-sub">{{ item.sub }}</div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- 一日游、多日游网格显示
             <div v-if="!currentServiceConfig && (activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
                 class="coming-grid">
                 <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card"
@@ -939,7 +1076,7 @@ onUnmounted(() => {
                     <div class="card-title">{{ item.title }}</div>
                     <div class="card-sub">{{ item.sub }}</div>
                 </div>
-            </div>
+            </div> -->
 
             <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
             <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
@@ -1911,6 +2048,7 @@ onUnmounted(() => {
         padding-top: 6px;
     }
 }
+
 
 .no-result-body {
     color: #374151;
