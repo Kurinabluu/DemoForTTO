@@ -1,10 +1,14 @@
 <script setup>
 // 搜索相关数据
 import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useNavStore } from '@/stores/nav';
 import HomeView from '@/views/HomeView.vue';
 
-function onNavClick(event) {
+const currentNav = ref('网站首页')
+const navStore = useNavStore();
+
+function onNavClick(event, navName) {
     const clickedElement = event.currentTarget;
     const btnsContainer = clickedElement.closest('.btns');
     if (!btnsContainer) {
@@ -14,6 +18,20 @@ function onNavClick(event) {
     const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
     candidates.forEach((node) => node.classList.remove('clicked'));
     clickedElement.classList.add('clicked');
+
+    // 更新当前导航状态
+    currentNav.value = navName;
+
+    // 触发全局事件，让HomeView知道导航变化
+    if (navName === '特别推荐') {
+        window.dispatchEvent(new CustomEvent('header-nav-click', {
+            detail: { nav: '特别推荐' }
+        }));
+    } else if (navName === '网站首页') {
+        window.dispatchEvent(new CustomEvent('header-nav-click', {
+            detail: { nav: '网站首页' }
+        }));
+    }
 }
 
 // 联系我们弹窗
@@ -26,8 +44,6 @@ function closeContactDialog() {
 }
 const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
 const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
-
-
 
 // 首次访问免责声明弹窗（不使用本地存储，初次渲染后即弹出）
 const showDisclaimerModal = ref(false)
@@ -45,6 +61,15 @@ const rejectDisclaimer = () => {
     //   }
     // }, 200)
 }
+
+// 组件挂载时检查是否首次访问
+onMounted(() => {
+    // 检查是否是首次访问
+    if (navStore.isFirstVisit()) {
+        // 首次访问，显示免责声明
+        showDisclaimerModal.value = true
+    }
+})
 </script>
 
 <template>
@@ -55,13 +80,13 @@ const rejectDisclaimer = () => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer clicked" @click="onNavClick" to="/DemoForTTO">
+                    <li class="pointer clicked" @click="onNavClick($event, '网站首页')" to="/DemoForTTO">
                         <RouterLink to="/DemoForTTO">网站首页</RouterLink>
                     </li>
-                    <!-- 特别推荐页面考虑跳转【免费信息】中的“特别活动” -->
-                    <li class="pointer" @click="onNavClick">特别推荐</li>
-                    <li class="pointer" @click="onNavClick">行业新闻</li>
-                    <li class="pointer" @click="onNavClick">八大服务</li>
+                    <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
+                    <li class="pointer" @click="onNavClick($event, '特别推荐')">特别推荐</li>
+                    <li class="pointer" @click="onNavClick($event, '行业新闻')">行业新闻</li>
+                    <li class="pointer" @click="onNavClick($event, '八大服务')">八大服务</li>
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
                     <li class="pointer" @click="openContactDialog()">联系我们</li>
                 </ul>

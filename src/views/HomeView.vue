@@ -780,6 +780,23 @@ function onTouchEnd() {
 
 // 组件挂载时初始化轮播图
 onMounted(() => {
+    window.addEventListener('header-nav-click', (event) => {
+        const { nav } = event.detail;
+
+        if (nav === '特别推荐') {
+            // 切换到免费信息中的特别活动
+            activeTag.value = '自助游/自驾游免费信息';
+            subTab.value = '特别活动';
+        } else if (nav === '网站首页') {
+            // 切换到免费信息中的景点
+            activeTag.value = '自助游/自驾游免费信息';
+            subTab.value = '景点';
+        }
+    });
+
+    // 标记首次访问完成
+    useNavStore().markFirstVisitDone()
+
     selectSlides()
     if (typeof window !== 'undefined') {
         window.addEventListener('resize', handleResizeForSlides)
@@ -792,6 +809,14 @@ onUnmounted(() => {
         window.removeEventListener('resize', handleResizeForSlides)
     }
 })
+
+// 当切换到非"自助游/自驾游免费信息"时，重置子导航到默认"景点"
+watch(activeTag, (next) => {
+    if (next !== '自助游/自驾游免费信息') {
+        subTab.value = '景点';
+        subSearch.value = '';
+    }
+});
 </script>
 
 <template>
@@ -913,7 +938,7 @@ onUnmounted(() => {
                                     <div v-for="(infoItem, infoIndex) in item.info" :key="infoIndex" class="info-item">
                                         <span class="info-label">{{ infoItem.label }}：</span>
                                         <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value
-                                        }}</span>
+                                            }}</span>
                                     </div>
                                 </div>
                                 <div class="tags">
