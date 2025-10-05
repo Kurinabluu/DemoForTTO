@@ -302,7 +302,8 @@ const rejectDisclaimer = () => {
     }
 
     .el-footer {
-        height: 620px;
+        // height: 620px;
+        height: auto;
         background-color: #f8f9fa;
         color: #333;
         /* Added background color for footer */
@@ -324,23 +325,17 @@ const rejectDisclaimer = () => {
 
             .footer-section {
                 // background-color: rgba(255, 255, 255, 0.95);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                height: 420px;
                 border-radius: 10px;
+                text-align: left;
+                // height: 400px;
 
                 padding: {
                     top: 25px;
                 }
-
-                margin: {
-                    bottom: 25px; //增加适配
-
-                }
-
-                text-align: left;
-                // height: 400px;
-                height: 420px;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
 
                 // 第一个方块 - 关于我们
                 &:first-child {
@@ -397,23 +392,6 @@ const rejectDisclaimer = () => {
                     display: flex;
                     align-items: center;
                     margin-bottom: 15px;
-
-                    // .logo-circle {
-                    //   width: 60px;
-                    //   height: 60px;
-                    //   background-color: #007bff;
-                    //   border-radius: 50%;
-                    //   display: flex;
-                    //   align-items: center;
-                    //   justify-content: center;
-                    //   margin-right: 15px;
-
-                    //   .logo-text {
-                    //     color: #fff;
-                    //     font-size: 24px;
-                    //     font-weight: bold;
-                    //   }
-                    // }
 
                     .company-name {
                         font-size: 25px;
@@ -630,8 +608,7 @@ const rejectDisclaimer = () => {
         }
 
         .el-footer {
-            height: auto;
-            min-height: 620px;
+            // min-height: 620px;
 
             .footer-content {
                 grid-template-columns: 1fr 1fr;
@@ -707,13 +684,12 @@ const rejectDisclaimer = () => {
 
 
         .el-footer {
-            height: auto !important;
-            min-height: 680px;
+            // min-height: 680px;
             padding: 16px 0 16px;
 
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 90px;
                 padding: 0 12px;
                 height: auto;
             }
@@ -776,11 +752,11 @@ const rejectDisclaimer = () => {
         }
 
         .el-footer {
-            min-height: 720px;
+            // min-height: 720px;
             padding: 12px 0 12px;
 
             .footer-content {
-                gap: 8px;
+                gap: 20px;
                 padding: 0 8px;
             }
 
@@ -947,7 +923,7 @@ const rejectDisclaimer = () => {
         }
 
         .el-footer {
-            min-height: 760px;
+            // min-height: 760px;
             padding: 8px 0 8px;
 
             .footer-content {

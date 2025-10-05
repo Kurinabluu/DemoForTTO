@@ -5,7 +5,8 @@ const STORAGE_KEYS = {
     lastPath: 'tto_last_path',
     lastScrollY: 'tto_last_scroll_y',
     selectedService: 'tto_selected_service',
-    selectedSubNav: 'tto_selected_subnav'
+    selectedSubNav: 'tto_selected_subnav',
+    headerActiveNav: 'tto_header_active_nav'
 }
 
 export const useNavStore = defineStore('nav', {
@@ -13,7 +14,8 @@ export const useNavStore = defineStore('nav', {
         lastPath: localStorage.getItem(STORAGE_KEYS.lastPath) || '',
         lastScrollY: Number(localStorage.getItem(STORAGE_KEYS.lastScrollY) || 0),
         selectedService: localStorage.getItem(STORAGE_KEYS.selectedService) || '',
-        selectedSubNav: localStorage.getItem(STORAGE_KEYS.selectedSubNav) || ''
+        selectedSubNav: localStorage.getItem(STORAGE_KEYS.selectedSubNav) || '',
+        headerActiveNav: localStorage.getItem(STORAGE_KEYS.headerActiveNav) || '网站首页'
     }),
     actions: {
         markFirstVisitDone() {
@@ -39,6 +41,10 @@ export const useNavStore = defineStore('nav', {
             this.selectedSubNav = subNavName
             localStorage.setItem(STORAGE_KEYS.selectedSubNav, subNavName || '')
         },
+        setHeaderActiveNav(navName) {
+            this.headerActiveNav = navName
+            localStorage.setItem(STORAGE_KEYS.headerActiveNav, navName || '网站首页')
+        },
         clearSelectedService() {
             this.selectedService = ''
             localStorage.removeItem(STORAGE_KEYS.selectedService)
@@ -46,6 +52,11 @@ export const useNavStore = defineStore('nav', {
         clearSelectedSubNav() {
             this.selectedSubNav = ''
             localStorage.removeItem(STORAGE_KEYS.selectedSubNav)
+        },
+        switchToSpecialActivity() {
+            this.setHeaderActiveNav('特别推荐')
+            this.saveSelectedService('自助游/自驾游免费信息')
+            this.saveSelectedSubNav('特别活动')
         }
     }
 })

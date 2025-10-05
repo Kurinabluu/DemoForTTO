@@ -38,7 +38,7 @@ const fullscreen = computed(() => isMobile.value)
 
 <template>
     <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
-        :z-index="9800" :fullscreen="fullscreen" :append-to-body="true" :lock-scroll="true">
+        :z-index="9800" :fullscreen="fullscreen">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>

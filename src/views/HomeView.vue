@@ -1221,12 +1221,6 @@ onUnmounted(() => {
         // letter-spacing: 15px;
         margin-top: 90px;
 
-        .tourism-title {
-            font-size: 48px;
-            font-weight: 700;
-            font-style: italic;
-        }
-
         .coming-grid {
             width: 90%;
             // max-width: 1200px;
@@ -1603,8 +1597,8 @@ onUnmounted(() => {
                     }
                 }
 
-                .tourism-title {
-                    font-size: 36px;
+                .coming-grid {
+                    grid-template-columns: repeat(2, 1fr)
                 }
 
                 /* 特别活动平板端适配 */
@@ -1680,6 +1674,7 @@ onUnmounted(() => {
                 /* 与轮播图高度一致 */
             }
 
+            // 轮播图
             .carousel {
                 .slide-img {
                     height: 420px;
@@ -1713,6 +1708,7 @@ onUnmounted(() => {
                 }
             }
 
+            // 渲染内容
             .content-box {
                 height: auto;
                 margin-top: 0;
@@ -1731,10 +1727,6 @@ onUnmounted(() => {
                     .free-subnav-search {
                         flex: 0
                     }
-                }
-
-                .tourism-title {
-                    font-size: 28px;
                 }
 
                 .coming-grid {
@@ -1877,11 +1869,6 @@ onUnmounted(() => {
                 padding-top: 20px;
                 gap: 16px;
 
-                .tourism-title {
-                    font-size: 24px;
-                    // letter-spacing: 10px;
-                }
-
                 // .coming-soon {
                 //     font-size: 18px;
 
@@ -1945,11 +1932,6 @@ onUnmounted(() => {
                 // margin-top: 30px;
                 padding-top: 20px;
                 gap: 12px;
-
-                .tourism-title {
-                    font-size: 20px;
-                    letter-spacing: 8px;
-                }
 
                 .free-subnav-tabs {
                     gap: 0

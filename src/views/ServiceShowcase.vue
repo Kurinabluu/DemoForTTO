@@ -386,6 +386,13 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
     .service-showcase {
         padding: 30px 15px;
         margin-top: 20px;
+
+        .advantages-section {
+            .advantages-flex {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     }
 
     .service-showcase .hero-image {
@@ -406,7 +413,18 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
     .service-showcase {
         // padding: 20px 15px;
         padding: 0 15px 20px;
+
         // margin-top: 20px;
+        .advantages-section {
+            .advantages-flex {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+
+                img {
+                    width: 260px;
+                }
+            }
+        }
     }
 
     .service-showcase .hero-content {
@@ -440,6 +458,7 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
     .service-showcase {
         padding: 15px 10px;
         margin-top: 20px;
+
     }
 
     .service-showcase .hero-image {
