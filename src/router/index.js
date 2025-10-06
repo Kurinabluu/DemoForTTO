@@ -23,15 +23,15 @@ const routes = [
         path: 'DemoForTTO',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
-
+        children: [
+          // 待修改，改成根据本地存储而决定显示哪个组件
+          { path: '', component: () => import('@/views/ServiceShowcase.vue') },
+          // 服务相关路由
+          { path: 'service', name: 'Service', component: () => import('@/views/ServiceShowcase.vue') },
+          { path: 'trips', name: 'Trips', component: () => import('@/views/TripsGrid.vue') },
+        ]
       },
-      // {
-      //   path: 'DemoForTTO/disclaimer',
-      //   component: () => import('@/components/Disclaimer.vue'),
-      // }
-      // {
-      // path:'DemoForTTO/'
-      // }
+
     ]
   }
 
@@ -69,6 +69,8 @@ router.afterEach((to) => {
   const restore = () => {
     try {
       const nav = useNavStore();
+      // 记录本次路径
+      nav.savePath(to.fullPath || to.path || '')
       const y = Number(nav.lastScrollY || 0);
       if (typeof window !== 'undefined') {
         const scrollTop = Math.max(0, y)

@@ -1,3 +1,21 @@
+<script setup>
+import { ref, computed } from 'vue'
+import ContactDialog from '@/components/ContactDialog.vue'
+
+// 接收配置
+const props = defineProps({
+    config: { type: Object, required: true }
+})
+
+const consultationDialogVisible = ref(false)
+const openConsultationDialog = () => {
+    consultationDialogVisible.value = true
+}
+
+// 优先显示服务名；若未提供则回退到主标题
+const titleText = computed(() => props.config?.serviceName || props.config?.heroTitle || '')
+</script>
+
 <template>
     <div class="service-showcase">
         <!-- 顶部服务标题（左上角） -->
@@ -89,24 +107,6 @@
         <ContactDialog v-model:visible="consultationDialogVisible" />
     </div>
 </template>
-
-<script setup>
-import { ref, computed } from 'vue'
-import ContactDialog from '@/components/ContactDialog.vue'
-
-// 接收配置
-const props = defineProps({
-    config: { type: Object, required: true }
-})
-
-const consultationDialogVisible = ref(false)
-const openConsultationDialog = () => {
-    consultationDialogVisible.value = true
-}
-
-// 优先显示服务名；若未提供则回退到主标题
-const titleText = computed(() => props.config?.serviceName || props.config?.heroTitle || '')
-</script>
 
 <style lang="scss" scoped>
 .service-showcase {

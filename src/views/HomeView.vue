@@ -1,17 +1,44 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import ServiceShowcase from '@/views/ServiceShowcase.vue'
+import TripsGrid from '@/views/TripsGrid.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
 import { useNavStore } from '@/stores/nav'
 
-// 组件挂载时执行
-onMounted(() => {
-    // 标记首次访问完成
-    useNavStore().markFirstVisitDone()
+const route = useRoute()
+const router = useRouter()
+
+// 监听路由变化，根据当前路由决定显示什么内容
+const currentView = computed(() => {
+    if (route.name === 'Service') return 'service'
+    if (route.name === 'Trips') return 'trips'
+    return 'default'
 })
+
+// 路由名与标签的映射
+const routeNameToTag = {
+    Service: '代订门票及旅游项目', // 根据你的需求调整
+    Trips: '自助游/自驾游免费信息', // 根据你的需求调整
+}
+const tagToRouteName = {
+    '代订门票及旅游项目': 'Service',
+    '自助游/自驾游免费信息': 'Trips',
+}
+
+// 监听查询参数，动态切换子导航与一日游子标签
+// watch(() => route.query, (q) => {
+//     const query = q || {}
+//     if (typeof query.subTab === 'string' && subNavTabs.includes(query.subTab)) {
+//         subTab.value = query.subTab
+//     }
+//     if (typeof query.dayTab === 'string' && ['景点一日游', '主题一日游', '定制一日游'].includes(query.dayTab)) {
+//         dayTripTab.value = query.dayTab
+//     }
+// }, { deep: true })
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -33,7 +60,6 @@ const mobileSlides = desktopSlides
 const searchText = ref('')
 const popularTags = ref([
     '自助游/自驾游免费信息',
-    // '独立成团（不限人数）',
     '代订门票及旅游项目',
     '包车服务（独立成团+专车+司导）',
     '全程旅游管家服务',
@@ -41,8 +67,8 @@ const popularTags = ref([
     '一日游（固定行程）',
     '多日游（固定行程）',
     '个性定制服务'
-    // '有偿行程定制',
 ])
+
 
 // 服务类型 -> 统一组件的配置
 const serviceConfigs = {
@@ -228,77 +254,7 @@ function onClickSubTab(tab) {
     useNavStore().saveSelectedSubNav(tab)
 }
 
-// 当切换到非“自助游/自驾游免费信息”时，重置子导航到默认“景点”
-watch(activeTag, (next) => {
-    if (next !== '自助游/自驾游免费信息') {
-        subTab.value = '景点'
-        subSearch.value = ''
-    } else {
-        subTab.value = '景点'
-    }
-})
-
-// 进入“自助游/自驾游免费信息”默认选中“景点”
-watch(activeTag, (next) => {
-    if (next === '自助游/自驾游免费信息') {
-        subTab.value = '景点'
-    }
-})
-
-const scenicPlaces = [
-    '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
-    '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区',
-    '罗斯小镇', '塔基恩森林', '哈兹山脉', '高登大坝', '湖区自驾环线', '塔斯曼拱门', '魔鬼厨房', '蜜蜂农场',
-    '小企鹅栖息地', '薰衣草庄园', '亚麻湾步道', '月亮湾', '海角灯塔', '西海岸公路', '蓝湖', '荒野步道',
-    '威灵顿山', '萨拉曼卡市场', '塔斯马尼亚皇家植物园', '卡斯卡德啤酒厂', '塔斯马尼亚博物馆', '萨拉曼卡艺术中心',
-    '塔斯马尼亚海事博物馆', '塔斯马尼亚艺术画廊', '塔斯马尼亚野生动物园', '塔斯马尼亚薰衣草农场', '塔斯马尼亚蜂蜜农场',
-    '塔斯马尼亚奶酪工厂', '塔斯马尼亚威士忌酒厂', '塔斯马尼亚苹果园', '塔斯马尼亚樱桃园', '塔斯马尼亚草莓园'
-]
-
-function seededRandom(seed) {
-    let x = Math.sin(seed) * 10000
-    return x - Math.floor(x)
-}
-
-function generateItemsByTag(tag) {
-    const items = []
-    for (let i = 0; i < 32; i++) {
-        const r = seededRandom(i + tag.length)
-        const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
-        const place = scenicPlaces[idx]
-
-        let subTitle = ''
-        if (tag.includes('一日游（固定行程）')) {
-            const dayTripThemes = ['经典一日游', '自然探索', '文化体验', '海岸风光', '山景徒步', '历史遗迹']
-            const themeIdx = Math.floor(seededRandom(idx + i + 100) * dayTripThemes.length) % dayTripThemes.length
-            subTitle = dayTripThemes[themeIdx]
-        } else if (tag.includes('多日游（固定行程）')) {
-            const multiDayThemes = ['深度探索', '环岛之旅', '自然奇观', '文化深度游', '摄影之旅', '生态体验']
-            const themeIdx = Math.floor(seededRandom(idx + i + 200) * multiDayThemes.length) % multiDayThemes.length
-            subTitle = multiDayThemes[themeIdx]
-        } else {
-            const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
-            const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
-            subTitle = driveThemes[themeIdx]
-        }
-
-        items.push({
-            title: `${place}`,
-            sub: subTitle,
-        })
-    }
-    return items
-}
-
-const gridItems = ref(generateItemsByTag(activeTag.value))
-
-// 衍生出餐厅/住宿/特别活动的示例数据（与景点同样基于 scenicPlaces 派生，便于演示真实搜索）
-const restaurantItems = ref(
-    scenicPlaces.slice(0, 28).map((name, i) => ({ title: `${name} 美食餐厅`, sub: ['当地特色', '海鲜料理', '家庭餐馆', '酒庄餐厅'][i % 4] }))
-)
-const hotelItems = ref(
-    scenicPlaces.slice(10, 38).map((name, i) => ({ title: `${name} 舒适民宿`, sub: ['海景房', '市中心', '亲子友好', '度假小屋'][i % 4] }))
-)
+// 网格数据与筛选逻辑由 TripsGrid 组件内部维护
 
 // 地点-列表弹窗
 const isPlaceListVisible = ref(false)
@@ -306,69 +262,7 @@ const listPlaceName = ref('')
 const listItemType = ref('餐厅')
 const listItems = ref([])
 
-// 地点分组用于餐厅/住宿入口（塔斯马尼亚真实分区/目的地）
-const placeGroups = ref([
-    {
-        name: `菲欣拿国家公园 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `摇篮山 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `火焰湾 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `酒杯湾 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `玛丽亚岛 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `塔斯曼半岛 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `布鲁尼岛 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `霍巴特 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `朗塞斯顿 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `比切诺 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `圣海伦斯 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `斯坦利 周边`, img: new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `里士满 周边`, img: new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `亚瑟港 周边`, img: new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-    {
-        name: `德文波特 周边`, img: new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        enName: `名（待修改） surrounding`
-    },
-])
+// 地点分组网格改由 TripsGrid 内部数据驱动
 
 function openPlaceList(placeName, itemType) {
     listPlaceName.value = placeName
@@ -415,200 +309,9 @@ const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTa
 // const activityItems = ref(
 //     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
 // )
-// 景点一日游数据
-const scenicDayTripItems = [
-    {
-        title: '菲欣拿国家公园一日游',
-        sub: '酒杯湾徒步+葡萄酒庄体验'
-    },
-    {
-        title: '摇篮山一日游',
-        sub: '鸽子湖环湖徒步+野生动物观察'
-    },
-    {
-        title: '亚瑟港历史遗迹一日游',
-        sub: '历史监狱遗址+塔斯曼半岛奇观'
-    },
-    {
-        title: '布鲁尼岛一日游',
-        sub: '南北布鲁尼探险+生蚝品尝'
-    },
-    {
-        title: '火焰湾一日游',
-        sub: '橙色花岗岩+碧蓝海湾探索'
-    },
-    {
-        title: '威灵顿山一日游',
-        sub: '霍巴特全景+皇家植物园游览'
-    },
-    {
-        title: '朗塞斯顿峡谷一日游',
-        sub: '峡谷步道+瀑布观赏+城市探索'
-    },
-    {
-        title: '玛丽亚岛一日游',
-        sub: '野生动物观察+历史遗迹探索'
-    }
-]
+// 一日游网格数据已迁移到 TripsGrid.vue，由 dayTripTab 控制
 
-// 主题一日游数据
-const themeDayTripItems = [
-    {
-        title: '美食美酒之旅',
-        sub: '酒庄品酒+当地美食体验'
-    },
-    {
-        title: '野生动物探寻',
-        sub: '袋熊+小企鹅+塔斯马尼亚恶魔'
-    },
-    {
-        title: '摄影采风之旅',
-        sub: '专业摄影点+黄金光线捕捉'
-    },
-    {
-        title: '历史文化之旅',
-        sub: '殖民历史+原住民文化探索'
-    },
-    {
-        title: '冒险刺激之旅',
-        sub: '攀岩+速降+野外探险'
-    },
-    {
-        title: '休闲放松之旅',
-        sub: '温泉+水疗+美景欣赏'
-    }
-]
-
-// 定制一日游数据
-const customDayTripItems = [
-    {
-        title: '家庭亲子定制游',
-        sub: '儿童友好活动+安全行程'
-    },
-    {
-        title: '情侣浪漫定制游',
-        sub: '私密行程+浪漫体验'
-    },
-    {
-        title: '朋友结伴定制游',
-        sub: '冒险活动+团体娱乐'
-    },
-    {
-        title: '摄影爱好者定制',
-        sub: '专业摄影路线+黄金时段'
-    },
-    {
-        title: '商务考察定制',
-        sub: '专业导览+商务接待'
-    },
-    {
-        title: '特殊需求定制',
-        sub: '无障碍设施+特殊饮食安排'
-    }
-]
-// 当前显示的一日游项目
-const currentDayTripItems = computed(() => {
-    // 根据当前选中的子导航返回对应的数据
-    switch (dayTripTab.value) {
-        case '景点一日游':
-            return scenicDayTripItems
-        case '主题一日游':
-            return themeDayTripItems
-        case '定制一日游':
-            return customDayTripItems
-        default:
-            return []
-    }
-})
-
-const activityItems = ref([
-    {
-        title: '极光观测最佳时机',
-        sub: '南半球极光观测体验',
-        location: '摇篮山国家公园',
-        tags: ['天气晴朗', '极光', '观测条件极佳'],
-        badge: '极光预报',
-        cardClass: 'aurora-card',
-        badgeClass: 'aurora-badge',
-        info: [
-            { label: '今晚概率', value: '85%', valueClass: 'high' },
-            { label: '最佳时间', value: '22:00-02:00' },
-            { label: '推荐地点', value: '摇篮山国家公园' }
-        ],
-        tagItems: [
-            { icon: '🌌', text: '天气晴朗' },
-            { icon: '🌌', text: '极光' },
-            { icon: '🌌', text: '观测条件极佳' }
-        ]
-    },
-    {
-        title: '塔斯马尼亚薰衣草节',
-        sub: '紫色花海节庆活动',
-        location: '薰衣草庄园',
-        tags: ['紫色花海', '薰衣草美食', '纯天然薰衣草产品'],
-        badge: '节庆活动',
-        cardClass: 'lavender-card',
-        badgeClass: 'event-badge',
-        info: [
-            { label: '活动时间', value: '12月15日-1月31日' },
-            { label: '开放时间', value: '09:00-17:00' },
-            { label: '活动地点', value: '薰衣草庄园' }
-        ],
-        tagItems: [
-            { text: '紫色花海' },
-            { text: '薰衣草美食' },
-            { text: '纯天然薰衣草产品' }
-        ]
-    },
-    {
-        title: '座头鲸迁徙观鲸',
-        sub: '海洋生物观察',
-        location: '霍巴特港口',
-        tags: ['座头鲸迁徙', '专业导游讲解', '摄影指导'],
-        badge: '季节性活动',
-        cardClass: 'whale-card',
-        badgeClass: 'season-badge',
-        info: [
-            { label: '最佳季节', value: '5月-11月' },
-            { label: '今日概率', value: '92%', valueClass: 'high' },
-            { label: '出发地点', value: '霍巴特港口' }
-        ],
-        tagItems: [
-            { text: '座头鲸迁徙' },
-            { text: '专业导游讲解' },
-            { text: '摄影指导' }
-        ]
-    },
-    {
-        title: '南半球星空观测',
-        sub: '天文观测体验',
-        location: '威灵顿山',
-        tags: ['无云天气', '能见度极佳', '南十字星座'],
-        badge: '夜间活动',
-        cardClass: 'stargazing-card',
-        badgeClass: 'night-badge',
-        info: [
-            { label: '观测条件', value: '极佳', valueClass: 'excellent' },
-            { label: '最佳时间', value: '20:30-23:00' },
-            { label: '推荐地点', value: '威灵顿山' }
-        ],
-        tagItems: [
-            { icon: '⭐', text: '无云天气' },
-            { icon: '⭐', text: '能见度极佳' },
-            { icon: '⭐', text: '南十字星座' }
-        ]
-    }
-])
-// 获取活动图片
-function getActivityImage(index) {
-    const images = [
-        new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer4.jpg', import.meta.url).href
-    ]
-    return images[index] || images[0]
-}
+// 特别活动网格数据交由 TripsGrid 组件维护
 
 // 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
 // const scenicFiltered = computed(() =>
@@ -626,43 +329,7 @@ function getActivityImage(index) {
 //         ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
 //         : hotelItems.value
 // )
-const scenicFiltered = computed(() => {
-    const kw = (committedKeyword.value || '').trim().toLowerCase()
-    if (!kw) return gridItems.value
-
-    return gridItems.value.filter(it =>
-        it.title.toLowerCase().includes(kw)
-    )
-})
-
-const restaurantFiltered = computed(() => {
-    const kw = (committedKeyword.value || '').trim().toLowerCase()
-    if (!kw) return placeGroups.value
-
-    return placeGroups.value.filter(group =>
-        group.name.toLowerCase().includes(kw)
-    )
-})
-
-const hotelFiltered = computed(() => {
-    const kw = (committedKeyword.value || '').trim().toLowerCase()
-    if (!kw) return placeGroups.value
-
-    return placeGroups.value.filter(group =>
-        group.name.toLowerCase().includes(kw)
-    )
-})
-
-const activityFiltered = computed(() => {
-    const kw = (committedKeyword.value || '').trim().toLowerCase()
-    if (!kw) return []
-
-    return activityItems.value.filter(item =>
-        item.title.toLowerCase().includes(kw) ||
-        item.location.toLowerCase().includes(kw) ||
-        item.tags.some(tag => tag.toLowerCase().includes(kw))
-    )
-})
+// 过滤与网格渲染交由 TripsGrid 组件维护
 
 function doSubSearch() {
     const kw = (subSearch.value || '').trim()
@@ -679,16 +346,18 @@ function onClickTag(tag) {
     searchText.value = tag
 
     // 检查是否是服务类型标签（排除一日游和多日游）
-    if (serviceConfigs[tag] && tag !== '一日游' && tag !== '多日游') {
+    if (serviceConfigs[tag] && tag !== '一日游（固定行程）' && tag !== '多日游（固定行程）') {
         currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
     } else {
-        // 显示景点网格
+        // 非服务型标签，显示网格（交由 TripsGrid 渲染）
         currentServiceConfig.value = null
-        gridItems.value = generateItemsByTag(tag)
     }
 
-    // 保存用户选择的服务
-    useNavStore().saveSelectedService(tag)
+    // 路由跳转
+    const routeName = tagToRouteName[tag]
+    if (routeName) {
+        router.push({ name: routeName })
+    }
 }
 
 // 弹窗控制
@@ -778,24 +447,18 @@ function onTouchEnd() {
     }
 }
 
-// 组件挂载时初始化轮播图
+// 组件挂载时执行
 onMounted(() => {
-    window.addEventListener('header-nav-click', (event) => {
-        const { nav } = event.detail;
-
-        if (nav === '特别推荐') {
-            // 切换到免费信息中的特别活动
-            activeTag.value = '自助游/自驾游免费信息';
-            subTab.value = '特别活动';
-        } else if (nav === '网站首页') {
-            // 切换到免费信息中的景点
-            activeTag.value = '自助游/自驾游免费信息';
-            subTab.value = '景点';
-        }
-    });
-
-    // 标记首次访问完成
     useNavStore().markFirstVisitDone()
+
+    // 根据当前路由设置初始状态
+    if (route.name === 'Service') {
+        activeTag.value = '代订门票及旅游项目'
+        currentServiceConfig.value = { ...serviceConfigs['代订门票及旅游项目'], serviceName: '代订门票及旅游项目' }
+    } else if (route.name === 'Trips') {
+        activeTag.value = '自助游/自驾游免费信息'
+        currentServiceConfig.value = null
+    }
 
     selectSlides()
     if (typeof window !== 'undefined') {
@@ -810,13 +473,6 @@ onUnmounted(() => {
     }
 })
 
-// 当切换到非"自助游/自驾游免费信息"时，重置子导航到默认"景点"
-watch(activeTag, (next) => {
-    if (next !== '自助游/自驾游免费信息') {
-        subTab.value = '景点';
-        subSearch.value = '';
-    }
-});
 </script>
 
 <template>
@@ -848,8 +504,13 @@ watch(activeTag, (next) => {
             @search="isDialogVisible = true" />
         <!-- 内容区域 -->
         <div class="content-box">
-            <!-- 服务组件区域 -->
-            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
+            <!-- 服务组件区域
+            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" /> -->
+
+            <!-- 路由视图 -->
+            <router-view :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
+                :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
+                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
 
             <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
             <div v-if="showFreeTripSubnav" class="free-trip-subnav center">
@@ -871,185 +532,10 @@ watch(activeTag, (next) => {
                 </el-button>
             </div>
 
-            <!-- 搜索结果区：不影响下方原有景点网格 -->
-            <template v-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '景点'">
-                <template v-if="scenicFiltered.length">
-                    <div class="coming-grid">
-                        <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
-                            @click="openTourDialog(item)">
-                            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                            <div class="card-title">{{ item.title }}</div>
-                            <div class="card-sub">{{ item.sub }}</div>
-                        </div>
-                    </div>
-                </template>
-                <div v-else class="empty-tip">没有搜索结果</div>
-            </template>
-            <!-- 餐厅搜索结果 -->
-            <template v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '餐厅'">
-                <template v-if="restaurantFiltered.length">
-                    <div class="coming-grid">
-                        <div v-for="(g, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
-                            @click="openPlaceList(g.name, '餐厅')">
-                            <img :src="g.img" alt="" class="w100">
-                            <div class="card-title">{{ g.name }}餐厅</div>
-                            <div class="card-sub">餐厅{{ g.enName }}</div>
-                        </div>
-                    </div>
-                </template>
-                <div v-else class="empty-tip">没有搜索结果</div>
-            </template>
-
-            <!-- 住宿搜索结果 -->
-            <template v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '住宿'">
-                <template v-if="hotelFiltered.length">
-                    <div class="coming-grid">
-                        <div v-for="(g, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
-                            @click="openPlaceList(g.name, '住宿')">
-                            <img :src="g.img" alt="" class="w100">
-                            <div class="card-title">{{ g.name }}住宿</div>
-                            <div class="card-sub">住宿{{ g.enName }}</div>
-                        </div>
-                    </div>
-                </template>
-                <div v-else class="empty-tip">没有搜索结果</div>
-            </template>
-            <div class="special-activities-section"
-                v-else-if="showFreeTripSubnav && (committedKeyword?.trim()) && subTab === '特别活动'">
-                <template v-if="activityFiltered.length">
-                    <div class="activities-header">
-                        <h2 class="activities-title">塔斯马尼亚特别活动</h2>
-                        <p class="activities-subtitle">实时特色活动与极光天气信息</p>
-                    </div>
-
-                    <div class="activities-grid">
-                        <div v-for="(item, i) in activityFiltered" :key="'ac-filtered-' + i"
-                            :class="['activity-card', item.cardClass]">
-                            <!-- 这里使用特别活动的专属卡片结构 -->
-                            <div class="activity-image">
-                                <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
-                                <div :class="['activity-badge', item.badgeClass]">
-                                    {{ item.badge }}
-                                </div>
-                            </div>
-                            <div class="activity-content">
-                                <h3 class="activity-title">{{ item.title }}</h3>
-                                <div class="activity-info">
-                                    <div v-for="(infoItem, infoIndex) in item.info" :key="infoIndex" class="info-item">
-                                        <span class="info-label">{{ infoItem.label }}：</span>
-                                        <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value
-                                            }}</span>
-                                    </div>
-                                </div>
-                                <div class="tags">
-                                    <div v-for="(tagItem, tagIndex) in item.tagItems" :key="tagIndex"
-                                        :class="tagItem.icon ? 'weather-note' : 'activity-description'">
-                                        <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
-                                        <span>{{ tagItem.text }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-                <div v-else class="empty-tip">没有搜索结果</div>
-                <div class="activities-footer">
-                    <div class="update-info">
-                        <i class="update-icon">🔄</i>
-                        <span>信息每2小时更新一次</span>
-                    </div>
-                    <div class="contact-info">
-                        <span>获取最新活动信息，请联系我们的专业顾问</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 底部网格：仅在未进入"自助游/自驾游免费信息"或当前子选项为景点时展示，避免重复 -->
-            <!-- <div v-if="!showFreeTripSubnav || subTab === '景点'" class="coming-grid">
-                <div v-for="(item, i) in gridItems" :key="i" class="coming-card" @click="openTourDialog(item)">
-                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
-                </div>
-            </div> -->
-            <!-- 景点网格：仅在选中景点时显示 -->
-            <div v-if="showFreeTripSubnav && subTab === '景点' && !(committedKeyword?.trim())" class="coming-grid">
-                <div v-for="(item, i) in scenicFiltered" :key="'rt-bottom-' + i" class="coming-card"
-                    @click="openTourDialog(item)">
-                    <!-- 待修改成动态图片 -->
-                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
-                </div>
-            </div>
-            <!-- 餐厅网格：地点分组入口 -->
-            <div v-if="showFreeTripSubnav && subTab === '餐厅' && !(committedKeyword?.trim())" class="coming-grid">
-                <div v-for="(g, i) in placeGroups" :key="'rt-place-' + i" class="coming-card"
-                    @click="openPlaceList(g.name, '餐厅')">
-                    <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}餐厅</div>
-                    <!-- <div class="card-sub">餐厅分布</div> -->
-                    <div class="card-sub">餐厅{{ g.enName }}</div>
-                </div>
-            </div>
-
-            <!-- 住宿网格：地点分组入口 -->
-            <div v-if="showFreeTripSubnav && subTab === '住宿' && !(committedKeyword?.trim())" class="coming-grid">
-                <div v-for="(g, i) in placeGroups" :key="'ht-place-' + i" class="coming-card"
-                    @click="openPlaceList(g.name, '住宿')">
-                    <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}住宿</div>
-                    <!-- <div class="card-sub">住宿分布</div> -->
-                    <div class="card-sub">住宿{{ g.enName }}</div>
-                </div>
-            </div>
-
-            <!-- 特别活动：信息展示区域 -->
-            <div v-if="showFreeTripSubnav && subTab === '特别活动' && !(committedKeyword?.trim())"
-                class="special-activities-section">
-                <div class="activities-header">
-                    <h2 class="activities-title">塔斯马尼亚特别活动</h2>
-                    <p class="activities-subtitle">实时特色活动与极光天气信息</p>
-                </div>
-
-                <div class="activities-grid">
-                    <div v-for="(activity, index) in activityItems" :key="index"
-                        :class="['activity-card', activity.cardClass]">
-                        <div class="activity-image">
-                            <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
-                            <div :class="['activity-badge', activity.badgeClass]">
-                                {{ activity.badge }}
-                            </div>
-                        </div>
-                        <div class="activity-content">
-                            <h3 class="activity-title">{{ activity.title }}</h3>
-                            <div class="activity-info">
-                                <div v-for="(infoItem, infoIndex) in activity.info" :key="infoIndex" class="info-item">
-                                    <span class="info-label">{{ infoItem.label }}：</span>
-                                    <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value }}</span>
-                                </div>
-                            </div>
-                            <div class="tags">
-                                <div v-for="(tagItem, tagIndex) in activity.tagItems" :key="tagIndex"
-                                    :class="tagItem.icon ? 'weather-note' : 'activity-description'">
-                                    <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
-                                    <span>{{ tagItem.text }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="activities-footer">
-                    <div class="update-info">
-                        <i class="update-icon">🔄</i>
-                        <span>信息每2小时更新一次</span>
-                    </div>
-                    <div class="contact-info">
-                        <span>获取最新活动信息，请联系我们的专业顾问</span>
-                    </div>
-                </div>
-            </div>
+            <!-- 网格区统一由 TripsGrid 承担渲染 -->
+            <!-- <TripsGrid v-if="showFreeTripSubnav" :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
+                @open-tour-dialog="openTourDialog"
+                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" /> -->
 
             <!-- 一日游子导航 -->
             <template v-if="showDayTripSubnav">
@@ -1064,33 +550,13 @@ watch(activeTag, (next) => {
                     </ul>
                 </div>
 
-                <!-- 一日游内容网格 -->
-                <!-- <div class="day-trip-content"> -->
-                <div class="coming-grid">
-                    <!-- 这里显示当前选中子导航对应的独立数据 -->
-                    <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`"
-                        class="coming-card" @click="openTourDialog(item)">
-                        <!-- 使用统一的图片 -->
-                        <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                        <!-- <img :src="getDayTripImage(dayTripTab, i)" alt="" class="w100"> -->
-                        <div class="card-title">{{ item.title }}</div>
-                        <div class="card-sub">{{ item.sub }}</div>
-                    </div>
-                </div>
-                <!-- </div> -->
+                <!-- 一日游内容网格由 TripsGrid 渲染 -->
+                <!-- <TripsGrid :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
+                    :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
+                    @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" /> -->
             </template>
 
-            <!-- 多日游网格显示（保持不变） -->
-            <template v-if="!currentServiceConfig && activeTag === '多日游（固定行程）'">
-                <div class="coming-grid">
-                    <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card"
-                        @click="openTourDialog(item)">
-                        <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                        <div class="card-title">{{ item.title }}</div>
-                        <div class="card-sub">{{ item.sub }}</div>
-                    </div>
-                </div>
-            </template>
+            <!-- 多日游由 TripsGrid 内部处理，无需在此重复渲染 -->
 
             <!-- 一日游、多日游网格显示
             <div v-if="!currentServiceConfig && (activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
@@ -1246,20 +712,6 @@ watch(activeTag, (next) => {
         // letter-spacing: 15px;
         margin-top: 90px;
 
-        .coming-grid {
-            width: 90%;
-            // max-width: 1200px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            // padding: 8px 20px 40px;
-            padding: 8px 0 40px;
-
-            img {
-                // height: 90%;
-                height: 240px;
-            }
-        }
 
         .service-title {
             align-self: flex-start;
@@ -1272,33 +724,6 @@ watch(activeTag, (next) => {
             color: #111827;
         }
 
-        .coming-card {
-            // height: 160px;
-            border-radius: 12px;
-            // background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            // align-items: center;
-            // text-align: center;
-            padding: 12px;
-            // box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-            cursor: pointer;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #1f2937;
-            margin-bottom: 6px;
-        }
-
-        .card-sub {
-            font-size: 12px;
-            color: #6b7280;
-            letter-spacing: 2px;
-        }
 
         /* 自助游/自驾游免费信息 子导航容器 */
         .free-trip-subnav {
@@ -1359,213 +784,9 @@ watch(activeTag, (next) => {
             color: #111827;
         }
 
-        .empty-tip {
-            text-align: center;
-            color: #6b7280;
-            font-size: 18px;
-            padding: 16px 0 8px;
-        }
 
-        /* 特别活动样式 */
-        .special-activities-section {
-            width: 90%;
-            padding: 20px 0;
-        }
 
-        .activities-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
 
-        .activities-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-        }
-
-        .activities-subtitle {
-            font-size: 16px;
-            color: #6b7280;
-            margin: 0;
-        }
-
-        .activities-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-bottom: 30px;
-        }
-
-        .activity-card {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .activity-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .activity-image {
-            position: relative;
-            height: 300px;
-            overflow: hidden;
-        }
-
-        .activity-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .activity-card:hover .activity-img {
-            transform: scale(1.05);
-        }
-
-        .activity-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .aurora-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .event-badge {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .season-badge {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .night-badge {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .activity-content {
-            padding: 20px;
-
-            .tags {
-                display: flex;
-                column-gap: 10px;
-
-                .tags>div {
-                    width: 100px;
-                    height: 30px;
-                    line-height: 30px;
-                }
-            }
-        }
-
-        .activity-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
-        }
-
-        .activity-info {
-            margin-bottom: 16px;
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            padding: 4px 0;
-        }
-
-        .info-label {
-            font-size: 14px;
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 14px;
-            color: #111827;
-            font-weight: 600;
-        }
-
-        .info-value.high {
-            color: #059669;
-            font-weight: 700;
-        }
-
-        .info-value.excellent {
-            color: #dc2626;
-            font-weight: 700;
-        }
-
-        .activity-description {
-            font-size: 14px;
-            color: #4b5563;
-            line-height: 1.6;
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
-        }
-
-        .weather-note {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #059669;
-            background: #ecfdf5;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border-left: 4px solid #10b981;
-        }
-
-        .weather-icon {
-            font-size: 16px;
-        }
-
-        .activities-footer {
-            text-align: center;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .update-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .update-icon {
-            font-size: 16px;
-        }
-
-        .contact-info {
-            font-size: 14px;
-            color: #4b5563;
-        }
     }
 }
 

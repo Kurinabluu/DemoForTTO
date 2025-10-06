@@ -43,6 +43,15 @@ function onClickTag(tag) {
 function onSearch() {
   emit('search', searchInput.value)
 }
+// 在 ServicesNav.vue 的点击标签处理函数中
+function handleTagClick(tag) {
+  if (tag === '自助游/自驾游免费信息') {
+    router.push({ name: 'Trips' });
+  } else if (tag === '代订门票及旅游项目') {
+    router.push({ name: 'Service' });
+  }
+  // 其他标签处理...
+}
 </script>
 
 <template>
