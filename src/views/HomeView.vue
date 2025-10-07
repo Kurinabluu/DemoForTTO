@@ -21,12 +21,18 @@ const currentView = computed(() => {
 
 // 路由名与标签的映射
 const routeNameToTag = {
-    Service: '代订门票及旅游项目', // 根据你的需求调整
-    Trips: '自助游/自驾游免费信息', // 根据你的需求调整
+    Service: '代订门票及旅游项目', // 默认Service路由对应的标签
+    Trips: '自助游/自驾游免费信息', // 默认Trips路由对应的标签
 }
 const tagToRouteName = {
     '代订门票及旅游项目': 'Service',
+    '包车服务（独立成团+专车+司导）': 'Service',
+    '全程旅游管家服务': 'Service',
+    '地接地陪服务': 'Service',
+    '个性定制服务': 'Service',
     '自助游/自驾游免费信息': 'Trips',
+    '一日游（固定行程）': 'Trips',
+    '多日游（固定行程）': 'Trips'
 }
 
 // 监听查询参数，动态切换子导航与一日游子标签
@@ -356,6 +362,8 @@ function onClickTag(tag) {
     // 路由跳转
     const routeName = tagToRouteName[tag]
     if (routeName) {
+        // 保存路由名称
+        useNavStore().saveSelectedRoute(routeName)
         router.push({ name: routeName })
     }
 }
@@ -451,6 +459,11 @@ function onTouchEnd() {
 onMounted(() => {
     useNavStore().markFirstVisitDone()
 
+    // 保存当前路由
+    if (route.name) {
+        useNavStore().saveSelectedRoute(route.name)
+    }
+
     // 根据当前路由设置初始状态
     if (route.name === 'Service') {
         activeTag.value = '代订门票及旅游项目'
@@ -504,14 +517,6 @@ onUnmounted(() => {
             @search="isDialogVisible = true" />
         <!-- 内容区域 -->
         <div class="content-box">
-            <!-- 服务组件区域
-            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" /> -->
-
-            <!-- 路由视图 -->
-            <router-view :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
-                :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
-                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
-
             <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
             <div v-if="showFreeTripSubnav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
@@ -555,6 +560,18 @@ onUnmounted(() => {
                     :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
                     @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" /> -->
             </template>
+
+            <!-- 服务组件区域 -->
+            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
+
+            <!-- 网格区统一由 TripsGrid 承担渲染 -->
+            <TripsGrid
+                v-else-if="!currentServiceConfig && (activeTag === '自助游/自驾游免费信息' || activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
+                :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword" :day-trip-tab="dayTripTab"
+                @open-tour-dialog="openTourDialog"
+                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
+
+
 
             <!-- 多日游由 TripsGrid 内部处理，无需在此重复渲染 -->
 

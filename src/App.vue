@@ -3,10 +3,13 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
+import { useRouter } from 'vue-router'
 
 // 电梯导航相关
 const showElevator = ref(false)
 const isAtBottom = ref(false)
+
+const router = useRouter()
 
 // 滚动处理函数
 const handleScroll = () => {
@@ -85,7 +88,7 @@ onMounted(() => {
   if (!navStore.isFirstVisit()) {
     // 延迟执行，确保DOM已完全渲染
     setTimeout(() => {
-      const selectedService = navStore.selectedService
+      const selectedRoute = navStore.selectedRoute
       const selectedSubNav = navStore.selectedSubNav
       const savedScrollY = navStore.lastScrollY
 
@@ -93,36 +96,23 @@ onMounted(() => {
       const isMobile = window.innerWidth <= 768
       const navHeight = isMobile ? 60 : 80 // 移动端导航栏高度较小
 
-      // 如果有选中的服务，则查找并点击该服务标签
-      if (selectedService) {
-        const serviceTag = document.querySelector(`.tag-pill[data-service="${selectedService}"]`)
-        if (serviceTag) {
-          serviceTag.click()
-
-          // 如果有保存的滚动位置，则恢复到保存的位置
-          // 否则滚动到搜索标签区域
-          if (savedScrollY > 100) {
-            // 延迟恢复滚动位置，确保服务内容已加载
-            setTimeout(() => {
-              window.scrollTo({
-                top: savedScrollY,
-                behavior: 'smooth'
-              })
-            }, 500)
-          } else {
-            // 滚动到搜索标签区域（考虑导航栏高度）
-            const searchSection = document.querySelector('.search-fixed')
-            if (searchSection) {
-              const targetPosition = searchSection.offsetTop - navHeight
-              window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-              })
-            }
-          }
+      // 如果有选中的路由，则直接导航到该路由
+      if (selectedRoute) {
+        router.push({ name: selectedRoute })
+        
+        // 如果有保存的滚动位置，则恢复到保存的位置
+        // 否则滚动到搜索标签区域
+        if (savedScrollY > 100) {
+          // 延迟恢复滚动位置，确保服务内容已加载
+          setTimeout(() => {
+            window.scrollTo({
+              top: savedScrollY,
+              behavior: 'smooth'
+            })
+          }, 500)
         }
       } else if (savedScrollY > 100) {
-        // 如果没有选中的服务，但有保存的滚动位置，则直接恢复滚动位置
+        // 如果没有选中的路由，但有保存的滚动位置，则直接恢复滚动位置
         window.scrollTo({
           top: savedScrollY,
           behavior: 'smooth'

@@ -2,36 +2,49 @@
 // 搜索相关数据
 import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
 import HomeView from '@/views/HomeView.vue';
+import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 
 const currentNav = ref('网站首页')
 const navStore = useNavStore();
+const router = useRouter();
+const comingSoonDialogRef = ref(null);
 
 function onNavClick(event) {
     const clickedElement = event.currentTarget;
     const btnsContainer = clickedElement.closest('.btns');
+
+    const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
+    // 获取点击的文本内容
+    const textContent = clickedElement.textContent.trim();
+
+    // 特别推荐：跳转到免费信息并选择"特别活动"子导航
+    if (textContent === '特别推荐') {
+        // 保存需要选择的子导航
+        navStore.saveSelectedSubNav('特别活动');
+        // 跳转到免费信息页面
+        router.push('/DemoForTTO/trips');
+    }
+    // 网站首页和联系我们：不弹出对话框
+
+    // 其他导航项：弹出敬请期待对话框
+    else if (textContent === '行业新闻') {
+        if (comingSoonDialogRef.value) {
+            comingSoonDialogRef.value.showComingDialog = true;
+        }
+        return
+    }
+
     if (!btnsContainer) {
         clickedElement.classList.add('clicked');
         return;
     }
-    const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
     candidates.forEach((node) => node.classList.remove('clicked'));
     clickedElement.classList.add('clicked');
 
-    // // 更新当前导航状态
-    // currentNav.value = navName;
 
-    // // 触发全局事件，让HomeView知道导航变化
-    // if (navName === '特别推荐') {
-    //     window.dispatchEvent(new CustomEvent('header-nav-click', {
-    //         detail: { nav: '特别推荐' }
-    //     }));
-    // } else if (navName === '网站首页') {
-    //     window.dispatchEvent(new CustomEvent('header-nav-click', {
-    //         detail: { nav: '网站首页' }
-    //     }));
-    // }
 }
 
 // 联系我们弹窗
@@ -84,9 +97,11 @@ onMounted(() => {
                         <RouterLink to="/DemoForTTO">网站首页</RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
-                    <li class="pointer" @click="onNavClick($event)">特别推荐</li>
+                    <li class="pointer" @click="onNavClick($event)">
+                        <RouterLink to="/DemoForTTO/trips">特别推荐</RouterLink>
+                    </li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
-                    <li class="pointer" @click="onNavClick($event)">八大服务</li>
+                    <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
                     <li class="pointer" @click="openContactDialog()">联系我们</li>
                 </ul>
@@ -96,6 +111,7 @@ onMounted(() => {
 
         <!-- <HomeView /> -->
         <RouterView />
+        <ComingSoonDialog ref="comingSoonDialogRef" />
 
         <!-- 联系我们弹窗 -->
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"

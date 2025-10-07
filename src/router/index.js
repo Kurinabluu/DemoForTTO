@@ -23,14 +23,20 @@ const routes = [
         path: 'DemoForTTO',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
-        children: [
-          // 待修改，改成根据本地存储而决定显示哪个组件
-          { path: '', component: () => import('@/views/ServiceShowcase.vue') },
-          // 服务相关路由
-          { path: 'service', name: 'Service', component: () => import('@/views/ServiceShowcase.vue') },
-          { path: 'trips', name: 'Trips', component: () => import('@/views/TripsGrid.vue') },
+        children:[
+          {
+            path: 'service',
+            name: 'Service',
+            component: () => import('@/views/ServiceShowcase.vue')
+          },
+          {
+            path: 'trips',
+            name: 'Trips',
+            component: () => import('@/views/TripsGrid.vue')
+          }
         ]
       },
+      
 
     ]
   }

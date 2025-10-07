@@ -4,16 +4,16 @@ const STORAGE_KEYS = {
     firstVisit: 'tto_first_visit_done',
     lastPath: 'tto_last_path',
     lastScrollY: 'tto_last_scroll_y',
-    selectedService: 'tto_selected_service',
     selectedSubNav: 'tto_selected_subnav',
+    selectedRoute: 'tto_selected_route', // 保存路由名称
 }
 
 export const useNavStore = defineStore('nav', {
     state: () => ({
         lastPath: localStorage.getItem(STORAGE_KEYS.lastPath) || '',
         lastScrollY: Number(localStorage.getItem(STORAGE_KEYS.lastScrollY) || 0),
-        selectedService: localStorage.getItem(STORAGE_KEYS.selectedService) || '',
         selectedSubNav: localStorage.getItem(STORAGE_KEYS.selectedSubNav) || '',
+        selectedRoute: localStorage.getItem(STORAGE_KEYS.selectedRoute) || '', // 保存路由名称
     }),
     actions: {
         markFirstVisitDone() {
@@ -31,10 +31,6 @@ export const useNavStore = defineStore('nav', {
             this.lastScrollY = val
             localStorage.setItem(STORAGE_KEYS.lastScrollY, String(val))
         },
-        saveSelectedService(serviceName) {
-            this.selectedService = serviceName
-            localStorage.setItem(STORAGE_KEYS.selectedService, serviceName || '')
-        },
         saveSelectedSubNav(subNavName) {
             this.selectedSubNav = subNavName
             localStorage.setItem(STORAGE_KEYS.selectedSubNav, subNavName || '')
@@ -43,13 +39,19 @@ export const useNavStore = defineStore('nav', {
             this.headerActiveNav = navName
             localStorage.setItem(STORAGE_KEYS.headerActiveNav, navName || '网站首页')
         },
-        clearSelectedService() {
-            this.selectedService = ''
-            localStorage.removeItem(STORAGE_KEYS.selectedService)
-        },
         clearSelectedSubNav() {
             this.selectedSubNav = ''
             localStorage.removeItem(STORAGE_KEYS.selectedSubNav)
+        },
+        // 保存路由名称
+        saveSelectedRoute(routeName) {
+            this.selectedRoute = routeName
+            localStorage.setItem(STORAGE_KEYS.selectedRoute, routeName || '')
+        },
+        // 清除保存的路由名称
+        clearSelectedRoute() {
+            this.selectedRoute = ''
+            localStorage.removeItem(STORAGE_KEYS.selectedRoute)
         }
     }
 })

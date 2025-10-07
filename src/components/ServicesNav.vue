@@ -32,9 +32,6 @@ watch(() => props.modelValue, (newValue) => {
 
 // 标签点击事件处理
 function onClickTag(tag) {
-  // 保存用户选择的服务
-  useNavStore().saveSelectedService(tag)
-
   // 通知父组件标签被点击
   emit('tag-click', tag)
 }
