@@ -1,7 +1,6 @@
-import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import { useNavStore } from '@/stores/nav'
 
-// const BATH_PATH = 
 const routes = [
   //首页
   {
@@ -20,27 +19,26 @@ const routes = [
         redirect: { name: 'Home' }
       },
       {
-        path: 'DemoForTTO',
+        path: '/DemoForTTO',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
-        children:[
-          {
-            path: 'service',
-            name: 'Service',
-            component: () => import('@/views/ServiceShowcase.vue')
-          },
+        children: [
+          // Trips 路由组
           {
             path: 'trips',
             name: 'Trips',
             component: () => import('@/views/TripsGrid.vue')
+          },
+          // Service 路由组
+          {
+            path: 'service',
+            name: 'Service',
+            component: () => import('@/views/ServiceShowcase.vue')
           }
         ]
-      },
-      
-
+      }
     ]
   }
-
 ]
 const router = createRouter({
   history: createWebHistory(),

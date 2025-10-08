@@ -1,11 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import ContactDialog from './ContactDialog.vue'
+import dataJson from '@/data/data.json'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
     title: { type: String, default: '塔斯马尼亚一日游' },
     banner: { type: String, default: '' },
+    tripType: { type: String, default: '一日游' } // 添加tripType属性来区分一日游和多日游
 })
 
 const emit = defineEmits(['update:visible'])
@@ -21,97 +23,47 @@ const openContactDialog = () => {
     contactDialogVisible.value = true
 }
 
-// 景点一日游弹窗数据
-const scenicDayTripDialogData = {
-    '菲欣拿国家公园一日游': {
-        route: '菲欣拿国家公园生态探索之旅',
-        desc: '探索塔斯马尼亚最古老的国家公园，体验原始雨林、瀑布和丰富的野生动物。',
-        features: [
-            { icon: '#22c55e', title: '雨林徒步', desc: '漫步于古老的温带雨林中，感受千年古树的魅力' },
-            { icon: '#3b82f6', title: '瀑布观景', desc: '欣赏壮观的罗素瀑布和马蹄瀑布' },
-            { icon: '#f59e0b', title: '野生动物', desc: '观察袋鼠、袋熊等澳洲特有动物' }
-        ],
-        tags: ['全程约6小时', '含专业导游', '霍巴特出发', '中英文讲解']
-    },
-    '摇篮山一日游': {
-        route: '摇篮山国家公园一日游',
-        desc: '探访世界遗产摇篮山，体验高山湖泊、原始森林和壮丽山景。',
-        features: [
-            { icon: '#22c55e', title: '多芬湖环游', desc: '乘坐游船环游多芬湖，欣赏倒影山景' },
-            { icon: '#3b82f6', title: '高山徒步', desc: '挑战摇篮山步道，俯瞰塔斯马尼亚全景' },
-            { icon: '#f59e0b', title: '自然摄影', desc: '捕捉塔斯马尼亚最经典的自然风光' }
-        ],
-        tags: ['全程约8小时', '含午餐', '朗塞斯顿出发', '专业摄影指导']
+// 从data.json中获取行程信息
+const getTripRouteInfo = (title, tripType) => {
+    try {
+        // 确保title和dataJson已声明且不为空
+        if (!title || !dataJson || !Array.isArray(dataJson)) {
+            return getDefaultTripInfo(title)
+        }
+        
+        // 如果是多日游，从多日游数据中查找
+        if (tripType === '多日游') {
+            const multiDaySection = dataJson.find(item => item?.tagName === '多日游（固定行程）')
+            const tripItem = multiDaySection?.tripConfig?.find(item => item?.title === title)
+            if (tripItem?.tripData) {
+                return tripItem.tripData
+            }
+        }
+        
+        // 否则从一日游数据中查找
+        const dayTripSection = dataJson.find(item => item?.tagName === '一日游（固定行程）')
+        if (dayTripSection?.subNav && Array.isArray(dayTripSection.subNav)) {
+            // 遍历所有一日游子导航
+            for (const subNav of dayTripSection.subNav) {
+                if (subNav?.items && Array.isArray(subNav.items)) {
+                    const tripItem = subNav.items.find(item => item?.title === title)
+                    if (tripItem?.tripData) {
+                        return tripItem.tripData
+                    }
+                }
+            }
+        }
+
+        // 默认返回通用信息
+        return getDefaultTripInfo(title)
+    } catch (error) {
+        console.error('获取行程信息失败:', error)
+        return getDefaultTripInfo(title)
     }
-    // ... 其他景点一日游数据
 }
 
-// 主题一日游弹窗数据
-const themeDayTripDialogData = {
-    '美食美酒之旅': {
-        route: '塔玛谷美食美酒探索之旅',
-        desc: '探访塔斯马尼亚著名的葡萄酒产区，品尝当地美酒和特色美食。',
-        features: [
-            { icon: '#22c55e', title: '酒庄参观', desc: '参观精品酒庄了解酿酒工艺' },
-            { icon: '#3b82f6', title: '品酒体验', desc: '品尝多种塔斯马尼亚特色葡萄酒' },
-            { icon: '#f59e0b', title: '美食搭配', desc: '学习葡萄酒与当地美食的完美搭配' }
-        ],
-        tags: ['全程约6小时', '含品酒费', '朗塞斯顿出发', '美食专家']
-    },
-    '野生动物探寻': {
-        route: '塔斯马尼亚野生动物观察之旅',
-        desc: '专为野生动物爱好者设计，近距离观察塔斯马尼亚独有的野生动物和鸟类。',
-        features: [
-            { icon: '#22c55e', title: '夜间观察', desc: '在专业向导带领下夜间观察野生动物' },
-            { icon: '#3b82f6', title: '塔斯马尼亚恶魔', desc: '近距离观察濒危的塔斯马尼亚恶魔' },
-            { icon: '#f59e0b', title: '小企鹅归巢', desc: '观赏小企鹅傍晚归巢的可爱场景' }
-        ],
-        tags: ['全程约8小时', '含保护区门票', '多个出发地', '野生动物专家']
-    }
-    // ... 其他主题一日游数据
-}
-
-// 定制一日游弹窗数据
-const customDayTripDialogData = {
-    '家庭亲子定制游': {
-        route: '家庭亲子专属定制行程',
-        desc: '专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。',
-        features: [
-            { icon: '#22c55e', title: '儿童活动', desc: '安排适合儿童的趣味互动活动' },
-            { icon: '#3b82f6', title: '安全第一', desc: '全程注重儿童安全和舒适度' },
-            { icon: '#f59e0b', title: '教育体验', desc: '在游玩中学习自然和历史知识' }
-        ],
-        tags: ['灵活时长', '儿童专属活动', '安全车辆', '亲子专家']
-    },
-    '情侣浪漫定制游': {
-        route: '情侣浪漫专属定制行程',
-        desc: '为情侣量身定制的浪漫之旅，包含私密观景点和特色餐饮体验。',
-        features: [
-            { icon: '#22c55e', title: '私密景点', desc: '安排人少景美的私密观景点' },
-            { icon: '#3b82f6', title: '浪漫餐饮', desc: '精心安排浪漫的餐饮体验' },
-            { icon: '#f59e0b', title: '专业摄影', desc: '为情侣记录美好旅行时光' }
-        ],
-        tags: ['私密行程', '浪漫体验', '专业跟拍', '定制餐饮']
-    }
-    // ... 其他定制一日游数据
-}
-
-// 根据一日游标题获取对应的路线信息
-const getDayTripRouteInfo = (title) => {
-    // 检查是否在景点一日游数据中
-    if (scenicDayTripDialogData[title]) {
-        return scenicDayTripDialogData[title]
-    }
-    // 检查是否在主题一日游数据中
-    if (themeDayTripDialogData[title]) {
-        return themeDayTripDialogData[title]
-    }
-    // 检查是否在定制一日游数据中
-    if (customDayTripDialogData[title]) {
-        return customDayTripDialogData[title]
-    }
-
-    // 默认返回通用信息
+// 获取默认行程信息
+function getDefaultTripInfo(title = '未知行程') {
     return {
         route: `${title}探索之旅`,
         desc: `深度探索${title}的自然美景和文化内涵，体验塔斯马尼亚独特的魅力。`,
@@ -125,7 +77,7 @@ const getDayTripRouteInfo = (title) => {
 }
 
 // 计算路线信息
-const routeInfo = computed(() => getDayTripRouteInfo(props.title))
+const routeInfo = computed(() => getTripRouteInfo(props.title, props.tripType))
 </script>
 
 <template>

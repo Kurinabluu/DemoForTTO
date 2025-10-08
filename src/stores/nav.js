@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 
 const STORAGE_KEYS = {
     firstVisit: 'tto_first_visit_done',
-    lastPath: 'tto_last_path',
-    lastScrollY: 'tto_last_scroll_y',
-    selectedSubNav: 'tto_selected_subnav',
+    lastPath: 'tto_last_path', // 保存完整路由路径
+    lastScrollY: 'tto_last_scroll_y', // 保存滚动位置
+    selectedSubNav: 'tto_selected_subnav', // 保存选中的子导航
     selectedRoute: 'tto_selected_route', // 保存路由名称
 }
 

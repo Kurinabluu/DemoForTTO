@@ -32,22 +32,27 @@ watch(() => props.modelValue, (newValue) => {
 
 // 标签点击事件处理
 function onClickTag(tag) {
-  // 通知父组件标签被点击
-  emit('tag-click', tag)
+  try {
+    // 移除之前的高亮
+    const tags = document.querySelectorAll('.popular-tag.active')
+    tags.forEach(t => t.classList.remove('active'))
+    
+    // 添加当前高亮
+    const currentTag = document.querySelector(`.popular-tag[data-tag="${tag}"]`)
+    if (currentTag) {
+        currentTag.classList.add('active')
+    }
+    
+    // 触发父组件的标签点击事件
+    emit('tag-click', tag)
+  } catch (error) {
+    console.error('标签点击处理失败:', error)
+  }
 }
 
 // 搜索按钮点击事件
 function onSearch() {
   emit('search', searchInput.value)
-}
-// 在 ServicesNav.vue 的点击标签处理函数中
-function handleTagClick(tag) {
-  if (tag === '自助游/自驾游免费信息') {
-    router.push({ name: 'Trips' });
-  } else if (tag === '代订门票及旅游项目') {
-    router.push({ name: 'Service' });
-  }
-  // 其他标签处理...
 }
 </script>
 

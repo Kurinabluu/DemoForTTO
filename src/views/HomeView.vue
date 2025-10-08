@@ -8,6 +8,7 @@ import ServiceShowcase from '@/views/ServiceShowcase.vue'
 import TripsGrid from '@/views/TripsGrid.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
 import { useNavStore } from '@/stores/nav'
+import data from '@/data/data.json'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,32 +20,42 @@ const currentView = computed(() => {
     return 'default'
 })
 
-// 路由名与标签的映射
-const routeNameToTag = {
-    Service: '代订门票及旅游项目', // 默认Service路由对应的标签
-    Trips: '自助游/自驾游免费信息', // 默认Trips路由对应的标签
+// 标签与详细路由的映射
+const tagToFullRoute = {
+    '自助游/自驾游免费信息': '/DemoForTTO/trips/freeinfo',
+    '一日游（固定行程）': '/DemoForTTO/trips/oneday',
+    '多日游（固定行程）': '/DemoForTTO/trips/multiday',
+    '代订门票及旅游项目': '/DemoForTTO/service/ticket',
+    '包车服务（独立成团+专车+司导）': '/DemoForTTO/service/car',
+    '全程旅游管家服务': '/DemoForTTO/service/steward',
+    '地接地陪服务': '/DemoForTTO/service/guide',
+    '个性定制服务': '/DemoForTTO/service/custom'
 }
-const tagToRouteName = {
-    '代订门票及旅游项目': 'Service',
-    '包车服务（独立成团+专车+司导）': 'Service',
-    '全程旅游管家服务': 'Service',
-    '地接地陪服务': 'Service',
-    '个性定制服务': 'Service',
-    '自助游/自驾游免费信息': 'Trips',
-    '一日游（固定行程）': 'Trips',
-    '多日游（固定行程）': 'Trips'
+
+// 路由名与标签的映射（用于兼容现有代码）
+const routeNameToTag = {
+    Service: '代订门票及旅游项目',
+    Trips: '自助游/自驾游免费信息',
+    FreeInfo: '自助游/自驾游免费信息',
+    OneDayTour: '一日游（固定行程）',
+    MultiDayTour: '多日游（固定行程）',
+    TicketBooking: '代订门票及旅游项目',
+    CarService: '包车服务（独立成团+专车+司导）',
+    StewardService: '全程旅游管家服务',
+    GuideService: '地接地陪服务',
+    CustomService: '个性定制服务'
 }
 
 // 监听查询参数，动态切换子导航与一日游子标签
-// watch(() => route.query, (q) => {
-//     const query = q || {}
-//     if (typeof query.subTab === 'string' && subNavTabs.includes(query.subTab)) {
-//         subTab.value = query.subTab
-//     }
-//     if (typeof query.dayTab === 'string' && ['景点一日游', '主题一日游', '定制一日游'].includes(query.dayTab)) {
-//         dayTripTab.value = query.dayTab
-//     }
-// }, { deep: true })
+watch(() => route.query, (q) => {
+    const query = q || {}
+    if (typeof query.subTab === 'string' && subNavTabs.includes(query.subTab)) {
+        subTab.value = query.subTab
+    }
+    if (typeof query.dayTab === 'string' && ['景点一日游', '主题一日游', '定制一日游'].includes(query.dayTab)) {
+        dayTripTab.value = query.dayTab
+    }
+}, { deep: true })
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -273,20 +284,59 @@ const listItems = ref([])
 function openPlaceList(placeName, itemType) {
     listPlaceName.value = placeName
     listItemType.value = itemType
-    const baseImg = itemType === '餐厅'
-        ? new URL('@/assets/img/footer2.jpg', import.meta.url).href
-        : new URL('@/assets/img/footer3.jpg', import.meta.url).href
-    const items = []
-    for (let i = 0; i < 24; i++) {
-        // 字母在此-------------------------------------------------------------
-        const label = String.fromCharCode(65 + (i % 26))
-        const title = itemType === '餐厅' ? `餐厅名${label}` : `住宿名${label}`
-        //英文标题
-        const enTitle = itemType === '餐厅' ? `Restaurant${label}` : `Hotel${label}`
-        items.push({ title, img: baseImg, enTitle })
+    
+    // 从data.json中获取真实的数据
+    const freeInfo = data.find(item => item.tagName === '自助游/自驾游免费信息')
+    if (freeInfo && freeInfo.subNav) {
+        const subNav = freeInfo.subNav.find(sub => sub.subNavName === itemType)
+        if (subNav && subNav.items) {
+            listItems.value = subNav.items
+        } else {
+            // 如果没有找到匹配的数据，生成备用的模拟数据
+            generateMockItems()
+        }
+    } else {
+        // 如果没有找到免费信息数据，生成备用的模拟数据
+        generateMockItems()
     }
-    listItems.value = items
+    
     isPlaceListVisible.value = true
+    
+    // 生成备用模拟数据的函数
+    function generateMockItems() {
+        // 根据类型选择基础图片路径
+        let baseImg, titlePrefix, enTitlePrefix
+        switch (itemType) {
+            case '餐厅':
+                baseImg = new URL('@/assets/img/footer2.jpg', import.meta.url).href
+                titlePrefix = '餐厅名'
+                enTitlePrefix = 'Restaurant'
+                break
+            case '住宿':
+                baseImg = new URL('@/assets/img/footer3.jpg', import.meta.url).href
+                titlePrefix = '住宿名'
+                enTitlePrefix = 'Hotel'
+                break
+            case '景点':
+                baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
+                titlePrefix = '景点名'
+                enTitlePrefix = 'Attraction'
+                break
+            default:
+                baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
+                titlePrefix = '地点名'
+                enTitlePrefix = 'Place'
+        }
+        
+        const items = []
+        for (let i = 0; i < 24; i++) {
+            const label = String.fromCharCode(65 + (i % 26))
+            const title = `${titlePrefix}${label}`
+            const enTitle = `${enTitlePrefix}${label}`
+            items.push({ title, img: baseImg, enTitle })
+        }
+        listItems.value = items
+    }
 }
 
 function onSelectPlaceItem(item) {
@@ -348,23 +398,32 @@ function doSubSearch() {
 }
 
 function onClickTag(tag) {
-    activeTag.value = tag
-    searchText.value = tag
+    try {
+        activeTag.value = tag
+        searchText.value = tag
 
-    // 检查是否是服务类型标签（排除一日游和多日游）
-    if (serviceConfigs[tag] && tag !== '一日游（固定行程）' && tag !== '多日游（固定行程）') {
-        currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
-    } else {
-        // 非服务型标签，显示网格（交由 TripsGrid 渲染）
-        currentServiceConfig.value = null
-    }
+        // 重置子导航为默认值
+        subTab.value = '景点'
+        dayTripTab.value = dayTripTabs[0]
 
-    // 路由跳转
-    const routeName = tagToRouteName[tag]
-    if (routeName) {
-        // 保存路由名称
-        useNavStore().saveSelectedRoute(routeName)
-        router.push({ name: routeName })
+        // 检查是否是服务类型标签（排除一日游和多日游）
+        if (serviceConfigs[tag] && tag !== '一日游（固定行程）' && tag !== '多日游（固定行程）') {
+            currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
+        } else {
+            // 非服务型标签，显示网格（交由 TripsGrid 渲染）
+            currentServiceConfig.value = null
+        }
+
+        // 现在不再进行路由跳转，只保存状态信息
+        const isTripsType = ['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(tag)
+        const type = isTripsType ? 'Trips' : 'Service'
+
+        // 保存路由类型
+        useNavStore().saveSelectedRoute(type)
+        // 保存当前标签
+        useNavStore().savePath(tag)
+    } catch (error) {
+        console.error('标签点击处理失败:', error)
     }
 }
 

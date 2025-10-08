@@ -88,7 +88,7 @@ onMounted(() => {
   if (!navStore.isFirstVisit()) {
     // 延迟执行，确保DOM已完全渲染
     setTimeout(() => {
-      const selectedRoute = navStore.selectedRoute
+      const lastPath = navStore.lastPath
       const selectedSubNav = navStore.selectedSubNav
       const savedScrollY = navStore.lastScrollY
 
@@ -96,12 +96,12 @@ onMounted(() => {
       const isMobile = window.innerWidth <= 768
       const navHeight = isMobile ? 60 : 80 // 移动端导航栏高度较小
 
-      // 如果有选中的路由，则直接导航到该路由
-      if (selectedRoute) {
-        router.push({ name: selectedRoute })
-        
+      // 如果有保存的完整路径，则直接导航到该路径
+      if (lastPath && lastPath !== '/DemoForTTO') {
+        // 使用replace确保URL与实际内容一致
+        router.replace(lastPath)
+
         // 如果有保存的滚动位置，则恢复到保存的位置
-        // 否则滚动到搜索标签区域
         if (savedScrollY > 100) {
           // 延迟恢复滚动位置，确保服务内容已加载
           setTimeout(() => {
@@ -111,12 +111,10 @@ onMounted(() => {
             })
           }, 500)
         }
-      } else if (savedScrollY > 100) {
-        // 如果没有选中的路由，但有保存的滚动位置，则直接恢复滚动位置
-        window.scrollTo({
-          top: savedScrollY,
-          behavior: 'smooth'
-        })
+      } else {
+        // 默认跳转到免费信息并选择景点子导航
+        navStore.saveSelectedSubNav('景点')
+        router.replace('/DemoForTTO/trips/freeinfo')
       }
 
       // 如果有选中的子导航，则查找并点击该子导航标签

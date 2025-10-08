@@ -12,39 +12,30 @@ const navStore = useNavStore();
 const router = useRouter();
 const comingSoonDialogRef = ref(null);
 
-function onNavClick(event) {
-    const clickedElement = event.currentTarget;
-    const btnsContainer = clickedElement.closest('.btns');
-
-    const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
+function onNavClick(event, navName = '') {
     // 获取点击的文本内容
-    const textContent = clickedElement.textContent.trim();
+    const textContent = event.currentTarget.textContent.trim();
 
     // 特别推荐：跳转到免费信息并选择"特别活动"子导航
     if (textContent === '特别推荐') {
         // 保存需要选择的子导航
         navStore.saveSelectedSubNav('特别活动');
         // 跳转到免费信息页面
-        router.push('/DemoForTTO/trips');
+        router.push('/DemoForTTO/trips/freeinfo');
     }
-    // 网站首页和联系我们：不弹出对话框
-
+    // 网站首页：跳转到免费信息并选择"景点"子导航
+    else if (textContent === '网站首页') {
+        // 保存需要选择的子导航
+        navStore.saveSelectedSubNav('景点');
+        // 跳转到免费信息页面
+        router.push('/DemoForTTO/trips/freeinfo');
+    }
     // 其他导航项：弹出敬请期待对话框
     else if (textContent === '行业新闻') {
         if (comingSoonDialogRef.value) {
             comingSoonDialogRef.value.showComingDialog = true;
         }
-        return
     }
-
-    if (!btnsContainer) {
-        clickedElement.classList.add('clicked');
-        return;
-    }
-    candidates.forEach((node) => node.classList.remove('clicked'));
-    clickedElement.classList.add('clicked');
-
-
 }
 
 // 联系我们弹窗
@@ -93,12 +84,12 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer clicked" @click="onNavClick($event, '网站首页')" to="/DemoForTTO">
-                        <RouterLink to="/DemoForTTO">网站首页</RouterLink>
+                    <li class="pointer" @click="onNavClick($event, '网站首页')">
+                        <RouterLink to="/DemoForTTO/trips/freeinfo">网站首页</RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
                     <li class="pointer" @click="onNavClick($event)">
-                        <RouterLink to="/DemoForTTO/trips">特别推荐</RouterLink>
+                        <RouterLink to="/DemoForTTO/trips/freeinfo">特别推荐</RouterLink>
                     </li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
@@ -286,10 +277,18 @@ onMounted(() => {
 <style lang="scss" scoped>
 .clicked {
     color: #0052cc;
+    border-bottom: 1px #0052CC solid
+}
 
-    border: {
-        bottom: 1px #0052CC solid
-    }
+// 使用hover样式替代点击切换类名
+.ul-css li {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.ul-css li:hover {
+    color: #0052cc;
+    border-bottom: 1px #0052CC solid;
 }
 
 .el-container {

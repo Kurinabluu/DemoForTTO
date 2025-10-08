@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import dataJson from '@/data/data.json'
 
 const props = defineProps({
     activeTag: { type: String, required: true },
@@ -10,48 +11,31 @@ const props = defineProps({
 
 const emit = defineEmits(['openTourDialog', 'openPlaceList'])
 
-// 基础数据（组件内部维护，样式固定，数据按 activeTag 决定）
-const scenicPlaces = [
-    '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
-    '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区',
-    '罗斯小镇', '塔基恩森林', '哈兹山脉', '高登大坝', '湖区自驾环线', '塔斯曼拱门', '魔鬼厨房', '蜜蜂农场',
-    '小企鹅栖息地', '薰衣草庄园', '亚麻湾步道', '月亮湾', '海角灯塔', '西海岸公路', '蓝湖', '荒野步道',
-    '威灵顿山', '萨拉曼卡市场', '塔斯马尼亚皇家植物园', '卡斯卡德啤酒厂', '塔斯马尼亚博物馆', '萨拉曼卡艺术中心',
-    '塔斯马尼亚海事博物馆', '塔斯马尼亚艺术画廊', '塔斯马尼亚野生动物园', '塔斯马尼亚薰衣草农场', '塔斯马尼亚蜂蜜农场',
-    '塔斯马尼亚奶酪工厂', '塔斯马尼亚威士忌酒厂', '塔斯马尼亚苹果园', '塔斯马尼亚樱桃园', '塔斯马尼亚草莓园'
-]
-
-function seededRandom(seed) {
-    let x = Math.sin(seed) * 10000
-    return x - Math.floor(x)
-}
-
-function generateItemsByTag(tag) {
-    const items = []
-    for (let i = 0; i < 32; i++) {
-        const r = seededRandom(i + (tag?.length || 0))
-        const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
-        const place = scenicPlaces[idx]
-
-        let subTitle = ''
-        if (tag?.includes('一日游（固定行程）')) {
-            const dayTripThemes = ['经典一日游', '自然探索', '文化体验', '海岸风光', '山景徒步', '历史遗迹']
-            const themeIdx = Math.floor(seededRandom(idx + i + 100) * dayTripThemes.length) % dayTripThemes.length
-            subTitle = dayTripThemes[themeIdx]
-        } else if (tag?.includes('多日游（固定行程）')) {
-            const multiDayThemes = ['深度探索', '环岛之旅', '自然奇观', '文化深度游', '摄影之旅', '生态体验']
-            const themeIdx = Math.floor(seededRandom(idx + i + 200) * multiDayThemes.length) % multiDayThemes.length
-            subTitle = multiDayThemes[themeIdx]
-        } else {
-            const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
-            const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
-            subTitle = driveThemes[themeIdx]
-        }
-
-        items.push({ title: `${place}`, sub: subTitle })
+// 从data.json获取数据
+const getDayTripData = () => {
+    try {
+        if (!dataJson) return []
+        const dayTripSection = dataJson.find(item => item.tagName === '一日游（固定行程）')
+        return dayTripSection?.subNav || []
+    } catch (error) {
+        console.error('获取一日游数据失败:', error)
+        return []
     }
-    return items
 }
+
+const getMultiDayTripData = () => {
+    try {
+        if (!dataJson) return []
+        const multiDaySection = dataJson.find(item => item.tagName === '多日游（固定行程）')
+        return multiDaySection?.tripConfig || []
+    } catch (error) {
+        console.error('获取多日游数据失败:', error)
+        return []
+    }
+}
+
+const dayTripNavs = getDayTripData()
+const multiDayTrips = getMultiDayTripData()
 
 const placeGroups = [
     { name: '菲欣拿国家公园 周边', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
@@ -160,8 +144,46 @@ function getActivityImage(index) {
     return images[index] || images[0]
 }
 
-// 派生数据
-const gridItems = computed(() => generateItemsByTag(props.activeTag))
+// 派生数据 - 从data.json获取适合当前标签的数据
+const gridItems = computed(() => {
+    try {
+        if (!props.activeTag) return []
+        
+        if (props.activeTag === '一日游（固定行程）') {
+            return getDayTripItems(props.dayTripTab)
+        } else if (props.activeTag === '多日游（固定行程）') {
+            return multiDayTrips
+        } else {
+            // 对于其他标签，保持原有的生成逻辑
+            const scenicPlaces = [
+                '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
+                '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区'
+            ]
+            
+            function seededRandom(seed) {
+                let x = Math.sin(seed) * 10000
+                return x - Math.floor(x)
+            }
+            
+            const items = []
+            for (let i = 0; i < 32; i++) {
+                const r = seededRandom(i + (props.activeTag?.length || 0))
+                const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
+                const place = scenicPlaces[idx]
+                
+                const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
+                const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
+                const subTitle = driveThemes[themeIdx]
+                
+                items.push({ title: `${place}`, sub: subTitle })
+            }
+            return items
+        }
+    } catch (error) {
+        console.error('获取网格数据失败:', error)
+        return []
+    }
+})
 
 const scenicFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
@@ -189,7 +211,10 @@ const activityFiltered = computed(() => {
 
 // 对外事件
 function onOpenTour(item) {
-    emit('openTourDialog', item)
+    emit('openTourDialog', {
+        ...item,
+        tripType: props.activeTag === '多日游（固定行程）' ? '多日游' : '一日游'
+    })
 }
 function onOpenPlace(groupName, itemType) {
     emit('openPlaceList', { placeName: groupName, itemType })
@@ -198,48 +223,15 @@ function onOpenPlace(groupName, itemType) {
 // 当前是否显示多日游网格（保持与原逻辑一致）
 const showMultiDay = computed(() => props.activeTag === '多日游（固定行程）')
 
-// 一日游数据与派生
-const scenicDayTripItems = [
-    { title: '菲欣拿国家公园一日游', sub: '酒杯湾徒步+葡萄酒庄体验' },
-    { title: '摇篮山一日游', sub: '鸽子湖环湖徒步+野生动物观察' },
-    { title: '亚瑟港历史遗迹一日游', sub: '历史监狱遗址+塔斯曼半岛奇观' },
-    { title: '布鲁尼岛一日游', sub: '南北布鲁尼探险+生蚝品尝' },
-    { title: '火焰湾一日游', sub: '橙色花岗岩+碧蓝海湾探索' },
-    { title: '威灵顿山一日游', sub: '霍巴特全景+皇家植物园游览' },
-    { title: '朗塞斯顿峡谷一日游', sub: '峡谷步道+瀑布观赏+城市探索' },
-    { title: '玛丽亚岛一日游', sub: '野生动物观察+历史遗迹探索' },
-]
-
-const themeDayTripItems = [
-    { title: '美食美酒之旅', sub: '酒庄品酒+当地美食体验' },
-    { title: '野生动物探寻', sub: '袋熊+小企鹅+塔斯马尼亚恶魔' },
-    { title: '摄影采风之旅', sub: '专业摄影点+黄金光线捕捉' },
-    { title: '历史文化之旅', sub: '殖民历史+原住民文化探索' },
-    { title: '冒险刺激之旅', sub: '攀岩+速降+野外探险' },
-    { title: '休闲放松之旅', sub: '温泉+水疗+美景欣赏' },
-]
-
-const customDayTripItems = [
-    { title: '家庭亲子定制游', sub: '儿童友好活动+安全行程' },
-    { title: '情侣浪漫定制游', sub: '私密行程+浪漫体验' },
-    { title: '朋友结伴定制游', sub: '冒险活动+团体娱乐' },
-    { title: '摄影爱好者定制', sub: '专业摄影路线+黄金时段' },
-    { title: '商务考察定制', sub: '专业导览+商务接待' },
-    { title: '特殊需求定制', sub: '无障碍设施+特殊饮食安排' },
-]
+// 从data.json获取一日游数据
+const getDayTripItems = (tabName) => {
+    const navItem = dayTripNavs.find(nav => nav.subNavName === tabName)
+    return navItem?.items || []
+}
 
 const currentDayTripItems = computed(() => {
     if (props.activeTag !== '一日游（固定行程）') return []
-    switch (props.dayTripTab) {
-        case '景点一日游':
-            return scenicDayTripItems
-        case '主题一日游':
-            return themeDayTripItems
-        case '定制一日游':
-            return customDayTripItems
-        default:
-            return scenicDayTripItems
-    }
+    return getDayTripItems(props.dayTripTab)
 })
 
 const showDayTrip = computed(() => props.activeTag === '一日游（固定行程）')
@@ -347,7 +339,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：景点（无关键词） -->
-    <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(item, i) in scenicFiltered" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.title }}</div>
@@ -356,7 +348,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：餐厅（无关键词） -->
-    <div v-if="subTab === '餐厅' && !(keyword?.trim())" class="coming-grid">
+    <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(g, i) in placeGroups" :key="'rt-place-' + i" class="coming-card"
             @click="onOpenPlace(g.name, '餐厅')">
             <img :src="g.img" alt="" class="w100">
@@ -366,7 +358,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：住宿（无关键词） -->
-    <div v-if="subTab === '住宿' && !(keyword?.trim())" class="coming-grid">
+    <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(g, i) in placeGroups" :key="'ht-place-' + i" class="coming-card"
             @click="onOpenPlace(g.name, '住宿')">
             <img :src="g.img" alt="" class="w100">
@@ -411,10 +403,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
         </div>
     </div>
 
-    <!-- 多日游（保持不变：仍显示生成的网格） -->
+    <!-- 多日游（单独显示网格） -->
     <template v-if="showMultiDay">
         <div class="coming-grid">
-            <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card" @click="onOpenTour(item)">
+            <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card" @click="onOpenTour(item)">
                 <img src="@/assets/img/footer1.jpg" alt="" class="w100">
                 <div class="card-title">{{ item.title }}</div>
                 <div class="card-sub">{{ item.sub }}</div>
