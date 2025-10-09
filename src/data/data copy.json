@@ -527,11 +527,9 @@
                 "subNavName": "餐厅",
                 "items": [
                     {
-                        "place": "菲欣拿国家公园",
-                        "enPlace": "Freycinet National Park",
-                        "list": [
+                        "菲欣拿国家公园": [
                             {
-                                "title": "餐厅A",
+                                "title": "菲欣拿国家公园 餐厅A",
                                 "img": "@/assets/img/footer1.jpg",
                                 "enTitle": "Freycinet National Park Restaurant A",
                                 "tripData": {
@@ -563,7 +561,7 @@
                                 }
                             },
                             {
-                                "title": "餐厅B",
+                                "title": "菲欣拿国家公园 餐厅B",
                                 "img": "@/assets/img/footer2.jpg",
                                 "enTitle": "Freycinet National Park Restaurant B",
                                 "tripData": {
@@ -597,11 +595,9 @@
                         ]
                     },
                     {
-                        "place": "火焰山",
-                        "enPlace": "Fire Mountain",
-                        "list": [
+                        "火焰山": [
                             {
-                                "title": "餐厅A",
+                                "title": "火焰山 餐厅A",
                                 "img": "@/assets/img/footer1.jpg",
                                 "enTitle": "Freycinet National Park Restaurant A",
                                 "tripData": {
@@ -633,7 +629,7 @@
                                 }
                             },
                             {
-                                "title": "餐厅B",
+                                "title": "火焰山 餐厅B",
                                 "img": "@/assets/img/footer2.jpg",
                                 "enTitle": "Freycinet National Park Restaurant B",
                                 "tripData": {
@@ -665,77 +661,7 @@
                                 }
                             },
                             {
-                                "title": "餐厅C",
-                                "img": "@/assets/img/footer1.jpg",
-                                "enTitle": "Bay of Fires Restaurant A",
-                                "tripData": {
-                                    "route": "火焰湾海景海鲜之旅",
-                                    "desc": "位于火焰湾海滨大道的高级海景餐厅，提供新鲜海鲜和壮丽的海景。",
-                                    "features": [
-                                        {
-                                            "icon": "#22c55e",
-                                            "title": "海景餐厅",
-                                            "desc": "俯瞰美丽的火焰湾"
-                                        },
-                                        {
-                                            "icon": "#3b82f6",
-                                            "title": "海鲜料理",
-                                            "desc": "新鲜的当地海鲜"
-                                        },
-                                        {
-                                            "icon": "#f59e0b",
-                                            "title": "浪漫氛围",
-                                            "desc": "适合情侣约会的场所"
-                                        }
-                                    ],
-                                    "tags": [
-                                        "海景餐厅",
-                                        "海鲜料理",
-                                        "高级餐厅",
-                                        "海滨大道"
-                                    ]
-                                }
-                            },
-                            {
-                                "title": "餐厅D",
-                                "img": "@/assets/img/footer2.jpg",
-                                "enTitle": "Bay of Fires Restaurant B",
-                                "tripData": {
-                                    "route": "火焰湾家常美食体验",
-                                    "desc": "位于火焰湾小镇的家庭式餐厅，提供经济实惠的家常美食和亲切的服务。",
-                                    "features": [
-                                        {
-                                            "icon": "#22c55e",
-                                            "title": "家常菜",
-                                            "desc": "温馨可口的家常菜肴"
-                                        },
-                                        {
-                                            "icon": "#3b82f6",
-                                            "title": "经济实惠",
-                                            "desc": "价格亲民的美食选择"
-                                        },
-                                        {
-                                            "icon": "#f59e0b",
-                                            "title": "家庭友好",
-                                            "desc": "适合带孩子用餐"
-                                        }
-                                    ],
-                                    "tags": [
-                                        "家常菜",
-                                        "经济实惠",
-                                        "家庭友好",
-                                        "小镇中心"
-                                    ]
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        "place": "摇篮山",
-                        "enPlace": "Cradle Mountain",
-                        "list": [
-                            {
-                                "title": "餐厅A",
+                                "title": "摇篮山 餐厅A",
                                 "img": "@/assets/img/footer3.jpg",
                                 "enTitle": "Cradle Mountain Restaurant A",
                                 "tripData": {
@@ -767,7 +693,203 @@
                                 }
                             },
                             {
-                                "title": "餐厅B",
+                                "title": "摇篮山 餐厅B",
+                                "img": "@/assets/img/footer4.jpg",
+                                "enTitle": "Cradle Mountain Restaurant B",
+                                "tripData": {
+                                    "route": "摇篮山乡村美食探索",
+                                    "desc": "位于摇篮山镇中心的温馨餐厅，提供地道的乡村美食和亲切的服务。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "乡村美食",
+                                            "desc": "传统乡村风味菜肴"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "温馨氛围",
+                                            "desc": "舒适的乡村风格装修"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "当地食材",
+                                            "desc": "使用当地新鲜食材"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "乡村美食",
+                                        "温馨氛围",
+                                        "当地食材",
+                                        "小镇中心"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "火焰湾 餐厅A",
+                                "img": "@/assets/img/footer1.jpg",
+                                "enTitle": "Bay of Fires Restaurant A",
+                                "tripData": {
+                                    "route": "火焰湾海景海鲜之旅",
+                                    "desc": "位于火焰湾海滨大道的高级海景餐厅，提供新鲜海鲜和壮丽的海景。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "海景餐厅",
+                                            "desc": "俯瞰美丽的火焰湾"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "海鲜料理",
+                                            "desc": "新鲜的当地海鲜"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "浪漫氛围",
+                                            "desc": "适合情侣约会的场所"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "海景餐厅",
+                                        "海鲜料理",
+                                        "高级餐厅",
+                                        "海滨大道"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "火焰湾 餐厅B",
+                                "img": "@/assets/img/footer2.jpg",
+                                "enTitle": "Bay of Fires Restaurant B",
+                                "tripData": {
+                                    "route": "火焰湾家常美食体验",
+                                    "desc": "位于火焰湾小镇的家庭式餐厅，提供经济实惠的家常美食和亲切的服务。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "家常菜",
+                                            "desc": "温馨可口的家常菜肴"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "经济实惠",
+                                            "desc": "价格亲民的美食选择"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "家庭友好",
+                                            "desc": "适合带孩子用餐"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "家常菜",
+                                        "经济实惠",
+                                        "家庭友好",
+                                        "小镇中心"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "酒杯湾 餐厅A",
+                                "img": "@/assets/img/footer3.jpg",
+                                "enTitle": "Wineglass Bay Restaurant A",
+                                "tripData": {
+                                    "route": "酒杯湾法式美食之旅",
+                                    "desc": "位于酒杯湾观景台下方的高级法式餐厅，提供精致的法式料理和世界级的美景。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "法式料理",
+                                            "desc": "正宗的法国美食体验"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "顶级景观",
+                                            "desc": "俯瞰世界著名的酒杯湾"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "奢华体验",
+                                            "desc": "高端的用餐环境和服务"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "法式料理",
+                                        "顶级景观",
+                                        "奢华体验",
+                                        "米其林级别"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "酒杯湾 餐厅B",
+                                "img": "@/assets/img/footer4.jpg",
+                                "enTitle": "Wineglass Bay Restaurant B",
+                                "tripData": {
+                                    "route": "酒杯湾休闲美食之旅",
+                                    "desc": "位于酒杯湾停车场旁的休闲餐厅，提供便捷的快餐和小吃，适合游客休息用餐。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "便捷快餐",
+                                            "desc": "快速美味的快餐选择"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "方便位置",
+                                            "desc": "靠近停车场，方便游客"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "合理价格",
+                                            "desc": "经济实惠的用餐选择"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "便捷快餐",
+                                        "方便位置",
+                                        "合理价格",
+                                        "游客休息"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "摇篮山": [
+                            {
+                                "title": "摇篮山 餐厅A",
+                                "img": "@/assets/img/footer3.jpg",
+                                "enTitle": "Cradle Mountain Restaurant A",
+                                "tripData": {
+                                    "route": "摇篮山国际美食盛宴",
+                                    "desc": "位于摇篮山游客中心旁的高级餐厅，提供精致的国际美食和壮观的山景。",
+                                    "features": [
+                                        {
+                                            "icon": "#22c55e",
+                                            "title": "国际美食",
+                                            "desc": "多国风味的精致料理"
+                                        },
+                                        {
+                                            "icon": "#3b82f6",
+                                            "title": "山景餐厅",
+                                            "desc": "全景落地玻璃窗欣赏山景"
+                                        },
+                                        {
+                                            "icon": "#f59e0b",
+                                            "title": "顶级厨师",
+                                            "desc": "国际知名厨师掌勺"
+                                        }
+                                    ],
+                                    "tags": [
+                                        "国际美食",
+                                        "山景餐厅",
+                                        "高级餐厅",
+                                        "游客中心旁"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "摇篮山 餐厅B",
                                 "img": "@/assets/img/footer4.jpg",
                                 "enTitle": "Cradle Mountain Restaurant B",
                                 "tripData": {
@@ -801,11 +923,9 @@
                         ]
                     },
                     {
-                        "place": "酒杯湾",
-                        "enPlace": "Wineglass Bay",
-                        "list": [
+                        "酒杯湾": [
                             {
-                                "title": "餐厅A",
+                                "title": "酒杯湾 餐厅A",
                                 "img": "@/assets/img/footer3.jpg",
                                 "enTitle": "Wineglass Bay Restaurant A",
                                 "tripData": {
@@ -837,7 +957,7 @@
                                 }
                             },
                             {
-                                "title": "餐厅B",
+                                "title": "酒杯湾 餐厅B",
                                 "img": "@/assets/img/footer4.jpg",
                                 "enTitle": "Wineglass Bay Restaurant B",
                                 "tripData": {
@@ -876,11 +996,9 @@
                 "subNavName": "住宿",
                 "items": [
                     {
-                        "place": "菲欣拿国家公园",
-                        "enPlace": "Freycinet National Park",
-                        "list": [
+                        "菲欣拿国家公园": [
                             {
-                                "title": "酒店A",
+                                "title": "菲欣拿国家公园 酒店A",
                                 "img": "@/assets/img/footer1.jpg",
                                 "enTitle": "Freycinet National Park Hotel A",
                                 "tripData": {
@@ -912,7 +1030,7 @@
                                 }
                             },
                             {
-                                "title": "酒店B",
+                                "title": "菲欣拿国家公园 酒店B",
                                 "img": "@/assets/img/footer2.jpg",
                                 "enTitle": "Freycinet National Park Hotel B",
                                 "tripData": {
@@ -946,11 +1064,9 @@
                         ]
                     },
                     {
-                        "place": "摇篮山",
-                        "enPlace": "Cradle Mountain",
-                        "list": [
+                        "摇篮山": [
                             {
-                                "title": "酒店A",
+                                "title": "摇篮山 酒店A",
                                 "img": "@/assets/img/footer3.jpg",
                                 "enTitle": "Cradle Mountain Hotel A",
                                 "tripData": {
@@ -982,7 +1098,7 @@
                                 }
                             },
                             {
-                                "title": "酒店B",
+                                "title": "摇篮山 酒店B",
                                 "img": "@/assets/img/footer4.jpg",
                                 "enTitle": "Cradle Mountain Hotel B",
                                 "tripData": {
@@ -1016,11 +1132,9 @@
                         ]
                     },
                     {
-                        "place": "火焰湾",
-                        "enPlace": "Bay of Fires",
-                        "list": [
+                        "火焰湾": [
                             {
-                                "title": "酒店A",
+                                "title": "火焰湾 酒店A",
                                 "img": "@/assets/img/footer1.jpg",
                                 "enTitle": "Bay of Fires Hotel A",
                                 "tripData": {
@@ -1052,7 +1166,7 @@
                                 }
                             },
                             {
-                                "title": "酒店B",
+                                "title": "火焰湾 酒店B",
                                 "img": "@/assets/img/footer2.jpg",
                                 "enTitle": "Bay of Fires Hotel B",
                                 "tripData": {
@@ -1086,11 +1200,9 @@
                         ]
                     },
                     {
-                        "place": "酒杯湾",
-                        "enPlace": "Wineglass Bay",
-                        "list": [
+                        "酒杯湾": [
                             {
-                                "title": "酒店A",
+                                "title": "酒杯湾 酒店A",
                                 "img": "@/assets/img/footer3.jpg",
                                 "enTitle": "Wineglass Bay Hotel A",
                                 "tripData": {
@@ -1122,7 +1234,7 @@
                                 }
                             },
                             {
-                                "title": "酒店B",
+                                "title": "酒杯湾 酒店B",
                                 "img": "@/assets/img/footer4.jpg",
                                 "enTitle": "Wineglass Bay Hotel B",
                                 "tripData": {
@@ -1267,7 +1379,7 @@
                                 "value": "霍巴特港口"
                             }
                         ],
-                        "tagItems": [
+                        "tags": [
                             {
                                 "text": "座头鲸迁徙"
                             },

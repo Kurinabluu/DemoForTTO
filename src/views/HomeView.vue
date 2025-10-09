@@ -247,9 +247,6 @@ const serviceConfigs = {
 const currentServiceConfig = ref(null)
 const isDialogVisible = ref(false)
 
-// 标签激活与文案数据
-const activeTag = ref(popularTags.value[0])
-
 // 子导航（仅用于“自助游/自驾游免费信息”）
 // - 需求：在景点列表上方显示横向导航（景点/餐厅/住宿/特别活动）和搜索框，默认“景点”
 // - 点击切换：
@@ -260,9 +257,9 @@ const subNavTabs = ['景点', '餐厅', '住宿', '特别活动']
 const subTab = ref('景点')
 const subSearch = ref('')
 const committedKeyword = ref('')
-
+const navStore = useNavStore()
 // 仅当激活标签为“自助游/自驾游免费信息”且未展示服务组件时，才显示子导航
-const showFreeTripSubnav = computed(() => activeTag.value === '自助游/自驾游免费信息' && !currentServiceConfig.value)
+const showFreeTripSubnav = computed(() => navStore.selectedTagName === '自助游/自驾游免费信息' && !currentServiceConfig.value)
 
 function onClickSubTab(tab) {
     subTab.value = tab
@@ -284,7 +281,7 @@ const listItems = ref([])
 function openPlaceList(placeName, itemType) {
     listPlaceName.value = placeName
     listItemType.value = itemType
-    
+
     // 从data.json中获取真实的数据
     const freeInfo = data.find(item => item.tagName === '自助游/自驾游免费信息')
     if (freeInfo && freeInfo.subNav) {
@@ -299,9 +296,9 @@ function openPlaceList(placeName, itemType) {
         // 如果没有找到免费信息数据，生成备用的模拟数据
         generateMockItems()
     }
-    
+
     isPlaceListVisible.value = true
-    
+
     // 生成备用模拟数据的函数
     function generateMockItems() {
         // 根据类型选择基础图片路径
@@ -327,7 +324,7 @@ function openPlaceList(placeName, itemType) {
                 titlePrefix = '地点名'
                 enTitlePrefix = 'Place'
         }
-        
+
         const items = []
         for (let i = 0; i < 24; i++) {
             const label = String.fromCharCode(65 + (i % 26))
@@ -361,7 +358,7 @@ function onClickDayTripTab(t) {
     // 保存用户选择的子导航
     useNavStore().saveSelectedSubNav(t)
 }
-const showDayTripSubnav = computed(() => !currentServiceConfig.value && activeTag.value === '一日游（固定行程）')
+const showDayTripSubnav = computed(() => !currentServiceConfig.value && navStore.selectedTagName === '一日游（固定行程）')
 // const activityItems = ref(
 //     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
 // )
@@ -397,35 +394,7 @@ function doSubSearch() {
     committedKeyword.value = kw
 }
 
-function onClickTag(tag) {
-    try {
-        activeTag.value = tag
-        searchText.value = tag
-
-        // 重置子导航为默认值
-        subTab.value = '景点'
-        dayTripTab.value = dayTripTabs[0]
-
-        // 检查是否是服务类型标签（排除一日游和多日游）
-        if (serviceConfigs[tag] && tag !== '一日游（固定行程）' && tag !== '多日游（固定行程）') {
-            currentServiceConfig.value = { ...serviceConfigs[tag], serviceName: tag }
-        } else {
-            // 非服务型标签，显示网格（交由 TripsGrid 渲染）
-            currentServiceConfig.value = null
-        }
-
-        // 现在不再进行路由跳转，只保存状态信息
-        const isTripsType = ['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(tag)
-        const type = isTripsType ? 'Trips' : 'Service'
-
-        // 保存路由类型
-        useNavStore().saveSelectedRoute(type)
-        // 保存当前标签
-        useNavStore().savePath(tag)
-    } catch (error) {
-        console.error('标签点击处理失败:', error)
-    }
-}
+// 标签点击逻辑已移至ServicesNav组件内部实现
 
 // 弹窗控制
 const isTourDialogVisible = ref(false)
@@ -516,19 +485,20 @@ function onTouchEnd() {
 
 // 组件挂载时执行
 onMounted(() => {
-    useNavStore().markFirstVisitDone()
+    const navStore = useNavStore()
+    navStore.markFirstVisitDone()
 
     // 保存当前路由
     if (route.name) {
-        useNavStore().saveSelectedRoute(route.name)
+        navStore.saveSelectedRoute(route.name)
     }
 
     // 根据当前路由设置初始状态
     if (route.name === 'Service') {
-        activeTag.value = '代订门票及旅游项目'
+        navStore.saveSelectedTagName('代订门票及旅游项目')
         currentServiceConfig.value = { ...serviceConfigs['代订门票及旅游项目'], serviceName: '代订门票及旅游项目' }
     } else if (route.name === 'Trips') {
-        activeTag.value = '自助游/自驾游免费信息'
+        navStore.saveSelectedTagName('自助游/自驾游免费信息')
         currentServiceConfig.value = null
     }
 
@@ -536,6 +506,17 @@ onMounted(() => {
     if (typeof window !== 'undefined') {
         window.addEventListener('resize', handleResizeForSlides)
     }
+
+    // 监听navStore.selectedTagName变化，更新currentServiceConfig
+    watch(() => navStore.selectedTagName, (newTagName) => {
+        // 根据选中的标签名更新当前服务配置
+        const isServiceType = !['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(newTagName)
+        if (isServiceType && serviceConfigs[newTagName]) {
+            currentServiceConfig.value = { ...serviceConfigs[newTagName], serviceName: newTagName }
+        } else {
+            currentServiceConfig.value = null
+        }
+    }, { immediate: true })
 })
 
 // 组件卸载时清理事件监听器
@@ -571,9 +552,8 @@ onUnmounted(() => {
             </el-carousel>
         </div>
 
-        <!-- 固定搜索框 - 使用ServicesNav组件 -->
-        <ServicesNav v-model="searchText" :popular-tags="popularTags" :active-tag="activeTag" @tag-click="onClickTag"
-            @search="isDialogVisible = true" />
+        <!-- 固定搜索框 - 使用ServicesNav组件（完全独立） -->
+        <ServicesNav />
         <!-- 内容区域 -->
         <div class="content-box">
             <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
@@ -625,8 +605,8 @@ onUnmounted(() => {
 
             <!-- 网格区统一由 TripsGrid 承担渲染 -->
             <TripsGrid
-                v-else-if="!currentServiceConfig && (activeTag === '自助游/自驾游免费信息' || activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
-                :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword" :day-trip-tab="dayTripTab"
+                v-else-if="!currentServiceConfig && (navStore.selectedTagName === '自助游/自驾游免费信息' || navStore.selectedTagName === '一日游（固定行程）' || navStore.selectedTagName === '多日游（固定行程）')"
+                :active-tag="navStore.selectedTagName" :sub-tab="subTab" :keyword="committedKeyword" :day-trip-tab="dayTripTab"
                 @open-tour-dialog="openTourDialog"
                 @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
 

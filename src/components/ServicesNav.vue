@@ -1,58 +1,115 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { useNavStore } from '@/stores/nav'
+import { useRouter } from 'vue-router'
+import data from '@/data/data.json'
 
-// 定义props，从父组件接收数据
-const props = defineProps({
-  modelValue: {
-    type: String,
-    default: ''
-  },
-  popularTags: {
-    type: Array,
-    default: () => []
-  },
-  activeTag: {
-    type: String,
-    default: ''
-  }
-})
-
-// 定义事件，通知父组件数据变化
-const emit = defineEmits(['update:modelValue', 'tag-click', 'search'])
+// 从data.json中提取所有tagName
+const tags = data.map(item => item.tagName)
 
 // 本地搜索输入值
-const searchInput = ref(props.modelValue)
+const searchInput = ref('')
 
-// 响应modelValue变化
-watch(() => props.modelValue, (newValue) => {
-  searchInput.value = newValue
+// 组件内部独立维护的激活标签状态
+const localActiveTag = ref('')
+
+// 使用导航store
+const navStore = useNavStore()
+const router = useRouter()
+
+// 当前激活的标签（组件内部独立实现）
+const activeTag = computed(() => {
+  // 优先使用组件内部的激活标签状态
+  if (localActiveTag.value) {
+    return localActiveTag.value
+  }
+  // 如果组件内部状态为空，优先从store中获取保存的标签名
+  const savedTagName = navStore.selectedTagName
+  if (savedTagName && tags.includes(savedTagName)) {
+    localActiveTag.value = savedTagName
+    return savedTagName
+  }
+  // 如果都没有，设置第一个标签为默认激活状态
+  if (tags.length > 0 && !localActiveTag.value) {
+    localActiveTag.value = tags[0]
+    // 同时保存到store中
+    navStore.saveSelectedTagName(tags[0])
+    return tags[0]
+  }
+  return ''
 })
 
 // 标签点击事件处理
 function onClickTag(tag) {
   try {
-    // 移除之前的高亮
-    const tags = document.querySelectorAll('.popular-tag.active')
-    tags.forEach(t => t.classList.remove('active'))
-    
-    // 添加当前高亮
-    const currentTag = document.querySelector(`.popular-tag[data-tag="${tag}"]`)
-    if (currentTag) {
-        currentTag.classList.add('active')
-    }
-    
-    // 触发父组件的标签点击事件
-    emit('tag-click', tag)
+    // 更新组件内部的激活标签状态
+    localActiveTag.value = tag
+
+    // 更新搜索框值
+    searchInput.value = tag
+
+    // 重置子导航为默认值
+    navStore.saveSelectedSubNav('景点')
+
+    // 检查是否是服务类型标签（排除一日游和多日游）
+    const isTripsType = ['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(tag)
+    const type = isTripsType ? 'Trips' : 'Service'
+
+    // 保存路由类型
+    navStore.saveSelectedRoute(type)
+
+    // 保存当前标签名到专门的状态中
+    navStore.saveSelectedTagName(tag)
+
+    // 由于当前没有完整的路由系统，我们暂时只更新状态
+    // 未来实现路由时，可以添加router.push相关逻辑
+
+    console.log('标签点击:', tag, '类型:', type)
   } catch (error) {
     console.error('标签点击处理失败:', error)
   }
 }
 
+// 组件挂载时初始化
+onMounted(() => {
+  // 尝试根据当前路由路径设置激活标签
+  syncTagWithRoute()
+})
+
+// 监听路由变化，同步标签状态
+watch(() => router.currentRoute.value.path, () => {
+  syncTagWithRoute()
+})
+
+// 根据路由路径同步标签状态
+function syncTagWithRoute() {
+  try {
+    const currentPath = router.currentRoute.value.path
+    const savedTagName = navStore.selectedTagName
+
+    // 如果有保存的标签名，优先使用
+    if (savedTagName && tags.includes(savedTagName) && !localActiveTag.value) {
+      localActiveTag.value = savedTagName
+      searchInput.value = savedTagName
+      return
+    }
+
+    // 如果没有保存的标签名但有默认标签，使用默认标签
+    if (tags.length > 0 && !localActiveTag.value) {
+      localActiveTag.value = tags[0]
+      searchInput.value = tags[0]
+      navStore.saveSelectedTagName(tags[0])
+    }
+  } catch (error) {
+    console.error('同步标签与路由失败:', error)
+  }
+}
+
 // 搜索按钮点击事件
 function onSearch() {
-  emit('search', searchInput.value)
+  console.log('搜索:', searchInput.value)
+  // 未来可以实现搜索弹窗或搜索页面跳转
 }
 </script>
 
@@ -60,8 +117,7 @@ function onSearch() {
   <div class="search-fixed">
     <el-card class="search-card" shadow="hover">
       <div class="search-container">
-        <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable
-          @update:model-value="emit('update:modelValue', $event)">
+        <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
           <template #prefix>
             <el-icon>
               <Search />
@@ -76,7 +132,7 @@ function onSearch() {
         </el-button>
       </div>
       <div class="search-tags">
-        <div v-for="tag in popularTags" :key="tag" class="tag-pill pointer fs16" :class="{ active: activeTag === tag }"
+        <div v-for="tag in tags" :key="tag" class="tag-pill pointer fs16" :class="{ active: activeTag === tag }"
           @click="onClickTag(tag)" :data-service="tag">
           {{ tag }}
         </div>

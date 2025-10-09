@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import dataJson from '@/data/data.json'
+import { onMounted } from 'vue'
 
 const props = defineProps({
     activeTag: { type: String, required: true },
@@ -37,102 +38,13 @@ const getMultiDayTripData = () => {
 const dayTripNavs = getDayTripData()
 const multiDayTrips = getMultiDayTripData()
 
-const placeGroups = [
-    { name: '菲欣拿国家公园 周边', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '摇篮山 周边', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '火焰湾 周边', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '酒杯湾 周边', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '玛丽亚岛 周边', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '塔斯曼半岛 周边', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '布鲁尼岛 周边', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '霍巴特 周边', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '朗塞斯顿 周边', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '比切诺 周边', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '圣海伦斯 周边', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '斯坦利 周边', img: new URL('@/assets/img/footer4.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '里士满 周边', img: new URL('@/assets/img/footer1.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '亚瑟港 周边', img: new URL('@/assets/img/footer2.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-    { name: '德文波特 周边', img: new URL('@/assets/img/footer3.jpg', import.meta.url).href, enName: '名（待修改） surrounding' },
-]
+const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费信息")
+const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
+const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅")
 
-const activityItems = [
-    {
-        title: '极光观测最佳时机',
-        sub: '南半球极光观测体验',
-        location: '摇篮山国家公园',
-        tags: ['天气晴朗', '极光', '观测条件极佳'],
-        badge: '极光预报',
-        cardClass: 'aurora-card',
-        badgeClass: 'aurora-badge',
-        info: [
-            { label: '今晚概率', value: '85%', valueClass: 'high' },
-            { label: '最佳时间', value: '22:00-02:00' },
-            { label: '推荐地点', value: '摇篮山国家公园' }
-        ],
-        tagItems: [
-            { icon: '🌌', text: '天气晴朗' },
-            { icon: '🌌', text: '极光' },
-            { icon: '🌌', text: '观测条件极佳' }
-        ]
-    },
-    {
-        title: '塔斯马尼亚薰衣草节',
-        sub: '紫色花海节庆活动',
-        location: '薰衣草庄园',
-        tags: ['紫色花海', '薰衣草美食', '纯天然薰衣草产品'],
-        badge: '节庆活动',
-        cardClass: 'lavender-card',
-        badgeClass: 'event-badge',
-        info: [
-            { label: '活动时间', value: '12月15日-1月31日' },
-            { label: '开放时间', value: '09:00-17:00' },
-            { label: '活动地点', value: '薰衣草庄园' }
-        ],
-        tagItems: [
-            { text: '紫色花海' },
-            { text: '薰衣草美食' },
-            { text: '纯天然薰衣草产品' }
-        ]
-    },
-    {
-        title: '座头鲸迁徙观鲸',
-        sub: '海洋生物观察',
-        location: '霍巴特港口',
-        tags: ['座头鲸迁徙', '专业导游讲解', '摄影指导'],
-        badge: '季节性活动',
-        cardClass: 'whale-card',
-        badgeClass: 'season-badge',
-        info: [
-            { label: '最佳季节', value: '5月-11月' },
-            { label: '今日概率', value: '92%', valueClass: 'high' },
-            { label: '出发地点', value: '霍巴特港口' }
-        ],
-        tagItems: [
-            { text: '座头鲸迁徙' },
-            { text: '专业导游讲解' },
-            { text: '摄影指导' }
-        ]
-    },
-    {
-        title: '南半球星空观测',
-        sub: '天文观测体验',
-        location: '威灵顿山',
-        tags: ['无云天气', '能见度极佳', '南十字星座'],
-        badge: '夜间活动',
-        cardClass: 'stargazing-card',
-        badgeClass: 'night-badge',
-        info: [
-            { label: '观测条件', value: '极佳', valueClass: 'excellent' },
-            { label: '最佳时间', value: '20:30-23:00' },
-            { label: '推荐地点', value: '威灵顿山' }
-        ],
-        tagItems: [
-            { icon: '⭐', text: '无云天气' },
-            { icon: '⭐', text: '能见度极佳' },
-            { icon: '⭐', text: '南十字星座' }
-        ]
-    }
-]
+const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿")
+
+const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动")
 
 function getActivityImage(index) {
     const images = [
@@ -148,7 +60,7 @@ function getActivityImage(index) {
 const gridItems = computed(() => {
     try {
         if (!props.activeTag) return []
-        
+
         if (props.activeTag === '一日游（固定行程）') {
             return getDayTripItems(props.dayTripTab)
         } else if (props.activeTag === '多日游（固定行程）') {
@@ -159,22 +71,22 @@ const gridItems = computed(() => {
                 '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
                 '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区'
             ]
-            
+
             function seededRandom(seed) {
                 let x = Math.sin(seed) * 10000
                 return x - Math.floor(x)
             }
-            
+
             const items = []
             for (let i = 0; i < 32; i++) {
                 const r = seededRandom(i + (props.activeTag?.length || 0))
                 const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
                 const place = scenicPlaces[idx]
-                
+
                 const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
                 const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
                 const subTitle = driveThemes[themeIdx]
-                
+
                 items.push({ title: `${place}`, sub: subTitle })
             }
             return items
@@ -193,8 +105,8 @@ const scenicFiltered = computed(() => {
 
 const restaurantFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
-    if (!kw) return placeGroups
-    return placeGroups.filter(group => group.name.toLowerCase().includes(kw))
+    if (!kw) return restaurants
+    return restaurants.filter(group => group.name.toLowerCase().includes(kw))
 })
 
 const hotelFiltered = restaurantFiltered
@@ -340,30 +252,30 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 
     <!-- 底部网格：景点（无关键词） -->
     <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="(item, i) in scenicFiltered" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
+        <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.title }}</div>
-            <div class="card-sub">{{ item.sub }}</div>
+            <div class="card-sub">{{ item.enTitle }}</div>
         </div>
     </div>
 
     <!-- 底部网格：餐厅（无关键词） -->
     <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="(g, i) in placeGroups" :key="'rt-place-' + i" class="coming-card"
-            @click="onOpenPlace(g.name, '餐厅')">
-            <img :src="g.img" alt="" class="w100">
-            <div class="card-title">{{ g.name }}餐厅</div>
-            <div class="card-sub">餐厅{{ g.enName }}</div>
+        <div v-for="item in restaurants.items" :key="'rt-place-' + i" class="coming-card"
+            @click="onOpenPlace(item.place, '餐厅')">
+            <img src="../assets/img/footer2.jpg" alt="" class="w100">
+            <div class="card-title">{{ item.place }} 周边餐厅</div>
+            <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
         </div>
     </div>
 
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="(g, i) in placeGroups" :key="'ht-place-' + i" class="coming-card"
-            @click="onOpenPlace(g.name, '住宿')">
-            <img :src="g.img" alt="" class="w100">
-            <div class="card-title">{{ g.name }}住宿</div>
-            <div class="card-sub">住宿{{ g.enName }}</div>
+        <div v-for="item in hotels.items" :key="'ht-place-' + i" class="coming-card"
+            @click="onOpenPlace(item.place, '住宿')">
+            <img src="../assets/img/footer2.jpg" alt="" class="w100">
+            <div class="card-title">{{ item.place }} 住宿</div>
+            <div class="card-sub">Hotel {{ item.enPlace }}</div>
         </div>
     </div>
 
@@ -374,7 +286,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <p class="activities-subtitle">实时特色活动与极光天气信息</p>
         </div>
         <div class="activities-grid">
-            <div v-for="(activity, index) in activityItems" :key="index" :class="['activity-card', activity.cardClass]">
+            <div v-for="(activity, index) in activityItems.items" :key="'activity-' + index"
+                :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
                     <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
                     <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
@@ -406,7 +319,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <!-- 多日游（单独显示网格） -->
     <template v-if="showMultiDay">
         <div class="coming-grid">
-            <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card" @click="onOpenTour(item)">
+            <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card"
+                @click="onOpenTour(item)">
                 <img src="@/assets/img/footer1.jpg" alt="" class="w100">
                 <div class="card-title">{{ item.title }}</div>
                 <div class="card-sub">{{ item.sub }}</div>
