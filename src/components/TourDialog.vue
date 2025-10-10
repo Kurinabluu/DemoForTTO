@@ -30,7 +30,7 @@ const getTripRouteInfo = (title, tripType) => {
         if (!title || !dataJson || !Array.isArray(dataJson)) {
             return getDefaultTripInfo(title)
         }
-        
+
         // 如果是多日游，从多日游数据中查找
         if (tripType === '多日游') {
             const multiDaySection = dataJson.find(item => item?.tagName === '多日游（固定行程）')
@@ -39,7 +39,7 @@ const getTripRouteInfo = (title, tripType) => {
                 return tripItem.tripData
             }
         }
-        
+
         // 否则从一日游数据中查找
         const dayTripSection = dataJson.find(item => item?.tagName === '一日游（固定行程）')
         if (dayTripSection?.subNav && Array.isArray(dayTripSection.subNav)) {

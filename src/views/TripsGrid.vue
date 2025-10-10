@@ -123,9 +123,37 @@ const activityFiltered = computed(() => {
 
 // 对外事件
 function onOpenTour(item) {
+    // 直接从已加载的数据中获取完整的行程信息，避免在子组件中再次读取data.json
+    let tripData = item.tripData;
+    
+    // 如果是景点、餐厅或住宿，尝试从对应的数据源中查找完整信息
+    if (!tripData && item.title) {
+        // 查找景点信息
+        if (places && places.items) {
+            const placeItem = places.items.find(place => place.title === item.title);
+            if (placeItem && placeItem.tripData) {
+                tripData = placeItem.tripData;
+            }
+        }
+        
+        // 如果是一日游或多日游，item本身应该已经包含tripData
+        // 但为了兼容性，我们保留原有的emit结构
+    }
+    
     emit('openTourDialog', {
         ...item,
-        tripType: props.activeTag === '多日游（固定行程）' ? '多日游' : '一日游'
+        tripType: props.activeTag === '多日游（固定行程）' ? '多日游' : '一日游',
+        // 将完整的行程数据传递给子组件
+        tripData: tripData || {
+            route: `${item.title || '未知行程'}探索之旅`,
+            desc: `深度探索目的地的自然美景和文化内涵，体验塔斯马尼亚独特的魅力。`,
+            features: [
+                { icon: '#22c55e', title: '自然探索', desc: '深入了解当地的自然环境和生态系统' },
+                { icon: '#3b82f6', title: '文化体验', desc: '感受塔斯马尼亚的历史文化' },
+                { icon: '#f59e0b', title: '摄影记录', desc: '记录美好的旅行时光' }
+            ],
+            tags: ['全程约6小时', '含专业导游', '灵活出发', '中英文服务']
+        }
     })
 }
 function onOpenPlace(groupName, itemType) {
