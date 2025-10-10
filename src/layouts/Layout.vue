@@ -25,33 +25,11 @@ function onNavClick(event, navName = '') {
         // 跳转到免费信息页面
         // router.push('/DemoForTTO/trips/freeinfo');
     }
-    // 网站首页：根据是否首次访问决定跳转
+    // 网站首页：处理点击事件，保存子导航状态但不进行重复的路由跳转
     else if (textContent === '网站首页') {
-        // 检查是否是首次访问
-        const isFirstVisit = navStore.isFirstVisit();
-        if (!isFirstVisit) {
-            // 首次访问，跳转到默认路由（trips/freeinfo）
-            navStore.markFirstVisitDone();
-            navStore.saveSelectedSubNav('景点');
-            // router.push('/DemoForTTO/trips/freeinfo');
-        } else {
-            // 非首次访问，跳转到上次访问的页面
-            const lastPath = navStore.lastPath;
-            // if (lastPath && lastPath !== '/DemoForTTO') {
-            //     router.push(lastPath);
-            // } else {
-            //     // 如果没有上次访问记录，跳转到默认页面
-            //     navStore.saveSelectedSubNav('景点');
-            //     // router.push('/DemoForTTO/trips/freeinfo');
-            // } 
-            if (lastPath && lastPath !== '/DemoForTTO') {
-                router.push(lastPath);
-            } else {
-                // 如果没有上次访问记录，跳转到默认页面
-                navStore.saveSelectedSubNav('景点');
-                // router.push('/DemoForTTO/trips/freeinfo');
-            }
-        }
+        // 保存需要选择的子导航
+        navStore.saveSelectedSubNav('景点');
+        // 路由跳转由模板中的RouterLink处理，这里只需要保存状态
     }
     // 其他导航项：弹出敬请期待对话框
     else if (textContent === '行业新闻') {
@@ -133,7 +111,7 @@ onMounted(() => {
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
                     <li class="pointer clicked" @click="onNavClick($event, '网站首页');">
-                        <RouterLink to="/DemoForTTO/trips/freeinfo">网站首页</RouterLink>
+                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页</RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
                     <li class="pointer" @click="onNavClick($event);">
