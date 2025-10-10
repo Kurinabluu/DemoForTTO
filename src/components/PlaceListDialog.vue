@@ -8,6 +8,29 @@ const props = defineProps({
     items: { type: Array, default: () => [] }, // [{ title, img }]
 })
 
+// 处理图片URL的函数
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return ''
+
+    // 如果已经是完整的URL，直接返回
+    if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+        return imagePath
+    }
+
+    // 如果是@/assets路径，使用import.meta.url处理
+    if (imagePath.startsWith('@/assets/')) {
+        try {
+            return new URL(imagePath.replace('@/', '../'), import.meta.url).href
+        } catch (error) {
+            console.warn('图片路径处理失败:', imagePath, error)
+            return ''
+        }
+    }
+
+    // 其他情况直接返回
+    return imagePath
+}
+
 const emits = defineEmits(['update:modelValue', 'select'])
 
 const dialogVisible = computed({
@@ -67,7 +90,7 @@ const visibleItems = computed(() => props.items.slice(0, visibleLimit.value))
                 <div class="modal-body">
                     <div class="grid">
                         <div class="grid-item" v-for="(it, idx) in visibleItems" :key="idx" @click="onSelect(it)">
-                            <img :src="it.img" alt="thumb" class="thumb" />
+                            <img :src="getImageUrl(it.img)" alt="thumb" class="thumb" />
                             <div class="name">{{ it.title }}</div>
                             <div class="en-name">{{ it.enTitle }}</div>
                         </div>

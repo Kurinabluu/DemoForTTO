@@ -99,22 +99,32 @@ const gridItems = computed(() => {
 
 const scenicFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
-    if (!kw) return gridItems.value
-    return gridItems.value.filter(it => it.title.toLowerCase().includes(kw))
+    if (!kw) return places?.items || []
+    return (places?.items || []).filter(item => item.title.toLowerCase().includes(kw))
 })
 
 const restaurantFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
-    if (!kw) return restaurants
-    return restaurants.filter(group => group.name.toLowerCase().includes(kw))
+    if (!kw) return restaurants?.items || []
+    return (restaurants?.items || []).filter(item =>
+        item.place.toLowerCase().includes(kw) ||
+        item.enPlace.toLowerCase().includes(kw)
+    )
 })
 
-const hotelFiltered = restaurantFiltered
+const hotelFiltered = computed(() => {
+    const kw = (props.keyword || '').trim().toLowerCase()
+    if (!kw) return hotels?.items || []
+    return (hotels?.items || []).filter(item =>
+        item.place.toLowerCase().includes(kw) ||
+        item.enPlace.toLowerCase().includes(kw)
+    )
+})
 
 const activityFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
-    if (!kw) return []
-    return activityItems.filter(item =>
+    if (!kw) return activityItems?.items || []
+    return (activityItems?.items || []).filter(item =>
         item.title.toLowerCase().includes(kw) ||
         item.location.toLowerCase().includes(kw) ||
         item.tags.some(tag => tag.toLowerCase().includes(kw))
@@ -123,28 +133,36 @@ const activityFiltered = computed(() => {
 
 // 对外事件
 function onOpenTour(item) {
-    // 直接从已加载的数据中获取完整的行程信息，避免在子组件中再次读取data.json
+    // 声明变量存储处理后的数据
     let tripData = item.tripData;
-    
-    // 如果是景点、餐厅或住宿，尝试从对应的数据源中查找完整信息
-    if (!tripData && item.title) {
-        // 查找景点信息
-        if (places && places.items) {
-            const placeItem = places.items.find(place => place.title === item.title);
-            if (placeItem && placeItem.tripData) {
-                tripData = placeItem.tripData;
-            }
-        }
-        
-        // 如果是一日游或多日游，item本身应该已经包含tripData
-        // 但为了兼容性，我们保留原有的emit结构
+    let bannerImage = item.img;
+    let tripType = '一日游';
+
+    // 根据不同的activeTag确定tripType
+    if (props.activeTag === '多日游（固定行程）') {
+        tripType = '多日游';
+    } else if (props.activeTag === '自助游/自驾游免费信息' && props.subTab === '景点') {
+        tripType = '景点信息';
     }
-    
-    emit('openTourDialog', {
-        ...item,
-        tripType: props.activeTag === '多日游（固定行程）' ? '多日游' : '一日游',
-        // 将完整的行程数据传递给子组件
-        tripData: tripData || {
+
+    // 如果是景点数据，从places中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费信息' && props.subTab === '景点' && places && places.items) {
+        const placeItem = places.items.find(place => place.title === item.title);
+        if (placeItem) {
+            tripData = placeItem.tripData;
+            bannerImage = placeItem.img;
+        }
+    }
+
+    // 如果是一日游或多日游，item本身应该已经包含tripData
+    if (props.activeTag === '一日游（固定行程）' || props.activeTag === '多日游（固定行程）') {
+        tripData = item.tripData;
+        bannerImage = item.img || bannerImage;
+    }
+
+    // 如果没有找到tripData，使用默认数据
+    if (!tripData) {
+        tripData = {
             route: `${item.title || '未知行程'}探索之旅`,
             desc: `深度探索目的地的自然美景和文化内涵，体验塔斯马尼亚独特的魅力。`,
             features: [
@@ -153,7 +171,15 @@ function onOpenTour(item) {
                 { icon: '#f59e0b', title: '摄影记录', desc: '记录美好的旅行时光' }
             ],
             tags: ['全程约6小时', '含专业导游', '灵活出发', '中英文服务']
-        }
+        };
+    }
+
+    emit('openTourDialog', {
+        ...item,
+        title: item.title,
+        banner: bannerImage,
+        tripType: tripType,
+        tripData: tripData
     })
 }
 function onOpenPlace(groupName, itemType) {
@@ -200,7 +226,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
                     @click="onOpenTour(item)">
                     <img src="@/assets/img/footer2.jpg" alt="" class="w100">
                     <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
+                    <div class="card-sub">{{ item.enTitle }}</div>
                 </div>
             </div>
         </template>
@@ -211,11 +237,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <template v-else-if="(keyword?.trim()) && subTab === '餐厅'">
         <template v-if="restaurantFiltered.length">
             <div class="coming-grid">
-                <div v-for="(g, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
-                    @click="onOpenPlace(g.name, '餐厅')">
-                    <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}餐厅</div>
-                    <div class="card-sub">餐厅{{ g.enName }}</div>
+                <div v-for="(item, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
+                    @click="onOpenPlace(item.place, '餐厅')">
+                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.place }} 周边餐厅</div>
+                    <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
                 </div>
             </div>
         </template>
@@ -226,11 +252,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <template v-else-if="(keyword?.trim()) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
             <div class="coming-grid">
-                <div v-for="(g, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
-                    @click="onOpenPlace(g.name, '住宿')">
-                    <img :src="g.img" alt="" class="w100">
-                    <div class="card-title">{{ g.name }}住宿</div>
-                    <div class="card-sub">住宿{{ g.enName }}</div>
+                <div v-for="(item, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
+                    @click="onOpenPlace(item.place, '住宿')">
+                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <div class="card-title">{{ item.place }} 住宿</div>
+                    <div class="card-sub">Hotel {{ item.enPlace }}</div>
                 </div>
             </div>
         </template>
@@ -291,7 +317,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in restaurants.items" :key="'rt-place-' + i" class="coming-card"
             @click="onOpenPlace(item.place, '餐厅')">
-            <img src="../assets/img/footer2.jpg" alt="" class="w100">
+            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.place }} 周边餐厅</div>
             <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
         </div>
@@ -301,7 +327,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in hotels.items" :key="'ht-place-' + i" class="coming-card"
             @click="onOpenPlace(item.place, '住宿')">
-            <img src="../assets/img/footer2.jpg" alt="" class="w100">
+            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
             <div class="card-sub">Hotel {{ item.enPlace }}</div>
         </div>

@@ -87,161 +87,7 @@ const popularTags = ref([
 ])
 
 
-// 服务类型 -> 统一组件的配置
-const serviceConfigs = {
-    '独立成团（不限人数）': {
-        heroTitle: '独立成团专属体验',
-        heroDesc: '不限人数，完全按需，专属导游团队为您服务。',
-        features: ['不限人数 灵活成团', '专属导游全程陪同', '个性化行程定制', '灵活时间安排', '专属车辆与设备'],
-        packagesTitle: '独立成团套餐',
-        packages: [
-            { id: 1, title: '小团定制', description: '2-6人小团，灵活安排，专属导游服务' },
-            { id: 2, title: '中团定制', description: '7-15人中团，专业导游，舒适体验' },
-            { id: 3, title: '大团定制', description: '16人以上大团，专业团队，全程保障' }
-        ],
-        advantagesTitle: '独立成团服务优势',
-        advantages: [
-            { id: 1, title: '灵活成团', description: '不限人数 随时成团', icon: 'el-icon-user-solid' },
-            { id: 2, title: '专属服务', description: '专属导游全程陪同', icon: 'el-icon-service' },
-            { id: 3, title: '个性定制', description: '完全按需定制行程', icon: 'el-icon-setting' },
-            { id: 4, title: '品质保障', description: '专业团队品质服务', icon: 'el-icon-medal' }
-        ],
-        contactTitle: '获取独立成团服务',
-        contactIntro: '如需了解详情或预约独立成团服务，请联系我们的专属顾问'
-    },
-    '包车服务（独立成团+专车+司导）': {
-        heroTitle: '专车座驾，您的移动休息室，您的专属节奏',
-        heroDesc: '在塔斯马尼亚，最美的风景往往藏在徒步难以抵达之处。景点分散、班次有限、徒步距离遥远，这些因素导致太多旅行者与心仪的美景失之交臂。选择包车服务，TTO为您提供您的私密天地、您的移动探索基地，让您尽情放松休息、存放物品。遇到心动风景即可停靠，发现有趣地点随时前往。TTO提供的不只是车辆，更是打开塔斯马尼亚最美一面的钥匙，让您的旅途不再留下“如果当时能去那里就好了”的遗憾。TTO将这一切变为可能！',
-        features: ['多种专业车型应对满足任意需求', '司导具备本地知识，提供本地人才知道的隐藏景点信息', '行程节奏自由掌控', '全天候私密空间', '24小时服务支持'],
-        packagesTitle: '包车服务',
-        packages: [
-            { id: 1, title: 'XX包车', description: '描述描述描述' },
-            { id: 2, title: 'XX包车', description: '描述描述描述' },
-            { id: 3, title: 'XX包车', description: '描述描述描述' }
-        ],
-        advantagesTitle: '多种车型任你挑选',
-        advantages: [
-            {
-                id: 1, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
-                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
-            },
-            {
-                id: 2, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
-                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
-            },
-            {
-                id: 3, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
-                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
-            },
-            {
-                id: 4, title: '劳斯莱斯', description: 'XX座，真皮座驾', url: 'carType.png',
-                conTitle: '家庭出游', conDes: '一家人共同旅游，享受众多乐趣',
-            }
-        ],
-        contactTitle: '获取包车服务',
-        contactIntro: '如需了解详情或预约包车服务，请联系我们的专属顾问'
-    },
-    '有偿行程定制': {
-        heroTitle: '有偿行程定制体验',
-        heroDesc: '专业规划师为您量身打造专属塔州之旅。',
-        features: ['一对一专业规划师', '个性化行程设计', '详细行程安排', '全程跟踪服务', '专业建议与支持'],
-        packagesTitle: '行程定制套餐',
-        packages: [
-            { id: 1, title: '基础定制', description: '基础行程规划，含主要景点与住宿建议' },
-            { id: 2, title: '深度定制', description: '含交通、餐饮、活动等详细安排' },
-            { id: 3, title: '豪华定制', description: '全方位定制，专属导游与特殊体验' }
-        ],
-        advantagesTitle: '行程定制服务优势',
-        advantages: [
-            { id: 1, title: '专业规划', description: '专业规划师团队', icon: 'el-icon-edit' },
-            { id: 2, title: '个性定制', description: '完全按需定制', icon: 'el-icon-setting' },
-            { id: 3, title: '详细安排', description: '细致到每一步', icon: 'el-icon-document' },
-            { id: 4, title: '全程跟踪', description: '出行期间持续支持', icon: 'el-icon-view' }
-        ],
-        contactTitle: '获取行程定制服务',
-        contactIntro: '如需了解详情或预约行程定制服务，请联系我们的专属顾问'
-    },
-    '全程旅游管家服务': {
-        heroTitle: '全方位生活管家体验',
-        heroDesc: '从日常事务到特殊需求，专业管家团队让您无忧。',
-        features: ['一对一专属管家服务', '全方位生活需求规划', '专属活动与特殊安排', '24小时紧急支持', 'VIP特权与优先服务'],
-        packagesTitle: '管家服务套餐',
-        packages: [
-            { id: 1, title: '基础管家', description: '日常事务管理，采购与预约' },
-            { id: 2, title: '高级管家', description: '家庭活动与特殊安排' },
-            { id: 3, title: '尊享管家', description: '24小时专属管家与私人助理' }
-        ],
-        advantagesTitle: '管家服务优势',
-        advantages: [
-            { id: 1, title: '专业保障', description: '资深管家服务团队', icon: 'el-icon-shield' },
-            { id: 2, title: '全面服务', description: '全方位生活需求', icon: 'el-icon-chat-dot-round' },
-            { id: 3, title: '私人服务', description: '一对一专线管家', icon: 'el-icon-user' },
-            { id: 4, title: '尊享特权', description: '优先服务与特权', icon: 'el-icon-star-on' }
-        ],
-        contactTitle: '获取专属管家服务',
-        contactIntro: '如需了解详情或预约管家服务，请联系我们的专属顾问'
-    },
-    '个性定制服务': {
-        heroTitle: '个性定制服务体验',
-        heroDesc: '按兴趣与需求打造独一无二的旅程。',
-        features: ['创意定制方案', '特殊需求满足', '独特体验设计', '灵活调整服务', '专属活动安排'],
-        packagesTitle: '个性定制套餐',
-        packages: [
-            { id: 1, title: '创意定制', description: '基础创意方案，满足特殊兴趣' },
-            { id: 2, title: '深度定制', description: '独特体验与活动的深度方案' },
-            { id: 3, title: '极致定制', description: '专属活动与特殊安排' }
-        ],
-        advantagesTitle: '个性定制优势',
-        advantages: [
-            { id: 1, title: '创意设计', description: '专业创意团队', icon: 'el-icon-magic-stick' },
-            { id: 2, title: '个性定制', description: '完全个性定制', icon: 'el-icon-setting' },
-            { id: 3, title: '独特体验', description: '独特体验设计', icon: 'el-icon-star-on' },
-            { id: 4, title: '灵活服务', description: '灵活调整服务', icon: 'el-icon-refresh' }
-        ],
-        contactTitle: '获取个性定制服务',
-        contactIntro: '如需了解详情或预约个性定制服务，请联系我们的专属顾问'
-    },
-    '地接地陪服务': {
-        heroTitle: '地接地陪服务',
-        heroDesc: '地接地陪服务',
-        features: ['地接地陪服务', '地接地陪服务', '地接地陪服务', '地接地陪服务', '地接地陪服务'],
-        packagesTitle: '地接地陪服务',
-        packages: [
-            { id: 1, title: '地接地陪服务', description: '地接地陪服务' },
-            { id: 2, title: '地接地陪服务', description: '地接地陪服务' },
-            { id: 3, title: '地接地陪服务', description: '地接地陪服务' }
-        ],
-        advantagesTitle: '地接地陪服务',
-        advantages: [
-            { id: 1, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-magic-stick' },
-            { id: 2, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-setting' },
-            { id: 3, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-star-on' },
-            { id: 4, title: '地接地陪服务', description: '地接地陪服务', icon: 'el-icon-refresh' }
-        ],
-        contactTitle: '获取地接地陪服务',
-        contactIntro: '如需了解详情或预约地接地陪服务，请联系我们的专属顾问'
-    },
-    '代订门票及旅游项目': {
-        heroTitle: '让等待不再是旅行难题，高效管理时间',
-        heroDesc: '在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为您省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把您的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。',
-        features: ['酒店免等入住', '餐厅预留就座', '行程无缝对接', '全程无忧代办'],
-        packagesTitle: '代订门票及旅游项目',
-        packages: [
-            { id: 1, title: '代订门票及旅游项目', description: '代订门票及旅游项目' },
-            { id: 2, title: '代订门票及旅游项目', description: '代订门票及旅游项目' },
-            { id: 3, title: '代订门票及旅游项目', description: '代订门票及旅游项目' }
-        ],
-        advantagesTitle: '代订门票及旅游项目',
-        advantages: [
-            { id: 1, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-magic-stick' },
-            { id: 2, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-setting' },
-            { id: 3, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-star-on' },
-            { id: 4, title: '代订门票及旅游项目', description: '代订门票及旅游项目', icon: 'el-icon-refresh' }
-        ],
-        contactTitle: '获取代订门票及旅游项目',
-        contactIntro: '如需了解详情或预约代订门票及旅游项目，请联系我们的专属顾问'
-    },
-}
+// 服务配置已移至ServiceShowcase组件内部处理
 
 // 当前显示的服务配置
 const currentServiceConfig = ref(null)
@@ -264,8 +110,18 @@ const showFreeTripSubnav = computed(() => navStore.selectedTagName === '自助�
 function onClickSubTab(tab) {
     subTab.value = tab
 
+    // 清空搜索框和搜索关键词
+    subSearch.value = ''
+    committedKeyword.value = ''
+
     // 保存用户选择的子导航
     useNavStore().saveSelectedSubNav(tab)
+}
+
+// 清空搜索功能
+function clearSearch() {
+    subSearch.value = ''
+    committedKeyword.value = ''
 }
 
 // 网格数据与筛选逻辑由 TripsGrid 组件内部维护
@@ -287,7 +143,25 @@ function openPlaceList(placeName, itemType) {
     if (freeInfo && freeInfo.subNav) {
         const subNav = freeInfo.subNav.find(sub => sub.subNavName === itemType)
         if (subNav && subNav.items) {
-            listItems.value = subNav.items
+            // 对于餐厅和住宿，需要从items中找到对应place的数据，然后提取list
+            if (itemType === '餐厅' || itemType === '住宿') {
+                const placeItem = subNav.items.find(item => item.place === placeName)
+                if (placeItem && placeItem.list) {
+                    listItems.value = placeItem.list
+                } else {
+                    // 如果没有找到对应的place，使用所有items的list数据
+                    const allItems = []
+                    subNav.items.forEach(item => {
+                        if (item.list) {
+                            allItems.push(...item.list)
+                        }
+                    })
+                    listItems.value = allItems
+                }
+            } else {
+                // 对于景点，直接使用items
+                listItems.value = subNav.items
+            }
         } else {
             // 如果没有找到匹配的数据，生成备用的模拟数据
             generateMockItems()
@@ -338,9 +212,11 @@ function openPlaceList(placeName, itemType) {
 
 function onSelectPlaceItem(item) {
     dialogTitle.value = `${listPlaceName.value} · ${item.title}`
-    dialogBanner.value = listItemType.value === '餐厅'
+    dialogBanner.value = item.img || (listItemType.value === '餐厅'
         ? new URL('@/assets/img/footer2.jpg', import.meta.url).href
-        : new URL('@/assets/img/footer3.jpg', import.meta.url).href
+        : new URL('@/assets/img/footer3.jpg', import.meta.url).href)
+    dialogTripData.value = item.tripData || {}
+    dialogTripType.value = listItemType.value === '餐厅' ? '餐厅信息' : '住宿信息'
     isTourDialogVisible.value = true
 }
 
@@ -400,20 +276,15 @@ function doSubSearch() {
 const isTourDialogVisible = ref(false)
 const dialogTitle = ref('大堡礁单日游')
 const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
+const dialogTripData = ref({})
+const dialogTripType = ref('一日游')
 
 // function openTourDialog(item,url) {
 function openTourDialog(item) {
     dialogTitle.value = item?.title || '大堡礁单日游'
-    // 轮换几张本地图片作为示意
-    // const pics = [
-    //     new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-    //     new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-    //     new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-    //     new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-    // ]
-    // const idx = Math.floor(Math.random() * pics.length)
-    // dialogBanner.value = pics[idx]
-    // dialogBanner.value = url
+    dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
+    dialogTripData.value = item?.tripData || {}
+    dialogTripType.value = item?.tripType || '一日游'
     isTourDialogVisible.value = true
 }
 
@@ -492,11 +363,10 @@ onMounted(() => {
     if (route.name) {
         navStore.saveSelectedRoute(route.name)
     }
-
     // 根据当前路由设置初始状态
     if (route.name === 'Service') {
         navStore.saveSelectedTagName('代订门票及旅游项目')
-        currentServiceConfig.value = { ...serviceConfigs['代订门票及旅游项目'], serviceName: '代订门票及旅游项目' }
+        currentServiceConfig.value = { serviceName: '代订门票及旅游项目' }
     } else if (route.name === 'Trips') {
         navStore.saveSelectedTagName('自助游/自驾游免费信息')
         currentServiceConfig.value = null
@@ -511,8 +381,8 @@ onMounted(() => {
     watch(() => navStore.selectedTagName, (newTagName) => {
         // 根据选中的标签名更新当前服务配置
         const isServiceType = !['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(newTagName)
-        if (isServiceType && serviceConfigs[newTagName]) {
-            currentServiceConfig.value = { ...serviceConfigs[newTagName], serviceName: newTagName }
+        if (isServiceType) {
+            currentServiceConfig.value = { serviceName: newTagName }
         } else {
             currentServiceConfig.value = null
         }
@@ -553,7 +423,7 @@ onUnmounted(() => {
         </div>
 
         <!-- 固定搜索框 - 使用ServicesNav组件（完全独立） -->
-        <ServicesNav />
+        <ServicesNav @clear-search="clearSearch" />
         <!-- 内容区域 -->
         <div class="content-box">
             <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
@@ -601,13 +471,13 @@ onUnmounted(() => {
             </template>
 
             <!-- 服务组件区域 -->
-            <ServiceShowcase v-if="currentServiceConfig" :config="currentServiceConfig" />
+            <ServiceShowcase v-if="currentServiceConfig" :service-name="navStore.selectedTagName" />
 
             <!-- 网格区统一由 TripsGrid 承担渲染 -->
             <TripsGrid
                 v-else-if="!currentServiceConfig && (navStore.selectedTagName === '自助游/自驾游免费信息' || navStore.selectedTagName === '一日游（固定行程）' || navStore.selectedTagName === '多日游（固定行程）')"
-                :active-tag="navStore.selectedTagName" :sub-tab="subTab" :keyword="committedKeyword" :day-trip-tab="dayTripTab"
-                @open-tour-dialog="openTourDialog"
+                :active-tag="navStore.selectedTagName" :sub-tab="subTab" :keyword="committedKeyword"
+                :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
                 @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
 
 
@@ -625,7 +495,8 @@ onUnmounted(() => {
                 </div>
             </div> -->
 
-            <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner" />
+            <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner"
+                :trip-data="dialogTripData" :trip-type="dialogTripType" />
             <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
                 :items="listItems" @select="onSelectPlaceItem" />
         </div>

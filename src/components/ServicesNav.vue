@@ -40,6 +40,9 @@ const activeTag = computed(() => {
   return ''
 })
 
+// 定义emit事件
+const emit = defineEmits(['clearSearch'])
+
 // 标签点击事件处理
 function onClickTag(tag) {
   try {
@@ -61,6 +64,9 @@ function onClickTag(tag) {
 
     // 保存当前标签名到专门的状态中
     navStore.saveSelectedTagName(tag)
+
+    // 通知父组件清空搜索
+    emit('clearSearch')
 
     // 由于当前没有完整的路由系统，我们暂时只更新状态
     // 未来实现路由时，可以添加router.push相关逻辑

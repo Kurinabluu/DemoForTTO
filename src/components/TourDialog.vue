@@ -7,8 +7,35 @@ const props = defineProps({
     visible: { type: Boolean, default: false },
     title: { type: String, default: '塔斯马尼亚一日游' },
     banner: { type: String, default: '' },
-    tripType: { type: String, default: '一日游' } // 添加tripType属性来区分一日游和多日游
+    tripType: { type: String, default: '一日游' }, // 添加tripType属性来区分一日游和多日游
+    tripData: { type: Object, default: () => ({}) } // 添加tripData属性来接收完整的行程数据
 })
+
+// 处理图片URL的函数
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return ''
+
+    // 如果已经是完整的URL，直接返回
+    if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+        return imagePath
+    }
+
+    // 如果是@/assets路径，使用import.meta.url处理
+    if (imagePath.startsWith('@/assets/')) {
+        try {
+            return new URL(imagePath.replace('@/', '../'), import.meta.url).href
+        } catch (error) {
+            console.warn('图片路径处理失败:', imagePath, error)
+            return ''
+        }
+    }
+
+    // 其他情况直接返回
+    return imagePath
+}
+
+// 计算处理后的banner图片URL
+const bannerUrl = computed(() => getImageUrl(props.banner))
 
 const emit = defineEmits(['update:visible'])
 
@@ -77,7 +104,14 @@ function getDefaultTripInfo(title = '未知行程') {
 }
 
 // 计算路线信息
-const routeInfo = computed(() => getTripRouteInfo(props.title, props.tripType))
+const routeInfo = computed(() => {
+    // 如果传入了tripData，优先使用传入的数据
+    if (props.tripData && Object.keys(props.tripData).length > 0) {
+        return props.tripData;
+    }
+    // 否则使用原有的查找逻辑
+    return getTripRouteInfo(props.title, props.tripType);
+})
 </script>
 
 <template>
@@ -87,8 +121,8 @@ const routeInfo = computed(() => getTripRouteInfo(props.title, props.tripType))
             <div class="dlg-title">{{ title }}</div>
         </template>
 
-        <div class="dlg-banner">
-            <img :src="banner" alt="banner" />
+        <div class="dlg-banner" v-if="bannerUrl">
+            <img :src="bannerUrl" alt="banner" />
         </div>
 
         <div class="dlg-section">

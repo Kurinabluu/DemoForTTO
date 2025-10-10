@@ -1,19 +1,123 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import ContactDialog from '@/components/ContactDialog.vue'
+import dataJson from '@/data/data.json'
 
-// 接收配置
+// 接收配置（保持向后兼容）
 const props = defineProps({
-    config: { type: Object, required: true }
+    config: { type: Object, default: null },
+    serviceName: { type: String, default: '' }
 })
+
+// 声明变量存储服务数据
+let serviceData = ref(null)
+let currentServiceName = ref('')
+
+// 从data.json获取isTrip为false的服务数据
+const getServiceData = () => {
+    try {
+        if (!dataJson) return null
+        const services = dataJson.filter(item => item.isTrip === false)
+        return services || []
+    } catch (error) {
+        console.error('获取服务数据失败:', error)
+        return []
+    }
+}
+
+// 根据服务名称获取特定服务数据
+const getServiceByName = (serviceName) => {
+    const services = getServiceData()
+    return services.find(service => service.tagName === serviceName)
+}
+
+// 处理图片URL的函数
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return ''
+
+    // 如果已经是完整的URL，直接返回
+    if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
+        return imagePath
+    }
+
+    // 如果是@/assets路径，使用import.meta.url处理
+    if (imagePath.startsWith('@/assets/')) {
+        try {
+            return new URL(imagePath.replace('@/', '../'), import.meta.url).href
+        } catch (error) {
+            console.warn('图片路径处理失败:', imagePath, error)
+            return ''
+        }
+    }
+
+    // 如果是相对路径（如carType.png），转换为@/assets路径
+    if (imagePath.includes('.png') || imagePath.includes('.jpg') || imagePath.includes('.jpeg')) {
+        try {
+            return new URL(`@/assets/img/carService/${imagePath}`, import.meta.url).href
+        } catch (error) {
+            console.warn('图片路径处理失败:', imagePath, error)
+            return ''
+        }
+    }
+
+    // 其他情况直接返回
+    return imagePath
+}
+
+// 获取默认图片
+const getDefaultImage = () => {
+    return new URL('@/assets/img/footer1.jpg', import.meta.url).href
+}
 
 const consultationDialogVisible = ref(false)
 const openConsultationDialog = () => {
     consultationDialogVisible.value = true
 }
 
+// 计算属性：优先使用从data.json获取的数据，否则使用传入的config
+const currentConfig = computed(() => {
+    if (serviceData.value) {
+        return serviceData.value.serviceConfig
+    }
+    return props.config
+})
+
 // 优先显示服务名；若未提供则回退到主标题
-const titleText = computed(() => props.config?.serviceName || props.config?.heroTitle || '')
+const titleText = computed(() => {
+    if (serviceData.value) {
+        return serviceData.value.tagName || currentConfig.value?.heroTitle || ''
+    }
+    return props.config?.serviceName || props.config?.heroTitle || ''
+})
+
+// 获取服务数据的函数
+const loadServiceData = (serviceName) => {
+    if (serviceName) {
+        const data = getServiceByName(serviceName)
+        if (data) {
+            serviceData.value = data
+            currentServiceName.value = data.tagName
+        }
+    }
+}
+
+// 组件挂载时获取数据
+onMounted(() => {
+    // 优先使用传入的serviceName
+    if (props.serviceName) {
+        loadServiceData(props.serviceName)
+    } else if (props.config?.serviceName) {
+        // 如果有传入的config，尝试根据serviceName获取对应数据
+        loadServiceData(props.config.serviceName)
+    }
+})
+
+// 监听serviceName变化，重新加载数据
+watch(() => props.serviceName, (newServiceName) => {
+    if (newServiceName) {
+        loadServiceData(newServiceName)
+    }
+})
 </script>
 
 <template>
@@ -28,10 +132,10 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
                     <div class="image-placeholder"></div>
                 </div>
                 <div class="hero-text">
-                    <h2 class="subtitle">{{ config.heroTitle }}</h2>
-                    <p class="description">{{ config.heroDesc }}</p>
+                    <h2 class="subtitle">{{ currentConfig?.heroTitle }}</h2>
+                    <p class="description">{{ currentConfig?.heroDesc }}</p>
                     <ul class="features-list">
-                        <li class="feature-item" v-for="(f, i) in config.features" :key="i">
+                        <li class="feature-item" v-for="(f, i) in currentConfig?.features" :key="i">
                             <span class="feature-dot center fff fowe7">√</span>
                             {{ f }}
                         </li>
@@ -41,18 +145,19 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
         </div>
 
         <!-- 服务套餐区域 -->
-        <div class="packages-section">
-            <h2 class="section-title">{{ config.packagesTitle }}</h2>
+        <div class="packages-section" v-if="currentConfig?.packages">
+            <h2 class="section-title">{{ currentConfig.packagesTitle }}</h2>
             <div class="packages-grid">
-                <div class="package-card" v-for="p in config.packages" :key="p.id">
+                <div class="package-card" v-for="p in currentConfig.packages" :key="p.id">
                     <div class="package-image">
-                        <div class="image-placeholder"></div>
+                        <img v-if="p.img" :src="getImageUrl(p.img)" alt="套餐图片" class="package-img">
+                        <div v-else class="image-placeholder"></div>
                     </div>
                     <div class="package-content">
                         <h3 class="package-title">{{ p.title }}</h3>
                         <p class="package-description">{{ p.description }}</p>
-                        <span class="package-price">
-                            <i class="package-num">100</i>
+                        <span class="package-price" v-if="p.price">
+                            <i class="package-num">{{ p.price }}</i>
                             <i class="package-text">¥ /人</i>
                         </span>
                         <button class="consult-btn flri" @click="openConsultationDialog">立即咨询</button>
@@ -62,38 +167,33 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
         </div>
 
         <!-- 服务优势区域 -->
-        <div class="advantages-section">
-            <h2 class="section-title">{{ config.advantagesTitle }}</h2>
+        <div class="advantages-section" v-if="currentConfig?.advantages">
+            <h2 class="section-title">{{ currentConfig.advantagesTitle }}</h2>
             <div class="advantages-flex">
-                <div class="advantage-item" v-for="a in config.advantages" :key="a.id">
+                <div class="advantage-item" v-for="a in currentConfig.advantages" :key="a.id">
                     <div class="advantage-detail">
                         <div class="advantage-icon">
-                            <!-- <i :class="a.icon"></i> -->
-                            <!-- 待修改成动态值----------------------- -->
-                            <img src="../assets/img/carService/carType.png" alt="车辆图片">
+                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
+                            <img v-else src="@/assets/img/carService/carType.png" alt="默认图标" class="advantage-img">
                         </div>
                         <h3 class="advantage-title">{{ a.title }}</h3>
                         <p class="advantage-description">{{ a.description }}</p>
                     </div>
-                    <div class="advantage-condition">
+                    <div class="advantage-condition" v-if="a.conTitle">
                         <div class="advantage-icon">
-                            <!-- <i :class="a.icon"></i> -->
-                            <!-- 待修改成动态值----------------------- -->
-                            <!-- v-if="condition" -->
-                            <img src="../assets/img/carService/condition.png" alt="">
+                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
+                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
                         </div>
                         <h3 class="advantage-title">{{ a.conTitle }}</h3>
                         <p class="advantage-description">{{ a.conDes }}</p>
                     </div>
                 </div>
-                <!-- <img src="../assets/img/condition.png" alt="" style="float: left;width: 80%;height: 80%;"> -->
             </div>
         </div>
-        <!-- 目前是包车服务中 -->
         <!-- 联系方式区域 -->
-        <div class="contact-section">
-            <h2 class="section-title">{{ config.contactTitle }}</h2>
-            <p class="contact-intro">{{ config.contactIntro }}</p>
+        <div class="contact-section" v-if="currentConfig?.contactTitle">
+            <h2 class="section-title">{{ currentConfig.contactTitle }}</h2>
+            <p class="contact-intro">{{ currentConfig.contactIntro }}</p>
             <div class="contact-info">
                 <div class="contact-item"><i class="contact-icon phone-icon"></i><span>(+61)0488 388 188</span></div>
                 <div class="contact-item"><i class="contact-icon email-icon"></i><span>tto.advisory@gmail.com</span>
@@ -146,6 +246,23 @@ const titleText = computed(() => props.config?.serviceName || props.config?.hero
         width: 100%;
         height: 100%;
         background-color: #39c5bb;
+    }
+
+    .hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .package-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .advantage-img {
+        width: 300px;
+        height: auto;
     }
 
     .hero-text {

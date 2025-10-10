@@ -24,13 +24,13 @@ export const useNavStore = defineStore('nav', {
         isFirstVisit() {
             return !localStorage.getItem(STORAGE_KEYS.firstVisit)
         },
-        
+
         // 保存完整路由路径（用于路由恢复）
         savePath(path) {
             this.lastPath = path
             localStorage.setItem(STORAGE_KEYS.lastPath, path || '')
         },
-        
+
         // 保存选中的标签名
         saveSelectedTagName(tagName) {
             this.selectedTagName = tagName
