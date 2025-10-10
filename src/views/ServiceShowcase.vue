@@ -6,7 +6,7 @@ import dataJson from '@/data/data.json'
 // 接收配置（保持向后兼容）
 const props = defineProps({
     config: { type: Object, default: null },
-    serviceName: { type: String, default: '' }
+    serviceName: { type: String, default: '代订门票及旅游项目' }
 })
 
 // 声明变量存储服务数据
@@ -43,20 +43,12 @@ const getImageUrl = (imagePath) => {
     // 如果是@/assets路径，使用import.meta.url处理
     if (imagePath.startsWith('@/assets/')) {
         try {
+            // 直接使用new URL处理@/assets路径
             return new URL(imagePath.replace('@/', '../'), import.meta.url).href
         } catch (error) {
             console.warn('图片路径处理失败:', imagePath, error)
-            return ''
-        }
-    }
-
-    // 如果是相对路径（如carType.png），转换为@/assets路径
-    if (imagePath.includes('.png') || imagePath.includes('.jpg') || imagePath.includes('.jpeg')) {
-        try {
-            return new URL(`@/assets/img/carService/${imagePath}`, import.meta.url).href
-        } catch (error) {
-            console.warn('图片路径处理失败:', imagePath, error)
-            return ''
+            // 如果失败，尝试使用默认图片
+            return getDefaultImage()
         }
     }
 

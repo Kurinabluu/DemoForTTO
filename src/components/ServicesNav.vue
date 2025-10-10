@@ -24,26 +24,15 @@ const activeTag = computed(() => {
   if (localActiveTag.value) {
     return localActiveTag.value
   }
-  // 如果组件内部状态为空，优先从store中获取保存的标签名
-  const savedTagName = navStore.selectedTagName
-  if (savedTagName && tags.includes(savedTagName)) {
-    localActiveTag.value = savedTagName
-    return savedTagName
-  }
-  // 如果都没有，设置第一个标签为默认激活状态
+  // 如果都没有，使用默认标签
   if (tags.length > 0 && !localActiveTag.value) {
     localActiveTag.value = tags[0]
-    // 同时保存到store中
-    navStore.saveSelectedTagName(tags[0])
     return tags[0]
   }
   return ''
 })
 
-// 定义emit事件
-const emit = defineEmits(['clearSearch'])
-
-// 标签点击事件处理
+// 在标签点击事件中添加路由跳转
 function onClickTag(tag) {
   try {
     // 更新组件内部的激活标签状态
@@ -55,25 +44,48 @@ function onClickTag(tag) {
     // 重置子导航为默认值
     navStore.saveSelectedSubNav('景点')
 
-    // 检查是否是服务类型标签（排除一日游和多日游）
-    const isTripsType = ['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(tag)
-    const type = isTripsType ? 'Trips' : 'Service'
-
-    // 保存路由类型
-    navStore.saveSelectedRoute(type)
-
-    // 保存当前标签名到专门的状态中
-    navStore.saveSelectedTagName(tag)
+    // 根据data.json中的path配置进行路由跳转
+    const tagData = data.find(item => item.tagName === tag)
+    if (tagData && tagData.path) {
+      const fullPath = `/DemoForTTO/${tagData.path}`
+      router.push(fullPath)
+    }
 
     // 通知父组件清空搜索
-    emit('clearSearch')
+    // emit('clearSearch')
 
-    // 由于当前没有完整的路由系统，我们暂时只更新状态
-    // 未来实现路由时，可以添加router.push相关逻辑
-
-    console.log('标签点击:', tag, '类型:', type)
+    console.log('标签点击:', tag, '路由跳转到:', tagData?.path)
   } catch (error) {
     console.error('标签点击处理失败:', error)
+  }
+}
+
+// 根据路由路径同步标签状态
+function syncTagWithRoute() {
+  try {
+    const currentPath = router.currentRoute.value.path
+
+    // 根据当前路由路径找到对应的标签
+    const matchedTag = data.find(item => {
+      if (item.path) {
+        return currentPath.includes(item.path)
+      }
+      return false
+    })
+
+    if (matchedTag) {
+      localActiveTag.value = matchedTag.tagName
+      searchInput.value = matchedTag.tagName
+      return
+    }
+
+    // 如果都没有，使用默认标签
+    if (tags.length > 0 && !localActiveTag.value) {
+      localActiveTag.value = tags[0]
+      searchInput.value = tags[0]
+    }
+  } catch (error) {
+    console.error('同步标签与路由失败:', error)
   }
 }
 
@@ -87,30 +99,6 @@ onMounted(() => {
 watch(() => router.currentRoute.value.path, () => {
   syncTagWithRoute()
 })
-
-// 根据路由路径同步标签状态
-function syncTagWithRoute() {
-  try {
-    const currentPath = router.currentRoute.value.path
-    const savedTagName = navStore.selectedTagName
-
-    // 如果有保存的标签名，优先使用
-    if (savedTagName && tags.includes(savedTagName) && !localActiveTag.value) {
-      localActiveTag.value = savedTagName
-      searchInput.value = savedTagName
-      return
-    }
-
-    // 如果没有保存的标签名但有默认标签，使用默认标签
-    if (tags.length > 0 && !localActiveTag.value) {
-      localActiveTag.value = tags[0]
-      searchInput.value = tags[0]
-      navStore.saveSelectedTagName(tags[0])
-    }
-  } catch (error) {
-    console.error('同步标签与路由失败:', error)
-  }
-}
 
 // 搜索按钮点击事件
 function onSearch() {

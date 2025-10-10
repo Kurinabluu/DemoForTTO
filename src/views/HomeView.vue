@@ -1,61 +1,135 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Search } from '@element-plus/icons-vue'
 import TourDialog from '@/components/TourDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
-import ServiceShowcase from '@/views/ServiceShowcase.vue'
-import TripsGrid from '@/views/TripsGrid.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
-import { useNavStore } from '@/stores/nav'
 import data from '@/data/data.json'
+import { useNavStore } from '@/stores/nav'
+import { Search } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
 
+const navStore = useNavStore()
 const route = useRoute()
 const router = useRouter()
 
-// 监听路由变化，根据当前路由决定显示什么内容
-const currentView = computed(() => {
-    if (route.name === 'Service') return 'service'
-    if (route.name === 'Trips') return 'trips'
-    return 'default'
+// 当前选中的子导航
+const currentSubNavTab = ref('')
+
+// 监听路由变化，当路由改变时自动设置默认子导航
+watch(() => route.path, (newPath) => {
+    // 找到当前路由对应的数据对象
+    const routeData = data.find(item => {
+        if (item.path) {
+            return newPath.includes(item.path)
+        }
+        return false
+    })
+
+    if (routeData && routeData.hasSubNav && routeData.subNav && routeData.subNav.length > 0) {
+        // 获取保存的子导航，如果没有则使用第一个
+        const savedSubNav = navStore.selectedSubNav
+        const defaultSubNav = routeData.subNav[0].subNavName
+
+        // 检查保存的子导航是否在当前对象的子导航列表中
+        const isValidSubNav = routeData.subNav.some(sub => sub.subNavName === savedSubNav)
+
+        if (isValidSubNav) {
+            // 如果保存的子导航有效，使用它
+            currentSubNavTab.value = savedSubNav
+        } else {
+            // 如果无效，使用默认的第一个子导航
+            currentSubNavTab.value = defaultSubNav
+            navStore.saveSelectedSubNav(defaultSubNav)
+        }
+    }
+}, { immediate: true })
+
+// 从data.json中获取有子导航的对象
+const itemsWithSubNav = computed(() => {
+    return data.filter(item => item.hasSubNav === true)
 })
 
-// 标签与详细路由的映射
-const tagToFullRoute = {
-    '自助游/自驾游免费信息': '/DemoForTTO/trips/freeinfo',
-    '一日游（固定行程）': '/DemoForTTO/trips/oneday',
-    '多日游（固定行程）': '/DemoForTTO/trips/multiday',
-    '代订门票及旅游项目': '/DemoForTTO/service/ticket',
-    '包车服务（独立成团+专车+司导）': '/DemoForTTO/service/car',
-    '全程旅游管家服务': '/DemoForTTO/service/steward',
-    '地接地陪服务': '/DemoForTTO/service/guide',
-    '个性定制服务': '/DemoForTTO/service/custom'
+// 获取当前路由对应的数据对象
+const currentRouteData = computed(() => {
+    const currentPath = route.path
+    return data.find(item => {
+        if (item.path) {
+            return currentPath.includes(item.path)
+        }
+        return false
+    })
+})
+// 获取当前对象的子导航
+const currentSubNav = computed(() => {
+    if (currentRouteData.value && currentRouteData.value.subNav) {
+        return currentRouteData.value.subNav.map(sub => sub.subNavName)
+    }
+    return []
+})
+
+// 显示子导航的条件
+const showSubNav = computed(() => {
+    return currentRouteData.value && currentRouteData.value.hasSubNav && currentSubNavTab.value
+})
+
+// 当前显示的服务配置
+const currentServiceConfig = ref(null)
+
+function onClickSubTab(tab) {
+    // 验证点击的tab是否在当前对象的子导航列表中
+    if (currentRouteData.value && currentRouteData.value.subNav) {
+        const isValidTab = currentRouteData.value.subNav.some(sub => sub.subNavName === tab)
+        if (isValidTab) {
+            currentSubNavTab.value = tab
+            // 清空搜索框和搜索关键词
+            subSearch.value = ''
+            committedKeyword.value = ''
+            // 保存用户选择的子导航
+            navStore.saveSelectedSubNav(tab)
+        }
+    }
 }
 
-// 路由名与标签的映射（用于兼容现有代码）
-const routeNameToTag = {
-    Service: '代订门票及旅游项目',
-    Trips: '自助游/自驾游免费信息',
-    FreeInfo: '自助游/自驾游免费信息',
-    OneDayTour: '一日游（固定行程）',
-    MultiDayTour: '多日游（固定行程）',
-    TicketBooking: '代订门票及旅游项目',
-    CarService: '包车服务（独立成团+专车+司导）',
-    StewardService: '全程旅游管家服务',
-    GuideService: '地接地陪服务',
-    CustomService: '个性定制服务'
+// 监听currentRouteData变化，确保子导航同步
+watch(currentRouteData, (newData) => {
+    if (newData && newData.hasSubNav && newData.subNav && newData.subNav.length > 0) {
+        const savedSubNav = navStore.selectedSubNav
+        const defaultSubNav = newData.subNav[0].subNavName
+
+        // 检查保存的子导航是否在当前对象的子导航列表中
+        const isValidSubNav = newData.subNav.some(sub => sub.subNavName === savedSubNav)
+
+        if (isValidSubNav) {
+            currentSubNavTab.value = savedSubNav
+        } else {
+            currentSubNavTab.value = defaultSubNav
+            navStore.saveSelectedSubNav(defaultSubNav)
+        }
+    }
+}, { immediate: true })
+
+// 搜索功能
+function doSubSearch() {
+    const kw = (subSearch.value || '').trim()
+    if (!kw) {
+        // 清空搜索时重置
+        committedKeyword.value = ''
+        return
+    }
+    committedKeyword.value = kw
 }
 
-// 监听查询参数，动态切换子导航与一日游子标签
-watch(() => route.query, (q) => {
-    const query = q || {}
-    if (typeof query.subTab === 'string' && subNavTabs.includes(query.subTab)) {
-        subTab.value = query.subTab
-    }
-    if (typeof query.dayTab === 'string' && ['景点一日游', '主题一日游', '定制一日游'].includes(query.dayTab)) {
-        dayTripTab.value = query.dayTab
-    }
-}, { deep: true })
+// 只保留弹窗相关的状态
+const isTourDialogVisible = ref(false)
+const dialogTitle = ref('大堡礁单日游')
+const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
+const dialogTripData = ref({})
+const dialogTripType = ref('一日游')
+
+const isPlaceListVisible = ref(false)
+const listPlaceName = ref('')
+const listItemType = ref('餐厅')
+const listItems = ref([])
 
 // 轮播图切换事件处理
 function onCarouselChange(index) {
@@ -74,23 +148,9 @@ const desktopSlides = Object.entries(desktopModules)
 // 移动端同样展示 4 张轮播图
 const mobileSlides = desktopSlides
 
-const searchText = ref('')
-const popularTags = ref([
-    '自助游/自驾游免费信息',
-    '代订门票及旅游项目',
-    '包车服务（独立成团+专车+司导）',
-    '全程旅游管家服务',
-    '地接地陪服务',
-    '一日游（固定行程）',
-    '多日游（固定行程）',
-    '个性定制服务'
-])
-
-
 // 服务配置已移至ServiceShowcase组件内部处理
 
 // 当前显示的服务配置
-const currentServiceConfig = ref(null)
 const isDialogVisible = ref(false)
 
 // 子导航（仅用于“自助游/自驾游免费信息”）
@@ -99,57 +159,75 @@ const isDialogVisible = ref(false)
 //   1) 选“景点”：下方维持原有景点网格
 //   2) 选“餐厅/住宿”：下方卡片标题改为对应文案（不改子标题，作为示例）
 //   3) 选“特别活动”：不显示网格，仅显示“待修改”占位
-const subNavTabs = ['景点', '餐厅', '住宿', '特别活动']
-const subTab = ref('景点')
 const subSearch = ref('')
 const committedKeyword = ref('')
-const navStore = useNavStore()
-// 仅当激活标签为“自助游/自驾游免费信息”且未展示服务组件时，才显示子导航
-const showFreeTripSubnav = computed(() => navStore.selectedTagName === '自助游/自驾游免费信息' && !currentServiceConfig.value)
 
-function onClickSubTab(tab) {
-    subTab.value = tab
 
-    // 清空搜索框和搜索关键词
-    subSearch.value = ''
-    committedKeyword.value = ''
+// function onClickSubTab(tab) {
+//     subTab.value = tab
 
-    // 保存用户选择的子导航
-    useNavStore().saveSelectedSubNav(tab)
-}
+//     // 清空搜索框和搜索关键词
+//     subSearch.value = ''
+//     committedKeyword.value = ''
+
+// }
 
 // 清空搜索功能
 function clearSearch() {
-    subSearch.value = ''
-    committedKeyword.value = ''
+    // subSearch.value = ''
+    // committedKeyword.value = ''
 }
-
-// 网格数据与筛选逻辑由 TripsGrid 组件内部维护
-
-// 地点-列表弹窗
-const isPlaceListVisible = ref(false)
-const listPlaceName = ref('')
-const listItemType = ref('餐厅')
-const listItems = ref([])
 
 // 地点分组网格改由 TripsGrid 内部数据驱动
 
-function openPlaceList(placeName, itemType) {
+function generateMockItems() {
+    let baseImg, titlePrefix, enTitlePrefix
+    switch (listItemType.value) {
+        case '餐厅':
+            baseImg = new URL('@/assets/img/footer2.jpg', import.meta.url).href
+            titlePrefix = '餐厅名'
+            enTitlePrefix = 'Restaurant'
+            break
+        case '住宿':
+            baseImg = new URL('@/assets/img/footer3.jpg', import.meta.url).href
+            titlePrefix = '住宿名'
+            enTitlePrefix = 'Hotel'
+            break
+        case '景点':
+            baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
+            titlePrefix = '景点名'
+            enTitlePrefix = 'Attraction'
+            break
+        default:
+            baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
+            titlePrefix = '地点名'
+            enTitlePrefix = 'Place'
+    }
+
+    const items = []
+    for (let i = 0; i < 24; i++) {
+        const label = String.fromCharCode(65 + (i % 26))
+        const title = `${titlePrefix}${label}`
+        const enTitle = `${enTitlePrefix}${label}`
+        items.push({ title, img: baseImg, enTitle })
+    }
+    listItems.value = items
+}
+
+function openPlaceList({ placeName, itemType }) {
     listPlaceName.value = placeName
     listItemType.value = itemType
 
-    // 从data.json中获取真实的数据
+    // 从data.json中获取数据
     const freeInfo = data.find(item => item.tagName === '自助游/自驾游免费信息')
     if (freeInfo && freeInfo.subNav) {
         const subNav = freeInfo.subNav.find(sub => sub.subNavName === itemType)
         if (subNav && subNav.items) {
-            // 对于餐厅和住宿，需要从items中找到对应place的数据，然后提取list
             if (itemType === '餐厅' || itemType === '住宿') {
                 const placeItem = subNav.items.find(item => item.place === placeName)
                 if (placeItem && placeItem.list) {
                     listItems.value = placeItem.list
                 } else {
-                    // 如果没有找到对应的place，使用所有items的list数据
                     const allItems = []
                     subNav.items.forEach(item => {
                         if (item.list) {
@@ -159,55 +237,16 @@ function openPlaceList(placeName, itemType) {
                     listItems.value = allItems
                 }
             } else {
-                // 对于景点，直接使用items
                 listItems.value = subNav.items
             }
         } else {
-            // 如果没有找到匹配的数据，生成备用的模拟数据
             generateMockItems()
         }
     } else {
-        // 如果没有找到免费信息数据，生成备用的模拟数据
         generateMockItems()
     }
 
     isPlaceListVisible.value = true
-
-    // 生成备用模拟数据的函数
-    function generateMockItems() {
-        // 根据类型选择基础图片路径
-        let baseImg, titlePrefix, enTitlePrefix
-        switch (itemType) {
-            case '餐厅':
-                baseImg = new URL('@/assets/img/footer2.jpg', import.meta.url).href
-                titlePrefix = '餐厅名'
-                enTitlePrefix = 'Restaurant'
-                break
-            case '住宿':
-                baseImg = new URL('@/assets/img/footer3.jpg', import.meta.url).href
-                titlePrefix = '住宿名'
-                enTitlePrefix = 'Hotel'
-                break
-            case '景点':
-                baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
-                titlePrefix = '景点名'
-                enTitlePrefix = 'Attraction'
-                break
-            default:
-                baseImg = new URL('@/assets/img/footer1.jpg', import.meta.url).href
-                titlePrefix = '地点名'
-                enTitlePrefix = 'Place'
-        }
-
-        const items = []
-        for (let i = 0; i < 24; i++) {
-            const label = String.fromCharCode(65 + (i % 26))
-            const title = `${titlePrefix}${label}`
-            const enTitle = `${enTitlePrefix}${label}`
-            items.push({ title, img: baseImg, enTitle })
-        }
-        listItems.value = items
-    }
 }
 
 function onSelectPlaceItem(item) {
@@ -220,66 +259,10 @@ function onSelectPlaceItem(item) {
     isTourDialogVisible.value = true
 }
 
-// 一日游子导航
-const dayTripTabs = ['景点一日游', '主题一日游', '定制一日游']
-const dayTripTab = ref(dayTripTabs[0])
-// const dayTripCopyMap = {
-//     '景点一日游': '精选经典景点路线，省心直达热门目的地',
-//     '主题一日游': '围绕自然、人文、美食等主题深度体验',
-//     '定制一日游': '按需定制专属行程，灵活时间与路线',
-// }
-function onClickDayTripTab(t) {
-    dayTripTab.value = t
-
-    // 保存用户选择的子导航
-    useNavStore().saveSelectedSubNav(t)
-}
-const showDayTripSubnav = computed(() => !currentServiceConfig.value && navStore.selectedTagName === '一日游（固定行程）')
-// const activityItems = ref(
-//     scenicPlaces.slice(5, 33).map((name, i) => ({ title: `${name} 特别活动`, sub: ['徒步体验', '观星之旅', '直升机游览', '葡萄酒品鉴'][i % 4] }))
-// )
-// 一日游网格数据已迁移到 TripsGrid.vue，由 dayTripTab 控制
-
-// 特别活动网格数据交由 TripsGrid 组件维护
-
-// 搜索：在选中子导航时对相应分组执行包含匹配；若无结果则弹窗提示，不改变原网格
-// const scenicFiltered = computed(() =>
-//     (committedKeyword.value || '').trim()
-//         ? gridItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-//         : gridItems.value
-// )
-// const restaurantFiltered = computed(() =>
-//     (committedKeyword.value || '').trim()
-//         ? restaurantItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-//         : restaurantItems.value
-// )
-// const hotelFiltered = computed(() =>
-//     (committedKeyword.value || '').trim()
-//         ? hotelItems.value.filter(it => it.title.includes(committedKeyword.value.trim()))
-//         : hotelItems.value
-// )
-// 过滤与网格渲染交由 TripsGrid 组件维护
-
-function doSubSearch() {
-    const kw = (subSearch.value || '').trim()
-    if (!kw) {
-        // 清空搜索时重置
-        committedKeyword.value = ''
-        return
-    }
-    committedKeyword.value = kw
-}
-
 // 标签点击逻辑已移至ServicesNav组件内部实现
 
 // 弹窗控制
-const isTourDialogVisible = ref(false)
-const dialogTitle = ref('大堡礁单日游')
-const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
-const dialogTripData = ref({})
-const dialogTripType = ref('一日游')
-
-// function openTourDialog(item,url) {
+// 弹窗相关方法
 function openTourDialog(item) {
     dialogTitle.value = item?.title || '大堡礁单日游'
     dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
@@ -354,42 +337,32 @@ function onTouchEnd() {
     }
 }
 
+// 初始化当前子导航
+function initializeSubNav() {
+    if (currentRouteData.value && currentRouteData.value.hasSubNav && currentRouteData.value.subNav && currentRouteData.value.subNav.length > 0) {
+        const savedSubNav = navStore.selectedSubNav
+        const defaultSubNav = currentRouteData.value.subNav[0].subNavName
+
+        // 检查保存的子导航是否在当前对象的子导航列表中
+        const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === savedSubNav)
+
+        if (isValidSubNav) {
+            currentSubNavTab.value = savedSubNav
+        } else {
+            currentSubNavTab.value = defaultSubNav
+            navStore.saveSelectedSubNav(defaultSubNav)
+        }
+    }
+}
 // 组件挂载时执行
 onMounted(() => {
-    const navStore = useNavStore()
-    navStore.markFirstVisitDone()
-
-    // 保存当前路由
-    if (route.name) {
-        navStore.saveSelectedRoute(route.name)
-    }
-    // 根据当前路由设置初始状态
-    if (route.name === 'Service') {
-        navStore.saveSelectedTagName('代订门票及旅游项目')
-        currentServiceConfig.value = { serviceName: '代订门票及旅游项目' }
-    } else if (route.name === 'Trips') {
-        navStore.saveSelectedTagName('自助游/自驾游免费信息')
-        currentServiceConfig.value = null
-    }
-
     selectSlides()
     if (typeof window !== 'undefined') {
         window.addEventListener('resize', handleResizeForSlides)
     }
-
-    // 监听navStore.selectedTagName变化，更新currentServiceConfig
-    watch(() => navStore.selectedTagName, (newTagName) => {
-        // 根据选中的标签名更新当前服务配置
-        const isServiceType = !['自助游/自驾游免费信息', '一日游（固定行程）', '多日游（固定行程）'].includes(newTagName)
-        if (isServiceType) {
-            currentServiceConfig.value = { serviceName: newTagName }
-        } else {
-            currentServiceConfig.value = null
-        }
-    }, { immediate: true })
+    initializeSubNav()
 })
 
-// 组件卸载时清理事件监听器
 onUnmounted(() => {
     if (typeof window !== 'undefined') {
         window.removeEventListener('resize', handleResizeForSlides)
@@ -403,12 +376,11 @@ onUnmounted(() => {
         <!-- 轮播图 -->
         <div class="carousel-container" @touchstart.passive="onTouchStart" @touchmove.passive="onTouchMove"
             @touchend="onTouchEnd">
-            <!-- 背景图片层 -->
+            <!-- 轮播图内容保持不变 -->
             <div class="carousel-background">
                 <img :src="slidesRef[currentSlideIndex]" alt="background" class="background-img"
                     :key="currentSlideIndex" />
             </div>
-            <!-- 毛玻璃层 -->
             <div class="glass-overlay"></div>
 
             <el-carousel ref="carouselRef" :height="carouselHeight" :autoplay="false" arrow="always" :interval="3000"
@@ -422,84 +394,43 @@ onUnmounted(() => {
             </el-carousel>
         </div>
 
-        <!-- 固定搜索框 - 使用ServicesNav组件（完全独立） -->
-        <ServicesNav @clear-search="clearSearch" />
-        <!-- 内容区域 -->
+        <!-- 固定搜索框 -->
+        <!-- <ServicesNav @clear-search="clearSearch" /> -->
+        <ServicesNav />
+
+        <!-- 内容区域 - 使用router-view来渲染子路由 -->
         <div class="content-box">
-            <!-- 自助游/自驾游免费信息：子导航（横向Tab + 搜索） -->
-            <div v-if="showFreeTripSubnav" class="free-trip-subnav center">
+            <!-- 动态子导航（根据data.json中hasSubNav为true的对象渲染） -->
+            <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
-                    <li v-for="t in subNavTabs" :key="t" class="free-subnav-tab" :class="{ active: subTab === t }"
-                        @click="onClickSubTab(t)" :data-tab="t">{{ t }}</li>
+                    <li v-for="t in currentSubNav" :key="t" class="free-subnav-tab"
+                        :class="{ active: currentSubNavTab === t }" @click="onClickSubTab(t)">
+                        {{ t }}
+                    </li>
                 </ul>
-                <!-- 搜索框 -->
-                <div class="free-subnav-search">
+                <!-- 搜索框（仅对免费信息显示） -->
+                <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" class="free-subnav-search">
                     <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
                         @keyup.enter="doSubSearch" @clear="doSubSearch" />
                 </div>
-                <el-button type="primary" class="free-subnav-search-btn" size="large" @click="doSubSearch">
+                <el-button v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" type="primary"
+                    class="free-subnav-search-btn" size="large" @click="doSubSearch">
                     <el-icon>
                         <Search />
                     </el-icon>
                     搜索
                 </el-button>
             </div>
-
-            <!-- 网格区统一由 TripsGrid 承担渲染 -->
-            <!-- <TripsGrid v-if="showFreeTripSubnav" :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
-                @open-tour-dialog="openTourDialog"
-                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" /> -->
-
-            <!-- 一日游子导航 -->
-            <template v-if="showDayTripSubnav">
-                <!-- 简化的子导航，只有标签切换 -->
-                <!-- <div class="free-trip-subnav center" style="margin-top:-10px;"> -->
-                <div class="free-trip-subnav center">
-                    <ul class="free-subnav-tabs">
-                        <li v-for="t in dayTripTabs" :key="t" class="free-subnav-tab"
-                            :class="{ active: dayTripTab === t }" @click="onClickDayTripTab(t)" :data-tab="t">
-                            {{ t }}
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 一日游内容网格由 TripsGrid 渲染 -->
-                <!-- <TripsGrid :active-tag="activeTag" :sub-tab="subTab" :keyword="committedKeyword"
-                    :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
-                    @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" /> -->
-            </template>
-
-            <!-- 服务组件区域 -->
-            <ServiceShowcase v-if="currentServiceConfig" :service-name="navStore.selectedTagName" />
-
-            <!-- 网格区统一由 TripsGrid 承担渲染 -->
-            <TripsGrid
-                v-else-if="!currentServiceConfig && (navStore.selectedTagName === '自助游/自驾游免费信息' || navStore.selectedTagName === '一日游（固定行程）' || navStore.selectedTagName === '多日游（固定行程）')"
-                :active-tag="navStore.selectedTagName" :sub-tab="subTab" :keyword="committedKeyword"
-                :day-trip-tab="dayTripTab" @open-tour-dialog="openTourDialog"
-                @open-place-list="({ placeName, itemType }) => openPlaceList(placeName, itemType)" />
-
-
-
-            <!-- 多日游由 TripsGrid 内部处理，无需在此重复渲染 -->
-
-            <!-- 一日游、多日游网格显示
-            <div v-if="!currentServiceConfig && (activeTag === '一日游（固定行程）' || activeTag === '多日游（固定行程）')"
-                class="coming-grid">
-                <div v-for="(item, i) in gridItems" :key="'day-trip-' + i" class="coming-card"
-                    @click="openTourDialog(item)">
-                    <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.sub }}</div>
-                </div>
-            </div> -->
-
-            <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner"
-                :trip-data="dialogTripData" :trip-type="dialogTripType" />
-            <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
-                :items="listItems" @select="onSelectPlaceItem" />
+            <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
+                :keyword="committedKeyword" />
         </div>
+
+        <!-- 弹窗组件 -->
+        <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner"
+            :trip-data="dialogTripData" :trip-type="dialogTripType" />
+        <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
+            :items="listItems" @select="onSelectPlaceItem" />
     </el-main>
 </template>
 

@@ -4,10 +4,8 @@ import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icon
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
-import HomeView from '@/views/HomeView.vue';
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 
-const currentNav = ref('网站首页')
 const navStore = useNavStore();
 const router = useRouter();
 const comingSoonDialogRef = ref(null);
@@ -23,12 +21,26 @@ function onNavClick(event, navName = '') {
         // 跳转到免费信息页面
         router.push('/DemoForTTO/trips/freeinfo');
     }
-    // 网站首页：跳转到免费信息并选择"景点"子导航
+    // 网站首页：根据是否首次访问决定跳转
     else if (textContent === '网站首页') {
-        // 保存需要选择的子导航
-        navStore.saveSelectedSubNav('景点');
-        // 跳转到免费信息页面
-        router.push('/DemoForTTO/trips/freeinfo');
+        // 检查是否是首次访问
+        const isFirstVisit = navStore.isFirstVisit();
+        if (isFirstVisit) {
+            // 首次访问，跳转到默认路由（trips/freeinfo）
+            navStore.markFirstVisitDone();
+            navStore.saveSelectedSubNav('景点');
+            router.push('/DemoForTTO/trips/freeinfo');
+        } else {
+            // 非首次访问，跳转到上次访问的页面
+            const lastPath = navStore.lastPath;
+            if (lastPath && lastPath !== '/DemoForTTO') {
+                router.push(lastPath);
+            } else {
+                // 如果没有上次访问记录，跳转到默认页面
+                navStore.saveSelectedSubNav('景点');
+                router.push('/DemoForTTO/trips/freeinfo');
+            }
+        }
     }
     // 其他导航项：弹出敬请期待对话框
     else if (textContent === '行业新闻') {
@@ -66,6 +78,20 @@ const rejectDisclaimer = () => {
     // }, 200)
 }
 
+// 滚动到页面顶部
+function scrollToTop() {
+    // 使用document.documentElement.scrollTop确保滚动到真正的页面顶部
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0; // 兼容性处理
+}
+
+// 显示ComingSoonDialog
+function showComingSoonDialog() {
+    if (comingSoonDialogRef.value) {
+        comingSoonDialogRef.value.showComingDialog = true;
+    }
+}
+
 // 组件挂载时检查是否首次访问
 onMounted(() => {
     // 检查是否是首次访问
@@ -80,7 +106,7 @@ onMounted(() => {
     <el-container>
         <el-header class="fs15 bgfff">
             <span class="logo fowe7 no-select pointer">
-                <RouterLink to="/DemoForTTO">TasmaniaTrips.Online</RouterLink>
+                <RouterLink to="/DemoForTTO/trips/freeinfo">TasmaniaTrips.Online</RouterLink>
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
@@ -214,12 +240,25 @@ onMounted(() => {
                     </div>
                     <div class="nav-links">
                         <div class="nav-item">
-                            <RouterLink to="/DemoForTTO">网站首页 <span>Home</span></RouterLink>
+                            <RouterLink to="/DemoForTTO/trips/freeinfo"
+                                @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">网站首页 <span>Home</span>
+                            </RouterLink>
                         </div>
-                        <div class="nav-item">精品路线 <span>Tourist route</span></div>
-                        <div class="nav-item">行业新闻 <span>News center</span></div>
-                        <div class="nav-item">八大服务 <span>Service</span></div>
-                        <div class="nav-item">关于我们 <span>About us</span></div>
+                        <div class="nav-item">
+                            <RouterLink to="/DemoForTTO/trips/oneday"
+                                @click="navStore.saveSelectedSubNav('景点一日游'); scrollToTop()">
+                                精品路线 <span>Tourist route</span>
+                            </RouterLink>
+                        </div>
+                        <div class="nav-item" @click="showComingSoonDialog">行业新闻 <span>News
+                                center</span></div>
+                        <div class="nav-item">
+                            <RouterLink to="/DemoForTTO/service/ticket" @click="scrollToTop()">
+                                八大服务 <span>Service</span>
+                            </RouterLink>
+                        </div>
+                        <div class="nav-item" @click="showComingSoonDialog">关于我们 <span>About
+                                us</span></div>
                         <div class="nav-item" @click="openContactDialog">联系我们 <span>Contact us</span></div>
                     </div>
                 </div>

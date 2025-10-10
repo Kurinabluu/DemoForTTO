@@ -1290,6 +1290,7 @@
         "isTrip": false,
         "path": "service/ticket",
         "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "让等待不再是旅行难题，高效管理时间",
             "heroDesc": "在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为您省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把您的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。",
             "features": [
@@ -1304,19 +1305,19 @@
                     "id": 1,
                     "title": "代订门票及旅游项目啦啦啦",
                     "description": "代订门票及旅游项目",
-                    "img": ""
+                    "img": "@/assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "img": ""
+                    "img": "@/assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "img": ""
+                    "img": "@/assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "代订门票及旅游项目",
@@ -1325,37 +1326,37 @@
                     "id": 1,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 2,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 3,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 4,
                     "title": "代订门票及旅游项目",
                     "description": "代订门票及旅游项目",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 }
             ],
             "contactTitle": "获取代订门票及旅游项目",
@@ -1369,6 +1370,7 @@
         "isTrip": false,
         "path": "service/car",
         "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "专车座驾，您的移动休息室，您的专属节奏",
             "heroDesc": "在塔斯马尼亚，最美的风景往往藏在徒步难以抵达之处。景点分散、班次有限、徒步距离遥远，这些因素导致太多旅行者与心仪的美景失之交臂。选择包车服务，TTO为您提供您的私密天地、您的移动探索基地，让您尽情放松休息、存放物品。遇到心动风景即可停靠，发现有趣地点随时前往。TTO提供的不只是车辆，更是打开塔斯马尼亚最美一面的钥匙，让您的旅途不再留下\"如果当时能去那里就好了\"的遗憾。TTO将这一切变为可能！",
             "features": [
@@ -1384,19 +1386,19 @@
                     "id": 1,
                     "title": "XX包车",
                     "description": "描述描述描述",
-                    "img": ""
+                    "img": "@/assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
                     "title": "XX包车",
                     "description": "描述描述描述",
-                    "img": ""
+                    "img": "@/assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
                     "title": "XX包车",
                     "description": "描述描述描述",
-                    "img": ""
+                    "img": "@/assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "多种车型任你挑选",
@@ -1405,37 +1407,37 @@
                     "id": 1,
                     "title": "劳斯莱斯",
                     "description": "XX座，真皮座驾",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 2,
                     "title": "劳斯莱斯",
                     "description": "XX座，真皮座驾",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 3,
                     "title": "劳斯莱斯",
                     "description": "XX座，真皮座驾",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 4,
                     "title": "劳斯莱斯",
                     "description": "XX座，真皮座驾",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 }
             ],
             "contactTitle": "获取包车服务",
@@ -1449,6 +1451,7 @@
         "isTrip": false,
         "path": "service/steward",
         "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "全方位生活管家体验",
             "heroDesc": "从日常事务到特殊需求，专业管家团队让您无忧。",
             "features": [
@@ -1464,19 +1467,19 @@
                     "id": 1,
                     "title": "基础管家",
                     "description": "日常事务管理，采购与预约",
-                    "img": ""
+                    "img": "@/assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
                     "title": "高级管家",
                     "description": "家庭活动与特殊安排",
-                    "img": ""
+                    "img": "@/assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
                     "title": "尊享管家",
                     "description": "24小时专属管家与私人助理",
-                    "img": ""
+                    "img": "@/assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "管家服务优势",
@@ -1485,28 +1488,28 @@
                     "id": 1,
                     "title": "专业保障",
                     "description": "资深管家服务团队",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 2,
                     "title": "全面服务",
                     "description": "全方位生活需求",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 3,
                     "title": "私人服务",
                     "description": "一对一专线管家",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 4,
@@ -1526,6 +1529,7 @@
         "isTrip": false,
         "path": "service/guide",
         "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "地接地陪服务",
             "heroDesc": "地接地陪服务",
             "features": [
@@ -1541,19 +1545,19 @@
                     "id": 1,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "img": ""
+                    "img": "@/assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "img": ""
+                    "img": "@/assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "img": ""
+                    "img": "@/assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "地接地陪服务",
@@ -1562,37 +1566,37 @@
                     "id": 1,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 2,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 3,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 4,
                     "title": "地接地陪服务",
                     "description": "地接地陪服务",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 }
             ],
             "contactTitle": "获取地接地陪服务",
@@ -2363,6 +2367,7 @@
         "isTrip": false,
         "path": "service/custom",
         "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "个性定制服务体验",
             "heroDesc": "按兴趣与需求打造独一无二的旅程。",
             "features": [
@@ -2378,19 +2383,19 @@
                     "id": 1,
                     "title": "创意定制",
                     "description": "基础创意方案，满足特殊兴趣",
-                    "img": ""
+                    "img": "@/assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
                     "title": "深度定制",
                     "description": "独特体验与活动的深度方案",
-                    "img": ""
+                    "img": "@/assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
                     "title": "极致定制",
                     "description": "专属活动与特殊安排",
-                    "img": ""
+                    "img": "@/assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "个性定制优势",
@@ -2399,37 +2404,37 @@
                     "id": 1,
                     "title": "创意设计",
                     "description": "专业创意团队",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 2,
                     "title": "个性定制",
                     "description": "完全个性定制",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 3,
                     "title": "独特体验",
                     "description": "独特体验设计",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 },
                 {
                     "id": 4,
                     "title": "灵活服务",
                     "description": "灵活调整服务",
-                    "url": "carType.png",
+                    "url": "@/assets/img/carService/carType.png",
                     "conTitle": "家庭出游",
                     "conDes": "一家人共同旅游，享受众多乐趣",
-                    "conUrl": "condition.png"
+                    "conUrl": "@/assets/img/carService/condition.png"
                 }
             ],
             "contactTitle": "获取个性定制服务",
