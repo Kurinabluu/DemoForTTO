@@ -12,37 +12,38 @@ const navStore = useNavStore()
 const route = useRoute()
 const router = useRouter()
 
+
 // 当前选中的子导航
 const currentSubNavTab = ref('')
 
 // 监听路由变化，当路由改变时自动设置默认子导航
-watch(() => route.path, (newPath) => {
-    // 找到当前路由对应的数据对象
-    const routeData = data.find(item => {
-        if (item.path) {
-            return newPath.includes(item.path)
-        }
-        return false
-    })
+// watch(() => route.path, (newPath) => {
+//     // 找到当前路由对应的数据对象
+//     const routeData = data.find(item => {
+//         if (item.path) {
+//             return newPath.includes(item.path)
+//         }
+//         return false
+//     })
 
-    if (routeData && routeData.hasSubNav && routeData.subNav && routeData.subNav.length > 0) {
-        // 获取保存的子导航，如果没有则使用第一个
-        const savedSubNav = navStore.selectedSubNav
-        const defaultSubNav = routeData.subNav[0].subNavName
+//     if (routeData && routeData.hasSubNav && routeData.subNav && routeData.subNav.length > 0) {
+//         // 获取保存的子导航，如果没有则使用第一个
+//         const savedSubNav = navStore.selectedSubNav
+//         const defaultSubNav = routeData.subNav[0].subNavName
 
-        // 检查保存的子导航是否在当前对象的子导航列表中
-        const isValidSubNav = routeData.subNav.some(sub => sub.subNavName === savedSubNav)
+//         // 检查保存的子导航是否在当前对象的子导航列表中
+//         const isValidSubNav = routeData.subNav.some(sub => sub.subNavName === savedSubNav)
 
-        if (isValidSubNav) {
-            // 如果保存的子导航有效，使用它
-            currentSubNavTab.value = savedSubNav
-        } else {
-            // 如果无效，使用默认的第一个子导航
-            currentSubNavTab.value = defaultSubNav
-            navStore.saveSelectedSubNav(defaultSubNav)
-        }
-    }
-}, { immediate: true })
+//         if (isValidSubNav) {
+//             // 如果保存的子导航有效，使用它
+//             currentSubNavTab.value = savedSubNav
+//         } else {
+//             // 如果无效，使用默认的第一个子导航
+//             currentSubNavTab.value = defaultSubNav
+//             navStore.saveSelectedSubNav(defaultSubNav)
+//         }
+//     }
+// }, { immediate: true })
 
 // 从data.json中获取有子导航的对象
 const itemsWithSubNav = computed(() => {
@@ -354,6 +355,42 @@ function initializeSubNav() {
         }
     }
 }
+
+
+// 监听路由query参数变化
+watch(() => route.query, (newQuery) => {
+    // 如果query中有subNavName参数，优先使用它
+    if (newQuery.subNavName) {
+        // 检查这个子导航是否在当前路由的子导航列表中
+        if (currentRouteData.value && currentRouteData.value.subNav) {
+            const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === newQuery.subNavName);
+            if (isValidSubNav) {
+                currentSubNavTab.value = newQuery.subNavName;
+                navStore.saveSelectedSubNav(newQuery.subNavName);
+                // 清空搜索
+                subSearch.value = '';
+                committedKeyword.value = '';
+                return;
+            }
+        }
+    }
+
+    // 如果没有query参数（比如点击网站首页清空了query），使用默认逻辑
+    if (currentRouteData.value && currentRouteData.value.hasSubNav && currentRouteData.value.subNav && currentRouteData.value.subNav.length > 0) {
+        const savedSubNav = navStore.selectedSubNav;
+        const defaultSubNav = currentRouteData.value.subNav[0].subNavName;
+
+        // 当没有query参数时，优先使用store中保存的子导航，如果无效则使用默认的
+        const isValidSubNav = savedSubNav && currentRouteData.value.subNav.some(sub => sub.subNavName === savedSubNav);
+
+        if (isValidSubNav) {
+            currentSubNavTab.value = savedSubNav;
+        } else {
+            currentSubNavTab.value = defaultSubNav;
+            navStore.saveSelectedSubNav(defaultSubNav);
+        }
+    }
+}, { immediate: true });
 // 组件挂载时执行
 onMounted(() => {
     selectSlides()

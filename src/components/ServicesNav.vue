@@ -11,7 +11,6 @@ const tags = data.map(item => item.tagName)
 // 本地搜索输入值
 const searchInput = ref('')
 
-// 组件内部独立维护的激活标签状态
 const localActiveTag = ref('')
 
 // 使用导航store

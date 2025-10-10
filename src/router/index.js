@@ -20,10 +20,12 @@ const routes = [
             path: 'trips/freeinfo',
             name: 'FreeInfo',
             component: () => import('@/views/TripsGrid.vue'),
-            props: {
-              activeTag: '自助游/自驾游免费信息',
-              subTab: '景点'
-            }
+            props: (route) => (
+              {
+                activeTag: '自助游/自驾游免费信息',
+                subTab: route.query.subNavName || '景点'
+              }
+            )
           },
           {
             path: 'trips/oneday',

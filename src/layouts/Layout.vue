@@ -14,31 +14,42 @@ function onNavClick(event, navName = '') {
     // 获取点击的文本内容
     const textContent = event.currentTarget.textContent.trim();
 
+    const clickedElement = event.currentTarget;
+    const btnsContainer = clickedElement.closest('.btns');
+    const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
+
     // 特别推荐：跳转到免费信息并选择"特别活动"子导航
     if (textContent === '特别推荐') {
         // 保存需要选择的子导航
         navStore.saveSelectedSubNav('特别活动');
         // 跳转到免费信息页面
-        router.push('/DemoForTTO/trips/freeinfo');
+        // router.push('/DemoForTTO/trips/freeinfo');
     }
     // 网站首页：根据是否首次访问决定跳转
     else if (textContent === '网站首页') {
         // 检查是否是首次访问
         const isFirstVisit = navStore.isFirstVisit();
-        if (isFirstVisit) {
+        if (!isFirstVisit) {
             // 首次访问，跳转到默认路由（trips/freeinfo）
             navStore.markFirstVisitDone();
             navStore.saveSelectedSubNav('景点');
-            router.push('/DemoForTTO/trips/freeinfo');
+            // router.push('/DemoForTTO/trips/freeinfo');
         } else {
             // 非首次访问，跳转到上次访问的页面
             const lastPath = navStore.lastPath;
+            // if (lastPath && lastPath !== '/DemoForTTO') {
+            //     router.push(lastPath);
+            // } else {
+            //     // 如果没有上次访问记录，跳转到默认页面
+            //     navStore.saveSelectedSubNav('景点');
+            //     // router.push('/DemoForTTO/trips/freeinfo');
+            // } 
             if (lastPath && lastPath !== '/DemoForTTO') {
                 router.push(lastPath);
             } else {
                 // 如果没有上次访问记录，跳转到默认页面
                 navStore.saveSelectedSubNav('景点');
-                router.push('/DemoForTTO/trips/freeinfo');
+                // router.push('/DemoForTTO/trips/freeinfo');
             }
         }
     }
@@ -47,7 +58,18 @@ function onNavClick(event, navName = '') {
         if (comingSoonDialogRef.value) {
             comingSoonDialogRef.value.showComingDialog = true;
         }
+        return
     }
+
+
+    // 类名切换
+    if (!btnsContainer) {
+        clickedElement.classList.add('clicked');
+        return;
+    }
+    candidates.forEach((node) => node.classList.remove('clicked'));
+    clickedElement.classList.add('clicked');
+
 }
 
 // 联系我们弹窗
@@ -110,12 +132,13 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer" @click="onNavClick($event, '网站首页')">
+                    <li class="pointer clicked" @click="onNavClick($event, '网站首页');">
                         <RouterLink to="/DemoForTTO/trips/freeinfo">网站首页</RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
-                    <li class="pointer" @click="onNavClick($event)">
-                        <RouterLink to="/DemoForTTO/trips/freeinfo">特别推荐</RouterLink>
+                    <li class="pointer" @click="onNavClick($event);">
+                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '特别活动' } }">特别推荐
+                        </RouterLink>
                     </li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
