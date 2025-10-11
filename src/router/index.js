@@ -6,11 +6,11 @@ export function processHashRedirect() {
   try {
     // 检查URL hash中是否包含路径信息（来自404页面的重定向）
     if (window.location.hash && window.location.hash.startsWith('#/')) {
-      // 提取hash中的路径部分（去掉#）
-      const path = window.location.hash.substring(1);
+      // 提取hash中的完整路径部分（去掉#），包括查询参数
+      const hashContent = window.location.hash.substring(1);
       // 清空hash，然后跳转
       window.location.hash = '';
-      return path;
+      return hashContent;
     }
   } catch (e) {
     // ignore
