@@ -1,7 +1,7 @@
 <script setup>
 // 搜索相关数据
 import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
@@ -9,6 +9,24 @@ import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 const navStore = useNavStore();
 const router = useRouter();
 const comingSoonDialogRef = ref(null);
+
+// 计算属性：根据当前路由和子导航状态确定哪个导航项应该有clicked类
+const activeNavItem = computed(() => {
+    const currentRoute = router.currentRoute.value;
+    const path = currentRoute.path;
+    const subNavName = currentRoute.query.subNavName || '';
+
+    // 只在/DemoForTTO/trips/freeinfo路径下判断
+    if (path === '/DemoForTTO/trips/freeinfo') {
+        if (subNavName === '特别活动') {
+            return '特别推荐';
+        } else if (subNavName === '景点') {
+            return '网站首页';
+        }
+    }
+
+    return ''; // 默认没有活动项
+});
 
 function onNavClick(event, navName = '') {
     // 获取点击的文本内容
@@ -40,13 +58,8 @@ function onNavClick(event, navName = '') {
     }
 
 
-    // 类名切换
-    if (!btnsContainer) {
-        clickedElement.classList.add('clicked');
-        return;
-    }
-    candidates.forEach((node) => node.classList.remove('clicked'));
-    clickedElement.classList.add('clicked');
+    // 由于现在使用computed属性动态控制clicked类，这里不再需要手动切换类名
+    // 仅保留其他必要的逻辑
 
 }
 
@@ -80,9 +93,27 @@ const rejectDisclaimer = () => {
 
 // 滚动到页面顶部
 function scrollToTop() {
-    // 使用document.documentElement.scrollTop确保滚动到真正的页面顶部
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0; // 兼容性处理
+    // 使用window.scrollTo({ behavior: 'smooth' })实现平滑滚动到顶部
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    })
+    
+    // 临时禁用路由跳转后的滚动恢复
+    // 1. 保存当前滚动位置为0（顶部）
+    try {
+        localStorage.setItem('tto_last_scroll_y', '0');
+    } catch (e) {
+        // ignore
+    }
+    
+    // 2. 使用setTimeout确保在路由跳转完成后再次滚动到顶部
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 100); // 延迟100ms执行
 }
 
 // 显示ComingSoonDialog
@@ -110,11 +141,13 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer clicked" @click="onNavClick($event, '网站首页');">
-                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页</RouterLink>
+                    <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
+                        @click="onNavClick($event, '网站首页');">
+                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页
+                        </RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
-                    <li class="pointer" @click="onNavClick($event);">
+                    <li class="pointer" :class="{ clicked: activeNavItem === '特别推荐' }" @click="onNavClick($event);">
                         <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '特别活动' } }">特别推荐
                         </RouterLink>
                     </li>
@@ -241,8 +274,10 @@ onMounted(() => {
                     </div>
                     <div class="nav-links">
                         <div class="nav-item">
-                            <RouterLink to="/DemoForTTO/trips/freeinfo"
-                                @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">网站首页 <span>Home</span>
+                            <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
+                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNav: '景点' } }"
+                                @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
+                                网站首页 <span>Home</span>
                             </RouterLink>
                         </div>
                         <div class="nav-item">
@@ -272,7 +307,7 @@ onMounted(() => {
                     </div>
                     <div class="route-grid">
                         <div class="route-item" v-for="(src, idx) in footerSlides" :key="idx">
-                            <img :src="src" alt="route" class="route-img" />
+                            <img :src="src" alt="route" class="route-img" @click="showComingSoonDialog" />
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
@@ -86,8 +86,8 @@ onMounted(() => {
 
   // 非首次进入时，恢复用户上次选择的服务、子导航和滚动位置
   if (!navStore.isFirstVisit()) {
-    // 延迟执行，确保DOM已完全渲染
-    setTimeout(() => {
+    // 无需延迟，使用nextTick确保DOM已渲染
+    nextTick(() => {
       const lastPath = navStore.lastPath
       const selectedSubNav = navStore.selectedSubNav
       const savedScrollY = navStore.lastScrollY
@@ -101,34 +101,13 @@ onMounted(() => {
         // 使用replace确保URL与实际内容一致
         router.replace(lastPath)
 
-        // 如果有保存的滚动位置，则恢复到保存的位置
-        if (savedScrollY > 100) {
-          // 延迟恢复滚动位置，确保服务内容已加载
-          setTimeout(() => {
-            window.scrollTo({
-              top: savedScrollY,
-              behavior: 'smooth'
-            })
-          }, 500)
-        }
+        // 如果有保存的滚动位置，在路由跳转完成后由router.afterEach恢复
       } else {
         // 默认跳转到免费信息并选择景点子导航
         navStore.saveSelectedSubNav('景点')
         router.replace('/DemoForTTO/trips/freeinfo')
       }
-
-      // 如果有选中的子导航，则查找并点击该子导航标签
-      if (selectedSubNav) {
-        // 延迟执行，确保服务已加载完成
-        setTimeout(() => {
-          // 查找自助游/自驾游免费信息的子导航和一日游的子导航
-          const subNavTabs = document.querySelectorAll(`.free-subnav-tabs .free-subnav-tab[data-tab="${selectedSubNav}"]`)
-          if (subNavTabs && subNavTabs.length > 0) {
-            subNavTabs[0].click()
-          }
-        }, 500)
-      }
-    }, 1000)
+    })
   }
 })
 

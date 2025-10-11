@@ -14,6 +14,7 @@ const routes = [
         path: '/DemoForTTO',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
+        redirect: '/DemoForTTO/trips/freeinfo', // 添加默认重定向
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
           {
@@ -89,11 +90,12 @@ const router = createRouter({
 // 恢复逻辑：首次进入默认路由，非首次回到上次停留页面
 router.beforeEach((to, from, next) => {
   try {
-    const nav = useNavStore();
+    // 在beforeEach中直接使用localStorage，避免依赖Pinia实例
     const first = !localStorage.getItem('tto_first_visit_done');
 
     if (first) {
-      nav.markFirstVisitDone();
+      // 直接设置localStorage，不依赖Pinia
+      localStorage.setItem('tto_first_visit_done', '1');
       // 首次访问，重定向到默认路由
       if (to.path === '/' || to.path === '/DemoForTTO') {
         return next('/DemoForTTO/trips/freeinfo');
@@ -102,7 +104,7 @@ router.beforeEach((to, from, next) => {
     }
 
     // 非首次：如果直接到了根或默认页，跳转到上次页面
-    const lastPath = nav.lastPath;
+    const lastPath = localStorage.getItem('tto_last_path') || '';
     if ((to.path === '/' || to.path === '/DemoForTTO') && lastPath) {
       return next(lastPath);
     }
@@ -116,10 +118,14 @@ router.afterEach((to) => {
   // 进入页面后，尝试恢复滚动
   const restore = () => {
     try {
-      const nav = useNavStore();
-      // 记录本次路径
-      nav.savePath(to.fullPath || to.path || '')
-      const y = Number(nav.lastScrollY || 0);
+      // 记录本次路径到localStorage
+      const currentPath = to.fullPath || to.path || ''
+      localStorage.setItem('tto_last_path', currentPath)
+      
+      // 尝试从localStorage获取滚动位置
+      const lastScrollY = localStorage.getItem('tto_last_scroll_y') || '0'
+      const y = Number(lastScrollY)
+      
       if (typeof window !== 'undefined') {
         const scrollTop = Math.max(0, y)
         window.scrollTo(0, scrollTop)
@@ -128,9 +134,9 @@ router.afterEach((to) => {
       // ignore
     }
   }
-  requestAnimationFrame(() => {
-    setTimeout(restore, 0)
-  })
+  
+  // 直接执行，不需要requestAnimationFrame和setTimeout
+  restore()
 });
 
 export default router;

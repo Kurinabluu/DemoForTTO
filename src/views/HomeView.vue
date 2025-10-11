@@ -81,6 +81,22 @@ function onClickSubTab(tab) {
     if (currentRouteData.value && currentRouteData.value.subNav) {
         const isValidTab = currentRouteData.value.subNav.some(sub => sub.subNavName === tab)
         if (isValidTab) {
+            // 添加与Layout.vue中header相同的query参数逻辑
+            if (tab === '景点' || tab === '特别活动') {
+                // 进行路由跳转并携带query参数
+                router.push({
+                    path: '/DemoForTTO/trips/freeinfo',
+                    query: { subNavName: tab }
+                })
+            } else {
+                // 点击其他子导航项（如餐厅、住宿）时，进行路由跳转但不携带query参数
+                // 这样可以清除之前可能存在的query参数
+                router.push({
+                    path: '/DemoForTTO/trips/freeinfo',
+                    query: {}
+                })
+            }
+            
             currentSubNavTab.value = tab
             // 清空搜索框和搜索关键词
             subSearch.value = ''
