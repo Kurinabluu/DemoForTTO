@@ -1,6 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useNavStore } from '@/stores/nav'
 
+// 处理404重定向的hash路径
+export function processHashRedirect() {
+  try {
+    // 检查URL hash中是否包含路径信息（来自404页面的重定向）
+    if (window.location.hash && window.location.hash.startsWith('#/')) {
+      // 提取hash中的路径部分（去掉#）
+      const path = window.location.hash.substring(1);
+      // 清空hash，然后跳转
+      window.location.hash = '';
+      return path;
+    }
+  } catch (e) {
+    // ignore
+  }
+  return null;
+}
+
+// 创建路由实例前检查是否需要重定向
+const redirectPath = typeof window !== 'undefined' ? processHashRedirect() : null;
+
 const routes = [
   {
     path: '',
@@ -90,6 +110,11 @@ const router = createRouter({
 // 恢复逻辑：首次进入默认路由，非首次回到上次停留页面
 router.beforeEach((to, from, next) => {
   try {
+    // 首先检查是否有从404页面重定向过来的路径
+    if (redirectPath && to.path === '/DemoForTTO/index.html') {
+      return next(redirectPath);
+    }
+    
     // 在beforeEach中直接使用localStorage，避免依赖Pinia实例
     const first = !localStorage.getItem('tto_first_visit_done');
 
@@ -121,11 +146,11 @@ router.afterEach((to) => {
       // 记录本次路径到localStorage
       const currentPath = to.fullPath || to.path || ''
       localStorage.setItem('tto_last_path', currentPath)
-      
+
       // 尝试从localStorage获取滚动位置
       const lastScrollY = localStorage.getItem('tto_last_scroll_y') || '0'
       const y = Number(lastScrollY)
-      
+
       if (typeof window !== 'undefined') {
         const scrollTop = Math.max(0, y)
         window.scrollTo(0, scrollTop)
@@ -134,7 +159,7 @@ router.afterEach((to) => {
       // ignore
     }
   }
-  
+
   // 直接执行，不需要requestAnimationFrame和setTimeout
   restore()
 });
