@@ -47,7 +47,17 @@ function onClickTag(tag) {
     const tagData = data.find(item => item.tagName === tag)
     if (tagData && tagData.path) {
       const fullPath = `/DemoForTTO/${tagData.path}`
-      router.push(fullPath)
+      
+      // 如果是freeinfo路径，添加subNavName参数
+      if (tagData.path === 'trips/freeinfo') {
+        router.push({ path: fullPath, query: { subNavName: '景点' } })
+      }
+      // 如果是oneday路径，添加dayTripTab参数
+      else if (tagData.path === 'trips/oneday') {
+        router.push({ path: fullPath, query: { dayTripTab: '景点一日游' } })
+      } else {
+        router.push(fullPath)
+      }
     }
 
     // 通知父组件清空搜索

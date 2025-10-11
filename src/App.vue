@@ -71,9 +71,13 @@ const handleResize = () => {
 }
 
 onMounted(() => {
-  // 首次渲染完成后展示弹窗
-  // showDisclaimerModal.value = true
-  showTipsModal.value = true
+  // 只有首次访问时才显示弹窗
+  if (navStore.isFirstVisit()) {
+    showTipsModal.value = true
+    navStore.markFirstVisitDone()
+  } else {
+    showTipsModal.value = false
+  }
 
   // 添加滚动事件监听器
   window.addEventListener('scroll', () => {
@@ -105,7 +109,7 @@ onMounted(() => {
       } else {
         // 默认跳转到免费信息并选择景点子导航
         navStore.saveSelectedSubNav('景点')
-        router.replace('/DemoForTTO/trips/freeinfo')
+        router.replace({ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } })
       }
     })
   }

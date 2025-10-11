@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // 获取当前URL路径
+    const pathSegments = window.location.pathname.split('/');
+    
+    // 检查是否是GitHub Pages环境（包含DemoForTTO前缀）
+    const isGitHubPages = pathSegments.includes('DemoForTTO');
+    
+    // 构造重定向URL，保留路径信息
+    let redirectUrl = '/';
+    if (isGitHubPages) {
+      // GitHub Pages环境：保留DemoForTTO前缀
+      const demoIndex = pathSegments.indexOf('DemoForTTO');
+      const remainingPath = pathSegments.slice(demoIndex).join('/');
+      redirectUrl = '/' + remainingPath;
+    } else {
+      // 生产环境：使用完整路径
+      redirectUrl = window.location.pathname;
+    }
+    
+    // 添加查询参数
+    if (window.location.search) {
+      redirectUrl += window.location.search;
+    }
+    
+    // 重定向到index.html，并在URL hash中保留原始路径
+    window.location.replace('/DemoForTTO/index.html#' + redirectUrl);
+  </script>
+</head>
+<body>
+  <p>正在重定向...</p>
+</body>
+</html>

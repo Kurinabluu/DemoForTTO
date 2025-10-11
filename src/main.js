@@ -31,10 +31,20 @@ if (typeof window !== 'undefined') {
     document.addEventListener('visibilitychange', persist)
     window.addEventListener('beforeunload', persist)
 
-    // 路由变更时记录最后路径
+    // 路由变更时记录最后路径和恢复滚动位置
     router.afterEach((to) => {
         const path = to.fullPath || to.path
         nav.savePath(path)
+        
+        // 在下一次渲染后恢复滚动位置
+        requestAnimationFrame(() => {
+            const savedScrollY = nav.lastScrollY
+            if (savedScrollY > 0) {
+                window.scrollTo({ top: savedScrollY, behavior: 'auto' })
+            } else {
+                window.scrollTo({ top: 0, behavior: 'auto' })
+            }
+        })
     })
 }
 

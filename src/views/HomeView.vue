@@ -81,19 +81,20 @@ function onClickSubTab(tab) {
     if (currentRouteData.value && currentRouteData.value.subNav) {
         const isValidTab = currentRouteData.value.subNav.some(sub => sub.subNavName === tab)
         if (isValidTab) {
-            // 添加与Layout.vue中header相同的query参数逻辑
-            if (tab === '景点' || tab === '特别活动') {
-                // 进行路由跳转并携带query参数
+            // 根据当前路径决定使用哪个query参数
+            const currentPath = route.path
+            if (currentPath.includes('/DemoForTTO/trips/oneday')) {
+                // 一日游页面使用dayTripTab参数
+                router.push({
+                    path: '/DemoForTTO/trips/oneday',
+                    query: { dayTripTab: tab }
+                })
+            } else {
+                // 其他页面（如免费信息页面）使用subNavName参数
+                // 为所有子导航项（包括餐厅、住宿）都添加query参数
                 router.push({
                     path: '/DemoForTTO/trips/freeinfo',
                     query: { subNavName: tab }
-                })
-            } else {
-                // 点击其他子导航项（如餐厅、住宿）时，进行路由跳转但不携带query参数
-                // 这样可以清除之前可能存在的query参数
-                router.push({
-                    path: '/DemoForTTO/trips/freeinfo',
-                    query: {}
                 })
             }
             

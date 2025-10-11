@@ -275,13 +275,13 @@ onMounted(() => {
                     <div class="nav-links">
                         <div class="nav-item">
                             <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
-                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNav: '景点' } }"
+                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
                                 网站首页 <span>Home</span>
                             </RouterLink>
                         </div>
                         <div class="nav-item">
-                            <RouterLink to="/DemoForTTO/trips/oneday"
+                            <RouterLink :to="{ path: '/DemoForTTO/trips/oneday', query: { dayTripTab: '景点一日游' } }"
                                 @click="navStore.saveSelectedSubNav('景点一日游'); scrollToTop()">
                                 精品路线 <span>Tourist route</span>
                             </RouterLink>
