@@ -1,7 +1,7 @@
 <script setup>
 import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue'
 
-const showRefundPolicyDialog = ref(false)
+const showPrivacyPolicyDialog = ref(false)
 const isMobile = ref(window.innerWidth <= 768)
 
 const handleResize = () => {
@@ -17,13 +17,13 @@ onBeforeUnmount(() => {
 })
 
 defineExpose({
-    showRefundPolicyDialog
+    showPrivacyPolicyDialog
 })
 </script>
 
 <template>
     <!-- <div> -->
-    <el-dialog v-model="showRefundPolicyDialog" title="TTO隐私保护政策" width="800" max-width="500px" :fullscreen="isMobile"
+    <el-dialog v-model="showPrivacyPolicyDialog" title="TTO隐私保护政策" width="800" max-width="500px" :fullscreen="isMobile"
         align-center center z-index="9500">
         <div class="policy-text">
             <div class="policy-section">

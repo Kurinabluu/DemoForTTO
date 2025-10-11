@@ -130,17 +130,17 @@ function showComingSoonDialog() {
 }
 function showRefundPolicy() {
     if (refundPolicyRef.value) {
-        refundPolicyRef.value.showRefundPolicy = true;
+        refundPolicyRef.value.showRefundPolicyDialog = true;
     }
 }
 function showPrivacyPolicy() {
     if (privacyPolicyRef.value) {
-        privacyPolicyRef.value.showPrivacyPolicy = true;
+        privacyPolicyRef.value.showPrivacyPolicyDialog = true;
     }
 }
 function showTermsandConditionsDialog() {
     if (termsandConditionsDialogRef.value) {
-        termsandConditionsDialogRef.value.showTermsandConditionsDialog = true;
+        termsandConditionsDialogRef.value.showTemrsDialog = true;
     }
 }
 // 组件挂载时检查是否首次访问
