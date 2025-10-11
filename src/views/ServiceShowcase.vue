@@ -149,8 +149,9 @@ watch(() => props.serviceName, (newServiceName) => {
                         <h3 class="package-title">{{ p.title }}</h3>
                         <p class="package-description">{{ p.description }}</p>
                         <span class="package-price" v-if="p.price">
-                            <i class="package-num">{{ p.price }}</i>
-                            <i class="package-text">¥ /人</i>
+
+                            <i class="package-text">{{ p.currency }} <i class="package-num">{{ p.price }}</i>
+                                {{ p.amount }}{{ p.info }}</i>
                         </span>
                         <button class="consult-btn flri" @click="openConsultationDialog">立即咨询</button>
                     </div>
@@ -400,7 +401,8 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .advantages-flex {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
+        justify-content: space-around;
         gap: 30px;
     }
 

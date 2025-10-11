@@ -5,10 +5,17 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
+import RefundPolicy from '@/components/RefundPolicy.vue';
+import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
+import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
 
 const navStore = useNavStore();
 const router = useRouter();
+
 const comingSoonDialogRef = ref(null);
+const refundPolicyRef = ref(null);
+const privacyPolicyRef = ref(null);
+const termsandConditionsDialogRef = ref(null);
 
 // 计算属性：根据当前路由和子导航状态确定哪个导航项应该有clicked类
 const activeNavItem = computed(() => {
@@ -24,7 +31,6 @@ const activeNavItem = computed(() => {
             return '网站首页';
         }
     }
-
     return ''; // 默认没有活动项
 });
 
@@ -98,7 +104,7 @@ function scrollToTop() {
         top: 0,
         behavior: 'smooth'
     })
-    
+
     // 临时禁用路由跳转后的滚动恢复
     // 1. 保存当前滚动位置为0（顶部）
     try {
@@ -106,7 +112,7 @@ function scrollToTop() {
     } catch (e) {
         // ignore
     }
-    
+
     // 2. 使用setTimeout确保在路由跳转完成后再次滚动到顶部
     setTimeout(() => {
         window.scrollTo({
@@ -122,7 +128,21 @@ function showComingSoonDialog() {
         comingSoonDialogRef.value.showComingDialog = true;
     }
 }
-
+function showRefundPolicy() {
+    if (refundPolicyRef.value) {
+        refundPolicyRef.value.showRefundPolicy = true;
+    }
+}
+function showPrivacyPolicy() {
+    if (privacyPolicyRef.value) {
+        privacyPolicyRef.value.showPrivacyPolicy = true;
+    }
+}
+function showTermsandConditionsDialog() {
+    if (termsandConditionsDialogRef.value) {
+        termsandConditionsDialogRef.value.showTermsandConditionsDialog = true;
+    }
+}
 // 组件挂载时检查是否首次访问
 onMounted(() => {
     // 检查是否是首次访问
@@ -314,14 +334,14 @@ onMounted(() => {
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
-                            <li>退款政策</li>
+                            <li @click="showRefundPolicy">退款政策</li>
                             <li @click="showDisclaimerModal = true">
                                 <!-- showDisclaimerModal -->
                                 <!-- <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink> -->
                                 免责条款
                             </li>
-                            <li>隐私政策</li>
-                            <li>条款与条件</li>
+                            <li @click="showPrivacyPolicy">隐私政策</li>
+                            <li @click="showTermsandConditionsDialog">条款与条件</li>
                         </ul>
                     </div>
                     <div class="declaration center">TasmaniaTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>
@@ -346,6 +366,12 @@ onMounted(() => {
                 </div>
             </template>
         </el-dialog>
+        <!-- 退款政策弹窗 -->
+        <RefundPolicy ref="refundPolicyRef" />
+        <!-- 隐私政策弹窗 -->
+        <PrivacyPolicy ref="privacyPolicyRef" />
+        <!-- 条款与条件弹窗 -->
+        <TermsandConditionsDialog ref="termsandConditionsDialogRef" />
     </el-container>
 </template>
 

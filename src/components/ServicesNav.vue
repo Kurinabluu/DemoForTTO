@@ -4,6 +4,16 @@ import { Search } from '@element-plus/icons-vue'
 import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
 import data from '@/data/data.json'
+import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
+
+const comingSoonDialogRef = ref(null);
+
+// 显示ComingSoonDialog
+function showComingSoonDialog() {
+  if (comingSoonDialogRef.value) {
+    comingSoonDialogRef.value.showComingDialog = true;
+  }
+}
 
 // 从data.json中提取所有tagName
 const tags = data.map(item => item.tagName)
@@ -47,7 +57,7 @@ function onClickTag(tag) {
     const tagData = data.find(item => item.tagName === tag)
     if (tagData && tagData.path) {
       const fullPath = `/DemoForTTO/${tagData.path}`
-      
+
       // 如果是freeinfo路径，添加subNavName参数
       if (tagData.path === 'trips/freeinfo') {
         router.push({ path: fullPath, query: { subNavName: '景点' } })
@@ -127,7 +137,7 @@ function onSearch() {
             </el-icon>
           </template>
         </el-input>
-        <el-button type="primary" size="large" class="search-btn" @click="onSearch">
+        <el-button type="primary" size="large" class="search-btn" @click="onSearch(); showComingSoonDialog()">
           <el-icon>
             <Search />
           </el-icon>
@@ -142,6 +152,9 @@ function onSearch() {
       </div>
     </el-card>
   </div>
+
+  <ComingSoonDialog ref="comingSoonDialogRef" />
+
 </template>
 
 <style lang="scss" scoped>

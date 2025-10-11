@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import TourDialog from '@/components/TourDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
+import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
 import data from '@/data/data.json'
 import { useNavStore } from '@/stores/nav'
@@ -97,7 +98,7 @@ function onClickSubTab(tab) {
                     query: { subNavName: tab }
                 })
             }
-            
+
             currentSubNavTab.value = tab
             // 清空搜索框和搜索关键词
             subSearch.value = ''
