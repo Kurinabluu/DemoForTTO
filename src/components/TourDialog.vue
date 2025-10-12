@@ -259,4 +259,10 @@ const routeInfo = computed(() => {
 .dlg-footer {
     padding: 0 12px 12px;
 }
+
+@media (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
 </style>

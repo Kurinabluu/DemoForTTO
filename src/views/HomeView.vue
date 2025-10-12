@@ -886,6 +886,12 @@ onUnmounted(() => {
                     .free-subnav-search {
                         flex: 0
                     }
+
+                    .free-subnav-tabs {
+                        width: 100%;
+                        gap: 10px;
+                        grid-template-columns: repeat(1, 1fr);
+                    }
                 }
 
                 .coming-grid {
