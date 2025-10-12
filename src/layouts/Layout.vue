@@ -143,6 +143,7 @@ function showTermsandConditionsDialog() {
         termsandConditionsDialogRef.value.showTemrsDialog = true;
     }
 }
+
 // 组件挂载时检查是否首次访问
 onMounted(() => {
     // 检查是否是首次访问

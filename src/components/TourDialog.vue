@@ -126,7 +126,7 @@ const routeInfo = computed(() => {
         </div>
 
         <div class="dlg-section">
-            <div class="section-title">推荐路线：{{ routeInfo.route }}</div>
+            <div class="section-title">{{ routeInfo.route }}</div>
             <div class="section-desc">
                 {{ routeInfo.desc }}
             </div>

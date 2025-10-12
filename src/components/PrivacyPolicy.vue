@@ -100,7 +100,7 @@ defineExpose({
         </div>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" @click="showRefundPolicyDialog = false">
+                <el-button type="primary" @click="showPrivacyPolicyDialog = false">
                     确定
                 </el-button>
             </div>

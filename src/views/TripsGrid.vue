@@ -212,8 +212,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`" class="coming-card"
                 @click="onOpenTour(item)">
                 <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                <div class="card-title">{{ item.title }}</div>
-                <div class="card-sub">{{ item.sub }}</div>
+                <div class="card-title" :title="item.title">{{ item.title }}</div>
+                <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
             </div>
         </div>
     </template>
@@ -225,8 +225,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
                 <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
                     @click="onOpenTour(item)">
                     <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-                    <div class="card-title">{{ item.title }}</div>
-                    <div class="card-sub">{{ item.enTitle }}</div>
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
         </template>
@@ -308,8 +308,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
-            <div class="card-title">{{ item.title }}</div>
-            <div class="card-sub">{{ item.enTitle }}</div>
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
     </div>
 
@@ -376,8 +376,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card"
                 @click="onOpenTour(item)">
                 <img src="@/assets/img/footer1.jpg" alt="" class="w100">
-                <div class="card-title">{{ item.title }}</div>
-                <div class="card-sub">{{ item.sub }}</div>
+                <div class="card-title" :title="item.title">{{ item.title }}</div>
+                <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
             </div>
         </div>
     </template>
@@ -412,12 +412,28 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     letter-spacing: 2px;
     color: #1f2937;
     margin-bottom: 6px;
+    -webkit-line-clamp: 1;
 }
 
 .card-sub {
     font-size: 12px;
     color: #6b7280;
     letter-spacing: 2px;
+    -webkit-line-clamp: 2;
+}
+
+.card-title,
+.card-sub {
+    display: -webkit-box;
+    /* 将元素设置为弹性盒子 */
+    -webkit-box-orient: vertical;
+    /* 设置盒子方向为垂直 */
+    /* 限制显示的行数 */
+    overflow: hidden;
+    /* 隐藏溢出内容 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
+
 }
 
 .empty-tip {
