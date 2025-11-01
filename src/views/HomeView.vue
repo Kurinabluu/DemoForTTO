@@ -429,9 +429,8 @@ onUnmounted(() => {
 <template>
     <el-main>
         <!-- 轮播图 -->
-        <div class="carousel-container" @touchstart.passive="onTouchStart" @touchmove.passive="onTouchMove"
+        <!-- <div class="carousel-container" @touchstart.passive="onTouchStart" @touchmove.passive="onTouchMove"
             @touchend="onTouchEnd">
-            <!-- 轮播图内容保持不变 -->
             <div class="carousel-background">
                 <img :src="slidesRef[currentSlideIndex]" alt="background" class="background-img"
                     :key="currentSlideIndex" />
@@ -447,7 +446,7 @@ onUnmounted(() => {
                     </div>
                 </el-carousel-item>
             </el-carousel>
-        </div>
+        </div> -->
 
         <!-- 固定搜索框 -->
         <!-- <ServicesNav @clear-search="clearSearch" /> -->

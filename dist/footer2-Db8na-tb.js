@@ -1,1 +1,0 @@
-const e="/DemoForTTO/assets/footer1-gczu9F7h.jpg",t=Object.freeze(Object.defineProperty({__proto__:null,default:e},Symbol.toStringTag,{value:"Module"})),o="/DemoForTTO/assets/footer2-BmWZRUvI.jpg",_=Object.freeze(Object.defineProperty({__proto__:null,default:o},Symbol.toStringTag,{value:"Module"}));export{_,t as a,e as b,o as c};

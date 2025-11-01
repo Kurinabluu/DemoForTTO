@@ -115,29 +115,64 @@ watch(() => props.serviceName, (newServiceName) => {
 <template>
     <div class="service-showcase">
         <!-- 顶部服务标题（左上角） -->
-        <h1 class="service-title fowe7" v-if="titleText">{{ titleText }}</h1>
-
+        <!-- <h1 class="service-title fowe7" v-if="titleText">{{ titleText }}</h1> -->
+        <!-- 服务优势区域 -->
+        <div class="advantages-section" v-if="currentConfig?.advantages">
+            <h2 class="section-title center">{{ currentConfig.advantagesTitle }}</h2>
+            <div class="advantages-flex">
+                <div class="advantage-item" v-for="a in currentConfig.advantages" :key="a.id">
+                    <div class="advantage-detail">
+                        <div class="advantage-icon">
+                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
+                            <img v-else src="@/assets/img/carService/carType.png" alt="默认图标" class="advantage-img">
+                        </div>
+                        <h3 class="advantage-title">{{ a.title }}</h3>
+                        <p class="advantage-description">{{ a.description }}</p>
+                    </div>
+                    <!-- <div class="advantage-condition" v-if="a.conTitle">
+                        <div class="advantage-icon">
+                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
+                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
+                        </div>
+                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
+                        <p class="advantage-description">{{ a.conDes }}</p>
+                    </div> -->
+                </div>
+            </div>
+        </div>
         <!-- 主要服务介绍区域 -->
         <div class="hero-section">
             <div class="hero-content">
-                <div class="hero-image">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="hero-text">
-                    <h2 class="subtitle">{{ currentConfig?.heroTitle }}</h2>
-                    <p class="description">{{ currentConfig?.heroDesc }}</p>
+
+                <div class="hero-text w100">
+                    <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2>
+                    <p class="description center">{{ currentConfig?.heroDesc }}</p>
                     <ul class="features-list">
                         <li class="feature-item" v-for="(f, i) in currentConfig?.features" :key="i">
                             <span class="feature-dot center fff fowe7">√</span>
                             {{ f }}
                         </li>
                     </ul>
+
+                    <!-- 服务提示信息 -->
+                    <div class="service-tips" v-if="currentConfig?.tips">
+                        <div class="tips-icon">⚠️</div>
+                        <div class="tips-content">
+                            <h4 class="tips-title">重要提示</h4>
+                            <p class="tips-text" v-html="currentConfig.tips"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image w100">
+                    <div class="image-placeholder center fff fowe7" v-for="text in currentConfig?.imgText">{{ text }}
+                    </div>
+
                 </div>
             </div>
         </div>
 
         <!-- 服务套餐区域 -->
-        <div class="packages-section" v-if="currentConfig?.packages">
+        <!-- <div class="packages-section" v-if="currentConfig?.packages">
             <h2 class="section-title">{{ currentConfig.packagesTitle }}</h2>
             <div class="packages-grid">
                 <div class="package-card" v-for="p in currentConfig.packages" :key="p.id">
@@ -157,32 +192,11 @@ watch(() => props.serviceName, (newServiceName) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <!-- 服务优势区域 -->
-        <div class="advantages-section" v-if="currentConfig?.advantages">
-            <h2 class="section-title">{{ currentConfig.advantagesTitle }}</h2>
-            <div class="advantages-flex">
-                <div class="advantage-item" v-for="a in currentConfig.advantages" :key="a.id">
-                    <div class="advantage-detail">
-                        <div class="advantage-icon">
-                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
-                            <img v-else src="@/assets/img/carService/carType.png" alt="默认图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.title }}</h3>
-                        <p class="advantage-description">{{ a.description }}</p>
-                    </div>
-                    <div class="advantage-condition" v-if="a.conTitle">
-                        <div class="advantage-icon">
-                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
-                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
-                        <p class="advantage-description">{{ a.conDes }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- 原服务区域优势 -->
+
+
         <!-- 联系方式区域 -->
         <div class="contact-section" v-if="currentConfig?.contactTitle">
             <h2 class="section-title">{{ currentConfig.contactTitle }}</h2>
@@ -224,12 +238,16 @@ watch(() => props.serviceName, (newServiceName) => {
         display: flex;
         gap: 40px;
         align-items: center;
+        flex-direction: column;
+
     }
 
     .hero-image {
-        flex: 0 0 50%;
-        height: 400px;
-        background-color: #39c5bb;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+        // flex: 0 0 50%;
+        // background-color: #39c5bb;
         /* 直接给容器上色，确保可见 */
         border-radius: 8px;
         overflow: hidden;
@@ -237,8 +255,10 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .image-placeholder {
         width: 100%;
-        height: 100%;
+        height: 400px;
+        line-height: 400px;
         background-color: #39c5bb;
+        font-size: 32px;
     }
 
     .hero-img {
@@ -263,25 +283,25 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .subtitle {
-        font-size: 28px;
+        // font-size: 28px;
+        font-size: 42px;
         font-weight: 700;
         color: #333;
-        margin-bottom: 16px;
-        text-align: left;
+        margin-bottom: 30px;
         letter-spacing: 0;
     }
 
     .description {
-        font-size: 16px;
+        font-size: 20px;
         line-height: 1.8;
         color: #444;
         margin-bottom: 24px;
-        text-align: left;
         letter-spacing: 0;
     }
 
     .features-list {
-        list-style: none;
+        display: flex;
+        justify-content: space-between;
         padding: 0;
         margin: 0;
     }
@@ -302,8 +322,68 @@ watch(() => props.serviceName, (newServiceName) => {
         font-size: 10px;
         background-color: #39c5bb;
         border-radius: 50%;
-        margin-right: 12px;
+        margin-right: 5px;
         flex-shrink: 0;
+    }
+
+    /* 服务提示样式 - 醒目设计 */
+    .service-tips {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border: 2px solid #ffc107;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: pulse 3s infinite;
+    }
+
+    .service-tips:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 193, 7, 0.3);
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+        }
+
+        50% {
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        100% {
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+        }
+    }
+
+    .tips-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+    }
+
+    .tips-content {
+        flex: 1;
+    }
+
+    .tips-title {
+        color: #856404;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tips-text {
+        color: #721c24;
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0;
+        font-weight: 500;
     }
 
     .packages-section {
@@ -318,11 +398,12 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .section-title {
-        font-size: 26px;
+        // font-size: 26px;
+        font-size: 42px;
         font-weight: 700;
         color: #111;
-        text-align: left;
-        margin: 0 0 20px 0;
+        // margin: 0 0 20px 0;
+        margin: 0 0 30px 0;
         letter-spacing: 0;
     }
 
@@ -400,9 +481,11 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .advantages-flex {
-        display: flex;
+        // display: flex;
         // justify-content: space-between;
-        justify-content: space-around;
+        // justify-content: space-around;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 30px;
     }
 
@@ -436,7 +519,8 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .advantage-title {
-        font-size: 16px;
+        // font-size: 16px;
+        font-size: 25px;
         font-weight: 700;
         color: #111;
         margin-bottom: 8px;
@@ -444,7 +528,8 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .advantage-description {
-        font-size: 13px;
+        // font-size: 13px;
+        font-size: 20px;
         color: #555;
         line-height: 1.5;
     }
@@ -493,6 +578,18 @@ watch(() => props.serviceName, (newServiceName) => {
 
 }
 
+@media (max-width: 1024px) {
+    .service-showcase {
+        .features-list {
+            display: block;
+        }
+
+        .feature-dot {
+            margin-right: 12px;
+        }
+    }
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
     .service-showcase {
         padding: 30px 15px;
@@ -539,12 +636,12 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .service-showcase .hero-content {
-        flex-direction: column;
+        // flex-direction: column;
         gap: 20px;
     }
 
     .service-showcase .hero-image {
-        width: 100%;
+        // width: 100%;
         height: 250px;
         flex: none;
     }

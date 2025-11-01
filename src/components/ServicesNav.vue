@@ -23,6 +23,9 @@ const searchInput = ref('')
 
 const localActiveTag = ref('')
 
+// 本地存储键名
+const STORAGE_KEY = 'services_nav_active_tag'
+
 // 使用导航store
 const navStore = useNavStore()
 const router = useRouter()
@@ -49,6 +52,9 @@ function onClickTag(tag) {
 
     // 更新搜索框值
     searchInput.value = tag
+
+    // 保存到本地存储
+    localStorage.setItem(STORAGE_KEY, tag)
 
     // 重置子导航为默认值
     navStore.saveSelectedSubNav('景点')
@@ -110,7 +116,27 @@ function syncTagWithRoute() {
 
 // 组件挂载时初始化
 onMounted(() => {
-  // 尝试根据当前路由路径设置激活标签
+  // 尝试从本地存储获取激活标签
+  const savedActiveTag = localStorage.getItem(STORAGE_KEY)
+
+  // 如果有保存的标签，使用它
+  if (savedActiveTag) {
+    localActiveTag.value = savedActiveTag
+    searchInput.value = savedActiveTag
+  } else {
+    // 首次访问，默认选中"包车服务（独立成团+专车+司导）"
+    const defaultTag = data.find(item => item.tagName === '包车服务（独立成团+专车+司导）')
+    if (defaultTag) {
+      localActiveTag.value = defaultTag.tagName
+      searchInput.value = defaultTag.tagName
+    } else if (tags.length > 0) {
+      // 备选方案：如果找不到指定的默认标签，则使用第一个标签
+      localActiveTag.value = tags[0]
+      searchInput.value = tags[0]
+    }
+  }
+
+  // 然后尝试根据当前路由路径同步标签（路由优先级高于默认值）
   syncTagWithRoute()
 })
 
@@ -129,24 +155,27 @@ function onSearch() {
 <template>
   <div class="search-fixed">
     <el-card class="search-card" shadow="hover">
-      <div class="search-container">
+      <!-- <div class="search-container">
         <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
           <template #prefix>
             <el-icon>
               <Search />
             </el-icon>
           </template>
-        </el-input>
-        <el-button type="primary" size="large" class="search-btn" @click="onSearch(); showComingSoonDialog()">
-          <el-icon>
-            <Search />
-          </el-icon>
-          搜索
-        </el-button>
-      </div>
+</el-input>
+<el-button type="primary" size="large" class="search-btn" @click="onSearch(); showComingSoonDialog()">
+  <el-icon>
+    <Search />
+  </el-icon>
+  搜索
+</el-button>
+</div> -->
       <div class="search-tags">
-        <div v-for="tag in tags" :key="tag" class="tag-pill pointer fs16" :class="{ active: activeTag === tag }"
-          @click="onClickTag(tag)" :data-service="tag">
+        <div v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs16" :class="{
+          active: activeTag === tag,
+          disabled: !data[index].available || data[index].available === false
+        }" @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag)"
+          :data-service="tag">
           {{ tag }}
         </div>
       </div>
@@ -229,6 +258,13 @@ function onSearch() {
         background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
         color: #fff;
         box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+      }
+
+      .disabled {
+        background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
+        color: #9ca3af;
+        cursor: not-allowed;
+        box-shadow: none;
       }
     }
   }

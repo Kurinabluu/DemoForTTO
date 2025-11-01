@@ -108,8 +108,9 @@ onMounted(() => {
         // 如果有保存的滚动位置，在路由跳转完成后由router.afterEach恢复
       } else {
         // 默认跳转到免费信息并选择景点子导航
-        navStore.saveSelectedSubNav('景点')
-        router.replace({ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } })
+        // navStore.saveSelectedSubNav('景点')
+        // router.replace({ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } })
+        router.replace({ path: '/DemoForTTO/service/car' })
       }
     })
   }

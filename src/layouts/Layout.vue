@@ -42,21 +42,23 @@ function onNavClick(event, navName = '') {
     const btnsContainer = clickedElement.closest('.btns');
     const candidates = btnsContainer.querySelectorAll('.ul-css li, i');
 
-    // 特别推荐：跳转到免费信息并选择"特别活动"子导航
-    if (textContent === '特别推荐') {
-        // 保存需要选择的子导航
-        navStore.saveSelectedSubNav('特别活动');
-        // 跳转到免费信息页面
-        // router.push('/DemoForTTO/trips/freeinfo');
-    }
-    // 网站首页：处理点击事件，保存子导航状态但不进行重复的路由跳转
-    else if (textContent === '网站首页') {
-        // 保存需要选择的子导航
-        navStore.saveSelectedSubNav('景点');
-        // 路由跳转由模板中的RouterLink处理，这里只需要保存状态
-    }
-    // 其他导航项：弹出敬请期待对话框
-    else if (textContent === '行业新闻') {
+    // // 特别推荐：跳转到免费信息并选择"特别活动"子导航
+    // if (textContent === '特别推荐') {
+    //     // 保存需要选择的子导航
+    //     navStore.saveSelectedSubNav('特别活动');
+    //     // 跳转到免费信息页面
+    //     // router.push('/DemoForTTO/trips/freeinfo');
+    // }
+    // // 网站首页：处理点击事件，保存子导航状态但不进行重复的路由跳转
+    // else 
+    // if (textContent === '网站首页') {
+    //     // 保存需要选择的子导航
+    //     navStore.saveSelectedSubNav('景点');
+    //     // 路由跳转由模板中的RouterLink处理，这里只需要保存状态
+    // }
+    // // 其他导航项：弹出敬请期待对话框
+    // else 
+    if (textContent === '行业新闻' || textContent === '特别推荐') {
         if (comingSoonDialogRef.value) {
             comingSoonDialogRef.value.showComingDialog = true;
         }
@@ -164,14 +166,16 @@ onMounted(() => {
                 <ul class="ul-css clearfix">
                     <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
                         @click="onNavClick($event, '网站首页');">
-                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页
+                        <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页 -->
+                        <RouterLink :to="{ path: '/DemoForTTO/service/car' }">网站首页
                         </RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
-                    <li class="pointer" :class="{ clicked: activeNavItem === '特别推荐' }" @click="onNavClick($event);">
+                    <!-- <li class="pointer" :class="{ clicked: activeNavItem === '特别推荐' }" @click="onNavClick($event);">
                         <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '特别活动' } }">特别推荐
                         </RouterLink>
-                    </li>
+                    </li> -->
+                    <li class="pointer" @click="onNavClick($event)">特别推荐</li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
@@ -296,21 +300,26 @@ onMounted(() => {
                     <div class="nav-links">
                         <div class="nav-item">
                             <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
-                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
+                            <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
+                                网站首页 <span>Home</span>
+                            </RouterLink> -->
+                            <RouterLink :to="{ path: '/DemoForTTO/service/car' }" @click="scrollToTop()">
                                 网站首页 <span>Home</span>
                             </RouterLink>
                         </div>
-                        <div class="nav-item">
-                            <RouterLink :to="{ path: '/DemoForTTO/trips/oneday', query: { dayTripTab: '景点一日游' } }"
+                        <div class="nav-item" @click="showComingSoonDialog">
+                            <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/oneday', query: { dayTripTab: '景点一日游' } }"
                                 @click="navStore.saveSelectedSubNav('景点一日游'); scrollToTop()">
                                 精品路线 <span>Tourist route</span>
-                            </RouterLink>
+                            </RouterLink> -->
+                            精品路线 <span>Tourist route</span>
                         </div>
                         <div class="nav-item" @click="showComingSoonDialog">行业新闻 <span>News
                                 center</span></div>
                         <div class="nav-item">
-                            <RouterLink to="/DemoForTTO/service/ticket" @click="scrollToTop()">
+                            <!-- <RouterLink to="/DemoForTTO/service/ticket" @click="scrollToTop()"> -->
+                            <RouterLink to="/DemoForTTO/service/car" @click="scrollToTop()">
                                 八大服务 <span>Service</span>
                             </RouterLink>
                         </div>
