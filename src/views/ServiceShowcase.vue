@@ -249,7 +249,6 @@ watch(() => props.serviceName, (newServiceName) => {
         // flex: 0 0 50%;
         // background-color: #39c5bb;
         /* 直接给容器上色，确保可见 */
-        border-radius: 8px;
         overflow: hidden;
     }
 
@@ -259,6 +258,7 @@ watch(() => props.serviceName, (newServiceName) => {
         line-height: 400px;
         background-color: #39c5bb;
         font-size: 32px;
+        border-radius: 8px;
     }
 
     .hero-img {
@@ -580,9 +580,9 @@ watch(() => props.serviceName, (newServiceName) => {
 
 @media (max-width: 1024px) {
     .service-showcase {
-        .features-list {
-            display: block;
-        }
+        // .features-list {
+        //     display: block;
+        // }
 
         .feature-dot {
             margin-right: 12px;
@@ -603,9 +603,9 @@ watch(() => props.serviceName, (newServiceName) => {
         }
     }
 
-    .service-showcase .hero-image {
-        height: 350px;
-    }
+    // .service-showcase .hero-image {
+    //     height: 350px;
+    // }
 
     .service-showcase .subtitle {
         font-size: 24px;
@@ -635,6 +635,11 @@ watch(() => props.serviceName, (newServiceName) => {
         }
     }
 
+    .service-showcase .features-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .service-showcase .hero-content {
         // flex-direction: column;
         gap: 20px;
@@ -642,8 +647,9 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .service-showcase .hero-image {
         // width: 100%;
-        height: 250px;
-        flex: none;
+        // height: 250px;
+        // flex: none;
+        grid-template-columns: repeat(1, 1fr);
     }
 
     .service-showcase .subtitle {
@@ -669,9 +675,9 @@ watch(() => props.serviceName, (newServiceName) => {
 
     }
 
-    .service-showcase .hero-image {
-        height: 200px;
-    }
+    // .service-showcase .hero-image {
+    // height: 200px;
+    // }
 
     .service-showcase .section-title {
         font-size: 22px;
