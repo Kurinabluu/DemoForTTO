@@ -56,6 +56,26 @@ function getActivityImage(index) {
     return images[index] || images[0]
 }
 
+// 免费信息：当前子项（如 特别活动/徒步/当地天气/医疗）数据
+const currentFreeInfoSection = computed(() => {
+    try {
+        if (!datas?.subNav || !props.subTab) return null
+        return datas.subNav.find(subItem => subItem.subNavName === props.subTab) || null
+    } catch (e) {
+        return null
+    }
+})
+
+// 是否为免费信息下的“内容块模式”（isGrid=false）
+const isSpecialSection = computed(() => {
+    return props.activeTag === '自助游/自驾游免费信息' && currentFreeInfoSection?.value?.isGrid === false
+})
+
+// 当前展示用的“特别内容”列表与标题
+const currentSpecialItems = computed(() => currentFreeInfoSection?.value?.items || [])
+const currentSpecialTitle = computed(() => currentFreeInfoSection?.value?.activitiesTitle || '塔斯马尼亚特别内容')
+const currentSpecialSubtitle = computed(() => currentFreeInfoSection?.value?.activitiesSubtitle || '')
+
 // 派生数据 - 从data.json获取适合当前标签的数据
 const gridItems = computed(() => {
     try {
@@ -123,11 +143,13 @@ const hotelFiltered = computed(() => {
 
 const activityFiltered = computed(() => {
     const kw = (props.keyword || '').trim().toLowerCase()
-    if (!kw) return activityItems?.items || []
-    return (activityItems?.items || []).filter(item =>
+    const base = currentSpecialItems.value || []
+    if (!kw) return base
+    return base.filter(item =>
         item.title.toLowerCase().includes(kw) ||
-        item.location.toLowerCase().includes(kw) ||
-        item.tags.some(tag => tag.toLowerCase().includes(kw))
+        (item.location && item.location.toLowerCase().includes(kw)) ||
+        (Array.isArray(item.tags) && item.tags.some(tag => (tag || '').toLowerCase().includes(kw))) ||
+        (Array.isArray(item.tagItems) && item.tagItems.some(t => (t?.text || '').toLowerCase().includes(kw)))
     )
 })
 
@@ -263,12 +285,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
 
-    <!-- 特别活动：搜索结果 -->
-    <div class="special-activities-section" v-else-if="(keyword?.trim()) && subTab === '特别活动'">
+    <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步/当地天气/医疗 等） -->
+    <div class="special-activities-section" v-else-if="(keyword?.trim()) && isSpecialSection">
         <template v-if="activityFiltered.length">
             <div class="activities-header">
-                <h2 class="activities-title">塔斯马尼亚特别活动</h2>
-                <p class="activities-subtitle">实时特色活动与极光天气信息</p>
+                <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
+                <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
             </div>
 
             <div class="activities-grid">
@@ -333,14 +355,14 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
         </div>
     </div>
 
-    <!-- 特别活动：信息展示区域（无关键词） -->
-    <div v-if="subTab === '特别活动' && !(keyword?.trim())" class="special-activities-section">
+    <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步/当地天气/医疗 等） -->
+    <div v-if="isSpecialSection && !(keyword?.trim())" class="special-activities-section">
         <div class="activities-header">
-            <h2 class="activities-title">塔斯马尼亚特别活动</h2>
-            <p class="activities-subtitle">实时特色活动与极光天气信息</p>
+            <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
+            <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
         </div>
         <div class="activities-grid">
-            <div v-for="(activity, index) in activityItems.items" :key="'activity-' + index"
+            <div v-for="(activity, index) in currentSpecialItems" :key="'activity-' + index"
                 :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
                     <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">

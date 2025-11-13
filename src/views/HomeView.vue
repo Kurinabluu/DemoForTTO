@@ -458,23 +458,26 @@ onUnmounted(() => {
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
-                    <li v-for="t in currentSubNav" :key="t" class="free-subnav-tab"
+                    <li v-for="t in currentSubNav" :key="t" class="free-subnav-tab w100"
                         :class="{ active: currentSubNavTab === t }" @click="onClickSubTab(t)">
                         {{ t }}
                     </li>
                 </ul>
                 <!-- 搜索框（仅对免费信息显示） -->
-                <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" class="free-subnav-search">
-                    <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
-                        @keyup.enter="doSubSearch" @clear="doSubSearch" />
+                <div class="free-subnav-search-container">
+                    <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'"
+                        class="free-subnav-search">
+                        <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
+                            @keyup.enter="doSubSearch" @clear="doSubSearch" />
+                    </div>
+                    <el-button v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" type="primary"
+                        class="free-subnav-search-btn fs16" size="large" @click="doSubSearch">
+                        <el-icon>
+                            <Search />
+                        </el-icon>
+                        搜索
+                    </el-button>
                 </div>
-                <el-button v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" type="primary"
-                    class="free-subnav-search-btn" size="large" @click="doSubSearch">
-                    <el-icon>
-                        <Search />
-                    </el-icon>
-                    搜索
-                </el-button>
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
                 :keyword="committedKeyword" />
@@ -641,18 +644,19 @@ onUnmounted(() => {
         .free-trip-subnav {
             width: 90%;
             /* 与下面网格等宽 */
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
+            // display: flex;
+            // align-items: center;
+            // justify-content: space-between;
+            // gap: 16px;
             padding: 0 20px;
         }
 
         /* 横向Tab列表 */
         .free-subnav-tabs {
-            // display: flex;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            justify-content: space-between;
+            // display: grid;
+            // grid-template-columns: repeat(4, 1fr);
             // list-style: none;
             margin: 0;
             padding: 0;
@@ -678,14 +682,21 @@ onUnmounted(() => {
             box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
         }
 
-        /* 子搜索框：与Tab在同一行，右对齐 */
-        .free-subnav-search {
-            flex: 0 0 320px;
-        }
+        .free-subnav-search-container {
+            display: flex;
+            justify-content: right;
+            margin-top: 25px;
 
-        .free-subnav-search-btn {
-            flex: 0 0 auto;
-            height: 40px;
+            /* 子搜索框：与Tab在同一行，右对齐 */
+            .free-subnav-search {
+                flex: 0 0 320px;
+                margin-right: 15px;
+            }
+
+            .free-subnav-search-btn {
+                // flex: 0 0 auto;
+                height: 40px;
+            }
         }
 
         .section-heading {

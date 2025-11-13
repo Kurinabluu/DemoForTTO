@@ -5,9 +5,11 @@
         "path": "trips/freeinfo",
         "isTrip": true,
         "hasSubNav": true,
+        "available": true,
         "subNav": [
             {
                 "subNavName": "景点",
+                "isGrid": true,
                 "items": [
                     {
                         "title": "菲欣拿国家公园",
@@ -525,6 +527,7 @@
             },
             {
                 "subNavName": "餐厅",
+                "isGrid": true,
                 "items": [
                     {
                         "place": "菲欣拿国家公园",
@@ -874,6 +877,7 @@
             },
             {
                 "subNavName": "住宿",
+                "isGrid": true,
                 "items": [
                     {
                         "place": "菲欣拿国家公园",
@@ -1159,6 +1163,9 @@
             },
             {
                 "subNavName": "特别活动",
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动",
+                "activitiesSubtitle": "实时特色活动与极光天气信息111",
                 "items": [
                     {
                         "title": "极光观测最佳时机",
@@ -1280,13 +1287,164 @@
                         ]
                     }
                 ]
+            },
+            {
+                "subNavName": "徒步",
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动222",
+                "activitiesSubtitle": "实时特色活动与极光天气信息222",
+                "items": [
+                    {
+                        "title": "极光观测最佳时机",
+                        "sub": "南半球极光观测体验",
+                        "location": "摇篮山国家公园",
+                        "tags": [
+                            "天气晴朗",
+                            "极光",
+                            "观测条件极佳"
+                        ],
+                        "badge": "极光预报",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "今晚概率",
+                                "value": "85%",
+                                "valueClass": "high"
+                            },
+                            {
+                                "label": "最佳时间",
+                                "value": "22:00-02:00"
+                            },
+                            {
+                                "label": "推荐地点",
+                                "value": "摇篮山国家公园"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🌌",
+                                "text": "天气晴朗"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "极光"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "观测条件极佳"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subNavName": "当地天气",
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动333",
+                "activitiesSubtitle": "实时特色活动与极光天气信息333",
+                "items": [
+                    {
+                        "title": "极光观测最佳时机",
+                        "sub": "南半球极光观测体验",
+                        "location": "摇篮山国家公园",
+                        "tags": [
+                            "天气晴朗",
+                            "极光",
+                            "观测条件极佳"
+                        ],
+                        "badge": "极光预报",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "今晚概率",
+                                "value": "85%",
+                                "valueClass": "high"
+                            },
+                            {
+                                "label": "最佳时间",
+                                "value": "22:00-02:00"
+                            },
+                            {
+                                "label": "推荐地点",
+                                "value": "摇篮山国家公园"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🌌",
+                                "text": "天气晴朗"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "极光"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "观测条件极佳"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subNavName": "医疗",
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动444",
+                "activitiesSubtitle": "实时特色活动与极光天气信息444",
+                "items": [
+                    {
+                        "title": "极光观测最佳时机",
+                        "sub": "南半球极光观测体验",
+                        "location": "摇篮山国家公园",
+                        "tags": [
+                            "天气晴朗",
+                            "极光",
+                            "观测条件极佳"
+                        ],
+                        "badge": "极光预报",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "今晚概率",
+                                "value": "85%",
+                                "valueClass": "high"
+                            },
+                            {
+                                "label": "最佳时间",
+                                "value": "22:00-02:00"
+                            },
+                            {
+                                "label": "推荐地点",
+                                "value": "摇篮山国家公园"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🌌",
+                                "text": "天气晴朗"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "极光"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "观测条件极佳"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
     {
         "id": 2,
-        "tagName": "代订门票及旅游项目",
+        "tagName": "热门项目",
         "hasSubNav": false,
+        "available": true,
         "isTrip": false,
         "path": "service/ticket",
         "serviceConfig": {
@@ -1446,6 +1604,7 @@
         "id": 4,
         "tagName": "全程旅游管家服务",
         "hasSubNav": false,
+        "available": true,
         "isTrip": false,
         "path": "service/steward",
         "serviceConfig": {
@@ -1506,6 +1665,7 @@
         "id": 5,
         "tagName": "地接地陪服务",
         "hasSubNav": false,
+        "available": true,
         "isTrip": false,
         "path": "service/guide",
         "serviceConfig": {
@@ -1585,6 +1745,7 @@
         "id": 6,
         "tagName": "一日游（固定行程）",
         "hasSubNav": true,
+        "available": true,
         "isTrip": true,
         "subNav": [
             {
@@ -2170,6 +2331,7 @@
         "id": 7,
         "tagName": "多日游（固定行程）",
         "hasSubNav": false,
+        "available": true,
         "isTrip": true,
         "path": "trips/multiday",
         "tripConfig": [
@@ -2335,7 +2497,7 @@
     },
     {
         "id": 8,
-        "tagName": "个性定制服务",
+        "tagName": "私人定制",
         "available": true,
         "hasSubNav": false,
         "isTrip": false,
@@ -2343,7 +2505,7 @@
         "serviceConfig": {
             "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "专属于您的私人旅行定制",
-            "heroDesc": "在塔斯马尼亚，没有两份相同的风景，也不该有两次雷同的旅程。TTO个性定制服务，从倾听您的心愿开始：或许您想在酿酒师陪同下深入葡萄酒庄，或许渴望在专业摄影师指引下捕捉极光，或许计划带着孩子与袋熊亲密接触。我们不为您提供现成菜单，而是与您共同创作——您提出想法，我们负责将其化为可行而精彩的现实。每一次推荐、每一处细节，都只为独一无二的您而存在。",
+            "heroDesc": "在塔斯马尼亚，没有两份相同的风景，也不该有两次雷同的旅程。TTO私人定制，从倾听您的心愿开始：或许您想在酿酒师陪同下深入葡萄酒庄，或许渴望在专业摄影师指引下捕捉极光，或许计划带着孩子与袋熊亲密接触。我们不为您提供现成菜单，而是与您共同创作——您提出想法，我们负责将其化为可行而精彩的现实。每一次推荐、每一处细节，都只为独一无二的您而存在。",
             "features": [
                 "专属资源匹配",
                 "特殊需求满足",
@@ -2418,8 +2580,8 @@
                     "url": "@/assets/img/carService/carType.png"
                 }
             ],
-            "contactTitle": "订购个性定制服务",
-            "contactIntro": "如需了解详情或预约个性定制服务，请联系我们的专属顾问"
+            "contactTitle": "订购私人定制",
+            "contactIntro": "如需了解详情或预约私人定制，请联系我们的专属顾问"
         }
     }
 ]

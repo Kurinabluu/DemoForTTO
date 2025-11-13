@@ -92,6 +92,7 @@ onMounted(() => {
   if (!navStore.isFirstVisit()) {
     // 无需延迟，使用nextTick确保DOM已渲染
     nextTick(() => {
+      const currentPath = router.currentRoute.value.path
       const lastPath = navStore.lastPath
       const selectedSubNav = navStore.selectedSubNav
       const savedScrollY = navStore.lastScrollY
@@ -99,6 +100,17 @@ onMounted(() => {
       // 获取设备类型，用于适配导航栏高度
       const isMobile = window.innerWidth <= 768
       const navHeight = isMobile ? 60 : 80 // 移动端导航栏高度较小
+
+      // 如果当前路径已经是完整路径（不是根路径），说明可能是新窗口打开，不需要跳转
+      const currentFullPath = router.currentRoute.value.fullPath || router.currentRoute.value.path
+      if (currentFullPath && currentFullPath !== '/' && currentFullPath !== '/DemoForTTO' && currentFullPath.startsWith('/DemoForTTO/')) {
+        // 当前路径已经是完整路径，不需要跳转
+        // 但需要确保 lastPath 和当前路径一致
+        if (lastPath !== currentFullPath) {
+          navStore.savePath(currentFullPath)
+        }
+        return
+      }
 
       // 如果有保存的完整路径，则直接导航到该路径
       if (lastPath && lastPath !== '/DemoForTTO') {
@@ -131,7 +143,7 @@ onUnmounted(() => {
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-    :show-close="false" :append-to-body="true">
+    :show-close="false">
     <template #header>
       <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>
