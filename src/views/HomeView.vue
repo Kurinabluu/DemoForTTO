@@ -458,9 +458,11 @@ onUnmounted(() => {
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs">
-                    <li v-for="t in currentSubNav" :key="t" class="free-subnav-tab w100"
-                        :class="{ active: currentSubNavTab === t }" @click="onClickSubTab(t)">
-                        {{ t }}
+                    <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
+                        class="free-subnav-tab w100"
+                        :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
+                        @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
+                        {{ subItem.subNavName }}
                     </li>
                 </ul>
                 <!-- 搜索框（仅对免费信息显示） -->
@@ -673,6 +675,14 @@ onUnmounted(() => {
             transition: all .2s ease;
             white-space: nowrap;
             user-select: none;
+        }
+
+        .free-subnav-tab.disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+            border-color: #e5e7eb;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
 
         .free-subnav-tab.active {
@@ -898,9 +908,16 @@ onUnmounted(() => {
                     }
 
                     .free-subnav-tabs {
+                        display: grid;
                         width: 100%;
                         gap: 10px;
                         grid-template-columns: repeat(1, 1fr);
+                    }
+
+                    .free-subnav-search-container {
+                        display: grid;
+                        grid-template-columns: repeat(1, 1fr);
+                        gap: 15px;
                     }
                 }
 

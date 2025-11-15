@@ -9,6 +9,7 @@
         "subNav": [
             {
                 "subNavName": "景点",
+                "isShow": true,
                 "isGrid": true,
                 "items": [
                     {
@@ -527,6 +528,7 @@
             },
             {
                 "subNavName": "餐厅",
+                "isShow": false,
                 "isGrid": true,
                 "items": [
                     {
@@ -877,6 +879,7 @@
             },
             {
                 "subNavName": "住宿",
+                "isShow": false,
                 "isGrid": true,
                 "items": [
                     {
@@ -1163,6 +1166,7 @@
             },
             {
                 "subNavName": "特别活动",
+                "isShow": false,
                 "isGrid": false,
                 "activitiesTitle": "塔斯马尼亚特别活动",
                 "activitiesSubtitle": "实时特色活动与极光天气信息111",
@@ -1290,6 +1294,7 @@
             },
             {
                 "subNavName": "徒步",
+                "isShow": false,
                 "isGrid": false,
                 "activitiesTitle": "塔斯马尼亚特别活动222",
                 "activitiesSubtitle": "实时特色活动与极光天气信息222",
@@ -1340,6 +1345,7 @@
             },
             {
                 "subNavName": "当地天气",
+                "isShow": false,
                 "isGrid": false,
                 "activitiesTitle": "塔斯马尼亚特别活动333",
                 "activitiesSubtitle": "实时特色活动与极光天气信息333",
@@ -1389,7 +1395,8 @@
                 ]
             },
             {
-                "subNavName": "医疗",
+                "subNavName": "医疗机构",
+                "isShow": false,
                 "isGrid": false,
                 "activitiesTitle": "塔斯马尼亚特别活动444",
                 "activitiesSubtitle": "实时特色活动与极光天气信息444",
