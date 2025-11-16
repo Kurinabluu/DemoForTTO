@@ -28,7 +28,7 @@ defineExpose({
         <div class="policy-text">
             <div class="policy-section">
                 <h2>一、接受条款</h2>
-                <div class="policy-info">通过访问、浏览或使用TasmaniaTrips.Online（以下简称"TTO"）网站及相关服务，即表示您已阅读、理解并同意受本条款与条件的约束。</div>
+                <div class="policy-info">通过访问、浏览或使用TasTrips.Online（以下简称"TTO"）网站及相关服务，即表示您已阅读、理解并同意受本条款与条件的约束。</div>
             </div>
 
             <div class="policy-section">

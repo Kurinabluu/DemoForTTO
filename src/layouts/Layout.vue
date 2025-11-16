@@ -160,7 +160,8 @@ onMounted(() => {
     <el-container>
         <el-header class="fs15 bgfff">
             <span class="logo fowe7 no-select pointer">
-                <RouterLink to="/DemoForTTO/trips/freeinfo">TasmaniaTrips.Online</RouterLink>
+                <RouterLink to="/DemoForTTO/trips/freeinfo"><img src="@/assets/img/header_logo.png"
+                        alt="TasTrips.Online" class="logo-img logo-desktop" /></RouterLink>
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
@@ -233,7 +234,8 @@ onMounted(() => {
                         <!-- <div class="logo-circle">
                 <span class="logo-text">LINGBA</span>
               </div> -->
-                        <div class="company-name">TasmaniaTrips.Online</div>
+                        <div class="company-name"><img src="@/assets/img/header_logo.png" alt="TasTrips.Online"
+                                class="logo-img logo-desktop" /></div>
                     </div>
                     <div class="about-text">
                         旅游是一种社会行为，古已有之。
@@ -354,8 +356,8 @@ onMounted(() => {
                             <li @click="showTermsandConditionsDialog">条款与条件</li>
                         </ul>
                     </div>
-                    <div class="declaration center">TasmaniaTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>
-                    <div class="copyright center">© 2025 TasmaniaTrips.Online 保留所有权利。</div>
+                    <div class="declaration center">TasTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>
+                    <div class="copyright center">© 2025 TasTrips.Online 保留所有权利。</div>
                 </div>
             </div>
         </el-footer>
@@ -421,7 +423,12 @@ onMounted(() => {
         }
 
         .logo {
-            font-size: 24px;
+            // font-size: 24px;
+
+            .logo-img {
+                width: 180px;
+                vertical-align: middle;
+            }
         }
 
         .btns {
@@ -491,12 +498,12 @@ onMounted(() => {
                 // 第一个方块 - 关于我们
                 &:first-child {
                     .logo-section {
-                        margin-bottom: 20px;
+                        // margin-bottom: 20px;
                     }
 
                     .about-text {
                         flex: 1;
-                        margin-bottom: 20px;
+                        margin-bottom: 10px;
                         padding-top: 20px;
                     }
 
@@ -545,9 +552,15 @@ onMounted(() => {
                     margin-bottom: 15px;
 
                     .company-name {
-                        font-size: 25px;
+                        // font-size: 25px;
                         font-weight: bold;
                         font-style: italic;
+
+                        .logo-img {
+                            width: 260px;
+                            margin-top: -15px;
+                            vertical-align: middle;
+                        }
                     }
                 }
 

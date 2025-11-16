@@ -29,7 +29,7 @@ defineExpose({
             <div class="policy-section">
                 <h2>第一章 总则</h2>
                 <ul>
-                    <li class="policy-paragraph">1.1 塔斯马尼亚旅游在线（TasmaniaTrips.Online，以下简称"TTO"）始终致力于为客户提供最优质的旅行体验。</li>
+                    <li class="policy-paragraph">1.1 塔斯马尼亚旅游在线（TasTrips.Online，以下简称"TTO"）始终致力于为客户提供最优质的旅行体验。</li>
                     <li class="policy-paragraph">1.2 本协议旨在明确预订取消、行程变更等情况下的退款标准，保障客户权益的同时确保服务资源的合理配置。</li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@ defineExpose({
                 <ul>
                     <!-- <li class="policy-paragraph">官网会员中心在线提交</li> -->
                     <li class="policy-paragraph">联系电话：0431 888 888</li>
-                    <li class="policy-paragraph">咨询邮箱：tto.advisory@tasmaniatrips.online</li>
+                    <li class="policy-paragraph">咨询邮箱：tto.advisory@gmail.com</li>
                     <li class="policy-paragraph">官方微信公众号：TasmaniaTrips</li>
                 </ul>
 
