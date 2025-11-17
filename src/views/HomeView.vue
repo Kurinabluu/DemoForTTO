@@ -466,7 +466,7 @@ onUnmounted(() => {
                     </li>
                 </ul>
                 <!-- 搜索框（仅对免费信息显示） -->
-                <div class="free-subnav-search-container">
+                <!-- <div class="free-subnav-search-container">
                     <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'"
                         class="free-subnav-search">
                         <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
@@ -479,7 +479,7 @@ onUnmounted(() => {
                         </el-icon>
                         搜索
                     </el-button>
-                </div>
+                </div> -->
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
                 :keyword="committedKeyword" />

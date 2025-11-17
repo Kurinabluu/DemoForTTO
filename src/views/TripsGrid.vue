@@ -337,8 +337,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 
     <!-- 底部网格：餐厅（无关键词） -->
     <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="item in restaurants.items" :key="'rt-place-' + i" class="coming-card"
-            @click="onOpenPlace(item.place, '餐厅')">
+        <div v-for="item in restaurants.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '餐厅')">
             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.place }} 周边餐厅</div>
             <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
@@ -347,8 +346,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="item in hotels.items" :key="'ht-place-' + i" class="coming-card"
-            @click="onOpenPlace(item.place, '住宿')">
+        <div v-for="item in hotels.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '住宿')">
             <img src="@/assets/img/footer2.jpg" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
             <div class="card-sub">Hotel {{ item.enPlace }}</div>
@@ -424,8 +422,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 12px;
+    // padding: 12px;
     cursor: pointer;
+    gap: 5px;
 }
 
 .card-title {
@@ -433,7 +432,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     font-weight: 600;
     letter-spacing: 2px;
     color: #1f2937;
-    margin-bottom: 6px;
+    // margin-bottom: 6px;
     -webkit-line-clamp: 1;
 }
 
@@ -442,6 +441,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     color: #6b7280;
     letter-spacing: 2px;
     -webkit-line-clamp: 2;
+    line-height: 1.5;
+    min-height: calc(1.5em * 2);
 }
 
 .card-title,
@@ -721,6 +722,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     .coming-grid {
         grid-template-columns: repeat(1, 1fr);
         gap: 20px;
+
+        .coming-card {
+            gap: 10px;
+        }
     }
 
     .special-activities-section {

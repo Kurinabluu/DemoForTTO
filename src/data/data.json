@@ -6,6 +6,7 @@
         "isTrip": true,
         "hasSubNav": true,
         "available": true,
+        "hasSearch": true,
         "subNav": [
             {
                 "subNavName": "景点",
@@ -13,9 +14,9 @@
                 "isGrid": true,
                 "items": [
                     {
-                        "title": "菲欣拿国家公园",
+                        "title": "菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园",
                         "img": "@/assets/img/footer1.jpg",
-                        "enTitle": "Freycinet National Park",
+                        "enTitle": "Freycinet National ParkFreycinet National ParkFreycinet National ParkFreycinet National ParkFreycinet National Park",
                         "tripData": {
                             "route": "菲欣拿国家公园生态探索",
                             "desc": "探索塔斯马尼亚最著名的国家公园，欣赏壮观的海湾和山脉景色。",

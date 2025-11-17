@@ -5,6 +5,7 @@ import { useNavStore } from '@/stores/nav'
 import { RouterLink, useRouter } from 'vue-router'
 import data from '@/data/data.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
+import { searchAllContent, persistSearchSession, getStoredSearchSession } from '@/utils/searchService'
 
 const comingSoonDialogRef = ref(null);
 
@@ -18,8 +19,10 @@ function showComingSoonDialog() {
 // 从data.json中提取所有tagName
 const tags = data.map(item => item.tagName)
 
-// 本地搜索输入值
+// 本地搜索输入值（用于占位显示当前标签）
 const searchInput = ref('')
+// 实际搜索关键词
+const searchKeyword = ref('')
 
 const localActiveTag = ref('')
 
@@ -30,8 +33,14 @@ const STORAGE_KEY = 'services_nav_active_tag'
 const navStore = useNavStore()
 const router = useRouter()
 
+const isSearchPath = (path) => typeof path === 'string' && path.includes('/search')
+const isSearchRoute = computed(() => isSearchPath(router.currentRoute.value.path))
+
 // 当前激活的标签（组件内部独立实现）
 const activeTag = computed(() => {
+  if (isSearchRoute.value) {
+    return ''
+  }
   // 优先使用组件内部的激活标签状态
   if (localActiveTag.value) {
     return localActiveTag.value
@@ -95,6 +104,11 @@ function onClickTag(tag, event) {
 function syncTagWithRoute(forceUseStorage = false) {
   try {
     const currentPath = router.currentRoute.value.path
+    if (isSearchPath(currentPath)) {
+      localActiveTag.value = ''
+      searchInput.value = ''
+      return
+    }
     const savedActiveTag = localStorage.getItem(STORAGE_KEY)
 
     // 如果强制使用本地存储（新窗口打开时），优先使用本地存储的值
@@ -147,21 +161,15 @@ function syncTagWithRoute(forceUseStorage = false) {
 
 // 组件挂载时初始化
 onMounted(() => {
-  // 先检查本地存储是否有值，如果有则优先使用（新窗口打开时）
-  const savedActiveTag = localStorage.getItem(STORAGE_KEY)
-
-  if (savedActiveTag) {
-    // 验证本地存储的标签是否有效
-    const isValidTag = tags.includes(savedActiveTag)
-    if (isValidTag) {
-      // 优先使用本地存储的值（新窗口打开时，直接使用用户点击的标签）
-      localActiveTag.value = savedActiveTag
-      searchInput.value = savedActiveTag
-      return
-    }
+  const currentPath = router.currentRoute.value.path
+  if (isSearchPath(currentPath)) {
+    localActiveTag.value = ''
+    searchInput.value = ''
+    const storedSearch = getStoredSearchSession()
+    searchKeyword.value = storedSearch?.query || ''
+    return
   }
-
-  // 如果没有本地存储的值，则根据路由同步
+  searchKeyword.value = ''
   syncTagWithRoute()
 
   // 如果同步后仍然没有激活标签，则使用默认值
@@ -177,12 +185,21 @@ onMounted(() => {
       searchInput.value = tags[0]
     }
   }
+
 })
 
 // 监听路由变化，同步标签状态
 watch(() => router.currentRoute.value.path, () => {
   // 根据路由路径找到对应的标签
   const currentPath = router.currentRoute.value.path
+  if (isSearchPath(currentPath)) {
+    localActiveTag.value = ''
+    searchInput.value = ''
+    const storedSearch = getStoredSearchSession()
+    searchKeyword.value = storedSearch?.query || ''
+    return
+  }
+  searchKeyword.value = ''
   const matchedTag = data.find(item => {
     if (item.path) {
       return currentPath.includes(item.path)
@@ -223,8 +240,16 @@ watch(() => router.currentRoute.value.path, () => {
 
 // 搜索按钮点击事件
 function onSearch() {
-  console.log('搜索:', searchInput.value)
-  // 未来可以实现搜索弹窗或搜索页面跳转
+  const keyword = (searchKeyword.value || '').trim()
+  if (!keyword) return
+
+  const payload = searchAllContent(keyword)
+  persistSearchSession({ ...payload, currentPage: 1 })
+
+  router.push({
+    path: '/DemoForTTO/search',
+    query: { keyword: payload.query }
+  })
 }
 </script>
 
@@ -241,14 +266,15 @@ function onSearch() {
         </a>
       </div>
       <div class="search-container">
-        <el-input v-model="searchInput" placeholder="搜索目的地、景点、路线..." class="search-input" size="large" clearable>
+        <el-input v-model="searchKeyword" :placeholder="searchInput || '搜索目的地、景点、路线...'" class="search-input"
+          size="large" clearable @keyup.enter="onSearch">
           <template #prefix>
             <el-icon>
               <Search />
             </el-icon>
           </template>
         </el-input>
-        <el-button type="primary" size="large" class="search-btn fs16" @click="onSearch(); showComingSoonDialog()">
+        <el-button type="primary" size="large" class="search-btn fs16" @click="onSearch">
           <el-icon>
             <Search />
           </el-icon>

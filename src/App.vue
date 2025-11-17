@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
@@ -90,41 +90,25 @@ onMounted(() => {
 
   // 非首次进入时，恢复用户上次选择的服务、子导航和滚动位置
   if (!navStore.isFirstVisit()) {
-    // 无需延迟，使用nextTick确保DOM已渲染
-    nextTick(() => {
-      const currentPath = router.currentRoute.value.path
+    const restoreLastSession = async () => {
+      await router.isReady()
+
+      const currentFullPath = router.currentRoute.value.fullPath || router.currentRoute.value.path || ''
       const lastPath = navStore.lastPath
-      const selectedSubNav = navStore.selectedSubNav
-      const savedScrollY = navStore.lastScrollY
+      const isRootPath = !currentFullPath || currentFullPath === '/' || currentFullPath === '/DemoForTTO'
 
-      // 获取设备类型，用于适配导航栏高度
-      const isMobile = window.innerWidth <= 768
-      const navHeight = isMobile ? 60 : 80 // 移动端导航栏高度较小
-
-      // 如果当前路径已经是完整路径（不是根路径），说明可能是新窗口打开，不需要跳转
-      const currentFullPath = router.currentRoute.value.fullPath || router.currentRoute.value.path
-      if (currentFullPath && currentFullPath !== '/' && currentFullPath !== '/DemoForTTO' && currentFullPath.startsWith('/DemoForTTO/')) {
-        // 当前路径已经是完整路径，不需要跳转
-        // 但需要确保 lastPath 和当前路径一致
-        if (lastPath !== currentFullPath) {
-          navStore.savePath(currentFullPath)
-        }
+      if (!isRootPath && currentFullPath.startsWith('/DemoForTTO/')) {
         return
       }
 
-      // 如果有保存的完整路径，则直接导航到该路径
       if (lastPath && lastPath !== '/DemoForTTO') {
-        // 使用replace确保URL与实际内容一致
         router.replace(lastPath)
-
-        // 如果有保存的滚动位置，在路由跳转完成后由router.afterEach恢复
       } else {
-        // 默认跳转到免费信息并选择景点子导航
-        // navStore.saveSelectedSubNav('景点')
-        // router.replace({ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } })
         router.replace({ path: '/DemoForTTO/service/car' })
       }
-    })
+    }
+
+    restoreLastSession()
   }
 })
 

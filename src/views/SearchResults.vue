@@ -1,0 +1,315 @@
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Search } from '@element-plus/icons-vue'
+import {
+  searchAllContent,
+  persistSearchSession,
+  getStoredSearchSession,
+  SEARCH_PAGE_SIZE
+} from '@/utils/searchService'
+
+const route = useRoute()
+const router = useRouter()
+
+const searchInput = ref(route.query.keyword ? String(route.query.keyword) : '')
+const keyword = ref(searchInput.value)
+const results = ref([])
+const currentPage = ref(Number(route.query.page) || 1)
+const isLoading = ref(false)
+
+const totalResults = computed(() => results.value.length)
+const hasResults = computed(() => totalResults.value > 0)
+const pageSize = SEARCH_PAGE_SIZE
+
+const pagedResults = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return results.value.slice(start, start + pageSize)
+})
+
+const updateRoute = ({ queryKeyword, page }) => {
+  const query = {}
+  if (queryKeyword) {
+    query.keyword = queryKeyword
+  }
+  if (page && page > 1) {
+    query.page = page
+  }
+  router.replace({ path: route.path, query })
+}
+
+const applyStoredSession = (stored) => {
+  if (!stored) return
+  keyword.value = stored.query || ''
+  searchInput.value = stored.query || ''
+  results.value = stored.results || []
+  currentPage.value = stored.currentPage || 1
+}
+
+const performSearch = ({ resetPage = true } = {}) => {
+  const query = (keyword.value || '').trim()
+
+  if (!query) {
+    const stored = getStoredSearchSession()
+    if (stored) {
+      applyStoredSession(stored)
+    } else {
+      results.value = []
+      currentPage.value = 1
+    }
+    return
+  }
+
+  isLoading.value = true
+  try {
+    const payload = searchAllContent(query)
+    results.value = payload.results
+    if (resetPage) {
+      currentPage.value = 1
+    } else {
+      const routePage = Number(route.query.page) || 1
+      currentPage.value = routePage
+    }
+    persistSearchSession({ ...payload, currentPage: currentPage.value })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleSubmit = () => {
+  keyword.value = (searchInput.value || '').trim()
+  updateRoute({ queryKeyword: keyword.value, page: 1 })
+}
+
+const handlePageChange = (page) => {
+  if (page === currentPage.value) return
+  currentPage.value = page
+  updateRoute({ queryKeyword: keyword.value, page })
+  persistSearchSession({ query: keyword.value, results: results.value, currentPage: page })
+}
+
+const openResult = (result) => {
+  if (!result?.targetUrl) return
+  const baseUrl = window.location.origin
+  // 添加#top锚点确保新窗口打开后跳转到页面顶部
+  const fullUrl = `${baseUrl}${result.targetUrl}#top`
+  window.open(fullUrl, '_blank', 'noopener')
+}
+
+watch(
+  () => route.query.keyword,
+  (newKeyword, oldKeyword) => {
+    if (newKeyword === oldKeyword) return
+    keyword.value = newKeyword ? String(newKeyword) : ''
+    searchInput.value = keyword.value
+    performSearch({ resetPage: false })
+  }
+)
+
+watch(
+  () => route.query.page,
+  (newPage) => {
+    const normalized = Number(newPage) || 1
+    currentPage.value = normalized
+  }
+)
+
+onMounted(() => {
+  if (keyword.value) {
+    performSearch({ resetPage: false })
+  } else {
+    const stored = getStoredSearchSession()
+    if (stored) {
+      applyStoredSession(stored)
+      updateRoute({ queryKeyword: stored.query, page: stored.currentPage })
+    }
+  }
+})
+</script>
+
+<template>
+  <div class="search-results-page">
+    <div class="search-header">
+      <div class="search-title">
+        <h1>全站搜索</h1>
+        <p v-if="keyword">“{{ keyword }}” 的搜索结果，共 {{ totalResults }} 条</p>
+        <p v-else>输入关键词，探索内容</p>
+      </div>
+      <!-- <div class="search-bar">
+        <el-input v-model="searchInput" placeholder="输入目的地、景点或关键词" size="large" @keyup.enter="handleSubmit">
+          <template #prefix>
+            <el-icon>
+              <Search />
+            </el-icon>
+          </template>
+</el-input>
+<el-button type="primary" size="large" class="search-btn" @click="handleSubmit">搜索</el-button>
+</div> -->
+    </div>
+
+    <div v-if="isLoading" class="loading-state">正在搜索，请稍候...</div>
+
+    <div v-else class="results-section">
+      <div v-if="hasResults" class="results-list">
+        <article v-for="result in pagedResults" :key="result.id" class="result-card">
+          <div class="result-meta">
+            <span class="meta-tag">{{ result.sectionTag }}</span>
+            <span v-if="result.subNavName" class="meta-sub">{{ result.subNavName }}</span>
+            <span v-if="result.groupName" class="meta-sub">{{ result.groupName }}</span>
+          </div>
+          <h3 class="result-title">{{ result.title }}</h3>
+          <p v-if="result.summary" class="result-summary">{{ result.summary }}</p>
+          <p class="result-snippet">{{ result.snippet }}</p>
+          <div class="result-actions">
+            <el-button type="primary" text @click="openResult(result)">新窗口打开</el-button>
+          </div>
+        </article>
+      </div>
+      <div v-else class="empty-state">
+        <p>未找到匹配的内容，可以尝试更换关键词。</p>
+      </div>
+
+      <div class="pagination-wrapper" v-if="hasResults && totalResults > pageSize">
+        <el-pagination :current-page="currentPage" :page-size="pageSize" :total="totalResults"
+          layout="prev, pager, next" background @current-change="handlePageChange" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.search-results-page {
+  width: 90%;
+  margin: 60px auto 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  color: #111827;
+}
+
+.search-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+  box-shadow: 0 10px 30px rgba(148, 163, 184, 0.2);
+}
+
+.search-title h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.search-title p {
+  margin: 8px 0 0;
+  color: #475569;
+  font-size: 16px;
+}
+
+.search-bar {
+  display: flex;
+  gap: 12px;
+}
+
+.search-btn {
+  padding: 0 28px;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  font-size: 16px;
+  color: #64748b;
+  padding: 40px 0;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.meta-tag {
+  background: #eef2ff;
+  color: #4338ca;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.meta-sub {
+  background: #ecfeff;
+  color: #0f766e;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.result-title {
+  font-size: 22px;
+  margin: 0;
+  color: #0f172a;
+}
+
+.result-summary {
+  margin: 0;
+  color: #475569;
+  font-size: 15px;
+}
+
+.result-snippet {
+  margin: 0;
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.result-actions {
+  margin-top: 8px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+@media (max-width: 768px) {
+  .search-results-page {
+    width: 95%;
+    margin-top: 40px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-btn {
+    width: 100%;
+  }
+}
+</style>

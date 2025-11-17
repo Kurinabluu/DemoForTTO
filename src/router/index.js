@@ -1,5 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useNavStore } from '@/stores/nav'
+import data from '@/data/data.json'
+
+const DEFAULT_FREEINFO_SUBNAV = (() => {
+  try {
+    const freeInfoSection = data.find((item) => item.tagName === '自助游/自驾游免费信息')
+    if (freeInfoSection?.subNav?.length) {
+      return freeInfoSection.subNav[0].subNavName || '景点'
+    }
+  } catch (e) {
+    // ignore
+  }
+  return '景点'
+})()
 
 // 处理404重定向的hash路径
 export function processHashRedirect() {
@@ -35,7 +48,19 @@ const routes = [
         path: '/DemoForTTO',
         name: 'Home',
         component: () => import('@/views/HomeView.vue'),
-        redirect: '/DemoForTTO/trips/freeinfo', // 添加默认重定向
+        redirect: () => {
+          try {
+            if (typeof window !== 'undefined') {
+              const saved = localStorage.getItem('tto_last_path')
+              if (saved && saved !== '/DemoForTTO' && saved !== '/') {
+                return saved
+              }
+            }
+          } catch (e) {
+            // ignore
+          }
+          return '/DemoForTTO/trips/freeinfo'
+        }, // 添加默认重定向
         // redirect: '/DemoForTTO/service/car', // 添加默认重定向
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
@@ -96,7 +121,12 @@ const routes = [
             path: 'service/custom',
             name: 'CustomService',
             component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '个性定制服务' }
+            props: { serviceName: '私人定制' }
+          },
+          {
+            path: 'search',
+            name: 'GlobalSearch',
+            component: () => import('@/views/SearchResults.vue')
           }
         ]
       }
@@ -108,6 +138,26 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
+
+const detectReloadNavigation = () => {
+  try {
+    if (typeof window === 'undefined') return false
+    if (typeof performance?.getEntriesByType === 'function') {
+      const entries = performance.getEntriesByType('navigation')
+      if (entries && entries.length > 0) {
+        return entries[0].type === 'reload'
+      }
+    }
+    if (performance && 'navigation' in performance) {
+      return performance.navigation.type === 1 // TYPE_RELOAD
+    }
+  } catch (e) {
+    // ignore
+  }
+  return false
+}
+
+let shouldSkipFirstAfterEach = detectReloadNavigation()
 
 // 恢复逻辑：首次进入默认路由，非首次回到上次停留页面
 router.beforeEach((to, from, next) => {
@@ -123,6 +173,7 @@ router.beforeEach((to, from, next) => {
     if (first) {
       // 直接设置localStorage，不依赖Pinia
       localStorage.setItem('tto_first_visit_done', '1');
+      localStorage.setItem('tto_selected_subnav', DEFAULT_FREEINFO_SUBNAV);
       // 首次访问，重定向到默认路由
       if (to.path === '/' || to.path === '/DemoForTTO') {
         // return next('/DemoForTTO/service/car');
@@ -143,6 +194,10 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to) => {
+  if (shouldSkipFirstAfterEach) {
+    shouldSkipFirstAfterEach = false;
+    return;
+  }
   // 进入页面后，尝试恢复滚动
   const restore = () => {
     try {
