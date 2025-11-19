@@ -199,6 +199,7 @@ function onOpenTour(item) {
     emit('openTourDialog', {
         ...item,
         title: item.title,
+        enTitle: item.enTitle,
         banner: bannerImage,
         tripType: tripType,
         tripData: tripData

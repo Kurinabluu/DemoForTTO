@@ -140,6 +140,7 @@ function doSubSearch() {
 
 // 只保留弹窗相关的状态
 const isTourDialogVisible = ref(false)
+const dialogEnTitle = ref('')
 const dialogTitle = ref('大堡礁单日游')
 const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
 const dialogTripData = ref({})
@@ -284,6 +285,7 @@ function onSelectPlaceItem(item) {
 // 弹窗相关方法
 function openTourDialog(item) {
     dialogTitle.value = item?.title || '大堡礁单日游'
+    dialogEnTitle.value = item?.enTitle || ''
     dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
     dialogTripData.value = item?.tripData || {}
     dialogTripType.value = item?.tripType || '一日游'
@@ -486,8 +488,8 @@ onUnmounted(() => {
         </div>
 
         <!-- 弹窗组件 -->
-        <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :banner="dialogBanner"
-            :trip-data="dialogTripData" :trip-type="dialogTripType" />
+        <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" />
         <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
             :items="listItems" @select="onSelectPlaceItem" />
     </el-main>

@@ -14,11 +14,43 @@
                 "isGrid": true,
                 "items": [
                     {
+                        "title": "圣克莱尔湖国家公园",
+                        "img": "@/assets/img/LakeStClairNationalPark.jpg",
+                        "enTitle": "Cradle Mountain-Lake St Clair National Park",
+                        "tripData": {
+                            "route": "塔斯马尼亚州北部中央高地",
+                            "desc": "圣克莱尔湖（Lake Saint Clair）位于塔斯马尼岛中西部，面积约28平方公里，最深处达215米，是澳大利亚最深的湖泊。摇篮山和圣克莱尔湖（Lake St Clair）一起组成了摇篮山-圣克莱尔湖国家公园。",
+                            "features": [
+                                {
+                                    "icon": "#39c5bb",
+                                    "title": "自然景观",
+                                    "desc": "壮观的海岸线和山脉景色"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "徒步体验",
+                                    "desc": "多条难度不等的徒步路线"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "野生动物保护",
+                                    "desc": "机会看袋熊、袋鼠等特有动物"
+                                }
+                            ],
+                            "tags": [
+                                "自驾友好",
+                                "适合徒步",
+                                "观景点众多",
+                                "游客设施完善"
+                            ]
+                        }
+                    },
+                    {
                         "title": "菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园菲欣拿国家公园",
                         "img": "@/assets/img/footer1.jpg",
-                        "enTitle": "Freycinet National ParkFreycinet National ParkFreycinet National ParkFreycinet National ParkFreycinet National Park",
+                        "enTitle": "Freycinet National Park",
                         "tripData": {
-                            "route": "菲欣拿国家公园生态探索",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索塔斯马尼亚最著名的国家公园，欣赏壮观的海湾和山脉景色。",
                             "features": [
                                 {
@@ -50,7 +82,7 @@
                         "img": "@/assets/img/footer2.jpg",
                         "enTitle": "Cradle Mountain",
                         "tripData": {
-                            "route": "摇篮山高山探险",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探访塔斯马尼亚标志性的山峰，感受原始森林和高山湖泊的魅力。",
                             "features": [
                                 {
@@ -82,7 +114,7 @@
                         "img": "@/assets/img/footer3.jpg",
                         "enTitle": "Bay of Fires",
                         "tripData": {
-                            "route": "火焰湾海滩之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索拥有橙色岩石和洁白沙滩的独特海岸线，享受阳光和海浪。",
                             "features": [
                                 {
@@ -114,7 +146,7 @@
                         "img": "@/assets/img/footer4.jpg",
                         "enTitle": "Wineglass Bay",
                         "tripData": {
-                            "route": "酒杯湾观景体验",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "欣赏被评为世界十大最美海滩之一的酒杯湾，感受大自然的鬼斧神工。",
                             "features": [
                                 {
@@ -146,7 +178,7 @@
                         "img": "@/assets/img/footer1.jpg",
                         "enTitle": "Maria Island",
                         "tripData": {
-                            "route": "玛丽亚岛自然保护区",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探访这个没有汽车的自然天堂，体验丰富的历史和自然生态。",
                             "features": [
                                 {
@@ -178,7 +210,7 @@
                         "img": "@/assets/img/footer2.jpg",
                         "enTitle": "Tasman Peninsula",
                         "tripData": {
-                            "route": "塔斯曼半岛探险",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索这个拥有丰富历史和壮观自然景观的半岛，感受独特的海岸地貌。",
                             "features": [
                                 {
@@ -210,7 +242,7 @@
                         "img": "@/assets/img/footer3.jpg",
                         "enTitle": "Bruny Island",
                         "tripData": {
-                            "route": "布鲁尼岛生态之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "乘坐渡轮前往这个生态天堂，品尝当地美食并欣赏壮观的自然景观。",
                             "features": [
                                 {
@@ -242,7 +274,7 @@
                         "img": "@/assets/img/footer4.jpg",
                         "enTitle": "Hobart Waterfront",
                         "tripData": {
-                            "route": "霍巴特城市漫步",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "沿着霍巴特美丽的海滨漫步，探索历史建筑、艺术画廊和美食餐厅。",
                             "features": [
                                 {
@@ -274,7 +306,7 @@
                         "img": "@/assets/img/footer1.jpg",
                         "enTitle": "Launceston Gorge",
                         "tripData": {
-                            "route": "朗塞斯顿峡谷探险",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "在塔斯马尼亚第二大城市附近，探索这个令人惊叹的自然峡谷。",
                             "features": [
                                 {
@@ -306,7 +338,7 @@
                         "img": "@/assets/img/footer2.jpg",
                         "enTitle": "St Helens",
                         "tripData": {
-                            "route": "圣海伦斯海岸之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索这个位于塔斯马尼亚东海岸的小镇，享受美丽的海滩和新鲜的海鲜。",
                             "features": [
                                 {
@@ -338,7 +370,7 @@
                         "img": "@/assets/img/footer3.jpg",
                         "enTitle": "Bicheno",
                         "tripData": {
-                            "route": "比切诺海洋之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探访这个以小企鹅和海洋生物闻名的海滨小镇，体验独特的海洋生态。",
                             "features": [
                                 {
@@ -370,7 +402,7 @@
                         "img": "@/assets/img/footer4.jpg",
                         "enTitle": "Stanley",
                         "tripData": {
-                            "route": "斯坦利历史与自然",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索这个被火山岩环绕的历史小镇，欣赏独特的地貌和丰富的历史。",
                             "features": [
                                 {
@@ -402,7 +434,7 @@
                         "img": "@/assets/img/footer1.jpg",
                         "enTitle": "Richmond Bridge",
                         "tripData": {
-                            "route": "里士满历史之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探访澳大利亚最古老的石桥和周围保存完好的历史小镇。",
                             "features": [
                                 {
@@ -434,7 +466,7 @@
                         "img": "@/assets/img/footer2.jpg",
                         "enTitle": "Port Arthur",
                         "tripData": {
-                            "route": "亚瑟港历史遗址",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索澳大利亚最著名的 convict遗址，了解塔斯马尼亚的历史。",
                             "features": [
                                 {
@@ -466,7 +498,7 @@
                         "img": "@/assets/img/footer3.jpg",
                         "enTitle": "Devonport",
                         "tripData": {
-                            "route": "德文波特城市与自然",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探访塔斯马尼亚北部的门户城市，享受城市设施和周边自然景观。",
                             "features": [
                                 {
@@ -498,7 +530,7 @@
                         "img": "@/assets/img/footer4.jpg",
                         "enTitle": "Tamar Valley",
                         "tripData": {
-                            "route": "塔拉娜谷葡萄酒之旅",
+                            "route": "塔斯马尼亚州北部中央高地",
                             "desc": "探索塔斯马尼亚著名的葡萄酒产区，品尝优质葡萄酒并欣赏田园风光。",
                             "features": [
                                 {

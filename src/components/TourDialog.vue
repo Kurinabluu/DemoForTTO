@@ -6,6 +6,7 @@ import dataJson from '@/data/data.json'
 const props = defineProps({
     visible: { type: Boolean, default: false },
     title: { type: String, default: '塔斯马尼亚一日游' },
+    enTitle: { type: String, default: 'Tasmania Day Trip' },
     banner: { type: String, default: '' },
     tripType: { type: String, default: '一日游' }, // 添加tripType属性来区分一日游和多日游
     tripData: { type: Object, default: () => ({}) } // 添加tripData属性来接收完整的行程数据
@@ -118,7 +119,7 @@ const routeInfo = computed(() => {
     <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center :z-index="9500"
         :append-to-body="true" :lock-scroll="true">
         <template #header>
-            <div class="dlg-title">{{ title }}</div>
+            <div class="dlg-title">{{ title }}（{{ enTitle }}）</div>
         </template>
 
         <div class="dlg-banner" v-if="bannerUrl">
@@ -126,7 +127,7 @@ const routeInfo = computed(() => {
         </div>
 
         <div class="dlg-section">
-            <div class="section-title">{{ routeInfo.route }}</div>
+            <div class="section-title" v-if="routeInfo.route">{{ routeInfo.route }}</div>
             <div class="section-desc">
                 {{ routeInfo.desc }}
             </div>
@@ -145,6 +146,10 @@ const routeInfo = computed(() => {
 
         <template #footer>
             <div class="dlg-footer">
+                <div class="info-disclaimer">
+                    <span class="warning-icon">!</span>
+                    所有内容来自公共信息，以官方信息为准
+                </div>
                 <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
             </div>
         </template>
@@ -258,11 +263,48 @@ const routeInfo = computed(() => {
 
 .dlg-footer {
     padding: 0 12px 12px;
+    position: relative;
+}
+
+.info-disclaimer {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 12px;
+    color: #9ca3af;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.warning-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* 确保按钮不被提示文字遮挡 */
+.dlg-footer .el-button {
+    margin-top: 24px;
 }
 
 @media (max-width: 768px) {
     .feature-grid {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    .info-disclaimer {
+        position: relative;
+        bottom: 0;
     }
 }
 </style>

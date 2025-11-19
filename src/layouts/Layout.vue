@@ -167,8 +167,8 @@ onMounted(() => {
                 <ul class="ul-css clearfix">
                     <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
                         @click="onNavClick($event, '网站首页');">
-                        <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页 -->
-                        <RouterLink :to="{ path: '/DemoForTTO/service/car' }">网站首页
+                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页
+                            <!-- <RouterLink :to="{ path: '/DemoForTTO/service/car' }">网站首页 -->
                         </RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
