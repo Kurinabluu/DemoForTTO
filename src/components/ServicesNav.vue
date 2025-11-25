@@ -262,7 +262,26 @@ function onSearch() {
           disabled: !data[index].available || data[index].available === false
         }" @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag, $event)"
           :data-service="tag" href="javascript:void(0)">
-          {{ tag }}
+          <span class="tag-content">
+            <template v-if="tag.includes('免费信息')">
+              {{ tag.split('免费信息')[0] }}
+              <br />
+              免费信息
+            </template>
+            <template v-else-if="tag.includes('（固定行程）')">
+              {{ tag.split('（固定行程）')[0] }}
+              <br />
+              （固定行程）
+            </template>
+            <template v-else-if="tag.includes('（独立成团+专车+司导）')">
+              {{ tag.split('（独立成团+专车+司导）')[0] }}
+              <br />
+              <span class="small-text fs15">（独立成团+专车+司导）</span>
+            </template>
+            <template v-else>
+              {{ tag }}
+            </template>
+          </span>
         </a>
       </div>
       <div class="search-container">
@@ -347,30 +366,100 @@ function onSearch() {
         display: flex;
         border-radius: 10px;
         transition: all 0.2s ease;
-        height: 50px;
+        height: auto;
+        padding: 8px 10px;
         align-items: center;
         justify-content: center;
-        padding: 0 10px;
-        text-align: center;
         background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
         color: #3b82f6;
         user-select: none;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03) inset;
         text-decoration: none;
-        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+        line-height: 1.4;
+        white-space: pre-line;
+
+        .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        br {
+          display: block;
+          height: 8px;
+          content: '';
+          margin: 4px 0;
+        }
+
+        .small-text {
+          // font-size: 15px;
+          line-height: 1.2;
+        }
       }
 
       .active {
+        display: flex;
+        height: auto;
+        padding: 8px 10px;
+        align-items: center;
+        justify-content: center;
         background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
         color: #fff;
         box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+        width: 100%;
+        box-sizing: border-box;
+        line-height: 1.4;
+        white-space: pre-line;
+
+        .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .small-text {
+          color: #fff;
+        }
       }
 
       .disabled {
+        display: flex;
+        height: auto;
+        padding: 8px 10px;
+        align-items: center;
+        justify-content: center;
         background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
         color: #9ca3af;
         cursor: not-allowed;
         box-shadow: none;
+        width: 100%;
+        box-sizing: border-box;
+        line-height: 1.4;
+        white-space: pre-line;
+
+        .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .small-text {
+          color: #9ca3af;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .search-fixed {
+    .search-card {
+      .search-tags {
+        .small-text {
+          font-size: 12px;
+        }
       }
     }
   }
@@ -399,8 +488,31 @@ function onSearch() {
           width: 100%;
         }
 
-        .tag-pill {
+        .tag-pill,
+        .active,
+        .disabled {
           font-size: 13px;
+          padding: 6px 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1.4;
+          white-space: pre-line;
+        }
+
+        .tag-pill .tag-content,
+        .active .tag-content,
+        .disabled .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .tag-pill br,
+        .active br,
+        .disabled br {
+          height: 6px;
+          margin: 3px 0;
         }
       }
     }
@@ -417,7 +529,6 @@ function onSearch() {
         width: 100%;
         padding: 8px 12px 20px;
         top: auto;
-        // margin-bottom: 20px;
 
         .search-card {
           max-width: 95vw;
@@ -442,12 +553,36 @@ function onSearch() {
           gap: 6px;
           grid-template-columns: repeat(2, 1fr);
           width: 100%;
+
+          .tag-pill {
+            font-size: 12px
+          }
         }
 
-        .tag-pill {
+        .tag-pill,
+        .active,
+        .disabled {
           padding: 6px 10px;
-          line-height: 1.3;
-          // font-size: 12px;
+          line-height: 1.4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: pre-line;
+        }
+
+        .tag-pill .tag-content,
+        .active .tag-content,
+        .disabled .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .tag-pill br,
+        .active br,
+        .disabled br {
+          height: 6px;
+          margin: 3px 0;
         }
       }
     }
@@ -460,20 +595,39 @@ function onSearch() {
     .el-main {
       .search-fixed {
         padding: 6px 8px 20px;
-        // margin-bottom: 20px;
 
         .search-card {
           max-width: 98vw;
         }
 
-        .search-tags {
-          grid-template-columns: repeat(2, 1fr);
+        .tag-pill,
+        .active,
+        .disabled {
+          padding: 4px 8px;
+          line-height: 1.4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: pre-line;
         }
 
-        .tag-pill {
-          padding: 4px 8px;
-          // font-size: 11px;
-          line-height: 1.2;
+        .tag-pill .tag-content,
+        .active .tag-content,
+        .disabled .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .tag-pill br,
+        .active br,
+        .disabled br {
+          height: 4px;
+          margin: 2px 0;
+        }
+
+        .small-text {
+          // font-size: 10px;
         }
       }
     }
@@ -485,9 +639,7 @@ function onSearch() {
   .el-container {
     .el-main {
       .search-fixed {
-        // padding: 4px 6px 20px;
         padding: 4px 6px 0;
-        // margin-bottom: 20px;
 
         .search-card {
           max-width: 99vw;
@@ -497,10 +649,31 @@ function onSearch() {
           grid-template-columns: repeat(2, 1fr);
         }
 
-        .tag-pill {
+        .tag-pill,
+        .active,
+        .disabled {
           padding: 3px 6px;
-          font-size: 14px;
-          line-height: 1.1;
+          font-size: 12px;
+          line-height: 1.4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: pre-line;
+        }
+
+        .tag-pill .tag-content,
+        .active .tag-content,
+        .disabled .tag-content {
+          display: inline;
+          text-align: center;
+          width: 100%;
+        }
+
+        .tag-pill br,
+        .active br,
+        .disabled br {
+          height: 4px;
+          margin: 2px 0;
         }
       }
     }

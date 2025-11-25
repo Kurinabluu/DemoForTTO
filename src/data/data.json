@@ -1198,6 +1198,57 @@
                 ]
             },
             {
+                "subNavName": "徒步",
+                "isShow": false,
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动222",
+                "activitiesSubtitle": "实时特色活动与极光天气信息222",
+                "items": [
+                    {
+                        "title": "极光观测最佳时机",
+                        "sub": "南半球极光观测体验",
+                        "location": "摇篮山国家公园",
+                        "tags": [
+                            "天气晴朗",
+                            "极光",
+                            "观测条件极佳"
+                        ],
+                        "badge": "极光预报",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "今晚概率",
+                                "value": "85%",
+                                "valueClass": "high"
+                            },
+                            {
+                                "label": "最佳时间",
+                                "value": "22:00-02:00"
+                            },
+                            {
+                                "label": "推荐地点",
+                                "value": "摇篮山国家公园"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🌌",
+                                "text": "天气晴朗"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "极光"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "观测条件极佳"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "subNavName": "特别活动",
                 "isShow": false,
                 "isGrid": false,
@@ -1326,57 +1377,6 @@
                 ]
             },
             {
-                "subNavName": "徒步",
-                "isShow": false,
-                "isGrid": false,
-                "activitiesTitle": "塔斯马尼亚特别活动222",
-                "activitiesSubtitle": "实时特色活动与极光天气信息222",
-                "items": [
-                    {
-                        "title": "极光观测最佳时机",
-                        "sub": "南半球极光观测体验",
-                        "location": "摇篮山国家公园",
-                        "tags": [
-                            "天气晴朗",
-                            "极光",
-                            "观测条件极佳"
-                        ],
-                        "badge": "极光预报",
-                        "cardClass": "aurora-card",
-                        "badgeClass": "aurora-badge",
-                        "info": [
-                            {
-                                "label": "今晚概率",
-                                "value": "85%",
-                                "valueClass": "high"
-                            },
-                            {
-                                "label": "最佳时间",
-                                "value": "22:00-02:00"
-                            },
-                            {
-                                "label": "推荐地点",
-                                "value": "摇篮山国家公园"
-                            }
-                        ],
-                        "tagItems": [
-                            {
-                                "icon": "🌌",
-                                "text": "天气晴朗"
-                            },
-                            {
-                                "icon": "🌌",
-                                "text": "极光"
-                            },
-                            {
-                                "icon": "🌌",
-                                "text": "观测条件极佳"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
                 "subNavName": "当地天气",
                 "isShow": false,
                 "isGrid": false,
@@ -1477,70 +1477,62 @@
                         ]
                     }
                 ]
+            },
+            {
+                "subNavName": "塔州露营地",
+                "isShow": false,
+                "isGrid": false,
+                "activitiesTitle": "塔斯马尼亚特别活动444",
+                "activitiesSubtitle": "实时特色活动与极光天气信息444",
+                "items": [
+                    {
+                        "title": "极光观测最佳时机",
+                        "sub": "南半球极光观测体验",
+                        "location": "摇篮山国家公园",
+                        "tags": [
+                            "天气晴朗",
+                            "极光",
+                            "观测条件极佳"
+                        ],
+                        "badge": "极光预报",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "今晚概率",
+                                "value": "85%",
+                                "valueClass": "high"
+                            },
+                            {
+                                "label": "最佳时间",
+                                "value": "22:00-02:00"
+                            },
+                            {
+                                "label": "推荐地点",
+                                "value": "摇篮山国家公园"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🌌",
+                                "text": "天气晴朗"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "极光"
+                            },
+                            {
+                                "icon": "🌌",
+                                "text": "观测条件极佳"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
     {
         "id": 2,
-        "tagName": "热门项目",
-        "hasSubNav": false,
-        "available": true,
-        "isTrip": false,
-        "path": "service/ticket",
-        "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
-            "heroTitle": "让等待不再是旅行难题，高效管理时间",
-            "heroDesc": "在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为您省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把您的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。",
-            "features": [
-                "酒店免等入住",
-                "餐厅预留就座",
-                "行程无缝对接",
-                "全程无忧代办"
-            ],
-            "packagesTitle": "旅行无忧代办计划",
-            "packages": [
-                {
-                    "id": 1,
-                    "title": "无忧畅行通行证",
-                    "description": "代订各大景点门票,省去排队购票烦恼，让您专心游玩。",
-                    "currency": "¥",
-                    "price": "99",
-                    "amount": "/ 人",
-                    "info": "（包含门票）",
-                    "img": "@/assets/img/footer1.jpg"
-                },
-                {
-                    "id": 2,
-                    "title": "臻享体验规划",
-                    "description": "(包含无忧畅行通行证)提前预订热门餐厅座位，预约特色活动，让您的旅行不仅顺畅，而且还能收获独特体验！",
-                    "currency": "¥",
-                    "price": "199",
-                    "amount": "",
-                    "info": "",
-                    "img": "@/assets/img/footer2.jpg"
-                }
-            ],
-            "advantagesTitle": "TTO能做到的，不止这些",
-            "advantages": [
-                {
-                    "id": 1,
-                    "title": "无忧畅行通行证，帮您即到即入",
-                    "description": "无需担忧购票问题，支付问题不是事",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 2,
-                    "title": "臻享体验规划，让您坐下即享",
-                    "description": "没有饥肠辘辘等待美食的烦恼，没有等待清理酒店房间的疲惫，即到即享",
-                    "url": "@/assets/img/carService/carType.png"
-                }
-            ],
-            "contactTitle": "订购代订门票及旅游项目服务",
-            "contactIntro": "如需了解详情或预约代订门票及旅游项目，请联系我们的专属顾问"
-        }
-    },
-    {
-        "id": 3,
         "tagName": "包车服务（独立成团+专车+司导）",
         "available": true,
         "hasSubNav": false,
@@ -1641,148 +1633,7 @@
         }
     },
     {
-        "id": 4,
-        "tagName": "全程旅游管家服务",
-        "hasSubNav": false,
-        "available": true,
-        "isTrip": false,
-        "path": "service/steward",
-        "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
-            "heroTitle": "把麻烦交给我们，把时间留给风景",
-            "heroDesc": "带着对塔斯马尼亚的深度解读，根据您的品味，为您定制独一无二的礼宾专案：从私人庄园的品酒盛宴，到跟随生态学家探访袋熊栖息地；从专属直升机俯瞰酒杯湾，到在世界遗产地享受匠心打造的野餐体验。每一处细节都经过精心策划，每一次体验都彰显独特个性。TTO是您懂塔州、懂旅行的专业伙伴，是您在塔斯马尼亚的“自己人”。",
-            "features": [
-                "净化您的行程，为您过滤掉所有繁琐与等待，留下纯粹体验",
-                "服务无处不在，却从不打扰您的旅行节奏",
-                "安心托付，让您在异国他乡也能完全放松，尽享旅程",
-                "我们不只是服务者，更是懂行的同行伙伴"
-            ],
-            "packagesTitle": "管家服务套餐",
-            "packages": [
-                {
-                    "id": 1,
-                    "title": "私人订制礼宾专案",
-                    "description": "为您提供全方位的旅行支持：负责行程规划与优化，安排交通住宿及活动预约，随时协调行程中各类需求，并提供应急支持与本地建议",
-                    "currency": "¥",
-                    "price": "688",
-                    "amount": "/ 人",
-                    "info": "",
-                    "img": "@/assets/img/footer1.jpg"
-                }
-            ],
-            "advantagesTitle": "全方位的旅行支持",
-            "advantages": [
-                {
-                    "id": 1,
-                    "title": "行程规划与优化",
-                    "description": "为您打造真正个性化的旅程，让每个景点都符合您的旅行节奏与兴趣偏好",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 2,
-                    "title": "安排交通住宿与活动安排",
-                    "description": "为您安排全程交通、精选住宿与特色活动，实现各环节间的无缝衔接。",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 3,
-                    "title": "随时需求响应与协调",
-                    "description": "配备专属管家及时响应您的需求，灵活调整安排，从容应对旅途变化。",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 4,
-                    "title": "应急支持与本地建议",
-                    "description": "提供全天候应急支持，并分享当地人才知道的实用资讯与隐藏景点。",
-                    "url": "@/assets/img/carService/carType.png"
-                }
-            ],
-            "contactTitle": "订购专属管家服务",
-            "contactIntro": "如需了解详情或预约管家服务，请联系我们的专属顾问"
-        }
-    },
-    {
-        "id": 5,
-        "tagName": "地接地陪服务",
-        "hasSubNav": false,
-        "available": true,
-        "isTrip": false,
-        "path": "service/guide",
-        "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
-            "heroTitle": "当地向导地接地陪服务",
-            "heroDesc": "在塔斯马尼亚，风景的背后是故事，路途中藏着只有当地人才知道的秘境。TTO地接地陪服务，让一位真正了解这片土地的向导，带您跨越游客的边界，走进真实的塔州：领您探访游客地图上未标注的私人海湾，讲述山脉与海岸背后的历史与传说，在最适合的时刻避开人潮，独享摇篮山最宁静的晨光。我们不仅是向导，更是您在塔斯马尼亚的“旅行之眼”与“本地朋友”，让每一次停留都充满意义，每一次出发都心怀期待。",
-            "features": [
-                "与您分享风景之外的历史、生态与生活故事",
-                "多语言专业讲解，精通中英双语，深度解读自然景观与人文历史",
-                "随时根据天气、体力与兴趣优化体验"
-            ],
-            "packagesTitle": "多种接待方案",
-            "packages": [
-                {
-                    "id": 1,
-                    "title": "个人精致陪行",
-                    "description": "适合1-2人，专注于深度体验与个性化路线，如私人摄影点、小众咖啡馆与秘境徒步",
-                    "currency": "¥",
-                    "price": "68",
-                    "amount": "/ 人",
-                    "info": "",
-                    "img": "@/assets/img/footer1.jpg"
-                },
-                {
-                    "id": 2,
-                    "title": "家庭及好友专属陪游",
-                    "description": "适合3-6人小团体，兼顾不同年龄与兴趣需求，灵活安排活动节奏，包含互动体验与休憩点设计",
-                    "currency": "¥",
-                    "price": "128",
-                    "amount": "/ 人",
-                    "info": "",
-                    "img": "@/assets/img/footer2.jpg"
-                },
-                {
-                    "id": 3,
-                    "title": "商务接待与团体陪览",
-                    "description": "适合企业或多人团队，注重行程效率与专业性，提供多语言陪同、商务礼仪支持与团体动线规划",
-                    "currency": "¥",
-                    "price": "288",
-                    "amount": "/ 人",
-                    "info": "",
-                    "img": "@/assets/img/footer3.jpg"
-                }
-            ],
-            "advantagesTitle": "选择TTO地接地陪服务的理由",
-            "advantages": [
-                {
-                    "id": 1,
-                    "title": "像本地人一样旅行",
-                    "description": "TTO不会带您走常规攻略里“大量消耗体力花费时间”的路线",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 2,
-                    "title": "行程自由而轻松",
-                    "description": "您可随时提出“今天不想去这里了”“想多停留一会儿”，行程不赶场，节奏由您掌控",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 3,
-                    "title": "商务伙伴式陪同",
-                    "description": "我们协助安排商务会面动线，推荐得体餐饮场所，让您的商务行程高效又从容",
-                    "url": "@/assets/img/carService/carType.png"
-                },
-                {
-                    "id": 4,
-                    "title": "不止于陪同，更负责安心",
-                    "description": "我们从接送到送回，处理交通、沟通与应急状况，您只需沉浸于旅程之中",
-                    "url": "@/assets/img/carService/carType.png"
-                }
-            ],
-            "contactTitle": "订购地接地陪服务",
-            "contactIntro": "如需了解详情或预约地接地陪服务，请联系我们的专属顾问"
-        }
-    },
-    {
-        "id": 6,
+        "id": 3,
         "tagName": "一日游（固定行程）",
         "hasSubNav": true,
         "available": true,
@@ -2368,7 +2219,7 @@
         "path": "trips/oneday"
     },
     {
-        "id": 7,
+        "id": 4,
         "tagName": "多日游（固定行程）",
         "hasSubNav": false,
         "available": true,
@@ -2536,6 +2387,206 @@
         ]
     },
     {
+        "id": 5,
+        "tagName": "全程旅游管家服务",
+        "hasSubNav": false,
+        "available": true,
+        "isTrip": false,
+        "path": "service/steward",
+        "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
+            "heroTitle": "把麻烦交给我们，把时间留给风景",
+            "heroDesc": "带着对塔斯马尼亚的深度解读，根据您的品味，为您定制独一无二的礼宾专案：从私人庄园的品酒盛宴，到跟随生态学家探访袋熊栖息地；从专属直升机俯瞰酒杯湾，到在世界遗产地享受匠心打造的野餐体验。每一处细节都经过精心策划，每一次体验都彰显独特个性。TTO是您懂塔州、懂旅行的专业伙伴，是您在塔斯马尼亚的“自己人”。",
+            "features": [
+                "净化您的行程，为您过滤掉所有繁琐与等待，留下纯粹体验",
+                "服务无处不在，却从不打扰您的旅行节奏",
+                "安心托付，让您在异国他乡也能完全放松，尽享旅程",
+                "我们不只是服务者，更是懂行的同行伙伴"
+            ],
+            "packagesTitle": "管家服务套餐",
+            "packages": [
+                {
+                    "id": 1,
+                    "title": "私人订制礼宾专案",
+                    "description": "为您提供全方位的旅行支持：负责行程规划与优化，安排交通住宿及活动预约，随时协调行程中各类需求，并提供应急支持与本地建议",
+                    "currency": "¥",
+                    "price": "688",
+                    "amount": "/ 人",
+                    "info": "",
+                    "img": "@/assets/img/footer1.jpg"
+                }
+            ],
+            "advantagesTitle": "全方位的旅行支持",
+            "advantages": [
+                {
+                    "id": 1,
+                    "title": "行程规划与优化",
+                    "description": "为您打造真正个性化的旅程，让每个景点都符合您的旅行节奏与兴趣偏好",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 2,
+                    "title": "安排交通住宿与活动安排",
+                    "description": "为您安排全程交通、精选住宿与特色活动，实现各环节间的无缝衔接。",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 3,
+                    "title": "随时需求响应与协调",
+                    "description": "配备专属管家及时响应您的需求，灵活调整安排，从容应对旅途变化。",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 4,
+                    "title": "应急支持与本地建议",
+                    "description": "提供全天候应急支持，并分享当地人才知道的实用资讯与隐藏景点。",
+                    "url": "@/assets/img/carService/carType.png"
+                }
+            ],
+            "contactTitle": "订购专属管家服务",
+            "contactIntro": "如需了解详情或预约管家服务，请联系我们的专属顾问"
+        }
+    },
+    {
+        "id": 6,
+        "tagName": "地接地陪服务",
+        "hasSubNav": false,
+        "available": true,
+        "isTrip": false,
+        "path": "service/guide",
+        "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
+            "heroTitle": "当地向导地接地陪服务",
+            "heroDesc": "在塔斯马尼亚，风景的背后是故事，路途中藏着只有当地人才知道的秘境。TTO地接地陪服务，让一位真正了解这片土地的向导，带您跨越游客的边界，走进真实的塔州：领您探访游客地图上未标注的私人海湾，讲述山脉与海岸背后的历史与传说，在最适合的时刻避开人潮，独享摇篮山最宁静的晨光。我们不仅是向导，更是您在塔斯马尼亚的“旅行之眼”与“本地朋友”，让每一次停留都充满意义，每一次出发都心怀期待。",
+            "features": [
+                "与您分享风景之外的历史、生态与生活故事",
+                "多语言专业讲解，精通中英双语，深度解读自然景观与人文历史",
+                "随时根据天气、体力与兴趣优化体验"
+            ],
+            "packagesTitle": "多种接待方案",
+            "packages": [
+                {
+                    "id": 1,
+                    "title": "个人精致陪行",
+                    "description": "适合1-2人，专注于深度体验与个性化路线，如私人摄影点、小众咖啡馆与秘境徒步",
+                    "currency": "¥",
+                    "price": "68",
+                    "amount": "/ 人",
+                    "info": "",
+                    "img": "@/assets/img/footer1.jpg"
+                },
+                {
+                    "id": 2,
+                    "title": "家庭及好友专属陪游",
+                    "description": "适合3-6人小团体，兼顾不同年龄与兴趣需求，灵活安排活动节奏，包含互动体验与休憩点设计",
+                    "currency": "¥",
+                    "price": "128",
+                    "amount": "/ 人",
+                    "info": "",
+                    "img": "@/assets/img/footer2.jpg"
+                },
+                {
+                    "id": 3,
+                    "title": "商务接待与团体陪览",
+                    "description": "适合企业或多人团队，注重行程效率与专业性，提供多语言陪同、商务礼仪支持与团体动线规划",
+                    "currency": "¥",
+                    "price": "288",
+                    "amount": "/ 人",
+                    "info": "",
+                    "img": "@/assets/img/footer3.jpg"
+                }
+            ],
+            "advantagesTitle": "选择TTO地接地陪服务的理由",
+            "advantages": [
+                {
+                    "id": 1,
+                    "title": "像本地人一样旅行",
+                    "description": "TTO不会带您走常规攻略里“大量消耗体力花费时间”的路线",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 2,
+                    "title": "行程自由而轻松",
+                    "description": "您可随时提出“今天不想去这里了”“想多停留一会儿”，行程不赶场，节奏由您掌控",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 3,
+                    "title": "商务伙伴式陪同",
+                    "description": "我们协助安排商务会面动线，推荐得体餐饮场所，让您的商务行程高效又从容",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 4,
+                    "title": "不止于陪同，更负责安心",
+                    "description": "我们从接送到送回，处理交通、沟通与应急状况，您只需沉浸于旅程之中",
+                    "url": "@/assets/img/carService/carType.png"
+                }
+            ],
+            "contactTitle": "订购地接地陪服务",
+            "contactIntro": "如需了解详情或预约地接地陪服务，请联系我们的专属顾问"
+        }
+    },
+    {
+        "id": 7,
+        "tagName": "热门项目",
+        "hasSubNav": false,
+        "available": true,
+        "isTrip": false,
+        "path": "service/ticket",
+        "serviceConfig": {
+            "heroImg": "@/assets/img/footer1.jpg",
+            "heroTitle": "让等待不再是旅行难题，高效管理时间",
+            "heroDesc": "在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为您省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把您的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。",
+            "features": [
+                "酒店免等入住",
+                "餐厅预留就座",
+                "行程无缝对接",
+                "全程无忧代办"
+            ],
+            "packagesTitle": "旅行无忧代办计划",
+            "packages": [
+                {
+                    "id": 1,
+                    "title": "无忧畅行通行证",
+                    "description": "代订各大景点门票,省去排队购票烦恼，让您专心游玩。",
+                    "currency": "¥",
+                    "price": "99",
+                    "amount": "/ 人",
+                    "info": "（包含门票）",
+                    "img": "@/assets/img/footer1.jpg"
+                },
+                {
+                    "id": 2,
+                    "title": "臻享体验规划",
+                    "description": "(包含无忧畅行通行证)提前预订热门餐厅座位，预约特色活动，让您的旅行不仅顺畅，而且还能收获独特体验！",
+                    "currency": "¥",
+                    "price": "199",
+                    "amount": "",
+                    "info": "",
+                    "img": "@/assets/img/footer2.jpg"
+                }
+            ],
+            "advantagesTitle": "TTO能做到的，不止这些",
+            "advantages": [
+                {
+                    "id": 1,
+                    "title": "无忧畅行通行证，帮您即到即入",
+                    "description": "无需担忧购票问题，支付问题不是事",
+                    "url": "@/assets/img/carService/carType.png"
+                },
+                {
+                    "id": 2,
+                    "title": "臻享体验规划，让您坐下即享",
+                    "description": "没有饥肠辘辘等待美食的烦恼，没有等待清理酒店房间的疲惫，即到即享",
+                    "url": "@/assets/img/carService/carType.png"
+                }
+            ],
+            "contactTitle": "订购代订门票及旅游项目服务",
+            "contactIntro": "如需了解详情或预约代订门票及旅游项目，请联系我们的专属顾问"
+        }
+    },
+    {
         "id": 8,
         "tagName": "私人定制",
         "available": true,
@@ -2618,6 +2669,81 @@
                     "title": "持续优化直到出发",
                     "description": "在出行前，您可随时调整方案，我们始终耐心配合，只为呈现最完美的塔斯马尼亚之旅",
                     "url": "@/assets/img/carService/carType.png"
+                }
+            ],
+            "showcaseTitle": "没想好？直接咨询定制一日游！",
+            "showcaseData": [
+                {
+                    "id": 1,
+                    "title": "家庭亲子定制游",
+                    "description": "专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。",
+                    "image": "https://picsum.photos/seed/family/400/300",
+                    "features": [
+                        "儿童活动",
+                        "安全第一",
+                        "教育体验"
+                    ],
+                    "tag": "亲子游"
+                },
+                {
+                    "id": 2,
+                    "title": "情侣浪漫定制游",
+                    "description": "为情侣量身定制的浪漫之旅，包含私密观景点和特色餐饮体验。",
+                    "image": "https://picsum.photos/seed/couple/400/300",
+                    "features": [
+                        "私密景点",
+                        "浪漫餐饮",
+                        "专业摄影"
+                    ],
+                    "tag": "浪漫体验"
+                },
+                {
+                    "id": 3,
+                    "title": "朋友结伴定制游",
+                    "description": "专为朋友团体设计的行程，包含适合多人参与的互动活动和精彩体验。",
+                    "image": "https://picsum.photos/seed/friends/400/300",
+                    "features": [
+                        "团体活动",
+                        "灵活行程",
+                        "精彩体验"
+                    ],
+                    "tag": "团体游"
+                },
+                {
+                    "id": 4,
+                    "title": "摄影爱好者定制",
+                    "description": "专为摄影爱好者设计的行程，包含最佳摄影点和黄金拍摄时段。",
+                    "image": "https://picsum.photos/seed/photography/400/300",
+                    "features": [
+                        "黄金时段",
+                        "隐秘景点",
+                        "专业指导"
+                    ],
+                    "tag": "摄影之旅"
+                },
+                {
+                    "id": 5,
+                    "title": "商务考察定制",
+                    "description": "专为商务团队设计的考察行程，包含专业导览和商务接待服务。",
+                    "image": "https://picsum.photos/seed/business/400/300",
+                    "features": [
+                        "专业导览",
+                        "商务设施",
+                        "高效安排"
+                    ],
+                    "tag": "商务游"
+                },
+                {
+                    "id": 6,
+                    "title": "特殊需求定制",
+                    "description": "专为有特殊需求的游客设计的行程，包含无障碍设施和特殊饮食安排。",
+                    "image": "https://picsum.photos/seed/special/400/300",
+                    "features": [
+                        "无障碍设施",
+                        "特殊饮食",
+                        "贴心服务"
+                    ],
+                    "tag": "个性化服务"
                 }
             ],
             "contactTitle": "订购私人定制",

@@ -1,7 +1,10 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import ContactDialog from '@/components/ContactDialog.vue'
 import dataJson from '@/data/data.json'
+// 从data.json中获取私人定制服务的数据
+const privateCustomService = dataJson.find(item => item.id === 8 && item.tagName === '私人定制')
+const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
 
 // 接收配置（保持向后兼容）
 const props = defineProps({
@@ -66,6 +69,221 @@ const openConsultationDialog = () => {
     consultationDialogVisible.value = true
 }
 
+// 新展示列表数据和逻辑
+const showcaseItems = ref([])
+const scrollContainerRef = ref(null)
+const autoScrollTimer = ref(null)
+const isAutoScrolling = ref(true)
+const isUserInteracting = ref(false)
+const isDragging = ref(false)
+const startX = ref(0)
+const scrollLeft = ref(0)
+// 滚动按钮状态
+const canScrollLeft = ref(false)
+const canScrollRight = ref(false)
+
+// 使用从data.json获取的数据，如果没有则使用默认的mock数据
+const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson : [
+    {
+        id: 1,
+        title: '家庭亲子定制游',
+        description: '专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。',
+        image: 'https://picsum.photos/seed/family/400/300',
+        features: ['儿童活动', '安全第一', '教育体验'],
+        tag: '亲子游'
+    },
+    {
+        id: 2,
+        title: '情侣浪漫定制游',
+        description: '为情侣量身定制的浪漫之旅，包含私密观景点和特色餐饮体验。',
+        image: 'https://picsum.photos/seed/couple/400/300',
+        features: ['私密景点', '浪漫餐饮', '专业摄影'],
+        tag: '浪漫体验'
+    },
+    {
+        id: 3,
+        title: '朋友结伴定制游',
+        description: '专为朋友团体设计的行程，包含适合多人参与的互动活动和精彩体验。',
+        image: 'https://picsum.photos/seed/friends/400/300',
+        features: ['团体活动', '灵活行程', '精彩体验'],
+        tag: '团体游'
+    },
+    {
+        id: 4,
+        title: '摄影爱好者定制',
+        description: '专为摄影爱好者设计的行程，包含最佳摄影点和黄金拍摄时段。',
+        image: 'https://picsum.photos/seed/photography/400/300',
+        features: ['黄金时段', '隐秘景点', '专业指导'],
+        tag: '摄影之旅'
+    },
+    {
+        id: 5,
+        title: '商务考察定制',
+        description: '专为商务团队设计的考察行程，包含专业导览和商务接待服务。',
+        image: 'https://picsum.photos/seed/business/400/300',
+        features: ['专业导览', '商务设施', '高效安排'],
+        tag: '商务游'
+    },
+    {
+        id: 6,
+        title: '特殊需求定制',
+        description: '专为有特殊需求的游客设计的行程，包含无障碍设施和特殊饮食安排。',
+        image: 'https://picsum.photos/seed/special/400/300',
+        features: ['无障碍设施', '特殊饮食', '贴心服务'],
+        tag: '个性化服务'
+    }
+]
+
+// 初始化展示列表数据
+const initShowcaseData = () => {
+    // 优先使用currentConfig中的showcaseData，如果存在且有内容
+    const dataToUse = currentConfig?.showcaseData && currentConfig.showcaseData.length > 0
+        ? currentConfig.showcaseData
+        : mockShowcaseData;
+
+    showcaseItems.value = dataToUse.map(item => ({
+        ...item,
+        imageUrl: getImageUrl(item.image)
+    }))
+}
+
+// 自动滚动函数
+const autoScroll = () => {
+    if (!scrollContainerRef.value || !isAutoScrolling.value || isUserInteracting.value) return
+
+    const container = scrollContainerRef.value
+    const scrollAmount = 2 // 每次滚动像素
+    const maxScrollLeft = container.scrollWidth - container.clientWidth
+
+    // 计算滚动位置，确保不会滚动超过容器边界
+    if (container.scrollLeft + scrollAmount <= maxScrollLeft) {
+        container.scrollLeft += scrollAmount
+    } else {
+        // 滚动到最后一个项目时停止自动滚动
+        stopAutoScroll()
+    }
+}
+
+// 开始自动滚动
+const startAutoScroll = () => {
+    if (autoScrollTimer.value) {
+        clearInterval(autoScrollTimer.value)
+    }
+
+    autoScrollTimer.value = setInterval(autoScroll, 30)
+}
+
+// 停止自动滚动
+const stopAutoScroll = () => {
+    if (autoScrollTimer.value) {
+        clearInterval(autoScrollTimer.value)
+        autoScrollTimer.value = null
+    }
+}
+
+// 处理用户交互
+const handleUserInteraction = (isInteracting) => {
+    isUserInteracting.value = isInteracting
+
+    if (isInteracting) {
+        stopAutoScroll()
+    } else {
+        // 延迟1秒后恢复自动滚动
+        setTimeout(() => {
+            if (!isUserInteracting.value && isAutoScrolling.value) {
+                startAutoScroll()
+            }
+        }, 1000)
+    }
+}
+
+// 左右滚动按钮方法
+const scrollLeftClick = () => {
+    if (scrollContainerRef.value && canScrollLeft.value) {
+        const scrollAmount = 340 // 滚动一个卡片的宽度加上间距
+        const container = scrollContainerRef.value
+
+        // 平滑滚动，不超过容器边界
+        const newScrollLeft = Math.max(0, container.scrollLeft - scrollAmount)
+        container.scrollTo({
+            left: newScrollLeft,
+            behavior: 'smooth'
+        })
+
+        updateScrollButtonsState()
+        handleUserInteraction(true)
+    }
+}
+
+const scrollRightClick = () => {
+    if (scrollContainerRef.value && canScrollRight.value) {
+        const scrollAmount = 340 // 滚动一个卡片的宽度加上间距
+        const container = scrollContainerRef.value
+        const maxScrollLeft = container.scrollWidth - container.clientWidth
+
+        // 平滑滚动，不超过容器边界
+        const newScrollLeft = Math.min(maxScrollLeft, container.scrollLeft + scrollAmount)
+        container.scrollTo({
+            left: newScrollLeft,
+            behavior: 'smooth'
+        })
+
+        updateScrollButtonsState()
+        handleUserInteraction(true)
+    }
+}
+
+// 更新滚动按钮状态
+const updateScrollButtonsState = () => {
+    if (!scrollContainerRef.value) return
+
+    const container = scrollContainerRef.value
+    const maxScrollLeft = container.scrollWidth - container.clientWidth
+
+    // 当滚动到最左侧时，禁用左滚动按钮
+    canScrollLeft.value = container.scrollLeft > 5 // 添加小的容差
+
+    // 当滚动到最右侧时，禁用右滚动按钮
+    canScrollRight.value = container.scrollLeft < maxScrollLeft - 5 // 添加小的容差
+}
+
+// 开始拖拽
+const startDrag = (e) => {
+    if (!scrollContainerRef.value) return
+
+    isDragging.value = true
+    handleUserInteraction(true)
+
+    // 获取初始触摸/鼠标位置和当前滚动位置
+    startX.value = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX
+    scrollLeft.value = scrollContainerRef.value.scrollLeft
+}
+
+// 拖拽中
+const drag = (e) => {
+    if (!isDragging.value || !scrollContainerRef.value) return
+    e.preventDefault()
+
+    // 计算移动距离
+    const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX
+    const walk = (x - startX.value) * 1.5 // 滚动速度倍数
+
+    // 应用滚动
+    scrollContainerRef.value.scrollLeft = scrollLeft.value - walk
+}
+
+// 结束拖拽
+const endDrag = () => {
+    isDragging.value = false
+    updateScrollButtonsState()
+    handleUserInteraction(false)
+}
+
+// 监听滚动事件更新按钮状态
+const onScroll = () => {
+    updateScrollButtonsState()
+}
+
 // 计算属性：优先使用从data.json获取的数据，否则使用传入的config
 const currentConfig = computed(() => {
     if (serviceData.value) {
@@ -101,6 +319,33 @@ onMounted(() => {
     } else if (props.config?.serviceName) {
         // 如果有传入的config，尝试根据serviceName获取对应数据
         loadServiceData(props.config.serviceName)
+    }
+
+    // 初始化展示数据
+    initShowcaseData()
+
+    // 延迟启动自动滚动，确保DOM已经渲染
+    setTimeout(() => {
+        if (isAutoScrolling.value) {
+            startAutoScroll()
+        }
+        // 添加滚动事件监听器
+        if (scrollContainerRef.value) {
+            scrollContainerRef.value.addEventListener('scroll', onScroll)
+            // 初始化滚动按钮状态
+            setTimeout(() => {
+                updateScrollButtonsState()
+            }, 100)
+        }
+    }, 1000)
+})
+
+// 组件卸载时清理定时器
+onUnmounted(() => {
+    stopAutoScroll()
+    // 移除滚动事件监听器
+    if (scrollContainerRef.value) {
+        scrollContainerRef.value.removeEventListener('scroll', onScroll)
     }
 })
 
@@ -168,6 +413,49 @@ watch(() => props.serviceName, (newServiceName) => {
                     </div>
 
                 </div>
+
+                <!-- 横向自动播放展示列表 -->
+                <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
+                    class="showcase-section w100">
+                    <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
+                    }}</h3>
+
+                    <!-- 左侧滚动按钮 -->
+                    <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M15 6l-6 6 6 6" />
+                        </svg>
+                    </button>
+
+                    <!-- 滚动容器 -->
+                    <div ref="scrollContainerRef" class="showcase-scroll-container"
+                        @mouseenter="handleUserInteraction(true)" @mousedown="startDrag" @mousemove="drag"
+                        @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="drag"
+                        @touchend="endDrag" @touchcancel="endDrag" @selectstart.prevent @dragstart.prevent>
+                        <div class="showcase-items-wrapper">
+                            <div v-for="item in showcaseItems" :key="item.id" class="showcase-item">
+                                <div class="showcase-card">
+                                    <div class="showcase-image">
+                                        <img :src="item.imageUrl" :alt="item.title" class="showcase-img">
+                                        <div class="showcase-tag">{{ item.tag }}</div>
+                                    </div>
+                                    <div class="showcase-content">
+                                        <h4 class="showcase-item-title">{{ item.title }}</h4>
+                                        <p class="showcase-description">{{ item.description }}</p>
+                                        <button class="consult-btn" @click="openConsultationDialog">立即咨询</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧滚动按钮 -->
+                    <button class="scroll-btn scroll-btn-right" @click="scrollRightClick" :disabled="!canScrollRight">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 6l6 6-6 6" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -230,10 +518,6 @@ watch(() => props.serviceName, (newServiceName) => {
         margin: 0 0 16px 0;
     }
 
-    .hero-section {
-        margin-bottom: 80px;
-    }
-
     .hero-content {
         display: flex;
         gap: 40px;
@@ -250,6 +534,7 @@ watch(() => props.serviceName, (newServiceName) => {
         // background-color: #39c5bb;
         /* 直接给容器上色，确保可见 */
         overflow: hidden;
+        margin-bottom: 40px;
     }
 
     .image-placeholder {
@@ -576,6 +861,209 @@ watch(() => props.serviceName, (newServiceName) => {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
     }
 
+    /* 展示列表样式 */
+    .showcase-section {
+        margin-bottom: 80px;
+    }
+
+    .showcase-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 30px;
+        // text-align: center;
+    }
+
+    .showcase-scroll-container {
+        position: relative;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px 0;
+        cursor: grab;
+    }
+
+    .showcase-scroll-container:active {
+        cursor: grabbing;
+    }
+
+    /* 隐藏底部滚动条 */
+    .showcase-scroll-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 左右滚动按钮容器 */
+    .showcase-section {
+        position: relative;
+    }
+
+    /* 滚动按钮样式 */
+    .scroll-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #e0e0e0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .scroll-btn:hover {
+        background: #fff;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .scroll-btn-left {
+        left: -20px;
+    }
+
+    .scroll-btn-right {
+        right: -20px;
+    }
+
+    .scroll-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: #3b82f6;
+    }
+
+    .scroll-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: translateY(-50%) scale(1);
+    }
+
+    .showcase-items-wrapper {
+        display: flex;
+        gap: 24px;
+        min-width: max-content;
+        padding: 0 10px;
+    }
+
+    .showcase-item {
+        flex-shrink: 0;
+        width: 320px;
+        transition: transform 0.3s ease;
+    }
+
+    .showcase-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .showcase-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .showcase-card:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .showcase-image {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .showcase-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .showcase-card:hover .showcase-img {
+        transform: scale(1.05);
+    }
+
+    .showcase-tag {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: #3b82f6;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .showcase-content {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .showcase-item-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        margin: 0 0 12px 0;
+        line-height: 1.4;
+    }
+
+    .showcase-description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        // margin: 0 0 16px 0;
+        flex: 1;
+    }
+
+    .showcase-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .feature-badge {
+        background: #eff6ff;
+        color: #3b82f6;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .consult-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 16px;
+        margin-bottom: 0;
+        // align-self: flex-start;
+    }
+
+    .consult-btn:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
 }
 
 @media (max-width: 1024px) {
@@ -587,6 +1075,32 @@ watch(() => props.serviceName, (newServiceName) => {
         .feature-dot {
             margin-right: 12px;
         }
+
+        .showcase-item {
+            width: 280px;
+        }
+
+        .showcase-title {
+            font-size: 28px;
+        }
+    }
+
+    .scroll-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .scroll-btn-left {
+        left: -18px;
+    }
+
+    .scroll-btn-right {
+        right: -18px;
+    }
+
+    .scroll-btn svg {
+        width: 18px;
+        height: 18px;
     }
 }
 
@@ -600,6 +1114,14 @@ watch(() => props.serviceName, (newServiceName) => {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+        .showcase-section {
+            // margin-bottom: 40px;
+        }
+
+        .showcase-items-wrapper {
+            gap: 16px;
         }
     }
 
@@ -633,11 +1155,61 @@ watch(() => props.serviceName, (newServiceName) => {
                 }
             }
         }
+
+        .showcase-section {
+            // margin-bottom: 30px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .showcase-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .showcase-item {
+            width: 260px;
+        }
+
+        .showcase-card {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .showcase-content {
+            padding: 16px;
+        }
+
+        .showcase-item-title {
+            font-size: 18px;
+        }
+
+        .showcase-description {
+            font-size: 13px;
+        }
+    }
+
+    // 移动设备上的滚动按钮样式
+    .scroll-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .scroll-btn-left {
+        left: 0;
+    }
+
+    .scroll-btn-right {
+        right: 0;
+    }
+
+    .scroll-btn svg {
+        width: 16px;
+        height: 16px;
     }
 
     .service-showcase .features-list {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(1, 1fr);
     }
 
     .service-showcase .hero-content {
@@ -673,6 +1245,22 @@ watch(() => props.serviceName, (newServiceName) => {
         padding: 15px 10px;
         margin-top: 20px;
 
+        .showcase-item {
+            width: 240px;
+        }
+
+        .showcase-image {
+            height: 160px;
+        }
+
+        .showcase-features {
+            gap: 6px;
+        }
+
+        .feature-badge {
+            font-size: 11px;
+            padding: 3px 10px;
+        }
     }
 
     // .service-showcase .hero-image {
