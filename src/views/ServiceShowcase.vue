@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
+// Element Plus已在main.js中全局注册
+import { ElIcon } from 'element-plus'
+import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
 import ContactDialog from '@/components/ContactDialog.vue'
 import dataJson from '@/data/data.json'
 // 从data.json中获取私人定制服务的数据
@@ -10,6 +13,25 @@ const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData |
 const props = defineProps({
     config: { type: Object, default: null },
     serviceName: { type: String, default: '代订门票及旅游项目' }
+})
+
+// 响应式检测屏幕宽度，用于移动端适配
+const screenWidth = ref(window.innerWidth)
+// const isMobile = computed(() => screenWidth.value <= 768) 
+const isMobile = computed(() => screenWidth.value <= 820)
+const isTablet = computed(() => screenWidth.value <= 1024)
+
+// 监听窗口大小变化
+const handleResize = () => {
+    screenWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
 })
 
 // 声明变量存储服务数据
@@ -34,34 +56,55 @@ const getServiceByName = (serviceName) => {
     return services.find(service => service.tagName === serviceName)
 }
 
-// 处理图片URL的函数
-const getImageUrl = (imagePath) => {
-    if (!imagePath) return ''
+// 注释掉之前的动态导入函数，使用require方式替代
 
-    // 如果已经是完整的URL，直接返回
-    if (imagePath.startsWith('http') || imagePath.startsWith('data:')) {
-        return imagePath
+
+// 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
+// 导入所有需要的图片，使用@别名
+import car1FrontRight from '@/assets/img/carService/car1_front_right.jpg';
+import car1Right from '@/assets/img/carService/car1_right.jpg';
+import car1Inside from '@/assets/img/carService/car1_inside.jpg';
+import car1InsideTop from '@/assets/img/carService/car1_inside_top.jpg';
+import car1InsideBack from '@/assets/img/carService/car1_inside_back.jpg';
+import car1BackWithSpace from '@/assets/img/carService/car1_back_with_space.jpg';
+import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space.jpg';
+import car2CarType from '@/assets/img/carService/car2_carType.png';
+import carType from '@/assets/img/carService/carType.png';
+import defaultCarType from '@/assets/img/carService/carType.png';
+
+// 创建图片映射表
+const carImagesMap = {
+    'car1_front_right.jpg': car1FrontRight,
+    'car1_right.jpg': car1Right,
+    'car1_inside.jpg': car1Inside,
+    'car1_inside_top.jpg': car1InsideTop,
+    'car1_inside_back.jpg': car1InsideBack,
+    'car1_back_with_space.jpg': car1BackWithSpace,
+    'car1_back_with_no_space.jpg': car1BackWithNoSpace,
+    'car2_carType.png': car2CarType,
+    'carType.png': defaultCarType
+};
+
+const getImageUrl = (imagePath, advantage = null) => {
+    // 基础验证
+    if (!imagePath || typeof imagePath !== 'string') {
+        return defaultCarType;
     }
 
-    // 如果是@/assets路径，使用import.meta.url处理
-    if (imagePath.startsWith('@/assets/')) {
-        try {
-            // 直接使用new URL处理@/assets路径
-            return new URL(imagePath.replace('@/', '../'), import.meta.url).href
-        } catch (error) {
-            console.warn('图片路径处理失败:', imagePath, error)
-            // 如果失败，尝试使用默认图片
-            return getDefaultImage()
-        }
+    // 完整URL直接返回
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return imagePath;
     }
 
-    // 其他情况直接返回
-    return imagePath
+    // 从映射表中获取图片，如果不存在则返回默认图片
+    const image = carImagesMap[imagePath];
+    return image || defaultCarType;
 }
 
-// 获取默认图片
+
+// 获取默认图片 - 直接返回导入的默认图片
 const getDefaultImage = () => {
-    return new URL('@/assets/img/footer1.jpg', import.meta.url).href
+    return defaultCarType;
 }
 
 const consultationDialogVisible = ref(false)
@@ -86,7 +129,7 @@ const canScrollRight = ref(false)
 const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson : [
     {
         id: 1,
-        title: '家庭亲子定制游',
+        title: '测试数据',
         description: '专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。',
         image: 'https://picsum.photos/seed/family/400/300',
         features: ['儿童活动', '安全第一', '教育体验'],
@@ -361,30 +404,6 @@ watch(() => props.serviceName, (newServiceName) => {
     <div class="service-showcase">
         <!-- 顶部服务标题（左上角） -->
         <!-- <h1 class="service-title fowe7" v-if="titleText">{{ titleText }}</h1> -->
-        <!-- 服务优势区域 -->
-        <div class="advantages-section" v-if="currentConfig?.advantages">
-            <h2 class="section-title center">{{ currentConfig.advantagesTitle }}</h2>
-            <div class="advantages-flex">
-                <div class="advantage-item" v-for="a in currentConfig.advantages" :key="a.id">
-                    <div class="advantage-detail">
-                        <div class="advantage-icon">
-                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
-                            <img v-else src="@/assets/img/carService/carType.png" alt="默认图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.title }}</h3>
-                        <p class="advantage-description">{{ a.description }}</p>
-                    </div>
-                    <!-- <div class="advantage-condition" v-if="a.conTitle">
-                        <div class="advantage-icon">
-                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
-                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
-                        <p class="advantage-description">{{ a.conDes }}</p>
-                    </div> -->
-                </div>
-            </div>
-        </div>
         <!-- 主要服务介绍区域 -->
         <div class="hero-section">
             <div class="hero-content">
@@ -398,15 +417,6 @@ watch(() => props.serviceName, (newServiceName) => {
                             {{ f }}
                         </li>
                     </ul>
-
-                    <!-- 服务提示信息 -->
-                    <div class="service-tips" v-if="currentConfig?.tips">
-                        <div class="tips-icon">⚠️</div>
-                        <div class="tips-content">
-                            <h4 class="tips-title">重要提示</h4>
-                            <p class="tips-text" v-html="currentConfig.tips"></p>
-                        </div>
-                    </div>
                 </div>
                 <div class="hero-image w100">
                     <div class="image-placeholder center fff fowe7" v-for="text in currentConfig?.imgText">{{ text }}
@@ -418,7 +428,7 @@ watch(() => props.serviceName, (newServiceName) => {
                 <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
                     class="showcase-section w100">
                     <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
-                    }}</h3>
+                        }}</h3>
 
                     <!-- 左侧滚动按钮 -->
                     <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -482,8 +492,94 @@ watch(() => props.serviceName, (newServiceName) => {
             </div>
         </div> -->
 
-        <!-- 原服务区域优势 -->
+        <!-- 服务优势区域 - 轮播图展示 -->
+        <div class="advantages-section">
+            <h2 class="section-title center">{{ currentConfig?.advantagesTitle }}</h2>
 
+            <template v-if="currentConfig?.packagesTitle === '包车服务'">
+                <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
+                    <el-card :class="advantage.carClass || 'car1'">
+                        <template #header>{{ advantage.title }}</template>
+                        <div class="carousel-container w100">
+                            <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000"
+                                type="card" indicator-position="outside"
+                                :direction="isMobile ? 'vertical' : 'horizontal'">
+                                <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
+                                    <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
+                                        class="carousel-img w100 h100 pointer"
+                                        :fit="isTablet ? 'scale-down' : 'contain'"
+                                        :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
+                                        :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
+                                        :initial-index="index" fit="cover" show-close show-toolbar show-index
+                                        :preview-teleported="true" :z-index="9888">
+                                        <!-- 在保留原有工具栏功能的基础上添加左右切换按钮 -->
+                                        <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
+                                            <!-- 新增左右切换按钮 -->
+                                            <ElIcon @click="prev">
+                                                <Back />
+                                            </ElIcon>
+                                            <ElIcon @click="next">
+                                                <Right />
+                                            </ElIcon>
+
+                                            <!-- 保留原始工具栏功能 -->
+                                            <ElIcon @click="actions('zoomOut')">
+                                                <ZoomOut />
+                                            </ElIcon>
+                                            <ElIcon @click="actions('zoomIn')">
+                                                <ZoomIn />
+                                            </ElIcon>
+                                            <!-- 修改旋转按钮的实现方式 -->
+                                            <el-icon @click="
+                                                actions('clockwise')
+                                                ">
+                                                <RefreshRight />
+                                            </el-icon>
+                                            <el-icon @click="actions('anticlockwise')">
+                                                <RefreshLeft />
+                                            </el-icon>
+                                            <!-- <ElIcon @click="reset">
+                                                <Refresh />
+                                            </ElIcon> -->
+                                        </template>
+                                    </el-image>
+                                </el-carousel-item>
+                            </el-carousel>
+                        </div>
+                    </el-card>
+                </template>
+            </template>
+
+            <div v-else class="advantages-flex">
+                <div class="advantage-item" v-for="a in (currentConfig?.advantages || [])" :key="a?.id">
+                    <div class="advantage-detail">
+                        <div class="advantage-icon">
+                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
+                            <img v-else :src="defaultCarType" alt="默认图标" class="advantage-img">
+                        </div>
+                        <h3 class="advantage-title">{{ a.title }}</h3>
+                        <p class="advantage-description">{{ a.description }}</p>
+                    </div>
+                    <!-- <div class="advantage-condition" v-if="a.conTitle">
+                        <div class="advantage-icon">
+                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
+                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
+                        </div>
+                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
+                        <p class="advantage-description">{{ a.conDes }}</p>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 服务提示信息 -->
+        <div class="service-tips" v-if="currentConfig?.tips">
+            <div class="tips-icon">⚠️</div>
+            <div class="tips-content">
+                <h4 class="tips-title">重要提示</h4>
+                <p class="tips-text" v-html="currentConfig.tips"></p>
+            </div>
+        </div>
 
         <!-- 联系方式区域 -->
         <div class="contact-section" v-if="currentConfig?.contactTitle">
@@ -502,7 +598,21 @@ watch(() => props.serviceName, (newServiceName) => {
         <ContactDialog v-model:visible="consultationDialogVisible" />
     </div>
 </template>
-
+<style lang="scss">
+.el-carousel__indicators--outside {
+    position: sticky;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+}
+</style>
 <style lang="scss" scoped>
 .service-showcase {
     width: 90%;
@@ -617,7 +727,7 @@ watch(() => props.serviceName, (newServiceName) => {
         border: 2px solid #ffc107;
         border-radius: 12px;
         padding: 20px;
-        margin-top: 25px;
+        margin-bottom: 40px;
         display: flex;
         align-items: flex-start;
         gap: 15px;
@@ -762,7 +872,35 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .advantages-section {
-        margin-bottom: 80px;
+        margin-bottom: 40px;
+
+        .car2 {
+            margin-top: 60px;
+        }
+
+        .carousel-container {
+            // width: 100%;
+            // max-width: 800px;
+            margin: 0 auto;
+
+            /* 增强预览体验的样式 */
+            :deep(.el-image__inner) {
+                transition: transform 0.3s ease;
+            }
+
+            :deep(.el-image:hover .el-image__inner) {
+                transform: scale(1.05);
+            }
+        }
+
+        .carousel-img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            margin: 0 auto;
+        }
+
     }
 
     .advantages-flex {

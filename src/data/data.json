@@ -1593,39 +1593,27 @@
             "advantages": [
                 {
                     "id": 1,
-                    "title": "轿车A",
-                    "description": "XX-XX人座",
-                    "url": "@/assets/img/carService/carType.png",
-                    "conTitle": "纯粹体验",
-                    "conDes": "灵活穿梭于塔斯马尼亚海岸线与小镇之间。可随时停靠拍照、调整路线，私密空间内放松休整",
-                    "conUrl": "@/assets/img/carService/condition.png"
+                    "carClass": "car1",
+                    "title": "TOYOTA Granvia（丰田格兰维亚）八座People Mover",
+                    "urls": [
+                        "car1_front_right.jpg",
+                        "car1_right.jpg",
+                        "car1_inside.jpg",
+                        "car1_inside_top.jpg",
+                        "car1_inside_back.jpg",
+                        "car1_back_with_space.jpg",
+                        "car1_back_with_no_space.jpg"
+                    ]
                 },
                 {
                     "id": 2,
-                    "title": "商务车B",
-                    "description": "XX-XX人座，电动车门，真皮车座。",
-                    "url": "@/assets/img/carService/carType.png",
-                    "conTitle": "商务接待",
-                    "conDes": "小团出行的实惠选择",
-                    "conUrl": "@/assets/img/carService/condition.png"
-                },
-                {
-                    "id": 3,
-                    "title": "大巴车C",
-                    "description": "XX座",
-                    "url": "@/assets/img/carService/carType.png",
-                    "conTitle": "大团出行",
-                    "conDes": "更大的空间，能够容纳更多游者；确保团队成员的安全与舒适",
-                    "conUrl": "@/assets/img/carService/condition.png"
-                },
-                {
-                    "id": 4,
-                    "title": "劳斯莱斯",
-                    "description": "尊贵VIP会员，享受更多特权服务。",
-                    "url": "@/assets/img/carService/carType.png",
-                    "conTitle": "至臻享受",
-                    "conDes": "最豪华、舒适的选择，无论是前往景点的途中，还是在景点的尽头，都能给您最满意的安排",
-                    "conUrl": "@/assets/img/carService/condition.png"
+                    "carClass": "car2",
+                    "title": "Car 2 劳斯莱斯",
+                    "urls": [
+                        "car2_carType.png",
+                        "car2_carType.png",
+                        "car2_carType.png"
+                    ]
                 }
             ],
             "contactTitle": "订购包车服务",
@@ -2502,7 +2490,7 @@
                     "id": 1,
                     "title": "像本地人一样旅行",
                     "description": "TTO不会带您走常规攻略里“大量消耗体力花费时间”的路线",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "@/assets/img/footer4.jpg"
                 },
                 {
                     "id": 2,
