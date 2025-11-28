@@ -509,9 +509,9 @@ onMounted(() => {
 
                 // 第一个方块 - 关于我们
                 &:first-child {
-                    .logo-section {
-                        // margin-bottom: 20px;
-                    }
+                    // .logo-section {
+                    //     // margin-bottom: 20px;
+                    // }
 
                     .about-text {
                         flex: 1;

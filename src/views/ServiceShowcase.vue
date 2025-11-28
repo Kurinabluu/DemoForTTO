@@ -428,7 +428,7 @@ watch(() => props.serviceName, (newServiceName) => {
                 <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
                     class="showcase-section w100">
                     <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
-                        }}</h3>
+                    }}</h3>
 
                     <!-- 左侧滚动按钮 -->
                     <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -1254,9 +1254,9 @@ watch(() => props.serviceName, (newServiceName) => {
             }
         }
 
-        .showcase-section {
-            // margin-bottom: 40px;
-        }
+        // .showcase-section {
+        //     // margin-bottom: 40px;
+        // }
 
         .showcase-items-wrapper {
             gap: 16px;

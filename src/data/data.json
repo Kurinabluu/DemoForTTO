@@ -15,7 +15,7 @@
                 "items": [
                     {
                         "title": "圣克莱尔湖国家公园",
-                        "img": "@/assets/img/LakeStClairNationalPark.jpg",
+                        "img": "@/assets/img/places/LakeStClairNationalPark.jpg",
                         "enTitle": "Cradle Mountain-Lake St Clair National Park",
                         "tripData": {
                             "route": "塔斯马尼亚州北部中央高地",
@@ -1594,7 +1594,7 @@
                 {
                     "id": 1,
                     "carClass": "car1",
-                    "title": "TOYOTA Granvia（丰田格兰维亚）八座People Mover",
+                    "title": "TOYOTA Granvia（丰田格兰维亚）八座People Mover（可乘坐七位乘客）",
                     "urls": [
                         "car1_front_right.jpg",
                         "car1_right.jpg",
@@ -1608,7 +1608,7 @@
                 {
                     "id": 2,
                     "carClass": "car2",
-                    "title": "Car 2 劳斯莱斯",
+                    "title": "现代I-Max Elite 八座位（可乘坐七位乘客）",
                     "urls": [
                         "car2_carType.png",
                         "car2_carType.png",
