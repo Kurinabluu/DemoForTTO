@@ -160,8 +160,20 @@ onMounted(() => {
     <el-container>
         <el-header class="fs15 bgfff">
             <span class="logo fowe7 no-select pointer">
-                <RouterLink to="/DemoForTTO/trips/freeinfo"><img src="@/assets/img/header_logo.png"
-                        alt="TasTrips.Online" class="logo-img logo-desktop" /></RouterLink>
+                <RouterLink to="/DemoForTTO/trips/freeinfo">
+                    <img src="@/assets/img/header_logo.png" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
+                                 const span=document.createElement('span'); 
+                                 span.innerText='TasTrips.Online'; 
+                                 span.style.display='inline-block'; 
+                                 span.style.height='100%'; 
+                                 span.style.color='#101010'; 
+                                 span.style.fontWeight='700';
+                                 // 根据屏幕宽度设置响应式样式
+                                 const isMobile = window.innerWidth <= 768;
+                                 span.style.lineHeight=isMobile ? '32px' : '48px'; 
+                                 span.style.fontSize=isMobile ? '18px' : '20px'; 
+                                 this.parentNode.appendChild(span);" />
+                </RouterLink>
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
@@ -808,7 +820,7 @@ onMounted(() => {
             align-items: stretch;
             height: auto;
             line-height: 1.4;
-            padding: 8px 12px;
+            padding: 8px 0 12px 8px;
 
             .logo {
                 font-size: 18px;
@@ -824,7 +836,7 @@ onMounted(() => {
                 .ul-css {
                     display: flex;
                     flex-wrap: wrap;
-                    justify-content: space-between;
+                    justify-content: space-evenly;
                     gap: 8px;
                     overflow: visible;
                     white-space: normal;
