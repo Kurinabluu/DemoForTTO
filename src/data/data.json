@@ -14,6 +14,45 @@
                 "isGrid": true,
                 "items": [
                     {
+                        "title": "测试标题",
+                        "img": "@/assets/img/places/LakeStClairNationalPark.jpg",
+                        "enTitle": "Test",
+                        "tripData": {
+                            "route": "Location",
+                            "desc": "描述文本",
+                            "features": [
+                                {
+                                    "icon": "#39c5bb",
+                                    "title": "关键词",
+                                    "desc": "描述"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "关键词",
+                                    "desc": "描述"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "关键词",
+                                    "desc": "描述"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3",
+                                "tag3"
+                            ],
+                            "source": [
+                                {
+                                    "title": "“Cradle Mountain-Lake St Clair National Park”",
+                                    "desc": "Wikipedia,The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Cradle_Mountain-Lake_St_Clair_National_Park&oldid=1318846310"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "title": "圣克莱尔湖国家公园",
                         "img": "@/assets/img/places/LakeStClairNationalPark.jpg",
                         "enTitle": "Cradle Mountain-Lake St Clair National Park",
@@ -34,7 +73,7 @@
                                 {
                                     "icon": "#f59e0b",
                                     "title": "野生动物保护",
-                                    "desc": "机会看袋熊、袋鼠等特有动物"
+                                    "desc": "有机会看袋熊、袋鼠等特有动物"
                                 }
                             ],
                             "tags": [

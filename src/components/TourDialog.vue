@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import dataJson from '@/data/data.json'
+import { InfoFilled } from '@element-plus/icons-vue'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -9,7 +10,8 @@ const props = defineProps({
     enTitle: { type: String, default: 'Tasmania Day Trip' },
     banner: { type: String, default: '' },
     tripType: { type: String, default: '一日游' }, // 添加tripType属性来区分一日游和多日游
-    tripData: { type: Object, default: () => ({}) } // 添加tripData属性来接收完整的行程数据
+    tripData: { type: Object, default: () => ({}) }, // 添加tripData属性来接收完整的行程数据
+
 })
 
 // 处理图片URL的函数
@@ -46,9 +48,14 @@ const dialogVisible = computed({
 })
 
 const contactDialogVisible = ref(false)
+const infoDialogVisible = ref(false)
 
 const openContactDialog = () => {
     contactDialogVisible.value = true
+}
+
+const openInfoDialog = () => {
+    infoDialogVisible.value = true
 }
 
 // 从data.json中获取行程信息
@@ -146,9 +153,12 @@ const routeInfo = computed(() => {
 
         <template #footer>
             <div class="dlg-footer">
-                <div class="info-disclaimer">
-                    <span class="warning-icon">!</span>
-                    所有内容来自公共信息，以官方信息为准
+                <div class="info-disclaimer" @click="openInfoDialog">
+                    <!-- <span class="warning-icon">!</span> -->
+                    <el-icon class="info-icon">
+                        <InfoFilled />
+                    </el-icon>
+                    本页信息来源：{{ routeInfo.source[0].desc }}
                 </div>
                 <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
             </div>
@@ -157,6 +167,23 @@ const routeInfo = computed(() => {
 
     <!-- 联系方式弹窗 -->
     <ContactDialog v-model:visible="contactDialogVisible" />
+
+    <!-- 信息来源弹窗 -->
+    <el-dialog v-model="infoDialogVisible" :z-index="9999" :append-to-body="true" title="测试" align-center>
+        <el-table :data="tripData.source" style="width: 100%">
+            <el-table-column prop="title" label="条目/文章标题" width="180" />
+            <el-table-column prop="desc" label="来源名称" width="180" />
+            <!-- <el-table-column prop="url" label="永久链接" /> -->
+            <el-table-column prop="url" label="永久链接">
+                <template #default="scope">
+                    <el-link :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
+                </template>
+            </el-table-column>
+        </el-table>
+        <template #footer>
+            <el-button type="primary" @click="infoDialogVisible = false">确定</el-button>
+        </template>
+    </el-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -276,6 +303,22 @@ const routeInfo = computed(() => {
     display: flex;
     align-items: center;
     gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    .info-icon {
+        color: #9ca3af;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    &:hover .info-icon {
+        color: #6b7280;
+    }
 }
 
 .warning-icon {
