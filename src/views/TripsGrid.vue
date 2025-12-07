@@ -233,7 +233,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <template v-if="showDayTrip">
         <div class="coming-grid">
             <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`" class="coming-card"
-                @click="onOpenTour(item)">
+                @click="onOpenTour(item)" :data-tour-title="item.title">
                 <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
                 <img src="@/assets/img/default.png" alt="" class="w100">
                 <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -246,8 +246,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <template v-if="(keyword?.trim()) && subTab === '景点'">
         <template v-if="scenicFiltered.length">
             <div class="coming-grid">
-                <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
-                    @click="onOpenTour(item)">
+                <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card" @click="onOpenTour(item)"
+                    :data-tour-title="item.title">
                     <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
                     <img src="@/assets/img/default.png" alt="" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -333,7 +333,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 
     <!-- 底部网格：景点（无关键词） -->
     <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
-        <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
+        <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)"
+            :data-tour-title="item.title">
             <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -400,7 +401,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <template v-if="showMultiDay">
         <div class="coming-grid">
             <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card"
-                @click="onOpenTour(item)">
+                @click="onOpenTour(item)" :data-tour-title="item.title">
                 <img src="@/assets/img/default.png" alt="" class="w100">
                 <div class="card-title" :title="item.title">{{ item.title }}</div>
                 <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
@@ -431,6 +432,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     // padding: 12px;
     cursor: pointer;
     gap: 5px;
+    border: 2px solid transparent;
 
     img {
         object-fit: cover;

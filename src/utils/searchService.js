@@ -116,13 +116,21 @@ const processItemsArray = (items, context = {}) => {
 
     const baseTitle = item.title || item.place || item.name || item.route || item.subNavName
     const summary = summaryFromItem(item)
+
+    // 构建包含元素标识和弹窗类型的URL参数
+    const itemParams = {
+      ...context.queryParams || {},
+      dialogItemId: item.title ? encodeURIComponent(item.title) : undefined,
+      dialogType: 'tour' // 默认弹窗类型
+    }
+
     pushResult({
       title: baseTitle,
       summary,
       sectionTag: context.sectionTag,
       subNavName: context.subNavName,
       groupName: context.groupName,
-      targetUrl: buildTargetUrl(context.basePath, context.queryParams || {}),
+      targetUrl: buildTargetUrl(context.basePath, itemParams),
       source: item
     })
 

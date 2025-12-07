@@ -318,7 +318,7 @@ onMounted(() => {
                                 @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
                                 网站首页 <span>Home</span>
                             </RouterLink> -->
-                            <RouterLink :to="{ path: '/DemoForTTO/service/car' }" @click="scrollToTop()">
+                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo' }" @click="scrollToTop()">
                                 网站首页 <span>Home</span>
                             </RouterLink>
                         </div>

@@ -418,6 +418,43 @@ onMounted(() => {
         window.addEventListener('resize', handleResizeForSlides)
     }
     initializeSubNav()
+
+    // 解析URL参数，定位元素并打开弹窗
+    const dialogItemId = route.query.dialogItemId
+    const dialogType = route.query.dialogType
+
+    if (dialogItemId && dialogType === 'tour') {
+        // 延迟执行，确保页面内容已加载完成
+        setTimeout(() => {
+            const decodedId = decodeURIComponent(dialogItemId)
+            const targetElement = document.querySelector(`[data-tour-title="${decodedId}"]`)
+
+            if (targetElement) {
+                // 滚动到元素位置
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+                // 等待滚动完成后添加蓝色边框效果
+                setTimeout(() => {
+                    // 添加蓝色边框样式
+                    targetElement.style.border = '2px solid #409eff'
+                    targetElement.style.transition = 'all 0.3s ease'
+
+                    // 1秒后移除边框
+                    setTimeout(() => {
+                        // 边框淡出效果
+                        targetElement.style.transition = 'all 0.5s ease'
+                        targetElement.style.border = 'none'
+
+                        // 等待边框消失后再打开弹窗
+                        setTimeout(() => {
+                            targetElement.click()
+                            console.log('已定位到元素并打开弹窗:', decodedId)
+                        }, 500) // 等待边框消失动画完成
+                    }, 1000) // 边框显示1秒
+                }, 500) // 等待滚动动画完成
+            }
+        }, 1000)
+    }
 })
 
 onUnmounted(() => {

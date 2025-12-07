@@ -174,7 +174,7 @@ const routeInfo = computed(() => {
                         本页信息来源：{{ routeInfo.source[0].desc }}
                     </template>
                     <template v-else>
-                        本页信息来源：TasTrips.Online
+                        本页信息来源：TasTrips.Online原创
                     </template>
                 </div>
                 <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
