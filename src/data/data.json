@@ -15,7 +15,7 @@
                 "items": [
                     {
                         "title": "测试标题",
-                        "img": "@/assets/img/places/LakeStClairNationalPark.jpg",
+                        "img": "@/assets/img/default.png",
                         "enTitle": "Test",
                         "tripData": {
                             "route": "Location",
@@ -45,9 +45,9 @@
                             ],
                             "source": [
                                 {
-                                    "title": "“Cradle Mountain-Lake St Clair National Park”",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "https://en.wikipedia.org/w/index.php?title=Cradle_Mountain-Lake_St_Clair_National_Park&oldid=1318846310"
+                                    "title": "“文章标题”",
+                                    "desc": "名称",
+                                    "url": "www.baidu.com"
                                 }
                             ]
                         }
@@ -81,6 +81,13 @@
                                 "适合徒步",
                                 "观景点众多",
                                 "游客设施完善"
+                            ],
+                            "source": [
+                                {
+                                    "title": "“Cradle Mountain-Lake St Clair National Park”",
+                                    "desc": "Wikipedia,The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Cradle_Mountain-Lake_St_Clair_National_Park&oldid=1318846310"
+                                }
                             ]
                         }
                     },
@@ -1959,7 +1966,7 @@
                     },
                     {
                         "title": "经典自然野趣线：菲尔德山国家公园 + 波诺朗野生动物园",
-                        "sub": "探索菲尔德山国家公园的神秘洞穴系统、层叠的瀑布和高大的沼泽桉树，同时在波诺朗野生动物园观赏各种野生动物",
+                        "sub": "探索菲尔德山国家公园的神秘洞穴系统、层叠的瀑布和高大的沼泽桉树，同时在波诺朗野生动物园观赏各种野生动物野生动物野生动物野生动物",
                         "tripData": {
                             "route": "菲尔德山国家公园（三瀑布环线） → 三文鱼塘 → 波诺朗野生动物园 → 返回菲尔德山国家公园",
                             "desc": "菲尔德山国家公园（Mount Field National Park）是塔斯马尼亚最古老的国家公园之一，以茂密的温带雨林、层叠的瀑布和高大的沼泽桉树闻名。萨尔蒙鱼塘遗产孵化场及花园（Salmon Ponds Heritage Hatchery and Gardens）是南半球历史最悠久的鳟鱼孵化场之一（自1864年开始运营），环境优美，可以了解鲑鱼和鳟鱼的养殖历史，并在优雅的花园中漫步。波诺朗野生动物园（Bonorong Wildlife Sanctuary）则是许多濒危物种的家园，是近距离观察塔斯马尼亚恶魔（袋獾）、亲手喂食袋鼠和小袋鼠的绝佳地点。",

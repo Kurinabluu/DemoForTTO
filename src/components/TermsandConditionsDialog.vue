@@ -62,7 +62,7 @@ defineExpose({
             <div class="policy-section">
                 <h2>五、用户责任</h2>
                 <ul>
-                    <li class="policy-paragraph">确保提供的信息真实有效</li>
+                    <!-- <li class="policy-paragraph">确保提供的信息真实有效</li> -->
                     <li class="policy-paragraph">遵守当地法律法规及风俗习惯</li>
                     <li class="policy-paragraph">妥善保管个人财物及旅行证件</li>
                     <li class="policy-paragraph">按时到达指定集合地点</li>
@@ -80,37 +80,51 @@ defineExpose({
                 <h3>在任何情况下，TTO的赔偿责任不超过相关订单金额</h3>
             </div>
             <div class="policy-section">
-                <h2>七、知识产权</h2>
+                <h2>七、知识产权与内容授权</h2>
+                <h3>版权归属</h3>
                 <ul>
-                    <li class="policy-paragraph">网站内容、标识、设计均受版权保护</li>
-                    <li class="policy-paragraph">未经授权，不得使用、复制或修改任何内容</li>
+                    <li class="policy-paragraph">TTO网站的整体设计、标识、图形及由TTO独立创作的原创文字、图片、视频等内容（“TTO原创内容”），其版权及相关知识产权均归TTO所有
+                    </li>
+                </ul>
+                <h3>第三方内容的引用</h3>
+                <ul>
+                    <li class="policy-paragraph">为提供准确信息，本站部分事实性描述参考或引用了受许可的第三方内容。对于依据 《知识共享 署名-相同方式共享 协议》（如CC BY-SA
+                        4.0）授权的第三方内容（如维基百科），我们已在具体页面中遵循其署名要求</li>
+                </ul>
+                <h3>对您的授权与限制</h3>
+                <ul>
+                    <li class="policy-paragraph">
+                        对于TTO原创内容：您可为个人、非商业目的浏览、下载或打印。未经TTO明确书面许可，您不得出于任何商业目的复制、转载、修改或公开发布本站的TTO原创内容</li>
+                    <li class="policy-paragraph">对于本站引用的知识共享协议内容：您可根据该等内容原始的《知识共享 署名-相同方式共享 协议》
+                        所规定的条款（包括商业使用）进行再利用，但必须遵守该协议规定的署名和相同方式共享等条件</li>
+                    <li class="policy-paragraph">
+                        禁止混淆与滥用：在任何情况下，您均不得使用TTO的名称、Logo，或以致使他人误认为您的作品、网站或服务与TTO存在关联、赞助或认可的方式，使用本站的任何内容</li>
                 </ul>
             </div>
             <div class="policy-section">
                 <h2>八、隐私保护</h2>
                 <ul>
                     <li class="policy-paragraph">个人信息处理遵循隐私政策规定</li>
-                    <li class="policy-paragraph">我们采取合理措施保护用户数据安全</li>
+                    <li class="policy-paragraph">我们采取合理措施保护用户数据安全，但无法保证互联网传输的绝对安全</li>
                 </ul>
             </div>
             <div class="policy-section">
                 <h2>九、条款修改</h2>
                 <ul>
-                    <li class="policy-paragraph">我们保留修改本条款的权利</li>
-                    <li class="policy-paragraph">修改后的条款将在官网公布后生效</li>
+                    <li class="policy-paragraph">我们保留不时修改本条款的权利，修改后的条款将在官网公布后生效</li>
                     <li class="policy-paragraph">继续使用服务视为接受修改内容</li>
                 </ul>
             </div>
             <div class="policy-section">
                 <h2>十、争议解决</h2>
                 <ul>
-                    <li class="policy-paragraph">优先通过友好协商解决争议</li>
-                    <li class="policy-paragraph">适用法律为塔斯马尼亚所在地法律</li>
+                    <li class="policy-paragraph">双方应优先通过友好协商解决争议</li>
+                    <li class="policy-paragraph">若协商不成，本条款之解释、效力及争议解决均适用法律为塔斯马尼亚所在地法律</li>
                 </ul>
             </div>
             <div class="contact-info">
-                <span>最后更新：<i class="fowe7" style="font-style: italic;">2024年1月15日</i>&nbsp;&nbsp;</span><span>生效日期：<i
-                        class="fowe7" style="font-style: italic;">2024年1月22日</i></span><br>
+                <span>最后更新：<i class="fowe7" style="font-style: italic;">2025年12月7日</i>&nbsp;&nbsp;</span><span>生效日期：<i
+                        class="fowe7" style="font-style: italic;">2025年12月7日</i></span><br>
                 工作时间：周一至周五 9:00-17:00（塔斯马尼亚时间）；周一至周五 10:00-18:00（中国时间）
                 <br>请定期查阅本页面以了解条款更新情况。如有任何疑问，请点击“联系我们”获取更多帮助。
             </div>

@@ -418,17 +418,17 @@ watch(() => props.serviceName, (newServiceName) => {
                         </li>
                     </ul>
                 </div>
-                <div class="hero-image w100">
+                <!-- <div class="hero-image w100">
                     <div class="image-placeholder center fff fowe7" v-for="text in currentConfig?.imgText">{{ text }}
                     </div>
 
-                </div>
+                </div> -->
 
                 <!-- 横向自动播放展示列表 -->
                 <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
                     class="showcase-section w100">
                     <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
-                    }}</h3>
+                        }}</h3>
 
                     <!-- 左侧滚动按钮 -->
                     <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -873,6 +873,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .advantages-section {
         margin-bottom: 40px;
+        margin-top: 60px;
 
         .car2 {
             margin-top: 60px;

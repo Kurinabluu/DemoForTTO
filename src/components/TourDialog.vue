@@ -14,6 +14,18 @@ const props = defineProps({
 
 })
 
+// 响应式检测屏幕宽度，用于移动端适配
+const screenWidth = ref(window.innerWidth)
+// const isMobile = computed(() => screenWidth.value <= 768) 
+const isMobile = computed(() => screenWidth.value <= 820)//100%
+const isTablet = computed(() => screenWidth.value <= 1200)//80%
+const isPhone = computed(() => screenWidth.value <= 767)//改变弹窗内容的样式
+
+// 监听窗口大小变化
+window.addEventListener('resize', () => {
+    screenWidth.value = window.innerWidth
+})
+
 // 处理图片URL的函数
 const getImageUrl = (imagePath) => {
     if (!imagePath) return ''
@@ -153,12 +165,17 @@ const routeInfo = computed(() => {
 
         <template #footer>
             <div class="dlg-footer">
-                <div class="info-disclaimer" @click="openInfoDialog">
+                <div class="info-disclaimer" @click="routeInfo.source ? openInfoDialog() : null">
                     <!-- <span class="warning-icon">!</span> -->
                     <el-icon class="info-icon">
                         <InfoFilled />
                     </el-icon>
-                    本页信息来源：{{ routeInfo.source[0].desc }}
+                    <template v-if="routeInfo.source">
+                        本页信息来源：{{ routeInfo.source[0].desc }}
+                    </template>
+                    <template v-else>
+                        本页信息来源：TasTrips.Online
+                    </template>
                 </div>
                 <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
             </div>
@@ -169,21 +186,24 @@ const routeInfo = computed(() => {
     <ContactDialog v-model:visible="contactDialogVisible" />
 
     <!-- 信息来源弹窗 -->
-    <el-dialog v-model="infoDialogVisible" :z-index="9999" :append-to-body="true" title="测试" align-center>
-        <el-table :data="tripData.source" style="width: 100%">
-            <el-table-column prop="title" label="条目/文章标题" width="180" />
-            <el-table-column prop="desc" label="来源名称" width="180" />
+    <el-dialog v-model="infoDialogVisible" :z-index="9999" :append-to-body="true" title="信息参考来源" align-center
+        :width="isMobile ? '100%' : '80%'" class="source-dia">
+        <!-- <template v-if="!isPhone"> -->
+        <el-table :data="tripData.source" border>
+            <el-table-column prop="title" label="条目/文章标题" :width="isPhone ? '160' : '200'" />
+            <el-table-column prop="desc" label="来源名称" :width="isPhone ? '160' : '200'" />
             <!-- <el-table-column prop="url" label="永久链接" /> -->
-            <el-table-column prop="url" label="永久链接">
+            <!-- <el-table-column prop="url" label="永久链接" fixed="right"> -->
+            <el-table-column prop="url" label="永久链接" :width="isPhone ? '360' : ''">
                 <template #default="scope">
                     <el-link :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
                 </template>
             </el-table-column>
         </el-table>
-        <template #footer>
-            <el-button type="primary" @click="infoDialogVisible = false">确定</el-button>
-        </template>
+        <!-- </template> -->
     </el-dialog>
+
+
 </template>
 
 <style lang="scss" scoped>
@@ -197,6 +217,7 @@ const routeInfo = computed(() => {
     :deep(.el-dialog__body) {
         padding: 0 0 8px 0;
     }
+
 
 }
 
@@ -338,6 +359,13 @@ const routeInfo = computed(() => {
 /* 确保按钮不被提示文字遮挡 */
 .dlg-footer .el-button {
     margin-top: 24px;
+}
+
+.source-list {
+    // list-style: disc;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 15px;
 }
 
 @media (max-width: 768px) {

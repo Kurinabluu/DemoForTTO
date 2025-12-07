@@ -234,7 +234,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
         <div class="coming-grid">
             <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`" class="coming-card"
                 @click="onOpenTour(item)">
-                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
+                <img src="@/assets/img/default.png" alt="" class="w100">
                 <div class="card-title" :title="item.title">{{ item.title }}</div>
                 <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
             </div>
@@ -247,7 +248,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <div class="coming-grid">
                 <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card"
                     @click="onOpenTour(item)">
-                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
+                    <img src="@/assets/img/default.png" alt="" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
                     <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
@@ -262,7 +264,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <div class="coming-grid">
                 <div v-for="(item, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
                     @click="onOpenPlace(item.place, '餐厅')">
-                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
+                    <img src="@/assets/img/default.png" alt="" class="w100">
                     <div class="card-title">{{ item.place }} 周边餐厅</div>
                     <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
                 </div>
@@ -277,7 +280,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
             <div class="coming-grid">
                 <div v-for="(item, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
                     @click="onOpenPlace(item.place, '住宿')">
-                    <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
+                    <img src="@/assets/img/default.png" alt="" class="w100">
                     <div class="card-title">{{ item.place }} 住宿</div>
                     <div class="card-sub">Hotel {{ item.enPlace }}</div>
                 </div>
@@ -330,7 +334,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <!-- 底部网格：景点（无关键词） -->
     <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)">
-            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+            <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
+            <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title" :title="item.title">{{ item.title }}</div>
             <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
@@ -339,7 +344,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <!-- 底部网格：餐厅（无关键词） -->
     <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in restaurants.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '餐厅')">
-            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+            <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 周边餐厅</div>
             <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
         </div>
@@ -348,7 +353,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in hotels.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '住宿')">
-            <img src="@/assets/img/footer2.jpg" alt="" class="w100">
+            <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
             <div class="card-sub">Hotel {{ item.enPlace }}</div>
         </div>
@@ -396,7 +401,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
         <div class="coming-grid">
             <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card"
                 @click="onOpenTour(item)">
-                <img src="@/assets/img/footer1.jpg" alt="" class="w100">
+                <img src="@/assets/img/default.png" alt="" class="w100">
                 <div class="card-title" :title="item.title">{{ item.title }}</div>
                 <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
             </div>
@@ -426,6 +431,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     // padding: 12px;
     cursor: pointer;
     gap: 5px;
+
+    img {
+        object-fit: cover;
+    }
 }
 
 .card-title {
