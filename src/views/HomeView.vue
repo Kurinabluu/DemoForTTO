@@ -178,7 +178,7 @@ const isDialogVisible = ref(false)
 // - 点击切换：
 //   1) 选“景点”：下方维持原有景点网格
 //   2) 选“餐厅/住宿”：下方卡片标题改为对应文案（不改子标题，作为示例）
-//   3) 选“特别活动”：不显示网格，仅显示“待修改”占位
+//   3) 选“特别活动”：显示特别活动列表，包含活动卡片和详细信息
 const subSearch = ref('')
 const committedKeyword = ref('')
 
@@ -709,7 +709,7 @@ onUnmounted(() => {
             padding: 10px 16px;
             border-radius: 8px;
             background: #fff;
-            color: #3b82f6;
+            color: #3dc7be;
             border: 1px solid #e5e7eb;
             transition: all .2s ease;
             white-space: nowrap;
@@ -725,10 +725,10 @@ onUnmounted(() => {
         }
 
         .free-subnav-tab.active {
-            background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
+            background: linear-gradient(180deg, #3dc7be 0%, #2da099 100%);
             color: #fff;
             border-color: transparent;
-            box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+            box-shadow: 0 6px 16px rgba(61, 199, 190, 0.26);
         }
 
         .free-subnav-search-container {

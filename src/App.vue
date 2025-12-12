@@ -71,13 +71,18 @@ const handleResize = () => {
 }
 
 onMounted(() => {
-  // 只有首次访问时才显示弹窗
+  // 新代码：每次访问都显示弹窗
+  showTipsModal.value = true
+
+  // 原代码：只有首次访问时才显示弹窗
+  /*
   if (navStore.isFirstVisit()) {
     showTipsModal.value = true
     navStore.markFirstVisitDone()
   } else {
     showTipsModal.value = false
   }
+  */
 
   // 添加滚动事件监听器
   window.addEventListener('scroll', () => {
@@ -211,7 +216,7 @@ onUnmounted(() => {
 
     .el-icon {
       font-size: 20px !important;
-      color: #609AB1 !important;
+      color: #3dc7be !important;
     }
   }
 }

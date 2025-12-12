@@ -1,6 +1,6 @@
 <script setup>
 // 搜索相关数据
-import { Location, Phone, Message, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { Location, Phone, Message, ArrowUp, ArrowDown, ChatRound } from '@element-plus/icons-vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
@@ -206,7 +206,7 @@ onMounted(() => {
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
             @close="closeContactDialog">
             <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#101010;">联系我们</div>
+                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">联系我们</div>
             </template>
             <div class="contact-modal">
                 <div class="contact-modal-info">
@@ -280,7 +280,7 @@ onMounted(() => {
                         </div>
                         <div class="contact-item">
                             <el-icon>
-                                <i></i>
+                                <ChatRound />
                             </el-icon>
                             <!-- <span>tto.operator@gmail.com（业务用邮箱）</span> -->
                             <span>TasmaniaTrips（欢迎添加微信咨询）</span>
@@ -378,7 +378,7 @@ onMounted(() => {
         <el-dialog v-model="showDisclaimerModal" align-center width="520px" :close-on-click-modal="false"
             :show-close="false" :append-to-body="true" :lock-scroll="true">
             <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#101010;">免责条款提示</div>
+                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">免责条款提示</div>
             </template>
             <div style="color:#333; line-height:1.8; text-align:justify;">
                 【免责条款】本网站之全部内容，不对任何本网站的使用者（以下简称使用者）构成任何的旅行建议或行程建议。
@@ -401,8 +401,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .clicked {
-    color: #0052cc;
-    border-bottom: 1px #0052CC solid
+    color: #2da099;
+    border-bottom: 1px #2da099 solid
 }
 
 // 使用hover样式替代点击切换类名
@@ -412,8 +412,8 @@ onMounted(() => {
 }
 
 .ul-css li:hover {
-    color: #0052cc;
-    border-bottom: 1px #0052CC solid;
+    color: #2da099;
+    border-bottom: 1px #2da099 solid;
 }
 
 .el-container {
@@ -592,12 +592,15 @@ onMounted(() => {
                         .el-icon {
                             margin-right: 8px;
                             font-size: 18px;
-                            color: #609AB1;
+                            color: #3dc7be;
                         }
 
                         i {
                             width: 1em;
                             height: 1em;
+                        }
+
+                        i:last-child {
                             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
                         }
                     }
@@ -618,7 +621,7 @@ onMounted(() => {
                     .title-underline {
                         width: 36px;
                         height: 2px;
-                        background-color: #609AB1;
+                        background-color: #3dc7be;
                     }
                 }
 
@@ -631,7 +634,7 @@ onMounted(() => {
                 .news-date {
                     font-size: 12px;
                     text-align: right;
-                    color: #609AB1;
+                    color: #3dc7be;
                 }
 
                 .nav-links {
@@ -647,12 +650,12 @@ onMounted(() => {
                         transition: color 0.3s ease;
 
                         &:hover {
-                            color: #007bff;
+                            color: #2da099;
                         }
 
                         // 英文部分使用指定颜色
                         span {
-                            color: #609AB1;
+                            color: #3dc7be;
                             margin-left: 8px;
                         }
                     }
@@ -752,7 +755,7 @@ onMounted(() => {
 
             .el-icon {
                 font-size: 18px;
-                color: #609AB1;
+                color: #3dc7be;
             }
 
         }
@@ -968,6 +971,7 @@ onMounted(() => {
                                 margin-right: 6px;
                                 font-size: 14px;
                                 flex-shrink: 0;
+                                color: #3dc7be;
                             }
 
                             span {
@@ -975,11 +979,7 @@ onMounted(() => {
                                 hyphens: auto;
                             }
 
-                            i {
-                                width: 1em;
-                                height: 1em;
-                                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
-                            }
+
                         }
                     }
                 }

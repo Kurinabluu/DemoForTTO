@@ -332,7 +332,8 @@ function onSearch() {
     .search-container {
       display: flex;
       gap: 12px;
-      width: 800px;
+      // width: 800px;
+      width: 1200px;
       margin-top: 30px;
 
       .search-input {
@@ -357,21 +358,23 @@ function onSearch() {
 
     .search-tags {
       display: grid;
-      // grid-template-columns: repeat(4, 1fr);
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(4, 1fr);
+      // grid-template-columns: repeat(8, 1fr);
       gap: 12px;
       // width: 1200px;
+      width: 800px;
 
       .tag-pill {
         display: flex;
         border-radius: 10px;
         transition: all 0.2s ease;
-        height: auto;
+        // height: auto;
+        height: 75px;
         padding: 8px 10px;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
-        color: #3b82f6;
+        background: linear-gradient(180deg, #ffffff 0%, #e6f7f6 100%);
+        color: #3dc7be;
         user-select: none;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03) inset;
         text-decoration: none;
@@ -405,9 +408,9 @@ function onSearch() {
         padding: 8px 10px;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(180deg, #4f86ff 0%, #3a6ff2 100%);
+        background: linear-gradient(180deg, #3dc7be 0%, #2da099 100%);
         color: #fff;
-        box-shadow: 0 6px 16px rgba(63, 111, 242, 0.26);
+        box-shadow: 0 6px 16px rgba(61, 199, 190, 0.26);
         width: 100%;
         box-sizing: border-box;
         line-height: 1.4;

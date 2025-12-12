@@ -155,8 +155,8 @@ const processItemsArray = (items, context = {}) => {
 }
 
 dataSource.forEach((section) => {
-  // 检查section的isShow属性，如果存在且为false，则跳过
-  if (section.hasOwnProperty('isShow') && !section.isShow) return
+  // 检查section的isShow属性和available属性，如果存在且为false，则跳过
+  if ((section.hasOwnProperty('isShow') && !section.isShow) || section.available === false) return
 
   const basePath = buildBasePath(section.path)
   const sectionText = collectStrings(section).join(' ')

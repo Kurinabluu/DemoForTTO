@@ -178,7 +178,7 @@ defineExpose({
     font-size: 16px;
     font-weight: bold;
     margin: 15px 0 10px 0;
-    color: #1890ff;
+    color: #3dc7be;
 }
 
 .policy-section h3 {
@@ -219,7 +219,7 @@ defineExpose({
 
 .tips {
     background-color: #f0f9ff;
-    border-left: 4px solid #1890ff;
+    border-left: 4px solid #3dc7be;
     padding: 10px;
     margin: 15px 0;
     border-radius: 4px;

@@ -41,8 +41,8 @@ const routes = [
     children: [
       {
         path: '/',
-        redirect: '/DemoForTTO/trips/freeinfo' // 默认重定向到自助游页面
-        // redirect: '/DemoForTTO/service/car' // 默认重定向到自助游页面
+        // redirect: '/DemoForTTO/trips/freeinfo' // 默认重定向到自助游页面
+        redirect: '/DemoForTTO/service/car' // 默认重定向到自助游页面
       },
       {
         path: '/DemoForTTO',
@@ -59,64 +59,65 @@ const routes = [
           } catch (e) {
             // ignore
           }
-          return '/DemoForTTO/trips/freeinfo'
+          // return '/DemoForTTO/trips/freeinfo'
+          return '/DemoForTTO/service/car'
         }, // 添加默认重定向
         // redirect: '/DemoForTTO/service/car', // 添加默认重定向
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
-          {
-            path: 'trips/freeinfo',
-            name: 'FreeInfo',
-            component: () => import('@/views/TripsGrid.vue'),
-            props: (route) => (
-              {
-                activeTag: '自助游/自驾游免费信息',
-                subTab: route.query.subNavName || '景点'
-              }
-            )
-          },
-          {
-            path: 'trips/oneday',
-            name: 'OneDayTour',
-            component: () => import('@/views/TripsGrid.vue'),
-            props: (route) => ({
-              activeTag: '一日游（固定行程）',
-              dayTripTab: route.query.dayTripTab || '景点一日游'
-            })
-          },
-          {
-            path: 'trips/multiday',
-            name: 'MultiDayTour',
-            component: () => import('@/views/TripsGrid.vue'),
-            props: {
-              activeTag: '多日游（固定行程）'
-            }
-          },
-          // Service 路由组 - 使用 ServiceShowcase.vue
-          {
-            path: 'service/ticket',
-            name: 'TicketBooking',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '热门项目' }
-          },
+          // {
+          //   path: 'trips/freeinfo',
+          //   name: 'FreeInfo',
+          //   component: () => import('@/views/TripsGrid.vue'),
+          //   props: (route) => (
+          //     {
+          //       activeTag: '自助游/自驾游免费信息',
+          //       subTab: route.query.subNavName || '景点'
+          //     }
+          //   )
+          // },
+          // {
+          //   path: 'trips/oneday',
+          //   name: 'OneDayTour',
+          //   component: () => import('@/views/TripsGrid.vue'),
+          //   props: (route) => ({
+          //     activeTag: '一日游（固定行程）',
+          //     dayTripTab: route.query.dayTripTab || '景点一日游'
+          //   })
+          // },
+          // {
+          //   path: 'trips/multiday',
+          //   name: 'MultiDayTour',
+          //   component: () => import('@/views/TripsGrid.vue'),
+          //   props: {
+          //     activeTag: '多日游（固定行程）'
+          //   }
+          // },
+          // // Service 路由组 - 使用 ServiceShowcase.vue
+          // {
+          //   path: 'service/ticket',
+          //   name: 'TicketBooking',
+          //   component: () => import('@/views/ServiceShowcase.vue'),
+          //   props: { serviceName: '热门项目' }
+          // },
           {
             path: 'service/car',
             name: 'CarService',
             component: () => import('@/views/ServiceShowcase.vue'),
             props: { serviceName: '包车服务（独立成团+专车+司导）' }
           },
-          {
-            path: 'service/steward',
-            name: 'StewardService',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '全程旅游管家服务' }
-          },
-          {
-            path: 'service/guide',
-            name: 'GuideService',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '地接地陪服务' }
-          },
+          // {
+          //   path: 'service/steward',
+          //   name: 'StewardService',
+          //   component: () => import('@/views/ServiceShowcase.vue'),
+          //   props: { serviceName: '全程旅游管家服务' }
+          // },
+          // {
+          //   path: 'service/guide',
+          //   name: 'GuideService',
+          //   component: () => import('@/views/ServiceShowcase.vue'),
+          //   props: { serviceName: '地接地陪服务' }
+          // },
           {
             path: 'service/custom',
             name: 'CustomService',
@@ -176,8 +177,8 @@ router.beforeEach((to, from, next) => {
       localStorage.setItem('tto_selected_subnav', DEFAULT_FREEINFO_SUBNAV);
       // 首次访问，重定向到默认路由
       if (to.path === '/' || to.path === '/DemoForTTO') {
-        // return next('/DemoForTTO/service/car');
-        return next('/DemoForTTO/trips/freeinfo');
+        return next('/DemoForTTO/service/car');
+        // return next('/DemoForTTO/trips/freeinfo');
       }
       return next();
     }

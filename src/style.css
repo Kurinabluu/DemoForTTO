@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+/* Element Plus 主题色配置 */
+:root {
+    --el-color-primary: #3dc7be;
+    --el-color-primary-light-3: #5dd0c9;
+    --el-color-primary-light-5: #7ed9d3;
+    --el-color-primary-light-7: #9ee2dc;
+    --el-color-primary-light-8: #aee6e0;
+    --el-color-primary-light-9: #ceeae5;
+    --el-color-primary-dark-2: #2da099;
+}
+
 h1,
 h2,
 h3,

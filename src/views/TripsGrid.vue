@@ -554,7 +554,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 }
 
 .aurora-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3dc7be 0%, #2da099 100%);
 }
 
 .event-badge {
@@ -562,7 +562,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
 }
 
 .season-badge {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #3dc7be 0%, #2da099 100%);
 }
 
 .night-badge {
@@ -633,7 +633,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     background: #f9fafb;
     padding: 12px;
     border-radius: 8px;
-    border-left: 4px solid #3b82f6;
+    border-left: 4px solid #3dc7be;
 }
 
 .weather-note {

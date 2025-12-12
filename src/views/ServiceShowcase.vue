@@ -121,6 +121,7 @@ const isUserInteracting = ref(false)
 const isDragging = ref(false)
 const startX = ref(0)
 const scrollLeft = ref(0)
+const scrollDirection = ref(1) // 1 表示向右滚动，-1 表示向左滚动
 // 滚动按钮状态
 const canScrollLeft = ref(false)
 const canScrollRight = ref(false)
@@ -197,13 +198,43 @@ const autoScroll = () => {
     const container = scrollContainerRef.value
     const scrollAmount = 2 // 每次滚动像素
     const maxScrollLeft = container.scrollWidth - container.clientWidth
+    const scrollInterval = 30 // 正常滚动间隔时间(ms)
 
-    // 计算滚动位置，确保不会滚动超过容器边界
-    if (container.scrollLeft + scrollAmount <= maxScrollLeft) {
-        container.scrollLeft += scrollAmount
+    // 计算新的滚动位置
+    const newScrollLeft = container.scrollLeft + (scrollAmount * scrollDirection.value)
+
+    // 检查是否到达边界并改变滚动方向
+    if (newScrollLeft <= 0) {
+        // 到达左侧边界，开始向右滚动
+        scrollDirection.value = 1
+        container.scrollLeft = 0
+
+        // 清除当前定时器
+        clearInterval(autoScrollTimer.value)
+
+        // 延迟1.5秒后重新开始滚动，使用正常的滚动间隔
+        setTimeout(() => {
+            if (isAutoScrolling.value && !isUserInteracting.value) {
+                autoScrollTimer.value = setInterval(autoScroll, scrollInterval)
+            }
+        }, 1500)
+    } else if (newScrollLeft >= maxScrollLeft) {
+        // 到达右侧边界，开始向左滚动
+        scrollDirection.value = -1
+        container.scrollLeft = maxScrollLeft
+
+        // 清除当前定时器
+        clearInterval(autoScrollTimer.value)
+
+        // 延迟1.5秒后重新开始滚动，使用正常的滚动间隔
+        setTimeout(() => {
+            if (isAutoScrolling.value && !isUserInteracting.value) {
+                autoScrollTimer.value = setInterval(autoScroll, scrollInterval)
+            }
+        }, 1500)
     } else {
-        // 滚动到最后一个项目时停止自动滚动
-        stopAutoScroll()
+        // 正常滚动
+        container.scrollLeft = newScrollLeft
     }
 }
 
@@ -715,7 +746,7 @@ watch(() => props.serviceName, (newServiceName) => {
         height: 20px;
         line-height: 20px;
         font-size: 10px;
-        background-color: #39c5bb;
+        background-color: #3dc7be;
         border-radius: 50%;
         margin-right: 5px;
         flex-shrink: 0;
@@ -786,7 +817,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .contact-section {
-        background-color: #eff6ff;
+        background-color: #e6f7f6;
         padding: 20px;
         margin-bottom: 60px;
         border-radius: 5px;
@@ -856,7 +887,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .consult-btn {
         padding: 5px 20px;
-        background: #3b82f6;
+        background: #3dc7be;
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -868,7 +899,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .consult-btn:hover {
-        background: #2563eb;
+        background: #2da099;
     }
 
     .advantages-section {
@@ -989,15 +1020,15 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .contact-icon.phone-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E");
     }
 
     .contact-icon.email-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E");
     }
 
     .contact-icon.wechat-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'%3E%3Cpath d='M8.5 12c0 .8-.7 1.5-1.5 1.5S5.5 12.8 5.5 12s.7-1.5 1.5-1.5S8.5 11.2 8.5 12zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5S15.5 11.2 15.5 12z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E");
     }
 
     /* 展示列表样式 */
@@ -1073,7 +1104,7 @@ watch(() => props.serviceName, (newServiceName) => {
     .scroll-btn svg {
         width: 20px;
         height: 20px;
-        fill: #3b82f6;
+        fill: #3dc7be;
     }
 
     .scroll-btn:disabled {
@@ -1135,7 +1166,7 @@ watch(() => props.serviceName, (newServiceName) => {
         position: absolute;
         top: 12px;
         left: 12px;
-        background: #3b82f6;
+        background: #3dc7be;
         color: white;
         padding: 6px 12px;
         border-radius: 20px;
@@ -1175,8 +1206,8 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .feature-badge {
-        background: #eff6ff;
-        color: #3b82f6;
+        background: #e6f7f6;
+        color: #3dc7be;
         padding: 4px 12px;
         border-radius: 16px;
         font-size: 12px;
@@ -1184,7 +1215,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .consult-btn {
-        background: #3b82f6;
+        background: #3dc7be;
         color: white;
         border: none;
         padding: 10px 20px;
@@ -1199,9 +1230,9 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .consult-btn:hover {
-        background: #2563eb;
+        background: #2da099;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 4px 12px rgba(61, 199, 190, 0.4);
     }
 }
 
