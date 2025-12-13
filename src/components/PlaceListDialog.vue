@@ -22,7 +22,6 @@ const getImageUrl = (imagePath) => {
         try {
             return new URL(imagePath.replace('@/', '../'), import.meta.url).href
         } catch (error) {
-            console.warn('图片路径处理失败:', imagePath, error)
             return ''
         }
     }

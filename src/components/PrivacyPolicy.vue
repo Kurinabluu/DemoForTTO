@@ -24,7 +24,7 @@ defineExpose({
 <template>
     <!-- <div> -->
     <el-dialog v-model="showPrivacyPolicyDialog" title="TTO隐私保护政策" width="800" max-width="500px" :fullscreen="isMobile"
-        align-center center z-index="9500">
+        align-center center :z-index=9500>
         <div class="policy-text">
             <div class="policy-section">
                 <h2>隐私保护承诺</h2>

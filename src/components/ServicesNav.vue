@@ -93,10 +93,7 @@ function onClickTag(tag, event) {
       const newUrl = `${baseUrl}${fullPath}`
       window.open(newUrl, '_blank')
     }
-
-    console.log('标签点击:', tag, '在新窗口打开:', tagData?.path, '路径:', fullPath)
   } catch (error) {
-    console.error('标签点击处理失败:', error)
   }
 }
 
@@ -155,7 +152,6 @@ function syncTagWithRoute(forceUseStorage = false) {
       searchInput.value = tags[0]
     }
   } catch (error) {
-    console.error('同步标签与路由失败:', error)
   }
 }
 

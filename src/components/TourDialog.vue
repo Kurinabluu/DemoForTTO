@@ -40,7 +40,6 @@ const getImageUrl = (imagePath) => {
         try {
             return new URL(imagePath.replace('@/', '../'), import.meta.url).href
         } catch (error) {
-            console.warn('图片路径处理失败:', imagePath, error)
             return ''
         }
     }
@@ -104,7 +103,6 @@ const getTripRouteInfo = (title, tripType) => {
         // 默认返回通用信息
         return getDefaultTripInfo(title)
     } catch (error) {
-        console.error('获取行程信息失败:', error)
         return getDefaultTripInfo(title)
     }
 }

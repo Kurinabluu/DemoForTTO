@@ -213,7 +213,10 @@ router.afterEach((to) => {
 
       if (typeof window !== 'undefined') {
         const scrollTop = Math.max(0, y)
-        window.scrollTo(0, scrollTop)
+        window.scrollTo({
+          top: scrollTop,
+          behavior: 'smooth'
+        })
       }
     } catch (e) {
       // ignore

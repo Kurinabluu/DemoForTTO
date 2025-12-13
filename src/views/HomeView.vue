@@ -94,8 +94,9 @@ function onClickSubTab(tab) {
                 // 其他页面（如免费信息页面）使用subNavName参数
                 // 为所有子导航项（包括餐厅、住宿）都添加query参数
                 router.push({
-                    path: '/DemoForTTO/trips/freeinfo',
-                    query: { subNavName: tab }
+                    path: '/DemoForTTO/service/car'
+                    // path:'/DemoForTTO/trips/freeinfo',
+                    // query:{subNavName:tab}
                 })
             }
 
@@ -448,7 +449,6 @@ onMounted(() => {
                         // 等待边框消失后再打开弹窗
                         setTimeout(() => {
                             targetElement.click()
-                            console.log('已定位到元素并打开弹窗:', decodedId)
                         }, 500) // 等待边框消失动画完成
                     }, 1000) // 边框显示1秒
                 }, 500) // 等待滚动动画完成

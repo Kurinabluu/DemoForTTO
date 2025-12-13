@@ -160,7 +160,9 @@ onMounted(() => {
     <el-container>
         <el-header class="fs15 bgfff">
             <span class="logo fowe7 no-select pointer">
-                <RouterLink to="/DemoForTTO/trips/freeinfo">
+                <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
+
+                <RouterLink to="/DemoForTTO/service/car">
                     <img src="@/assets/img/header_logo.png" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
                                  const span=document.createElement('span'); 
                                  span.innerText='TasTrips.Online'; 
@@ -180,7 +182,7 @@ onMounted(() => {
                     <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
                         @click="onNavClick($event, '网站首页');">
                         <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页 -->
-                        <RouterLink :to="{ path: '/DemoForTTO/service/car' }">网站首页
+                        <RouterLink :to="{ path: '/DemoForTTO/service/car' }" @click="scrollToTop()">网站首页
                         </RouterLink>
                     </li>
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
@@ -313,7 +315,7 @@ onMounted(() => {
                     </div>
                     <div class="nav-links">
                         <div class="nav-item">
-                            <RouterLink to="/DemoForTTO/service/car">
+                            <RouterLink to="/DemoForTTO/service/car" @click="scrollToTop()">
                                 <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
                                 网站首页 <span>Home</span>

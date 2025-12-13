@@ -78,8 +78,8 @@
                     "carClass": "car2",
                     "title": "现代I-Max Elite 八座位（可乘坐七位乘客）",
                     "urls": [
-                        "car2_left.jpg",
                         "car2_front_left.jpg",
+                        "car2_left.jpg",
                         "car2_left_open.jpg",
                         "car2_inside.jpg",
                         "car2_inside_top.jpg",

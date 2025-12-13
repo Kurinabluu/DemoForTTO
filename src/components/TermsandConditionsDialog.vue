@@ -24,7 +24,7 @@ defineExpose({
 <template>
     <!-- <div> -->
     <el-dialog v-model="showTemrsDialog" title="TTO服务条款与条件" width="800" max-width="500px" :fullscreen="isMobile"
-        align-center center z-index="9500">
+        align-center center :z-index=9500>
         <div class="policy-text">
             <div class="policy-section">
                 <h2>一、接受条款</h2>

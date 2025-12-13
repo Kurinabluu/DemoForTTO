@@ -19,7 +19,6 @@ const getDayTripData = () => {
         const dayTripSection = dataJson.find(item => item.tagName === '一日游（固定行程）')
         return dayTripSection?.subNav || []
     } catch (error) {
-        console.error('获取一日游数据失败:', error)
         return []
     }
 }
@@ -30,7 +29,6 @@ const getMultiDayTripData = () => {
         const multiDaySection = dataJson.find(item => item.tagName === '多日游（固定行程）')
         return multiDaySection?.tripConfig || []
     } catch (error) {
-        console.error('获取多日游数据失败:', error)
         return []
     }
 }
@@ -112,7 +110,6 @@ const gridItems = computed(() => {
             return items
         }
     } catch (error) {
-        console.error('获取网格数据失败:', error)
         return []
     }
 })

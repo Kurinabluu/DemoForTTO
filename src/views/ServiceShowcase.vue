@@ -45,7 +45,6 @@ const getServiceData = () => {
         const services = dataJson.filter(item => item.isTrip === false)
         return services || []
     } catch (error) {
-        console.error('获取服务数据失败:', error)
         return []
     }
 }
@@ -484,7 +483,7 @@ watch(() => props.serviceName, (newServiceName) => {
                 <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
                     class="showcase-section w100">
                     <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
-                        }}</h3>
+                    }}</h3>
 
                     <!-- 左侧滚动按钮 -->
                     <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">

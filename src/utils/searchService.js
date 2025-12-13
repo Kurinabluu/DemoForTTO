@@ -330,7 +330,7 @@ export const persistSearchSession = (payload) => {
   try {
     localStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify({ ...payload, timestamp: Date.now() }))
   } catch (error) {
-    console.error('保存搜索结果失败:', error)
+    // 保存搜索结果失败
   }
 }
 
@@ -341,7 +341,6 @@ export const getStoredSearchSession = () => {
     if (!raw) return null
     return JSON.parse(raw)
   } catch (error) {
-    console.error('读取搜索记录失败:', error)
     return null
   }
 }
@@ -351,7 +350,7 @@ export const clearStoredSearchSession = () => {
   try {
     localStorage.removeItem(SEARCH_STORAGE_KEY)
   } catch (error) {
-    console.error('清除搜索记录失败:', error)
+    // 清除搜索记录失败
   }
 }
 
