@@ -54,7 +54,11 @@ const scrollToBottom = () => {
 
 //温馨提示弹窗
 const showTipsModal = ref(false)
+const dontShowAgain = ref(false)
 const acceptTips = () => {
+  if (dontShowAgain.value) {
+    localStorage.setItem('tto_dont_show_tips', 'true')
+  }
   showTipsModal.value = false
 }
 
@@ -71,8 +75,11 @@ const handleResize = () => {
 }
 
 onMounted(() => {
-  // 新代码：每次访问都显示弹窗
-  showTipsModal.value = true
+  // 检查用户是否设置了不再显示提示
+  const shouldNotShow = localStorage.getItem('tto_dont_show_tips') === 'true'
+  if (!shouldNotShow) {
+    showTipsModal.value = true
+  }
 
   // 原代码：只有首次访问时才显示弹窗
   /*
@@ -132,7 +139,7 @@ onUnmounted(() => {
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-    :show-close="false">
+    :show-close="false" :z-index="9999">
     <template #header>
       <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>
@@ -140,7 +147,10 @@ onUnmounted(() => {
       【免责声明】由于本网站仍在建立之中，内容仍未完善，因此本网站的内容不构成任何建议，敬请谅解。
     </div>
     <template #footer>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <div style="display:flex; justify-content:flex-end; gap:16px; align-items:center;">
+        <div style="display:flex; align-items:center; gap:4px;">
+          <el-checkbox v-model="dontShowAgain" label="不再提示" size="small"></el-checkbox>
+        </div>
         <el-button type="primary" @click="acceptTips">确定</el-button>
       </div>
     </template>
@@ -177,7 +187,7 @@ onUnmounted(() => {
   right: 30px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  z-index: 9999 !important;
+  z-index: 9200 !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 10px !important;

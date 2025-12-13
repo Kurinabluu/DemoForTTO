@@ -78,9 +78,13 @@
                     "carClass": "car2",
                     "title": "现代I-Max Elite 八座位（可乘坐七位乘客）",
                     "urls": [
-                        "car2_carType.png",
-                        "car2_carType.png",
-                        "car2_carType.png"
+                        "car2_left.jpg",
+                        "car2_front_left.jpg",
+                        "car2_left_open.jpg",
+                        "car2_inside.jpg",
+                        "car2_inside_top.jpg",
+                        "car2_back_right.jpg",
+                        "car2_back.jpg"
                     ]
                 }
             ],
@@ -98,7 +102,7 @@
         "serviceConfig": {
             "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "专属于你的私人旅行定制",
-            "heroDesc": "在塔斯马尼亚，没有两份相同的风景，也不该有两次雷同的旅程。TTO私人定制，从倾听你的心愿开始：或许你想在酿酒师陪同下深入葡萄酒庄，或许渴望在专业摄影师指引下捕捉极光，或许计划带着孩子与袋熊亲密接触。我们不为你提供现成菜单，而是与你共同创作——你提出想法，我们负责将其化为可行而精彩的现实。每一次推荐、每一处细节，都只为独一无二的你而存在。",
+            "heroDesc": "世上没有两份相同的风景，也不该有两次雷同的旅程。TTO私人定制，从“你出想法，我们实现”开始：或许你想在酿酒师陪同下深入葡萄酒庄，或者想捕捉极光，或许计划带着孩子与袋熊亲密接触。我们不为你提供现成菜单，而是与你共同创作——你提出想法，我们负责将其化为可行而精彩的现实。每一次推荐、每一处细节，都只为独一无二的你而存在。",
             "features": [
                 "专属资源匹配",
                 "特殊需求满足",
@@ -152,25 +156,25 @@
                     "id": 1,
                     "title": "真正的从零开始",
                     "description": "我们不修改模板，而是基于你的想法、习惯甚至预算，构建完全属于你的行程",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "@/assets/img/startFromZero.png"
                 },
                 {
                     "id": 2,
                     "title": "专注落地与可行性",
                     "description": "每个推荐都经过实地验证，确保你的想法能够顺利实现，不只是一纸空谈",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "@/assets/img/capable.png"
                 },
                 {
                     "id": 3,
                     "title": "像朋友一样的共创体验",
                     "description": "你将参与设计过程，我们提供专业建议，共同完善旅程，这本身已成为旅行的一部分",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "@/assets/img/createFreely.png"
                 },
                 {
                     "id": 4,
                     "title": "持续优化直到出发",
                     "description": "在出行前，你可随时调整方案，我们始终耐心配合，只为呈现最完美的塔斯马尼亚之旅",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "@/assets/img/finalPlan.png"
                 }
             ],
             "showcaseTitle": "没想好？直接咨询定制一日游！",
@@ -455,7 +459,7 @@
     {
         "id": 6,
         "tagName": "一日游（固定行程）",
-        "available": false,
+        "available": true,
         "hasSubNav": true,
         "isTrip": true,
         "subNav": [

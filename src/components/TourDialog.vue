@@ -135,7 +135,7 @@ const routeInfo = computed(() => {
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center :z-index="9500"
+    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center :z-index="9300"
         :append-to-body="true" :lock-scroll="true">
         <template #header>
             <div class="dlg-title">{{ title }}（{{ enTitle }}）</div>

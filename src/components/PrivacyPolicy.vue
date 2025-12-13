@@ -28,7 +28,7 @@ defineExpose({
         <div class="policy-text">
             <div class="policy-section">
                 <h2>隐私保护承诺</h2>
-                <div class="policy-info">TTO深知个人信息的重要性，我们承诺以最严格的标准保护您的隐私权。本政策将清晰说明我们如何收集、使用、存储和保护您的个人信息。</div>
+                <div class="policy-info">TTO深知个人信息的重要性，我们承诺以最严格的标准保护你的隐私权。本政策将清晰说明我们如何收集、使用、存储和保护你的个人信息。</div>
             </div>
             <div class="policy-section">
                 <h2>第一章 信息收集范围</h2>
@@ -38,49 +38,43 @@ defineExpose({
                     <li class="policy-paragraph">设备信息：IP地址、浏览器类型、设备型号等用于改善服务质量</li>
                 </ul>
             </div>
-
             <div class="policy-section">
-                <h2>第二章 信息使用原则</h2>
-
+                <h2>第二章 信息使用与共享原则</h2>
+                <h3>我们仅出于以下明确、必要的目的处理你的个人信息：</h3>
                 <ul>
-                    <li class="policy-paragraph">仅用于为您提供预订服务、行程安排和客户支持</li>
-                    <li class="policy-paragraph">不会将您的个人信息分享给任何第三方，除非获得您的明确同意或法律要求</li>
-                    <li class="policy-paragraph">不会用于广告或营销目的</li>
-                    <li class="policy-paragraph">在获得明确同意后，用于发送个性化旅行建议和优惠信息</li>
-                    <li class="policy-paragraph">用于履行法律义务和保障交易安全</li>
+
+                    <li class="policy-paragraph">用于为你提供行程预订、安排、确认及客户支持等核心旅行服务</li>
+                    <li class="policy-paragraph">用于履行法定义务、解决争议、执行我们的协议，以及保障交易与账户安全</li>
+                    <li class="policy-paragraph">在获得你明确同意后，用于发送个性化的旅行建议、优惠信息或用于你指定的其他用途</li>
+                    <li class="policy-paragraph">为了完成您的预订与服务，我们将在必要范围内将您的信息（如姓名与入住日期）提供给酒店、航司等合作伙伴，所有合作伙伴均受严格的保密协议约束
+                    </li>
+                    <li class="policy-paragraph">我们承诺，绝不会出售你的个人信息。未经你额外同意，我们也不会将你的信息用于与本政策所述目的无关的广告营销</li>
                 </ul>
             </div>
 
             <div class="policy-section">
-                <h2>第三章 信息共享与保护</h2>
-
-                <h3>我们仅在必要范围内与以下第三方共享信息：</h3>
+                <h2>第三章 信息保护与依法披露</h2>
+                <h3>我们采取严格措施保护你的信息，并仅在法律要求时进行披露</h3>
                 <ul>
-                    <li class="policy-paragraph">酒店、景点、交通等服务提供商</li>
-                    <li class="policy-paragraph">支付处理机构和金融机构</li>
-                    <li class="policy-paragraph">法律要求的政府机构</li>
+                    <li class="policy-paragraph">我们采用加密技术、访问控制、安全审计等组织性与技术性措施保护你的个人信息安全</li>
+                    <li class="policy-paragraph">所有受托处理信息的第三方，均受合同条款及保密协议的严格约束，必须采取同等保护措施，并禁止将信息用于任何其他目的</li>
+                    <li class="policy-paragraph">我们仅在法律、法规、司法机关或政府主管部门强制性要求的情况下，披露你的必要信息</li>
                 </ul>
-                <h3>所有数据合作伙伴均受严格保密协议约束</h3>
-                <h3>我们采取加密技术、访问控制等多重措施保护您的信息</h3>
-
             </div>
-
             <div class="policy-section">
-                <h2>第四章 您的权利</h2>
+                <h2>第四章 你的权利</h2>
                 <ul>
-                    <li class="policy-paragraph">若实际服务与承诺严重不符：</li>
-                    <li class="policy-paragraph">更正权：要求更新或修正不准确的信息</li>
-                    <li class="policy-paragraph">删除权：在法律法规允许范围内要求删除个人信息</li>
-                    <li class="policy-paragraph">撤回同意权：通过客服渠道撤回已授权的信息使用</li>
+                    <li class="policy-paragraph">你有权查询我们持有的关于你的个人信息，并要求更新或更正不准确的信息</li>
+                    <li class="policy-paragraph">在法律法规允许及我们的服务义务完成后，你可以要求删除你的个人信息</li>
+                    <li class="policy-paragraph">你可以通过客服渠道，随时撤回你已授予我们的信息使用同意，但这不影响撤回前基于同意已进行的信息处理</li>
                 </ul>
-
             </div>
 
             <div class="policy-section">
                 <h2>第五章 Cookie与追踪技术</h2>
                 <ul>
                     <li class="policy-paragraph">我们使用Cookie提升网站体验</li>
-                    <li class="policy-paragraph">您可通过浏览器设置管理Cookie偏好</li>
+                    <li class="policy-paragraph">你可通过浏览器设置管理Cookie偏好</li>
                     <li class="policy-paragraph">我们使用数据分析工具改善服务质量</li>
                 </ul>
             </div>

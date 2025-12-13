@@ -174,8 +174,8 @@ onMounted(() => {
 
   // 如果同步后仍然没有激活标签，则使用默认值
   if (!localActiveTag.value) {
-    // 首次访问，默认选中"包车服务（独立成团+专车+司导）"
-    const defaultTag = data.find(item => item.tagName === '包车服务（独立成团+专车+司导）')
+    // 首次访问，默认选中"包车服务"
+    const defaultTag = data.find(item => item.tagName === '包车服务')
     if (defaultTag) {
       localActiveTag.value = defaultTag.tagName
       searchInput.value = defaultTag.tagName
@@ -428,11 +428,11 @@ function onSearch() {
       }
 
       .disabled {
-        display: flex;
-        height: auto;
+        // display: flex;
+        // height: auto;
         padding: 8px 10px;
-        align-items: center;
-        justify-content: center;
+        // align-items: center;
+        // justify-content: center;
         background: linear-gradient(180deg, #f3f4f6 0%, #e5e7eb 100%);
         color: #9ca3af;
         cursor: not-allowed;
@@ -456,20 +456,19 @@ function onSearch() {
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .search-fixed {
     .search-card {
-      .search-tags {
-        .small-text {
-          font-size: 12px;
-        }
+      .search-container {
+        width: 100%;
+        max-width: 1000px;
       }
     }
   }
 }
 
 /* 响应式适配：平板（768px-1024px） */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .el-container {
     .el-main {
       .search-fixed {
@@ -489,6 +488,10 @@ function onSearch() {
         .search-tags {
           grid-template-columns: repeat(4, 1fr);
           width: 100%;
+
+          .tag-pill {
+            width: 160px;
+          }
         }
 
         .tag-pill,
@@ -522,7 +525,7 @@ function onSearch() {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .el-container {
     .el-main {
       .search-fixed {
@@ -558,7 +561,8 @@ function onSearch() {
           width: 100%;
 
           .tag-pill {
-            font-size: 12px
+            font-size: 16px;
+            width: 150px;
           }
         }
 
@@ -586,6 +590,22 @@ function onSearch() {
         .disabled br {
           height: 6px;
           margin: 3px 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .el-container {
+    .el-main {
+      .search-fixed {
+        .search-card {
+          .search-tags {
+            .small-text {
+              font-size: 12px;
+            }
+          }
         }
       }
     }

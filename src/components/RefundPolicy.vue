@@ -119,7 +119,7 @@ defineExpose({
 
             <div class="tips">
                 <div class="policy-info">温馨提示：
-                    我们理解行程变化可能给您带来的困扰。建议您根据自身情况购买行程取消险，以获得更全面的保障。TTO始终竭诚为您提供咨询与协助。</div>
+                    我们理解行程变化可能给你带来的困扰。建议你根据自身情况购买行程取消险，以获得更全面的保障。TTO始终竭诚为你提供咨询与协助。</div>
             </div>
 
             <div class="contact-info">

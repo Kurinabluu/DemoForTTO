@@ -76,15 +76,15 @@ const routes = [
           //     }
           //   )
           // },
-          // {
-          //   path: 'trips/oneday',
-          //   name: 'OneDayTour',
-          //   component: () => import('@/views/TripsGrid.vue'),
-          //   props: (route) => ({
-          //     activeTag: '一日游（固定行程）',
-          //     dayTripTab: route.query.dayTripTab || '景点一日游'
-          //   })
-          // },
+          {
+            path: 'trips/oneday',
+            name: 'OneDayTour',
+            component: () => import('@/views/TripsGrid.vue'),
+            props: (route) => ({
+              activeTag: '一日游（固定行程）',
+              dayTripTab: route.query.dayTripTab || '景点一日游'
+            })
+          },
           // {
           //   path: 'trips/multiday',
           //   name: 'MultiDayTour',
@@ -104,7 +104,8 @@ const routes = [
             path: 'service/car',
             name: 'CarService',
             component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '包车服务（独立成团+专车+司导）' }
+            // props: { serviceName: '包车服务（独立成团+专车+司导）' }
+            props: { serviceName: '包车服务' }
           },
           // {
           //   path: 'service/steward',

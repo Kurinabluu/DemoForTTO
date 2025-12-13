@@ -6,7 +6,7 @@ import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from
 import ContactDialog from '@/components/ContactDialog.vue'
 import dataJson from '@/data/data.json'
 // 从data.json中获取私人定制服务的数据
-const privateCustomService = dataJson.find(item => item.id === 8 && item.tagName === '私人定制')
+const privateCustomService = dataJson.find(item => item.tagName === '私人定制')
 const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
 
 // 接收配置（保持向后兼容）
@@ -68,9 +68,22 @@ import car1InsideTop from '@/assets/img/carService/car1_inside_top.jpg';
 import car1InsideBack from '@/assets/img/carService/car1_inside_back.jpg';
 import car1BackWithSpace from '@/assets/img/carService/car1_back_with_space.jpg';
 import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space.jpg';
-import car2CarType from '@/assets/img/carService/car2_carType.png';
+// import car2CarType from '@/assets/img/carService/car2_carType.png';
 import carType from '@/assets/img/carService/carType.png';
 import defaultCarType from '@/assets/img/carService/carType.png';
+// 导入私人定制服务的图片
+import startFromZero from '@/assets/img/startFromZero.png';
+import capable from '@/assets/img/capable.png';
+import createFreely from '@/assets/img/createFreely.png';
+import finalPlan from '@/assets/img/finalPlan.png';
+// 导入car2的所有图片
+import car2Left from '@/assets/img/carService/car2_left.jpg';
+import car2FrontLeft from '@/assets/img/carService/car2_front_left.jpg';
+import car2LeftOpen from '@/assets/img/carService/car2_left_open.jpg';
+import car2Inside from '@/assets/img/carService/car2_inside.jpg';
+import car2InsideTop from '@/assets/img/carService/car2_inside_top.jpg';
+import car2BackRight from '@/assets/img/carService/car2_back_right.jpg';
+import car2Back from '@/assets/img/carService/car2_back.jpg';
 
 // 创建图片映射表
 const carImagesMap = {
@@ -81,8 +94,20 @@ const carImagesMap = {
     'car1_inside_back.jpg': car1InsideBack,
     'car1_back_with_space.jpg': car1BackWithSpace,
     'car1_back_with_no_space.jpg': car1BackWithNoSpace,
-    'car2_carType.png': car2CarType,
-    'carType.png': defaultCarType
+    'carType.png': defaultCarType,
+    // car2的图片映射
+    'car2_left.jpg': car2Left,
+    'car2_front_left.jpg': car2FrontLeft,
+    'car2_left_open.jpg': car2LeftOpen,
+    'car2_inside.jpg': car2Inside,
+    'car2_inside_top.jpg': car2InsideTop,
+    'car2_back_right.jpg': car2BackRight,
+    'car2_back.jpg': car2Back,
+    // 私人定制服务的图片映射
+    '@/assets/img/startFromZero.png': startFromZero,
+    '@/assets/img/capable.png': capable,
+    '@/assets/img/createFreely.png': createFreely,
+    '@/assets/img/finalPlan.png': finalPlan
 };
 
 const getImageUrl = (imagePath, advantage = null) => {
@@ -130,7 +155,7 @@ const canScrollRight = ref(false)
 const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson : [
     {
         id: 1,
-        title: '测试数据',
+        title: '家庭亲子定制游111',
         description: '专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。',
         image: 'https://picsum.photos/seed/family/400/300',
         features: ['儿童活动', '安全第一', '教育体验'],

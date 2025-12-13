@@ -28,7 +28,7 @@ defineExpose({
         <div class="policy-text">
             <div class="policy-section">
                 <h2>一、接受条款</h2>
-                <div class="policy-info">通过访问、浏览或使用TasTrips.Online（以下简称"TTO"）网站及相关服务，即表示您已阅读、理解并同意受本条款与条件的约束。</div>
+                <div class="policy-info">通过访问、浏览或使用TasTrips.Online（以下简称"TTO"）网站及相关服务，即表示你已阅读、理解并同意受本条款与条件的约束。</div>
             </div>
 
             <div class="policy-section">
@@ -91,14 +91,14 @@ defineExpose({
                     <li class="policy-paragraph">为提供准确信息，本站部分事实性描述参考或引用了受许可的第三方内容。对于依据 《知识共享 署名-相同方式共享 协议》（如CC BY-SA
                         4.0）授权的第三方内容（如维基百科），我们已在具体页面中遵循其署名要求</li>
                 </ul>
-                <h3>对您的授权与限制</h3>
+                <h3>对你的授权与限制</h3>
                 <ul>
                     <li class="policy-paragraph">
-                        对于TTO原创内容：您可为个人、非商业目的浏览、下载或打印。未经TTO明确书面许可，您不得出于任何商业目的复制、转载、修改或公开发布本站的TTO原创内容</li>
-                    <li class="policy-paragraph">对于本站引用的知识共享协议内容：您可根据该等内容原始的《知识共享 署名-相同方式共享 协议》
+                        对于TTO原创内容：你可为个人、非商业目的浏览、下载或打印。未经TTO明确书面许可，你不得出于任何商业目的复制、转载、修改或公开发布本站的TTO原创内容</li>
+                    <li class="policy-paragraph">对于本站引用的知识共享协议内容：你可根据该等内容原始的《知识共享 署名-相同方式共享 协议》
                         所规定的条款（包括商业使用）进行再利用，但必须遵守该协议规定的署名和相同方式共享等条件</li>
                     <li class="policy-paragraph">
-                        禁止混淆与滥用：在任何情况下，您均不得使用TTO的名称、Logo，或以致使他人误认为您的作品、网站或服务与TTO存在关联、赞助或认可的方式，使用本站的任何内容</li>
+                        禁止混淆与滥用：在任何情况下，你均不得使用TTO的名称、Logo，或以致使他人误认为你的作品、网站或服务与TTO存在关联、赞助或认可的方式，使用本站的任何内容</li>
                 </ul>
             </div>
             <div class="policy-section">
