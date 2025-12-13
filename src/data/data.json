@@ -459,7 +459,7 @@
     {
         "id": 6,
         "tagName": "一日游（固定行程）",
-        "available": true,
+        "available": false,
         "hasSubNav": true,
         "isTrip": true,
         "subNav": [
