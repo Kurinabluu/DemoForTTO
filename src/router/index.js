@@ -4,7 +4,7 @@ import data from '@/data/data.json'
 
 const DEFAULT_FREEINFO_SUBNAV = (() => {
   try {
-    const freeInfoSection = data.find((item) => item.tagName === '自助游/自驾游免费信息')
+    const freeInfoSection = data.find((item) => item.tagName === '自助游/自驾游免费参考信息')
     if (freeInfoSection?.subNav?.length) {
       return freeInfoSection.subNav[0].subNavName || '景点'
     }

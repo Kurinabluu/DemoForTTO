@@ -276,9 +276,15 @@ onMounted(() => {
 }
 
 .result-summary {
+  display: -webkit-box;
   margin: 0;
   color: #475569;
   font-size: 15px;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .result-snippet {

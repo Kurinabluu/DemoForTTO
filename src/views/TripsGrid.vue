@@ -443,6 +443,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     color: #1f2937;
     // margin-bottom: 6px;
     -webkit-line-clamp: 1;
+    line-clamp: 1;
 }
 
 .card-sub {
@@ -450,6 +451,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     color: #6b7280;
     letter-spacing: 2px;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     line-height: 1.5;
     min-height: calc(1.5em * 2);
 }

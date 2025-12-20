@@ -259,20 +259,10 @@ function onSearch() {
         }" @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag, $event)"
           :data-service="tag" href="javascript:void(0)">
           <span class="tag-content">
-            <template v-if="tag.includes('免费信息')">
-              {{ tag.split('免费信息')[0] }}
+            <template v-if="tag.includes('免费参考信息')">
+              {{ tag.split('免费参考信息')[0] }}
               <br />
-              免费信息
-            </template>
-            <template v-else-if="tag.includes('（固定行程）')">
-              {{ tag.split('（固定行程）')[0] }}
-              <br />
-              （固定行程）
-            </template>
-            <template v-else-if="tag.includes('（独立成团+专车+司导）')">
-              {{ tag.split('（独立成团+专车+司导）')[0] }}
-              <br />
-              <span class="small-text fs15">（独立成团+专车+司导）</span>
+              免费参考信息
             </template>
             <template v-else>
               {{ tag }}

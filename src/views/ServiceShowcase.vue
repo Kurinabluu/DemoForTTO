@@ -17,7 +17,7 @@ const props = defineProps({
 
 // 响应式检测屏幕宽度，用于移动端适配
 const screenWidth = ref(window.innerWidth)
-// const isMobile = computed(() => screenWidth.value <= 768) 
+const isPhone = computed(() => screenWidth.value <= 767)
 const isMobile = computed(() => screenWidth.value <= 820)
 const isTablet = computed(() => screenWidth.value <= 1024)
 
@@ -464,66 +464,87 @@ watch(() => props.serviceName, (newServiceName) => {
             <div class="hero-content">
 
                 <div class="hero-text w100">
-                    <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2>
+                    <!-- <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2> -->
+                    <h2 class="section-title center">{{ currentConfig?.heroTitle }}</h2>
                     <p class="description center">{{ currentConfig?.heroDesc }}</p>
-                    <ul class="features-list">
+                    <!-- <ul class="features-list">
                         <li class="feature-item" v-for="(f, i) in currentConfig?.features" :key="i">
                             <span class="feature-dot center fff fowe7">√</span>
                             {{ f }}
                         </li>
-                    </ul>
+                    </ul> -->
                 </div>
+
                 <!-- <div class="hero-image w100">
                     <div class="image-placeholder center fff fowe7" v-for="text in currentConfig?.imgText">{{ text }}
                     </div>
-
                 </div> -->
-
-                <!-- 横向自动播放展示列表 -->
-                <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
-                    class="showcase-section w100">
-                    <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
-                    }}</h3>
-
-                    <!-- 左侧滚动按钮 -->
-                    <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15 6l-6 6 6 6" />
-                        </svg>
-                    </button>
-
-                    <!-- 滚动容器 -->
-                    <div ref="scrollContainerRef" class="showcase-scroll-container"
-                        @mouseenter="handleUserInteraction(true)" @mousedown="startDrag" @mousemove="drag"
-                        @mouseup="endDrag" @mouseleave="endDrag" @touchstart="startDrag" @touchmove="drag"
-                        @touchend="endDrag" @touchcancel="endDrag" @selectstart.prevent @dragstart.prevent>
-                        <div class="showcase-items-wrapper">
-                            <div v-for="item in showcaseItems" :key="item.id" class="showcase-item">
-                                <div class="showcase-card">
-                                    <div class="showcase-image">
-                                        <img :src="item.imageUrl" :alt="item.title" class="showcase-img">
-                                        <div class="showcase-tag">{{ item.tag }}</div>
-                                    </div>
-                                    <div class="showcase-content">
-                                        <h4 class="showcase-item-title">{{ item.title }}</h4>
-                                        <p class="showcase-description">{{ item.description }}</p>
-                                        <button class="consult-btn" @click="openConsultationDialog">立即咨询</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 右侧滚动按钮 -->
-                    <button class="scroll-btn scroll-btn-right" @click="scrollRightClick" :disabled="!canScrollRight">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M9 6l6 6-6 6" />
-                        </svg>
-                    </button>
-                </div>
             </div>
         </div>
 
+        <div class="steps-box">
+            <div class="section-title center">{{ currentConfig?.stepsTitle }}</div>
+            <el-steps :active="currentConfig?.steps?.length || 0" align-center :space="isPhone ? 100 : ''"
+                :direction="isPhone ? 'vertical' : 'horizontal'">
+                <el-step v-for="(step, i) in currentConfig?.steps" :key="i" :title="step" />
+                <!-- <el-step title="咨询沟通，根据需求定制方案" />
+                <el-step title="透明报价，确认预定" />
+                <el-step title="行前对接，安心确认" />
+                <el-step title="行程结束，便捷结算尾款" />
+                <el-step title="服务反馈，持续优化" /> -->
+                <!-- <el-step title="提出你对旅行的任何想法" />
+                <el-step title="选择你的方案，深度定制or现有方案调整" />
+                <el-step title="获得专属方案与透明报价" />
+                <el-step title="签约支付" />
+                <el-step title="行程结束，完成尾款" />
+                <el-step title="服务反馈，持续优化" /> -->
+            </el-steps>
+            <div class="order-now fowe7 fs16 pointer" @click="openConsultationDialog">立即咨询 >></div>
+        </div>
+
+        <!--  横向自动播放展示列表 -->
+        <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0" class="showcase-section w100">
+            <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
+            }}</h3> -->
+            <h3 v-if="currentConfig?.showcaseTitle" class="section-title center">{{ currentConfig.showcaseTitle
+            }}</h3>
+
+            <!-- 左侧滚动按钮 -->
+            <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15 6l-6 6 6 6" />
+                </svg>
+            </button>
+
+            <!-- 滚动容器 -->
+            <div ref="scrollContainerRef" class="showcase-scroll-container" @mouseenter="handleUserInteraction(true)"
+                @mousedown="startDrag" @mousemove="drag" @mouseup="endDrag" @mouseleave="endDrag"
+                @touchstart="startDrag" @touchmove="drag" @touchend="endDrag" @touchcancel="endDrag"
+                @selectstart.prevent @dragstart.prevent>
+                <div class="showcase-items-wrapper">
+                    <div v-for="item in showcaseItems" :key="item.id" class="showcase-item">
+                        <div class="showcase-card">
+                            <div class="showcase-image">
+                                <img :src="item.imageUrl" :alt="item.title" class="showcase-img">
+                                <div class="showcase-tag">{{ item.tag }}</div>
+                            </div>
+                            <div class="showcase-content">
+                                <h4 class="showcase-item-title">{{ item.title }}</h4>
+                                <p class="showcase-description">{{ item.description }}</p>
+                                <button class="consult-btn" @click="openConsultationDialog">立即咨询</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧滚动按钮 -->
+            <button class="scroll-btn scroll-btn-right" @click="scrollRightClick" :disabled="!canScrollRight">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 6l6 6-6 6" />
+                </svg>
+            </button>
+        </div>
         <!-- 服务套餐区域 -->
         <!-- <div class="packages-section" v-if="currentConfig?.packages">
             <h2 class="section-title">{{ currentConfig.packagesTitle }}</h2>
@@ -683,12 +704,31 @@ watch(() => props.serviceName, (newServiceName) => {
         margin: 0 0 16px 0;
     }
 
-    .hero-content {
-        display: flex;
-        gap: 40px;
-        align-items: center;
-        flex-direction: column;
+    .hero-section {
+        .hero-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-direction: column;
+        }
+    }
 
+    .steps-box {
+        margin-top: 60px;
+
+        .order-now {
+            // display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .order-now:hover {
+            color: #2da099;
+            border-bottom: 1px solid #2da099;
+        }
     }
 
     .hero-image {
@@ -965,7 +1005,7 @@ watch(() => props.serviceName, (newServiceName) => {
         // justify-content: space-around;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
+        gap: 50px;
     }
 
     .advantage-item {
@@ -1057,6 +1097,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     /* 展示列表样式 */
     .showcase-section {
+        margin-top: 60px;
         margin-bottom: 80px;
     }
 
@@ -1339,6 +1380,12 @@ watch(() => props.serviceName, (newServiceName) => {
         padding: 0 15px 20px;
 
         // margin-top: 20px;
+
+        .steps-box,
+        .advantages-section {
+            margin-top: 20px;
+        }
+
         .advantages-section {
             .advantages-flex {
                 display: grid;
