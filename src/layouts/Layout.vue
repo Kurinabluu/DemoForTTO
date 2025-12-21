@@ -58,7 +58,7 @@ function onNavClick(event, navName = '') {
     // }
     // // 其他导航项：弹出敬请期待对话框
     // else 
-    if (textContent === '行业新闻' || textContent === '特别推荐') {
+    if (textContent === '行业新闻' || textContent === '特别推荐' || textContent === '用户注册') {
         if (comingSoonDialogRef.value) {
             comingSoonDialogRef.value.showComingDialog = true;
         }
