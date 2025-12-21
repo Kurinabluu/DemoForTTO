@@ -179,18 +179,33 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css clearfix">
-                    <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
+                    <li class="pointer">
+                        <el-dropdown class="language-dropdown">
+                            <span class="el-dropdown-link">
+                                语言/語言/LANGUAGE<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                            </span>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item>中文简体</el-dropdown-item>
+                                    <el-dropdown-item disabled>中文繁體</el-dropdown-item>
+                                    <el-dropdown-item disabled>ENGLISH</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </li>
+                    <!-- <li class="pointer" :class="{ clicked: activeNavItem === '网站首页' }"
                         @click="onNavClick($event, '网站首页');">
-                        <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页 -->
+                        <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">网站首页
                         <RouterLink :to="{ path: '/DemoForTTO/service/car' }" @click="scrollToTop()">网站首页
                         </RouterLink>
-                    </li>
+                    </li> -->
                     <!-- 特别推荐页面考虑跳转【免费信息】中的"特别活动" -->
                     <!-- <li class="pointer" :class="{ clicked: activeNavItem === '特别推荐' }" @click="onNavClick($event);">
                         <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '特别活动' } }">特别推荐
                         </RouterLink>
                     </li> -->
-                    <li class="pointer" @click="onNavClick($event)">特别推荐</li>
+                    <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
+                    <li class="pointer" @click="onNavClick($event)">用户注册</li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
@@ -401,6 +416,17 @@ onMounted(() => {
     </el-container>
 </template>
 
+<style lang="scss">
+.el-header .ul-css .el-dropdown {
+    // position: relative;
+    color: #A0A0A0;
+    font-size: 15px;
+}
+
+.el-dropdown-menu {
+    z-index: 3000 !important;
+}
+</style>
 <style lang="scss" scoped>
 .clicked {
     color: #2da099;
@@ -413,7 +439,7 @@ onMounted(() => {
     cursor: pointer;
 }
 
-.ul-css li:hover {
+.ul-css li:not(:first-child):hover {
     color: #2da099;
     border-bottom: 1px #2da099 solid;
 }
@@ -429,7 +455,8 @@ onMounted(() => {
         line-height: 70px;
         // background-color: #39c5bb;
         color: #333;
-        z-index: 8999;
+        z-index: 2000;
+        overflow: visible;
 
         .logo,
         .btns {
@@ -451,22 +478,22 @@ onMounted(() => {
             color: #A0A0A0;
 
             .ul-css {
-                display: inline-block;
-                float: none;
+                // display: inline-block;
 
                 li {
-                    width: 70px;
+                    float: left;
+                    // width: 70px;
+                    // min-width: 70px;
+                    // float: none;
                     height: 55px;
-                    margin-left: 20px;
+                    margin-left: 30px;
                 }
-
             }
 
             i {
                 display: inline-block;
                 height: 40px;
                 line-height: 70px;
-                margin-left: 20px;
                 font-size: 14px;
             }
         }

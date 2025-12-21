@@ -486,7 +486,9 @@ watch(() => props.serviceName, (newServiceName) => {
             <div class="section-title center">{{ currentConfig?.stepsTitle }}</div>
             <el-steps :active="currentConfig?.steps?.length || 0" align-center :space="isPhone ? 100 : ''"
                 :direction="isPhone ? 'vertical' : 'horizontal'">
-                <el-step v-for="(step, i) in currentConfig?.steps" :key="i" :title="step" />
+                <el-step v-for="(step, i) in currentConfig?.steps" :key="i"
+                    :title="typeof step === 'object' ? step.title : step"
+                    :description="typeof step === 'object' ? step.description : ''" />
                 <!-- <el-step title="咨询沟通，根据需求定制方案" />
                 <el-step title="透明报价，确认预定" />
                 <el-step title="行前对接，安心确认" />
@@ -507,7 +509,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title center">{{ currentConfig.showcaseTitle
-            }}</h3>
+                }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -723,6 +725,7 @@ watch(() => props.serviceName, (newServiceName) => {
             margin-top: 20px;
             font-style: italic;
             color: #555;
+            border: 1px solid transparent;
         }
 
         .order-now:hover {
