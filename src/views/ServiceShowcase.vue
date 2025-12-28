@@ -573,11 +573,15 @@ watch(() => props.serviceName, (newServiceName) => {
         <!-- 服务优势区域 - 轮播图展示 -->
         <div class="advantages-section">
             <h2 class="section-title center">{{ currentConfig?.advantagesTitle }}</h2>
+            <!-- <div class="advantages-text description">
+                我们提供如下车型的包车服务：
+            </div> -->
 
             <template v-if="currentConfig?.packagesTitle === '包车服务'">
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
-                    <el-card :class="advantage.carClass || 'car1'">
+                    <el-card :class="['car-pics', advantage.carClass || 'car1']">
                         <template #header>{{ advantage.title }}</template>
+                        <!-- <div class="carousel-wrapper"> -->
                         <div class="carousel-container w100">
                             <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000"
                                 type="card" indicator-position="outside"
@@ -590,40 +594,33 @@ watch(() => props.serviceName, (newServiceName) => {
                                         :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                         :initial-index="index" fit="cover" show-close show-toolbar show-index
                                         :preview-teleported="true" :z-index="9888">
-                                        <!-- 在保留原有工具栏功能的基础上添加左右切换按钮 -->
                                         <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
-                                            <!-- 新增左右切换按钮 -->
                                             <ElIcon @click="prev">
                                                 <Back />
                                             </ElIcon>
                                             <ElIcon @click="next">
                                                 <Right />
                                             </ElIcon>
-
-                                            <!-- 保留原始工具栏功能 -->
                                             <ElIcon @click="actions('zoomOut')">
                                                 <ZoomOut />
                                             </ElIcon>
                                             <ElIcon @click="actions('zoomIn')">
                                                 <ZoomIn />
                                             </ElIcon>
-                                            <!-- 修改旋转按钮的实现方式 -->
-                                            <el-icon @click="
-                                                actions('clockwise')
-                                                ">
+                                            <el-icon @click="actions('clockwise')">
                                                 <RefreshRight />
                                             </el-icon>
                                             <el-icon @click="actions('anticlockwise')">
                                                 <RefreshLeft />
                                             </el-icon>
-                                            <!-- <ElIcon @click="reset">
-                                                <Refresh />
-                                            </ElIcon> -->
                                         </template>
                                     </el-image>
                                 </el-carousel-item>
+                                <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }} {{
+                                    advantage.price }}/日</div>
                             </el-carousel>
                         </div>
+                        <!-- </div> -->
                     </el-card>
                 </template>
             </template>
@@ -651,11 +648,11 @@ watch(() => props.serviceName, (newServiceName) => {
         </div>
 
         <!-- 服务提示信息 -->
-        <div class="service-tips" v-if="currentConfig?.tips">
+        <div class="service-tips" v-for="tip in (currentConfig?.tips || [])" :key="tip">
             <div class="tips-icon">⚠️</div>
             <div class="tips-content">
                 <h4 class="tips-title">重要提示</h4>
-                <p class="tips-text" v-html="currentConfig.tips"></p>
+                <p class="tips-text" v-html="tip"></p>
             </div>
         </div>
 
@@ -900,6 +897,17 @@ watch(() => props.serviceName, (newServiceName) => {
         letter-spacing: 0;
     }
 
+    .car-pics {
+        margin-bottom: 60px;
+
+        .car-price-bottom {
+            position: absolute;
+            bottom: 0;
+            margin-top: 10px;
+            font-size: 20px;
+        }
+    }
+
     .packages-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -974,7 +982,7 @@ watch(() => props.serviceName, (newServiceName) => {
         margin-top: 60px;
 
         .car2 {
-            margin-top: 60px;
+            // margin-top: 60px;
         }
 
         .carousel-container {

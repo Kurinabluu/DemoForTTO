@@ -2418,7 +2418,10 @@
                 },
                 "行程结束，服务反馈，持续优化"
             ],
-            "tips": "我们提供两种灵活的行程安排方式，满足你的不同需求：<br><strong>自定行程</strong>：带上你准备好的旅行计划，随时出发<br><strong>专业定制</strong>：选择TTO“个性定制服务”，为你量身规划",
+            "tips": [
+                "我们提供两种灵活的行程安排方式，满足你的不同需求：<br><strong>自定行程</strong>：带上你准备好的旅行计划，随时出发<br><strong>专业定制</strong>：选择TTO“个性定制服务”，为你量身规划",
+                "我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站“关于我们”有全部的展示）"
+            ],
             "imgText": [
                 "专业车型",
                 "司导具备本地知识",
@@ -2463,21 +2466,7 @@
                 {
                     "id": 1,
                     "carClass": "car1",
-                    "title": "TOYOTA Granvia（丰田格兰维亚）八座People Mover（可乘坐七位乘客）",
-                    "urls": [
-                        "car1_front_right.jpg",
-                        "car1_right.jpg",
-                        "car1_inside.jpg",
-                        "car1_inside_top.jpg",
-                        "car1_inside_back.jpg",
-                        "car1_back_with_space.jpg",
-                        "car1_back_with_no_space.jpg"
-                    ]
-                },
-                {
-                    "id": 2,
-                    "carClass": "car2",
-                    "title": "现代I-Max Elite 八座位（可乘坐七位乘客）",
+                    "title": "现代I-Max Elite 行政精英 八座MVP，可座7位乘客",
                     "urls": [
                         "car2_front_left.jpg",
                         "car2_left.jpg",
@@ -2486,7 +2475,45 @@
                         "car2_inside_top.jpg",
                         "car2_back_right.jpg",
                         "car2_back.jpg"
-                    ]
+                    ],
+                    "currency": "AUD",
+                    "price": "30"
+                },
+                {
+                    "id": 2,
+                    "carClass": "car2",
+                    "title": "丰田 格兰维亚（Granvia） 八座MVP，可座7位乘客",
+                    "urls": [
+                        "car1_front_right.jpg",
+                        "car1_right.jpg",
+                        "car1_inside.jpg",
+                        "car1_inside_top.jpg",
+                        "car1_inside_back.jpg",
+                        "car1_back_with_space.jpg",
+                        "car1_back_with_no_space.jpg"
+                    ],
+                    "currency": "AUD",
+                    "price": "40"
+                },
+                {
+                    "id": 3,
+                    "carClass": "car3",
+                    "title": "丰田 海狮（Hiace） 12座 小型行政级巴士，可座11位乘客",
+                    "urls": [
+                        "carType.png"
+                    ],
+                    "currency": "AUD",
+                    "price": "50"
+                },
+                {
+                    "id": 4,
+                    "carClass": "car4",
+                    "title": "丰田 考斯特（coaster） 22座 中型巴士，可座20位乘客",
+                    "urls": [
+                        "carType.png"
+                    ],
+                    "currency": "AUD",
+                    "price": "60"
                 }
             ],
             "contactTitle": "订购包车服务",
@@ -2503,7 +2530,7 @@
         "serviceConfig": {
             "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "专属于你的私人旅行定制",
-            "heroDesc": "世上没有两份相同的风景，也不该有两次雷同的旅程。TTO私人定制，从“你出想法，我们实现”开始：或许你想在酿酒师陪同下深入葡萄酒庄，或者想捕捉极光，或许计划带着孩子与袋熊亲密接触。我们不为你提供现成菜单，而是与你共同创作——你提出想法，我们负责将其化为可行而精彩的现实。每一次推荐、每一处细节，都只为独一无二的你而存在。",
+            "heroDesc": "「私人定制」，代表着“高端玩家”对专业服务与深度体验的更高要求，它代表“高度专业、个性服务、活动稀有、体验独特与高度沉浸”。世上没有两份相同的风景，也不该有两次雷同的旅程。TTO与你共同创作的，正是这份独一无二的体验脚本。每一次推荐、每一处细节，都只为独一无二的你而存在。",
             "features": [
                 "专属资源匹配",
                 "特殊需求满足",
@@ -2513,14 +2540,19 @@
             ],
             "stepsTitle": "私人定制六步安心之旅",
             "steps": [
-                "提出你对行程的想法和主意",
-                "选择深度定制or现有方案调整",
-                "获得专定方案与透明的报价",
-                "确定专属方案及支付定金",
-                "行程开始前的两个礼拜全额支付尾款",
-                "行程结束，服务反馈，持续优化"
+                "告诉我们你的旅行想法，包括但不限于天数、兴趣点（景点、活动、餐饮、住宿等）与偏好节奏，我们将据此为你构思专属方案",
+                "获得详细行程与透明报价，然后根据人数选择对应车型",
+                {
+                    "title": "付费",
+                    "description": "收费标准详见“重要提示”板块"
+                },
+                "开始行程（进岛时机场迎接）",
+                "行程进行中客人完全掌控节奏，我们全力实时跟进、配合",
+                "行程结束（离岛时送至机场）"
             ],
-            "tips": "行程定制为<strong>收费</strong>内容，定制费<strong>¥20元/天</strong>；若后续预定TTO包车服务，定制费用可双倍抵扣团费！",
+            "tips": [
+                "私人定制提供两种服务模式，定制费统一为<strong>AUD 30/天</strong>：<br>1.仅定制：委托TTO规划行程并由你自行安排；<br>2.定制并雇佣TTO执行：定制费将作<strong>2倍的金额</strong>抵扣行程费用，如：2天行程定制费AUD 60可作AUD60 X 2=AUD 120抵扣行程费用。<br><strong style='font-style:italic'>此费用在定制之前全额支付到本公司账户。</strong>"
+            ],
             "imgText": [
                 "专属资源匹配",
                 "特殊需求满足",

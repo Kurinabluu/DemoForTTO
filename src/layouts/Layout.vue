@@ -58,12 +58,12 @@ function onNavClick(event, navName = '') {
     // }
     // // 其他导航项：弹出敬请期待对话框
     // else 
-    if (textContent === '行业新闻' || textContent === '特别推荐' || textContent === '用户注册') {
-        if (comingSoonDialogRef.value) {
-            comingSoonDialogRef.value.showComingDialog = true;
-        }
-        return
-    }
+    // if (textContent === '行业新闻' || textContent === '特别推荐' || textContent === '用户注册') {
+    // if (comingSoonDialogRef.value) {
+    comingSoonDialogRef.value.showComingDialog = true;
+    // }
+    // return
+    // }
 
 
     // 由于现在使用computed属性动态控制clicked类，这里不再需要手动切换类名
@@ -178,8 +178,9 @@ onMounted(() => {
                 </RouterLink>
             </span>
             <span class="btns no-select">
-                <ul class="ul-css clearfix">
-                    <li class="pointer">
+                <ul class="ul-css fs16 clearfix">
+                    <li class="pointer" @click="onNavClick($event)">关于我们</li>
+                    <li class="pointer dropdown">
                         <el-dropdown class="language-dropdown">
                             <span class="el-dropdown-link">
                                 语言/語言/LANGUAGE<el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -206,6 +207,8 @@ onMounted(() => {
                     </li> -->
                     <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
                     <li class="pointer" @click="onNavClick($event)">用户注册</li>
+                    <li class="pointer" @click="onNavClick($event)">Login</li>
+                    <li class="pointer" @click="onNavClick($event)">成为会员</li>
                     <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
@@ -419,8 +422,8 @@ onMounted(() => {
 <style lang="scss">
 .el-header .ul-css .el-dropdown {
     // position: relative;
-    color: #A0A0A0;
-    font-size: 15px;
+    color: #111;
+    font-size: 16px;
 }
 
 .el-dropdown-menu {
@@ -439,7 +442,7 @@ onMounted(() => {
     cursor: pointer;
 }
 
-.ul-css li:not(:first-child):hover {
+.ul-css li:not(.dropdown):hover {
     color: #2da099;
     border-bottom: 1px #2da099 solid;
 }
@@ -454,7 +457,6 @@ onMounted(() => {
         height: 70px;
         line-height: 70px;
         // background-color: #39c5bb;
-        color: #333;
         z-index: 2000;
         overflow: visible;
 
@@ -467,7 +469,7 @@ onMounted(() => {
             // font-size: 24px;
 
             .logo-img {
-                width: 180px;
+                width: 200px;
                 vertical-align: middle;
             }
         }
@@ -475,7 +477,7 @@ onMounted(() => {
         .btns {
             position: absolute;
             right: 40px;
-            color: #A0A0A0;
+            color: #111;
 
             .ul-css {
                 // display: inline-block;
