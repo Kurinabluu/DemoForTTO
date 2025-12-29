@@ -44,6 +44,26 @@ const routes = [
         // redirect: '/DemoForTTO/trips/freeinfo' // 默认重定向到自助游页面
         redirect: '/DemoForTTO/service/car' // 默认重定向到自助游页面
       },
+      // 兼容直接访问 /DemoForTTO/index.html 的情况（例如静态托管 404 回退）
+      // 无论本地存储是否有记录，都先跳转到默认首页或上次访问页面
+      {
+        path: '/DemoForTTO/index.html',
+        redirect: () => {
+          try {
+            if (typeof window !== 'undefined') {
+              const saved = localStorage.getItem('tto_last_path')
+              if (saved && saved !== '/DemoForTTO' && saved !== '/') {
+                return saved
+              }
+            }
+          } catch (e) {
+            // ignore
+          }
+          // 如果没有保存记录，则跳到默认自助游页面
+          // return '/DemoForTTO/trips/freeinfo'
+          return '/DemoForTTO/service/car'
+        }
+      },
       {
         path: '/DemoForTTO',
         name: 'Home',
@@ -137,7 +157,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory('/DemoForTTO/'),
+  history: createWebHistory(),
   routes
 });
 
@@ -177,7 +197,7 @@ router.beforeEach((to, from, next) => {
       localStorage.setItem('tto_first_visit_done', '1');
       localStorage.setItem('tto_selected_subnav', DEFAULT_FREEINFO_SUBNAV);
       // 首次访问，重定向到默认路由
-      if (to.path === '/' || to.path === '/DemoForTTO') {
+      if (to.path === '/' || to.path === '/DemoForTTO' || to.path === '/DemoForTTO/index.html') {
         return next('/DemoForTTO/service/car');
         // return next('/DemoForTTO/trips/freeinfo');
       }
@@ -186,7 +206,7 @@ router.beforeEach((to, from, next) => {
 
     // 非首次：如果直接到了根或默认页，跳转到上次页面
     const lastPath = localStorage.getItem('tto_last_path') || '';
-    if ((to.path === '/' || to.path === '/DemoForTTO') && lastPath) {
+    if ((to.path === '/' || to.path === '/DemoForTTO' || to.path === '/DemoForTTO/index.html') && lastPath) {
       return next(lastPath);
     }
   } catch (e) {
