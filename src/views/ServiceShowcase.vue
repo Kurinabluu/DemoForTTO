@@ -5,6 +5,33 @@ import { ElIcon } from 'element-plus'
 import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
 import ContactDialog from '@/components/ContactDialog.vue'
 import dataJson from '@/data/data.json'
+// 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
+// 导入所有需要的图片，使用@别名
+import car1FrontRight from '@/assets/img/carService/car1_front_right.jpg';
+import car1Right from '@/assets/img/carService/car1_right.jpg';
+import car1Inside from '@/assets/img/carService/car1_inside.jpg';
+import car1InsideTop from '@/assets/img/carService/car1_inside_top.jpg';
+import car1InsideBack from '@/assets/img/carService/car1_inside_back.jpg';
+import car1BackWithSpace from '@/assets/img/carService/car1_back_with_space.jpg';
+import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space.jpg';
+// import car2CarType from '@/assets/img/carService/car2_carType.png';
+import carType from '@/assets/img/carService/carType.png';
+import defaultCarType from '@/assets/img/carService/carType.png';
+// 导入私人定制服务的图片
+import startFromZero from '@/assets/img/startFromZero.png';
+import capable from '@/assets/img/capable.png';
+import createFreely from '@/assets/img/createFreely.png';
+import finalPlan from '@/assets/img/finalPlan.png';
+// 导入car2的所有图片
+import car2Left from '@/assets/img/carService/car2_left.jpg';
+import car2FrontLeft from '@/assets/img/carService/car2_front_left.jpg';
+import car2LeftOpen from '@/assets/img/carService/car2_left_open.jpg';
+import car2Inside from '@/assets/img/carService/car2_inside.jpg';
+import car2InsideTop from '@/assets/img/carService/car2_inside_top.jpg';
+import car2BackRight from '@/assets/img/carService/car2_back_right.jpg';
+import car2Back from '@/assets/img/carService/car2_back.jpg';
+import AboutUsDialog from '@/components/AboutUsDialog.vue';
+
 // 从data.json中获取私人定制服务的数据
 const privateCustomService = dataJson.find(item => item.tagName === '私人定制')
 const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
@@ -56,33 +83,6 @@ const getServiceByName = (serviceName) => {
 }
 
 // 注释掉之前的动态导入函数，使用require方式替代
-
-
-// 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
-// 导入所有需要的图片，使用@别名
-import car1FrontRight from '@/assets/img/carService/car1_front_right.jpg';
-import car1Right from '@/assets/img/carService/car1_right.jpg';
-import car1Inside from '@/assets/img/carService/car1_inside.jpg';
-import car1InsideTop from '@/assets/img/carService/car1_inside_top.jpg';
-import car1InsideBack from '@/assets/img/carService/car1_inside_back.jpg';
-import car1BackWithSpace from '@/assets/img/carService/car1_back_with_space.jpg';
-import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space.jpg';
-// import car2CarType from '@/assets/img/carService/car2_carType.png';
-import carType from '@/assets/img/carService/carType.png';
-import defaultCarType from '@/assets/img/carService/carType.png';
-// 导入私人定制服务的图片
-import startFromZero from '@/assets/img/startFromZero.png';
-import capable from '@/assets/img/capable.png';
-import createFreely from '@/assets/img/createFreely.png';
-import finalPlan from '@/assets/img/finalPlan.png';
-// 导入car2的所有图片
-import car2Left from '@/assets/img/carService/car2_left.jpg';
-import car2FrontLeft from '@/assets/img/carService/car2_front_left.jpg';
-import car2LeftOpen from '@/assets/img/carService/car2_left_open.jpg';
-import car2Inside from '@/assets/img/carService/car2_inside.jpg';
-import car2InsideTop from '@/assets/img/carService/car2_inside_top.jpg';
-import car2BackRight from '@/assets/img/carService/car2_back_right.jpg';
-import car2Back from '@/assets/img/carService/car2_back.jpg';
 
 // 创建图片映射表
 const carImagesMap = {
@@ -409,6 +409,13 @@ const loadServiceData = (serviceName) => {
     }
 }
 
+const aboutUsDialogRef = ref(null);
+function showAboutUsDialog() {
+    if (aboutUsDialogRef.value) {
+        aboutUsDialogRef.value.showAboutUsDialog = true;
+    }
+}
+
 // 组件挂载时获取数据
 onMounted(() => {
     // 优先使用传入的serviceName
@@ -457,6 +464,57 @@ watch(() => props.serviceName, (newServiceName) => {
 
 <template>
     <div class="service-showcase">
+        <!-- 包车服务介绍 -->
+        <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
+            <div class="charter-content">
+                <!-- <p class="charter-main-title center">我们提供如下车型的包车服务：</p> -->
+                <p class="section-title center">我们提供如下车型的包车服务：</p>
+                <p class="charter-notice center">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
+                        @click="showAboutUsDialog">关于我们</span>有全部的展示）」</p>
+
+                <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
+                    <p class="car-index">{{ advantage?.carIndex || '' }}</p>
+                    <p class="car-name">{{ advantage?.title || '' }}</p>
+                    <p class="car-price">{{ advantage?.carPrice || '' }}</p>
+
+                    <div class="carousel-container w100">
+                        <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000" type="card"
+                            indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
+                            <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
+                                <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
+                                    class="carousel-img w100 h100 pointer" :fit="isTablet ? 'scale-down' : 'contain'"
+                                    :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
+                                    :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
+                                    :initial-index="index" fit="cover" show-close show-toolbar show-index
+                                    :preview-teleported="true" :z-index="9888">
+                                    <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
+                                        <ElIcon @click="prev">
+                                            <Back />
+                                        </ElIcon>
+                                        <ElIcon @click="next">
+                                            <Right />
+                                        </ElIcon>
+                                        <ElIcon @click="actions('zoomOut')">
+                                            <ZoomOut />
+                                        </ElIcon>
+                                        <ElIcon @click="actions('zoomIn')">
+                                            <ZoomIn />
+                                        </ElIcon>
+                                        <el-icon @click="actions('clockwise')">
+                                            <RefreshRight />
+                                        </el-icon>
+                                        <el-icon @click="actions('anticlockwise')">
+                                            <RefreshLeft />
+                                        </el-icon>
+                                    </template>
+                                </el-image>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </template>
+            </div>
+        </div>
+
         <!-- 顶部服务标题（左上角） -->
         <!-- <h1 class="service-title fowe7" v-if="titleText">{{ titleText }}</h1> -->
         <!-- 主要服务介绍区域 -->
@@ -671,6 +729,8 @@ watch(() => props.serviceName, (newServiceName) => {
 
         <!-- 咨询弹窗 -->
         <ContactDialog v-model:visible="consultationDialogVisible" />
+        <!-- 关于我们弹窗 -->
+        <AboutUsDialog ref="aboutUsDialogRef" />
     </div>
 </template>
 <style lang="scss">
@@ -703,12 +763,98 @@ watch(() => props.serviceName, (newServiceName) => {
         margin: 0 0 16px 0;
     }
 
+    .top-intro-section {
+        text-align: center;
+        padding: 40px 20px 30px;
+
+        .top-intro-phone {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 8px 0;
+        }
+
+        .top-intro-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 10px 0;
+        }
+
+        .top-intro-desc {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+    }
+
     .hero-section {
         .hero-content {
             display: flex;
             gap: 40px;
             align-items: center;
             flex-direction: column;
+        }
+    }
+
+    .charter-intro {
+        .charter-content {
+            text-align: center;
+
+            .carousel-img {
+                height: auto;
+            }
+        }
+
+        .charter-main-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 15px 0;
+        }
+
+        .charter-notice {
+            font-size: 18px;
+            color: #666;
+            margin: 0 0 20px 0;
+
+            .about-us-link {
+                color: #3dc7be;
+                cursor: pointer;
+                text-decoration: underline;
+                font-weight: 500;
+                transition: color 0.3s;
+
+                &:hover {
+                    color: #2a9e93;
+                }
+            }
+        }
+
+        .car-index {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 8px 0;
+        }
+
+        .car-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin: 30px 0 20px 0;
+        }
+
+        .car-price {
+            font-size: 18px;
+            color: #3dc7be;
+            margin: 0 0 8px 0;
+        }
+
+        .car-image {
+            font-size: 16px;
+            color: #999;
+            margin: 0 0 20px 0;
         }
     }
 

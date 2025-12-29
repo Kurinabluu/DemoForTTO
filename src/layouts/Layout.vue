@@ -8,6 +8,7 @@ import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 import RefundPolicy from '@/components/RefundPolicy.vue';
 import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
+import AboutUsDialog from '@/components/AboutUsDialog.vue';
 
 const navStore = useNavStore();
 const router = useRouter();
@@ -16,6 +17,7 @@ const comingSoonDialogRef = ref(null);
 const refundPolicyRef = ref(null);
 const privacyPolicyRef = ref(null);
 const termsandConditionsDialogRef = ref(null);
+const aboutUsDialogRef = ref(null);
 
 // 计算属性：根据当前路由和子导航状态确定哪个导航项应该有clicked类
 const activeNavItem = computed(() => {
@@ -145,6 +147,11 @@ function showTermsandConditionsDialog() {
         termsandConditionsDialogRef.value.showTemrsDialog = true;
     }
 }
+function showAboutUsDialog() {
+    if (aboutUsDialogRef.value) {
+        aboutUsDialogRef.value.showAboutUsDialog = true;
+    }
+}
 
 // 组件挂载时检查是否首次访问
 onMounted(() => {
@@ -179,7 +186,7 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css fs16 clearfix">
-                    <li class="pointer" @click="onNavClick($event)">关于我们</li>
+                    <li class="pointer" @click="showAboutUsDialog">关于我们</li>
                     <li class="pointer dropdown">
                         <el-dropdown class="language-dropdown">
                             <span class="el-dropdown-link">
@@ -221,6 +228,7 @@ onMounted(() => {
         <!-- <HomeView /> -->
         <RouterView />
         <ComingSoonDialog ref="comingSoonDialogRef" />
+        <AboutUsDialog ref="aboutUsDialogRef" />
 
         <!-- 联系我们弹窗 -->
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
@@ -357,7 +365,7 @@ onMounted(() => {
                                 八大服务 <span>Service</span>
                             </RouterLink>
                         </div>
-                        <div class="nav-item" @click="showComingSoonDialog">关于我们 <span>About
+                        <div class="nav-item" @click="showAboutUsDialog">关于我们 <span>About
                                 us</span></div>
                         <div class="nav-item" @click="openContactDialog">联系我们 <span>Contact us</span></div>
                     </div>
