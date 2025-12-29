@@ -17,7 +17,7 @@ defineExpose({
                 我们的团队熟悉塔斯马尼亚的每一个角落，致力于为你打造专属的旅行方案。
             </p>
             <p class="about-slogan">
-                诚会天下游者，祝您旅途愉快！
+                诚会天下游者，祝你旅途愉快！
             </p>
         </div>
         <template #footer>
