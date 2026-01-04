@@ -168,7 +168,6 @@ onMounted(() => {
         <el-header class="fs15 bgfff">
             <span class="logo fowe7 no-select pointer">
                 <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
-
                 <RouterLink to="/DemoForTTO/service/car">
                     <img src="@/assets/img/header_logo.png" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
                                  const span=document.createElement('span'); 
@@ -213,10 +212,9 @@ onMounted(() => {
                         </RouterLink>
                     </li> -->
                     <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
-                    <li class="pointer" @click="onNavClick($event)">用户注册</li>
-                    <li class="pointer" @click="onNavClick($event)">Login</li>
+                    <li class="pointer" @click="onNavClick($event)">付款与退款</li>
+                    <li class="pointer" @click="onNavClick($event)">用户注册/登录</li>
                     <li class="pointer" @click="onNavClick($event)">成为会员</li>
-                    <li class="pointer" @click="onNavClick($event)">行业新闻</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
                     <li class="pointer" @click="openContactDialog()">联系我们</li>
@@ -357,8 +355,6 @@ onMounted(() => {
                             </RouterLink> -->
                             精品路线 <span>Tourist route</span>
                         </div>
-                        <div class="nav-item" @click="showComingSoonDialog">行业新闻 <span>News
-                                center</span></div>
                         <div class="nav-item">
                             <!-- <RouterLink to="/DemoForTTO/service/ticket" @click="scrollToTop()"> -->
                             <RouterLink to="/DemoForTTO/service/car" @click="scrollToTop()">

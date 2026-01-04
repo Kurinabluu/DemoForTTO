@@ -14,6 +14,10 @@ import car1InsideTop from '@/assets/img/carService/car1_inside_top.jpg';
 import car1InsideBack from '@/assets/img/carService/car1_inside_back.jpg';
 import car1BackWithSpace from '@/assets/img/carService/car1_back_with_space.jpg';
 import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space.jpg';
+import car1BackWithSuitcases from '@/assets/img/carService/car1_back_with_suitcases.jpg';
+import seats22 from '@/assets/img/carService/22seats_front_left.png';
+import seats22Left from '@/assets/img/carService/22seats_left.jpg';
+
 // import car2CarType from '@/assets/img/carService/car2_carType.png';
 import carType from '@/assets/img/carService/carType.png';
 import defaultCarType from '@/assets/img/carService/carType.png';
@@ -93,6 +97,7 @@ const carImagesMap = {
     'car1_inside_back.jpg': car1InsideBack,
     'car1_back_with_space.jpg': car1BackWithSpace,
     'car1_back_with_no_space.jpg': car1BackWithNoSpace,
+    'car1_back_with_suitcases.jpg': car1BackWithSuitcases,
     'carType.png': defaultCarType,
     // car2的图片映射
     'car2_left.jpg': car2Left,
@@ -102,6 +107,9 @@ const carImagesMap = {
     'car2_inside_top.jpg': car2InsideTop,
     'car2_back_right.jpg': car2BackRight,
     'car2_back.jpg': car2Back,
+    //丰田考斯特22座
+    '22seats_front_left.png': seats22,
+    '22seats_left.jpg': seats22Left,
     // 私人定制服务的图片映射
     '@/assets/img/startFromZero.png': startFromZero,
     '@/assets/img/capable.png': capable,
@@ -191,14 +199,6 @@ const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson 
         image: 'https://picsum.photos/seed/business/400/300',
         features: ['专业导览', '商务设施', '高效安排'],
         tag: '商务游'
-    },
-    {
-        id: 6,
-        title: '特殊需求定制',
-        description: '专为有特殊需求的游客设计的行程，包含无障碍设施和特殊饮食安排。',
-        image: 'https://picsum.photos/seed/special/400/300',
-        features: ['无障碍设施', '特殊饮食', '贴心服务'],
-        tag: '个性化服务'
     }
 ]
 
@@ -467,26 +467,26 @@ watch(() => props.serviceName, (newServiceName) => {
         <!-- 包车服务介绍 -->
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
-                <!-- <p class="charter-main-title center">我们提供如下车型的包车服务：</p> -->
-                <p class="section-title center">我们提供如下车型的包车服务：</p>
-                <p class="charter-notice center">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
+                <div class="section-title">包车服务包括如下内容：</div>
+                <p class="description center">1、包车价格包括以下内容：车、司机、油费、停车费、税金、保险；</p>
+                <p class="description center">2、每日用车时长是8-10个小时</p>
+                <p class="description center">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
                         @click="showAboutUsDialog">关于我们</span>有全部的展示）」</p>
 
+                <p class="section-title">车型选择与价格</p>
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
-                    <p class="car-index">{{ advantage?.carIndex || '' }}</p>
                     <p class="car-name">{{ advantage?.title || '' }}</p>
-                    <p class="car-price">{{ advantage?.carPrice || '' }}</p>
 
                     <div class="carousel-container w100">
-                        <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000" type="card"
+                        <el-carousel trigger="click" :height="isTablet ? '400px' : '600px'" :interval="5000" type="card"
                             indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
                             <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
                                 <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
                                     class="carousel-img w100 h100 pointer" :fit="isTablet ? 'scale-down' : 'contain'"
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
-                                    :initial-index="index" fit="cover" show-close show-toolbar show-index
-                                    :preview-teleported="true" :z-index="9888">
+                                    :initial-index="index" show-close show-toolbar show-index :preview-teleported="true"
+                                    :z-index="9888">
                                     <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
                                         <ElIcon @click="prev">
                                             <Back />
@@ -509,6 +509,8 @@ watch(() => props.serviceName, (newServiceName) => {
                                     </template>
                                 </el-image>
                             </el-carousel-item>
+                            <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }}{{
+                                advantage.price }}</div>
                         </el-carousel>
                     </div>
                 </template>
@@ -523,8 +525,8 @@ watch(() => props.serviceName, (newServiceName) => {
 
                 <div class="hero-text w100">
                     <!-- <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2> -->
-                    <h2 class="section-title center">{{ currentConfig?.heroTitle }}</h2>
-                    <p class="description center">{{ currentConfig?.heroDesc }}</p>
+                    <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
+                    <p class="description center" v-for="desc in currentConfig?.heroDesc">{{ desc }}</p>
                     <!-- <ul class="features-list">
                         <li class="feature-item" v-for="(f, i) in currentConfig?.features" :key="i">
                             <span class="feature-dot center fff fowe7">√</span>
@@ -541,9 +543,8 @@ watch(() => props.serviceName, (newServiceName) => {
         </div>
 
         <div class="steps-box">
-            <div class="section-title center">{{ currentConfig?.stepsTitle }}</div>
-            <el-steps :active="currentConfig?.steps?.length || 0" align-center :space="isPhone ? 100 : ''"
-                :direction="isPhone ? 'vertical' : 'horizontal'">
+            <div class="section-title">{{ currentConfig?.stepsTitle }}</div>
+            <el-steps :active="currentConfig?.steps?.length || 0" align-center :space=150 direction="vertical">
                 <el-step v-for="(step, i) in currentConfig?.steps" :key="i"
                     :title="typeof step === 'object' ? step.title : step"
                     :description="typeof step === 'object' ? step.description : ''" />
@@ -566,7 +567,7 @@ watch(() => props.serviceName, (newServiceName) => {
         <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0" class="showcase-section w100">
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
-            <h3 v-if="currentConfig?.showcaseTitle" class="section-title center">{{ currentConfig.showcaseTitle
+            <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
                 }}</h3>
 
             <!-- 左侧滚动按钮 -->
@@ -629,90 +630,76 @@ watch(() => props.serviceName, (newServiceName) => {
         </div> -->
 
         <!-- 服务优势区域 - 轮播图展示 -->
-        <div class="advantages-section">
-            <h2 class="section-title center">{{ currentConfig?.advantagesTitle }}</h2>
-            <!-- <div class="advantages-text description">
-                我们提供如下车型的包车服务：
-            </div> -->
+        <!-- <div class="advantages-section">
+            <h2 class="section-title">{{ currentConfig?.advantagesTitle }}</h2>
+           
 
-            <template v-if="currentConfig?.packagesTitle === '包车服务'">
-                <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
-                    <el-card :class="['car-pics', advantage.carClass || 'car1']">
-                        <template #header>{{ advantage.title }}</template>
-                        <!-- <div class="carousel-wrapper"> -->
-                        <div class="carousel-container w100">
-                            <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000"
-                                type="card" indicator-position="outside"
-                                :direction="isMobile ? 'vertical' : 'horizontal'">
-                                <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
-                                    <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
-                                        class="carousel-img w100 h100 pointer"
-                                        :fit="isTablet ? 'scale-down' : 'contain'"
-                                        :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
-                                        :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
-                                        :initial-index="index" fit="cover" show-close show-toolbar show-index
-                                        :preview-teleported="true" :z-index="9888">
-                                        <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
-                                            <ElIcon @click="prev">
-                                                <Back />
-                                            </ElIcon>
-                                            <ElIcon @click="next">
-                                                <Right />
-                                            </ElIcon>
-                                            <ElIcon @click="actions('zoomOut')">
-                                                <ZoomOut />
-                                            </ElIcon>
-                                            <ElIcon @click="actions('zoomIn')">
-                                                <ZoomIn />
-                                            </ElIcon>
-                                            <el-icon @click="actions('clockwise')">
-                                                <RefreshRight />
-                                            </el-icon>
-                                            <el-icon @click="actions('anticlockwise')">
-                                                <RefreshLeft />
-                                            </el-icon>
-                                        </template>
-                                    </el-image>
-                                </el-carousel-item>
-                                <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }} {{
-                                    advantage.price }}/日</div>
-                            </el-carousel>
-                        </div>
-                        <!-- </div> -->
-                    </el-card>
-                </template>
-            </template>
-
-            <div v-else class="advantages-flex">
-                <div class="advantage-item" v-for="a in (currentConfig?.advantages || [])" :key="a?.id">
-                    <div class="advantage-detail">
-                        <div class="advantage-icon">
-                            <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
-                            <img v-else :src="defaultCarType" alt="默认图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.title }}</h3>
-                        <p class="advantage-description">{{ a.description }}</p>
+        <template v-if="currentConfig?.packagesTitle === '包车服务'">
+            <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
+                <el-card :class="['car-pics', advantage.carClass || 'car1']">
+                    <template #header>{{ advantage.title }}</template>
+                    <div class="carousel-container w100">
+                        <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000" type="card"
+                            indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
+                            <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
+                                <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
+                                    class="carousel-img w100 h100 pointer" :fit="isTablet ? 'scale-down' : 'contain'"
+                                    :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
+                                    :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
+                                    :initial-index="index" fit="cover" show-close show-toolbar show-index
+                                    :preview-teleported="true" :z-index="9888">
+                                    <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
+                                        <ElIcon @click="prev">
+                                            <Back />
+                                        </ElIcon>
+                                        <ElIcon @click="next">
+                                            <Right />
+                                        </ElIcon>
+                                        <ElIcon @click="actions('zoomOut')">
+                                            <ZoomOut />
+                                        </ElIcon>
+                                        <ElIcon @click="actions('zoomIn')">
+                                            <ZoomIn />
+                                        </ElIcon>
+                                        <el-icon @click="actions('clockwise')">
+                                            <RefreshRight />
+                                        </el-icon>
+                                        <el-icon @click="actions('anticlockwise')">
+                                            <RefreshLeft />
+                                        </el-icon>
+                                    </template>
+                                </el-image>
+                            </el-carousel-item>
+                            <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }} {{
+                                advantage.price }}/日</div>
+                        </el-carousel>
                     </div>
-                    <!-- <div class="advantage-condition" v-if="a.conTitle">
-                        <div class="advantage-icon">
-                            <img v-if="a.conUrl" :src="getImageUrl(a.conUrl)" alt="条件图标" class="advantage-img">
-                            <img v-else src="@/assets/img/carService/condition.png" alt="默认条件图标" class="advantage-img">
-                        </div>
-                        <h3 class="advantage-title">{{ a.conTitle }}</h3>
-                        <p class="advantage-description">{{ a.conDes }}</p>
-                    </div> -->
+                </el-card>
+            </template>
+        </template>
+
+        <div v-else class="advantages-flex">
+            <div class="advantage-item" v-for="a in (currentConfig?.advantages || [])" :key="a?.id">
+                <div class="advantage-detail">
+                    <div class="advantage-icon">
+                        <img v-if="a.url" :src="getImageUrl(a.url)" alt="优势图标" class="advantage-img">
+                        <img v-else :src="defaultCarType" alt="默认图标" class="advantage-img">
+                    </div>
+                    <h3 class="advantage-title">{{ a.title }}</h3>
+                    <p class="advantage-description">{{ a.description }}</p>
                 </div>
             </div>
         </div>
+    </div> -->
 
         <!-- 服务提示信息 -->
-        <div class="service-tips" v-for="tip in (currentConfig?.tips || [])" :key="tip">
+        <!-- <div class="service-tips" v-for="tip in (currentConfig?.tips || [])" :key="tip">
             <div class="tips-icon">⚠️</div>
             <div class="tips-content">
                 <h4 class="tips-title">重要提示</h4>
                 <p class="tips-text" v-html="tip"></p>
             </div>
-        </div>
+        </div> -->
 
         <!-- 联系方式区域 -->
         <div class="contact-section" v-if="currentConfig?.contactTitle">
@@ -798,11 +785,27 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .charter-intro {
-        .charter-content {
-            text-align: center;
+        margin-bottom: 60px;
 
-            .carousel-img {
-                height: auto;
+        .charter-content {
+            .carousel-container {
+                position: relative;
+
+                .carousel-img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    margin: 0 auto;
+                    scale: 1.1;
+                }
+
+                .car-price-bottom {
+                    position: absolute;
+                    bottom: 0;
+                    margin-top: 10px;
+                    font-size: 20px;
+                }
             }
         }
 
@@ -813,36 +816,23 @@ watch(() => props.serviceName, (newServiceName) => {
             margin: 0 0 15px 0;
         }
 
-        .charter-notice {
-            font-size: 18px;
-            color: #666;
-            margin: 0 0 20px 0;
+        .about-us-link {
+            color: #3dc7be;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.3s;
 
-            .about-us-link {
-                color: #3dc7be;
-                cursor: pointer;
-                text-decoration: underline;
-                font-weight: 500;
-                transition: color 0.3s;
-
-                &:hover {
-                    color: #2a9e93;
-                }
+            &:hover {
+                color: #2a9e93;
             }
-        }
-
-        .car-index {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111;
-            margin: 0 0 8px 0;
         }
 
         .car-name {
             font-size: 20px;
             font-weight: 700;
             color: #111;
-            margin: 30px 0 20px 0;
+            margin: 30px 0 0;
         }
 
         .car-price {
@@ -864,8 +854,7 @@ watch(() => props.serviceName, (newServiceName) => {
         .order-now {
             // display: block;
             width: fit-content;
-            margin-left: auto;
-            margin-top: 20px;
+            margin: 20px 0 40px auto;
             font-style: italic;
             color: #555;
             border: 1px solid transparent;
@@ -930,7 +919,7 @@ watch(() => props.serviceName, (newServiceName) => {
     .description {
         font-size: 20px;
         line-height: 1.8;
-        color: #444;
+        color: #363030;
         margin-bottom: 24px;
         letter-spacing: 0;
     }
@@ -1035,23 +1024,13 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .section-title {
         // font-size: 26px;
-        font-size: 42px;
+        //font-size: 42px;
+        font-size: 24px;
         font-weight: 700;
         color: #111;
         // margin: 0 0 20px 0;
-        margin: 0 0 30px 0;
+        margin: 20px 0 30px 0;
         letter-spacing: 0;
-    }
-
-    .car-pics {
-        margin-bottom: 60px;
-
-        .car-price-bottom {
-            position: absolute;
-            bottom: 0;
-            margin-top: 10px;
-            font-size: 20px;
-        }
     }
 
     .packages-grid {
@@ -1123,37 +1102,11 @@ watch(() => props.serviceName, (newServiceName) => {
         background: #2da099;
     }
 
-    .advantages-section {
-        margin-bottom: 40px;
-        margin-top: 60px;
-
-        .car2 {
-            // margin-top: 60px;
-        }
-
-        .carousel-container {
-            // width: 100%;
-            // max-width: 800px;
-            margin: 0 auto;
-
-            /* 增强预览体验的样式 */
-            :deep(.el-image__inner) {
-                transition: transform 0.3s ease;
-            }
-
-            :deep(.el-image:hover .el-image__inner) {
-                transform: scale(1.05);
-            }
-        }
-
-        .carousel-img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            margin: 0 auto;
-        }
-
+    .car-price-bottom {
+        position: absolute;
+        bottom: 0;
+        margin-top: 10px;
+        font-size: 20px;
     }
 
     .advantages-flex {
