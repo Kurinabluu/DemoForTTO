@@ -17,6 +17,7 @@ import car1BackWithNoSpace from '@/assets/img/carService/car1_back_with_no_space
 import car1BackWithSuitcases from '@/assets/img/carService/car1_back_with_suitcases.jpg';
 import seats22 from '@/assets/img/carService/22seats_front_left.png';
 import seats22Left from '@/assets/img/carService/22seats_left.jpg';
+import seats22Inside from '@/assets/img/carService/22seats_inside.jpg';
 
 // import car2CarType from '@/assets/img/carService/car2_carType.png';
 import carType from '@/assets/img/carService/carType.png';
@@ -109,6 +110,7 @@ const carImagesMap = {
     'car2_back.jpg': car2Back,
     //丰田考斯特22座
     '22seats_front_left.png': seats22,
+    '22seats_inside.jpg': seats22Inside,
     '22seats_left.jpg': seats22Left,
     // 私人定制服务的图片映射
     '@/assets/img/startFromZero.png': startFromZero,
