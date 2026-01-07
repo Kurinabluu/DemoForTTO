@@ -35,6 +35,11 @@ import car2Inside from '@/assets/img/carService/car2_inside.jpg';
 import car2InsideTop from '@/assets/img/carService/car2_inside_top.jpg';
 import car2BackRight from '@/assets/img/carService/car2_back_right.jpg';
 import car2Back from '@/assets/img/carService/car2_back.jpg';
+import hiaceFront from '@/assets/img/carService/hiace_front.jpg';
+import hiaceLeftFront from '@/assets/img/carService/hiace_left_front.jpg';
+
+
+
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 
 // 从data.json中获取私人定制服务的数据
@@ -108,6 +113,9 @@ const carImagesMap = {
     'car2_inside_top.jpg': car2InsideTop,
     'car2_back_right.jpg': car2BackRight,
     'car2_back.jpg': car2Back,
+    // 丰田海狮12座
+    'hiace_front.jpg': hiaceFront,
+    'hiace_left_front.jpg': hiaceLeftFront,
     //丰田考斯特22座
     '22seats_front_left.png': seats22,
     '22seats_inside.jpg': seats22Inside,
@@ -470,9 +478,9 @@ watch(() => props.serviceName, (newServiceName) => {
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
                 <div class="section-title">包车服务包括如下内容：</div>
-                <p class="description center">1、包车价格包括以下内容：车、司机、油费、停车费、税金、保险；</p>
-                <p class="description center">2、每日用车时长是8-10个小时</p>
-                <p class="description center">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
+                <p class="description">1、包车价格包括以下内容：车、司机、油费、停车费、税金、保险；</p>
+                <p class="description">2、每日用车时长是8-10个小时</p>
+                <p class="description">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
                         @click="showAboutUsDialog">关于我们</span>有全部的展示）」</p>
 
                 <p class="section-title">车型选择与价格</p>
@@ -511,8 +519,8 @@ watch(() => props.serviceName, (newServiceName) => {
                                     </template>
                                 </el-image>
                             </el-carousel-item>
-                            <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }}{{
-                                advantage.price }}</div>
+                            <!-- <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }}{{
+                                advantage.price }}</div> -->
                         </el-carousel>
                     </div>
                 </template>
@@ -570,7 +578,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-                }}</h3>
+            }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">

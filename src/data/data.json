@@ -2470,7 +2470,7 @@
                 {
                     "id": 1,
                     "carClass": "car1",
-                    "title": "现代I-Max Elite 行政精英 八座MPV，可座7位乘客（每日用车时长是8-10小时）",
+                    "title": "现代I-Max Elite 行政精英 八座MPV，可坐7位乘客（包车价：AUD $600/天，每日用车时长是8-10小时）",
                     "urls": [
                         "car2_front_left.jpg",
                         "car2_left.jpg",
@@ -2486,7 +2486,7 @@
                 {
                     "id": 2,
                     "carClass": "car2",
-                    "title": "丰田 格兰维亚（Granvia） 八座MPV，可座7位乘客（每日用车时长是8-10小时）",
+                    "title": "丰田 格兰维亚（Granvia） 八座MPV，可坐7位乘客（包车价：AUD $700/天，每日用车时长是8-10小时）",
                     "urls": [
                         "car1_front_right.jpg",
                         "car1_right.jpg",
@@ -2503,9 +2503,10 @@
                 {
                     "id": 3,
                     "carClass": "car3",
-                    "title": "丰田 海狮（Hiace） 12座 小型行政级巴士，可座11位乘客（每日用车时长是8-10小时）",
+                    "title": "丰田 海狮（Hiace） 12座 小型行政级巴士，可坐11位乘客（包车价：AUD $750/天，每日用车时长是8-10小时）",
                     "urls": [
-                        "carType.png"
+                        "hiace_front.jpg",
+                        "hiace_left_front.jpg"
                     ],
                     "currency": "AUD $",
                     "price": "750/天（每日用车时长是8-10小时）"
@@ -2513,7 +2514,7 @@
                 {
                     "id": 4,
                     "carClass": "car4",
-                    "title": "丰田 考斯特（coaster） 22座 中型巴士，可座20位乘客（每日用车时长是8-10小时）",
+                    "title": "丰田 考斯特（coaster） 22座 中型巴士，可坐20位乘客（包车价：AUD $1200/天，每日用车时长是8-10小时）",
                     "urls": [
                         "22seats_front_left.png",
                         "22seats_inside.jpg",
