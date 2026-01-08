@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Redirecting...</title>
   <script>
     // 获取当前URL路径
     const pathSegments = window.location.pathname.split('/');
-    
+
     // 检查是否是GitHub Pages环境（包含DemoForTTO前缀）
     const isGitHubPages = pathSegments.includes('DemoForTTO');
-    
+
     // 构造重定向URL，保留路径信息
     let redirectUrl = '/';
     if (isGitHubPages) {
@@ -21,17 +22,32 @@
       // 生产环境：使用完整路径
       redirectUrl = window.location.pathname;
     }
-    
+
     // 添加查询参数
     if (window.location.search) {
       redirectUrl += window.location.search;
     }
-    
+
+    // 检查是否有原始hash（如#top），如果有则转换为查询参数
+    if (window.location.hash && window.location.hash !== '') {
+      const originalHash = window.location.hash;
+      // 如果hash不是路径的一部分（不以#/开头），则转换为查询参数
+      if (!originalHash.startsWith('#/')) {
+        // 将hash转换为查询参数，例如 #top -> ?scrollToTop=1
+        const hashValue = originalHash.substring(1); // 去掉#
+        if (hashValue === 'top') {
+          redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + 'scrollToTop=1';
+        }
+      }
+    }
+
     // 重定向到index.html，并在URL hash中保留原始路径
     window.location.replace('/DemoForTTO/index.html#' + redirectUrl);
   </script>
 </head>
+
 <body>
   <p>正在重定向...</p>
 </body>
+
 </html>
