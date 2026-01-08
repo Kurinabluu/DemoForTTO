@@ -12,7 +12,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 
-const searchInput = ref(route.query.keyword ? String(route.query.keyword) : '')
+const searchInput = ref(route.query.s ? String(route.query.s) : '')
 const keyword = ref(searchInput.value)
 const results = ref([])
 const currentPage = ref(Number(route.query.page) || 1)
@@ -30,7 +30,7 @@ const pagedResults = computed(() => {
 const updateRoute = ({ queryKeyword, page }) => {
   const query = {}
   if (queryKeyword) {
-    query.keyword = queryKeyword
+    query.s = queryKeyword
   }
   if (page && page > 1) {
     query.page = page
@@ -90,14 +90,36 @@ const handlePageChange = (page) => {
 
 const openResult = (result) => {
   if (!result?.targetUrl) return
-  const baseUrl = window.location.origin
-  // 添加#top锚点确保新窗口打开后跳转到页面顶部
-  const fullUrl = `${baseUrl}${result.targetUrl}#top`
+
+  // 确保 targetUrl 是绝对路径（以 / 开头）
+  let targetPath = result.targetUrl
+  if (!targetPath.startsWith('/')) {
+    targetPath = '/' + targetPath
+  }
+
+  // 解析查询参数，构建完整的路径
+  const url = new URL(targetPath, window.location.origin)
+  const fullPath = url.pathname + url.search
+
+  // 在新窗口打开前，更新 localStorage 中的 tto_last_path
+  // 这样可以确保新窗口打开后，路由守卫不会重定向回搜索结果页
+  try {
+    localStorage.setItem('tto_last_path', fullPath)
+  } catch (e) {
+    // 忽略 localStorage 错误
+  }
+
+  // 构建完整的URL，直接使用正确的路由路径
+  const currentUrl = new URL(window.location.href)
+  const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`
+  const fullUrl = `${baseUrl}${fullPath}#top`
+
+  // 打开新窗口
   window.open(fullUrl, '_blank', 'noopener')
 }
 
 watch(
-  () => route.query.keyword,
+  () => route.query.s,
   (newKeyword, oldKeyword) => {
     if (newKeyword === oldKeyword) return
     keyword.value = newKeyword ? String(newKeyword) : ''

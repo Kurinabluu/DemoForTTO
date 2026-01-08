@@ -6,7 +6,7 @@ import { onMounted } from 'vue'
 const props = defineProps({
     activeTag: { type: String, required: true },
     subTab: { type: String, default: '景点' },
-    keyword: { type: String, default: '' },
+    s: { type: String, default: '' },
     dayTripTab: { type: String, default: '景点一日游' },
 })
 
@@ -115,13 +115,13 @@ const gridItems = computed(() => {
 })
 
 const scenicFiltered = computed(() => {
-    const kw = (props.keyword || '').trim().toLowerCase()
+    const kw = (props.s || '').trim().toLowerCase()
     if (!kw) return places?.items || []
     return (places?.items || []).filter(item => item.title.toLowerCase().includes(kw))
 })
 
 const restaurantFiltered = computed(() => {
-    const kw = (props.keyword || '').trim().toLowerCase()
+    const kw = (props.s || '').trim().toLowerCase()
     if (!kw) return restaurants?.items || []
     return (restaurants?.items || []).filter(item =>
         item.place.toLowerCase().includes(kw) ||
@@ -130,7 +130,7 @@ const restaurantFiltered = computed(() => {
 })
 
 const hotelFiltered = computed(() => {
-    const kw = (props.keyword || '').trim().toLowerCase()
+    const kw = (props.s || '').trim().toLowerCase()
     if (!kw) return hotels?.items || []
     return (hotels?.items || []).filter(item =>
         item.place.toLowerCase().includes(kw) ||
@@ -139,7 +139,7 @@ const hotelFiltered = computed(() => {
 })
 
 const activityFiltered = computed(() => {
-    const kw = (props.keyword || '').trim().toLowerCase()
+    const kw = (props.s || '').trim().toLowerCase()
     const base = currentSpecialItems.value || []
     if (!kw) return base
     return base.filter(item =>
@@ -240,7 +240,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </template>
 
     <!-- 搜索结果区：景点 -->
-    <template v-if="(keyword?.trim()) && subTab === '景点'">
+    <template v-if="(s?.trim()) && subTab === '景点'">
         <template v-if="scenicFiltered.length">
             <div class="coming-grid">
                 <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card" @click="onOpenTour(item)"
@@ -256,7 +256,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </template>
 
     <!-- 搜索结果区：餐厅 -->
-    <template v-else-if="(keyword?.trim()) && subTab === '餐厅'">
+    <template v-else-if="(s?.trim()) && subTab === '餐厅'">
         <template v-if="restaurantFiltered.length">
             <div class="coming-grid">
                 <div v-for="(item, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
@@ -272,7 +272,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </template>
 
     <!-- 搜索结果区：住宿 -->
-    <template v-else-if="(keyword?.trim()) && subTab === '住宿'">
+    <template v-else-if="(s?.trim()) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
             <div class="coming-grid">
                 <div v-for="(item, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
@@ -288,7 +288,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </template>
 
     <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步/当地天气/医疗 等） -->
-    <div class="special-activities-section" v-else-if="(keyword?.trim()) && isSpecialSection">
+    <div class="special-activities-section" v-else-if="(s?.trim()) && isSpecialSection">
         <template v-if="activityFiltered.length">
             <div class="activities-header">
                 <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
@@ -329,7 +329,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：景点（无关键词） -->
-    <div v-if="subTab === '景点' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)"
             :data-tour-title="item.title">
             <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
@@ -340,7 +340,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：餐厅（无关键词） -->
-    <div v-if="subTab === '餐厅' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in restaurants.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '餐厅')">
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 周边餐厅</div>
@@ -349,7 +349,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 底部网格：住宿（无关键词） -->
-    <div v-if="subTab === '住宿' && !(keyword?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
         <div v-for="item in hotels.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '住宿')">
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
@@ -358,7 +358,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游（固定行程
     </div>
 
     <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步/当地天气/医疗 等） -->
-    <div v-if="isSpecialSection && !(keyword?.trim())" class="special-activities-section">
+    <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
         <div class="activities-header">
             <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
             <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>

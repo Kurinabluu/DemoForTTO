@@ -521,7 +521,7 @@ onUnmounted(() => {
                 </div> -->
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
-                :keyword="committedKeyword" />
+                :s="committedKeyword" />
         </div>
 
         <!-- 弹窗组件 -->

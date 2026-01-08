@@ -244,7 +244,7 @@ function onSearch() {
 
   router.push({
     path: '/DemoForTTO/search',
-    query: { keyword: payload.query }
+    query: { s: payload.query }
   })
 }
 </script>
