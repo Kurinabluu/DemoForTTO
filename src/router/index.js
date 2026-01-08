@@ -215,36 +215,6 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-router.afterEach((to) => {
-  if (shouldSkipFirstAfterEach) {
-    shouldSkipFirstAfterEach = false;
-    return;
-  }
-  // 进入页面后，尝试恢复滚动
-  const restore = () => {
-    try {
-      // 记录本次路径到localStorage
-      const currentPath = to.fullPath || to.path || ''
-      localStorage.setItem('tto_last_path', currentPath)
 
-      // 尝试从localStorage获取滚动位置
-      const lastScrollY = localStorage.getItem('tto_last_scroll_y') || '0'
-      const y = Number(lastScrollY)
-
-      if (typeof window !== 'undefined') {
-        const scrollTop = Math.max(0, y)
-        window.scrollTo({
-          top: scrollTop,
-          behavior: 'smooth'
-        })
-      }
-    } catch (e) {
-      // ignore
-    }
-  }
-
-  // 直接执行，不需要requestAnimationFrame和setTimeout
-  restore()
-});
 
 export default router;

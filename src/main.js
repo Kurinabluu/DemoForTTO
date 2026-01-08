@@ -60,14 +60,16 @@ if (typeof window !== 'undefined') {
             skipNextAfterEach = false
             return
         }
+
+        // 保存路径前移除#top锚点，避免影响URL
         const path = to.fullPath || to.path
         nav.savePath(path)
 
         // 在下一次渲染后处理滚动位置
         requestAnimationFrame(() => {
-            // 检查URL是否包含锚点，如果有则优先处理锚点（不恢复滚动位置）
-            if (window.location.hash && window.location.hash === '#top') {
-                // 明确滚动到顶部，确保锚点效果生效
+            // 检查是否有搜索关键词，如果有则滚动到顶部
+            if (to.query.s) {
+                // 有搜索关键词，滚动到顶部
                 window.scrollTo({ top: 0, behavior: 'auto' })
             } else {
                 // 否则恢复到之前保存的滚动位置

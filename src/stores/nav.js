@@ -21,10 +21,12 @@ export const useNavStore = defineStore('nav', {
             return !localStorage.getItem(STORAGE_KEYS.firstVisit)
         },
 
-        // 保存完整路由路径（用于路由恢复）
+        // 保存完整路由路径（用于路由恢复，移除#top锚点）
         savePath(path) {
-            this.lastPath = path
-            localStorage.setItem(STORAGE_KEYS.lastPath, path || '')
+            // 移除#top锚点后保存
+            const pathWithoutAnchor = (path || '').split('#')[0]
+            this.lastPath = pathWithoutAnchor
+            localStorage.setItem(STORAGE_KEYS.lastPath, pathWithoutAnchor)
         },
 
         saveScroll(y) {

@@ -100,6 +100,7 @@ function onClickTag(tag, event) {
 // 根据路由路径同步标签状态
 function syncTagWithRoute(forceUseStorage = false) {
   try {
+    // 获取当前路径（不包含#top锚点）
     const currentPath = router.currentRoute.value.path
     if (isSearchPath(currentPath)) {
       localActiveTag.value = ''

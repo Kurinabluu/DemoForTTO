@@ -104,7 +104,7 @@ const openResult = (result) => {
   // 在新窗口打开前，更新 localStorage 中的 tto_last_path
   // 这样可以确保新窗口打开后，路由守卫不会重定向回搜索结果页
   try {
-    localStorage.setItem('tto_last_path', fullPath)
+    localStorage.setItem('tto_last_path', fullPath.split('#')[0])
   } catch (e) {
     // 忽略 localStorage 错误
   }
@@ -112,7 +112,14 @@ const openResult = (result) => {
   // 构建完整的URL，直接使用正确的路由路径
   const currentUrl = new URL(window.location.href)
   const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`
-  const fullUrl = `${baseUrl}${fullPath}#top`
+
+  // 确保新窗口URL包含搜索参数"s"
+  const targetUrl = new URL(fullPath, baseUrl)
+  if (route.query.s) {
+    targetUrl.searchParams.set('s', route.query.s)
+  }
+
+  const fullUrl = targetUrl.href
 
   // 打开新窗口
   window.open(fullUrl, '_blank', 'noopener')
