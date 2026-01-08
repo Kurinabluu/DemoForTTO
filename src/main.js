@@ -65,23 +65,10 @@ if (typeof window !== 'undefined') {
 
         // 在下一次渲染后处理滚动位置
         requestAnimationFrame(() => {
-            // 检查URL查询参数中是否有scrollToTop参数（来自搜索结果的跳转）
-            const urlParams = new URLSearchParams(window.location.search)
-            const scrollToTop = urlParams.get('scrollToTop') === '1'
-
             // 检查URL是否包含锚点，如果有则优先处理锚点（不恢复滚动位置）
             if (window.location.hash && window.location.hash === '#top') {
                 // 明确滚动到顶部，确保锚点效果生效
                 window.scrollTo({ top: 0, behavior: 'auto' })
-            } else if (scrollToTop) {
-                // 如果有scrollToTop参数，滚动到顶部（用于搜索结果的跳转）
-                window.scrollTo({ top: 0, behavior: 'auto' })
-                // 移除查询参数，避免刷新后重复滚动
-                urlParams.delete('scrollToTop')
-                const newUrl = window.location.pathname +
-                    (urlParams.toString() ? '?' + urlParams.toString() : '') +
-                    window.location.hash
-                window.history.replaceState({}, '', newUrl)
             } else {
                 // 否则恢复到之前保存的滚动位置
                 const savedScrollY = nav.lastScrollY

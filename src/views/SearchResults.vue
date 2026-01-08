@@ -90,27 +90,9 @@ const handlePageChange = (page) => {
 
 const openResult = (result) => {
   if (!result?.targetUrl) return
-  // 确保 targetUrl 以 /DemoForTTO 开头（GitHub Pages 需要）
-  let targetUrl = result.targetUrl
-  if (!targetUrl.startsWith('/DemoForTTO')) {
-    targetUrl = `/DemoForTTO${targetUrl.startsWith('/') ? '' : '/'}${targetUrl}`
-  }
-  // 移除URL中可能存在的hash部分（避免干扰404重定向）
-  let pathAndQuery = targetUrl
-  if (targetUrl.includes('#')) {
-    pathAndQuery = targetUrl.split('#')[0]
-  }
-
-  // 添加scrollToTop查询参数，用于在新窗口打开后滚动到顶部
-  // 使用查询参数而不是hash，避免干扰GitHub Pages的404重定向
-  const separator = pathAndQuery.includes('?') ? '&' : '?'
-  pathAndQuery += `${separator}scrollToTop=1`
-
-  // 构建完整URL
   const baseUrl = window.location.origin
-  const fullUrl = `${baseUrl}${pathAndQuery}`
-  // 在新窗口打开，GitHub Pages的404.html会自动处理SPA路由重定向
-  // scrollToTop参数会在路由加载后触发滚动到顶部
+  // 添加#top锚点确保新窗口打开后跳转到页面顶部
+  const fullUrl = `${baseUrl}${result.targetUrl}#top`
   window.open(fullUrl, '_blank', 'noopener')
 }
 

@@ -21,7 +21,8 @@ export function processHashRedirect() {
     if (window.location.hash && window.location.hash.startsWith('#/')) {
       // 提取hash中的完整路径部分（去掉#），包括查询参数
       const hashContent = window.location.hash.substring(1);
-      // 注意：不清空hash，让router.beforeEach处理
+      // 清空hash，然后跳转
+      window.location.hash = '';
       return hashContent;
     }
   } catch (e) {
@@ -184,19 +185,8 @@ let shouldSkipFirstAfterEach = detectReloadNavigation()
 router.beforeEach((to, from, next) => {
   try {
     // 首先检查是否有从404页面重定向过来的路径
-    // 检查当前URL的hash（404.html重定向会使用hash）
-    const currentHash = typeof window !== 'undefined' && window.location.hash
-    const hashPath = currentHash && currentHash.startsWith('#/') ? currentHash.substring(1) : null
-    
-    // 优先使用当前hash中的路径（404重定向），其次使用初始化时检测到的redirectPath
-    const pathToRedirect = hashPath || redirectPath
-    
-    if (pathToRedirect && (to.path === '/DemoForTTO/index.html' || to.path === '/DemoForTTO')) {
-      // 清空hash，避免重复处理
-      if (typeof window !== 'undefined' && window.location.hash) {
-        window.location.hash = ''
-      }
-      return next(pathToRedirect);
+    if (redirectPath && to.path === '/DemoForTTO/index.html') {
+      return next(redirectPath);
     }
 
     // 在beforeEach中直接使用localStorage，避免依赖Pinia实例
