@@ -537,6 +537,11 @@ watch(() => props.serviceName, (newServiceName) => {
                     <!-- <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2> -->
                     <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
                     <p class="description center" v-for="desc in currentConfig?.heroDesc">{{ desc }}</p>
+
+
+                    <!-- <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
+                    <p class="description center" v-for="desc in currentConfig?.heroDesc">{{ desc }}</p> -->
+
                     <!-- <ul class="features-list">
                         <li class="feature-item" v-for="(f, i) in currentConfig?.features" :key="i">
                             <span class="feature-dot center fff fowe7">√</span>
@@ -544,6 +549,22 @@ watch(() => props.serviceName, (newServiceName) => {
                         </li>
                     </ul> -->
                 </div>
+                <template v-if="currentConfig?.heroTitle === '专属于你的私人旅行定制'">
+                    <div class="hero-text w100">
+                        <h2 class="section-title">3种私人订制方式</h2>
+                        <p class="description">
+                            1）只委托本公司定制行程表，行程表中不包含酒店和餐饮，也不在本公司执行行程。
+                            (此方式定制费30澳元/天，具体收费标准是30X天数，此费用在定制之前全额支付到本公司账户。)
+
+                        </p>
+                        <p class="description">
+                            2）定制行程同时包括酒店和餐饮(也可以只包含其中一种)(此方案收费A$35一天，具体收费标准是A$35X天数)
+                        </p>
+                        <p class="description">
+                            3）委托本公司定制行程(方案1或方案2)同时雇佣本公司执行行程。(采用此方案，定制费以2的金额抵扣行程费用)
+                        </p>
+                    </div>
+                </template>
 
                 <!-- <div class="hero-image w100">
                     <div class="image-placeholder center fff fowe7" v-for="text in currentConfig?.imgText">{{ text }}

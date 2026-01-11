@@ -97,11 +97,11 @@ const routes = [
           //   )
           // },
           {
-            path: 'trips/oneday',
-            name: 'OneDayTour',
+            path: 'trips/routes',
+            name: 'Routes',
             component: () => import('@/views/TripsGrid.vue'),
             props: (route) => ({
-              activeTag: '一日游（固定行程）',
+              activeTag: '一日游/多日游',
               dayTripTab: route.query.dayTripTab || '景点一日游'
             })
           },
@@ -110,10 +110,10 @@ const routes = [
           //   name: 'MultiDayTour',
           //   component: () => import('@/views/TripsGrid.vue'),
           //   props: {
-          //     activeTag: '多日游（固定行程）'
+          //     activeTag: '多日游'
           //   }
           // },
-          // // Service 路由组 - 使用 ServiceShowcase.vue
+          // Service 路由组 - 使用 ServiceShowcase.vue
           // {
           //   path: 'service/ticket',
           //   name: 'TicketBooking',

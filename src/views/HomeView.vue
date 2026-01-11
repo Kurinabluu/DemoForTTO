@@ -84,10 +84,10 @@ function onClickSubTab(tab) {
         if (isValidTab) {
             // 根据当前路径决定使用哪个query参数
             const currentPath = route.path
-            if (currentPath.includes('/DemoForTTO/trips/oneday')) {
-                // 一日游页面使用dayTripTab参数
+            if (currentPath.includes('/DemoForTTO/trips/routes')) {
+                // 一日游/多日游页面使用dayTripTab参数
                 router.push({
-                    path: '/DemoForTTO/trips/oneday',
+                    path: '/DemoForTTO/trips/routes',
                     query: { dayTripTab: tab }
                 })
             } else {

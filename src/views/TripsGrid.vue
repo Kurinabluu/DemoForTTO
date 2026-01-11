@@ -16,7 +16,7 @@ const emit = defineEmits(['openTourDialog', 'openPlaceList'])
 const getDayTripData = () => {
     try {
         if (!dataJson) return []
-        const dayTripSection = dataJson.find(item => item.tagName === '一日游（固定行程）')
+        const dayTripSection = dataJson.find(item => item.tagName === '一日游/多日游')
         return dayTripSection?.subNav || []
     } catch (error) {
         return []
@@ -26,7 +26,7 @@ const getDayTripData = () => {
 const getMultiDayTripData = () => {
     try {
         if (!dataJson) return []
-        const multiDaySection = dataJson.find(item => item.tagName === '多日游（固定行程）')
+        const multiDaySection = dataJson.find(item => item.tagName === '多日游')
         return multiDaySection?.tripConfig || []
     } catch (error) {
         return []
@@ -36,7 +36,7 @@ const getMultiDayTripData = () => {
 const dayTripNavs = getDayTripData()
 const multiDayTrips = getMultiDayTripData()
 
-const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费信息")
+const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费参考信息")
 const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
 const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅")
 
@@ -66,7 +66,7 @@ const currentFreeInfoSection = computed(() => {
 
 // 是否为免费信息下的“内容块模式”（isGrid=false）
 const isSpecialSection = computed(() => {
-    return props.activeTag === '自助游/自驾游免费信息' && currentFreeInfoSection?.value?.isGrid === false
+    return props.activeTag === '自助游/自驾游免费参考信息' && currentFreeInfoSection?.value?.isGrid === false
 })
 
 // 当前展示用的“特别内容”列表与标题
@@ -79,9 +79,9 @@ const gridItems = computed(() => {
     try {
         if (!props.activeTag) return []
 
-        if (props.activeTag === '一日游（固定行程）') {
+        if (props.activeTag === '一日游/多日游') {
             return getDayTripItems(props.dayTripTab)
-        } else if (props.activeTag === '多日游（固定行程）') {
+        } else if (props.activeTag === '多日游') {
             return multiDayTrips
         } else {
             // 对于其他标签，保持原有的生成逻辑
@@ -158,14 +158,14 @@ function onOpenTour(item) {
     let tripType = '一日游';
 
     // 根据不同的activeTag确定tripType
-    if (props.activeTag === '多日游（固定行程）') {
+    if (props.activeTag === '多日游') {
         tripType = '多日游';
-    } else if (props.activeTag === '自助游/自驾游免费信息' && props.subTab === '景点') {
+    } else if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点') {
         tripType = '景点信息';
     }
 
     // 如果是景点数据，从places中查找完整信息
-    if (props.activeTag === '自助游/自驾游免费信息' && props.subTab === '景点' && places && places.items) {
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点' && places && places.items) {
         const placeItem = places.items.find(place => place.title === item.title);
         if (placeItem) {
             tripData = placeItem.tripData;
@@ -174,7 +174,7 @@ function onOpenTour(item) {
     }
 
     // 如果是一日游或多日游，item本身应该已经包含tripData
-    if (props.activeTag === '一日游（固定行程）' || props.activeTag === '多日游（固定行程）') {
+    if (props.activeTag === '一日游/多日游' || props.activeTag === '多日游') {
         tripData = item.tripData;
         bannerImage = item.img || bannerImage;
     }
@@ -207,7 +207,7 @@ function onOpenPlace(groupName, itemType) {
 }
 
 // 当前是否显示多日游网格（保持与原逻辑一致）
-const showMultiDay = computed(() => props.activeTag === '多日游（固定行程）')
+const showMultiDay = computed(() => props.activeTag === '多日游')
 
 // 从data.json获取一日游数据
 const getDayTripItems = (tabName) => {
@@ -216,11 +216,11 @@ const getDayTripItems = (tabName) => {
 }
 
 const currentDayTripItems = computed(() => {
-    if (props.activeTag !== '一日游（固定行程）') return []
+    if (props.activeTag !== '一日游/多日游') return []
     return getDayTripItems(props.dayTripTab)
 })
 
-const showDayTrip = computed(() => props.activeTag === '一日游（固定行程）')
+const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 </script>
 
