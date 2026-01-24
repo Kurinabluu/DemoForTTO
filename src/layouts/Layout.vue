@@ -72,6 +72,14 @@ function onNavClick(event, navName = '') {
     // 仅保留其他必要的逻辑
 
 }
+// 加入我们弹窗
+const isJoinUsDialogVisible = ref(false)
+function openJoinUsDialog() {
+    isJoinUsDialogVisible.value = true
+}
+function closeJoinUsDialog() {
+    isJoinUsDialogVisible.value = false
+}
 
 // 联系我们弹窗
 const isContactDialogVisible = ref(false)
@@ -217,6 +225,7 @@ onMounted(() => {
                     <li class="pointer" @click="onNavClick($event)">成为会员</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
+                    <li class="pointer" @click="openJoinUsDialog()">加入我们</li>
                     <li class="pointer" @click="openContactDialog()">联系我们</li>
                 </ul>
                 <!-- <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i> -->
@@ -227,6 +236,25 @@ onMounted(() => {
         <RouterView />
         <ComingSoonDialog ref="comingSoonDialogRef" />
         <AboutUsDialog ref="aboutUsDialogRef" />
+
+        <!-- 加入我们弹窗 -->
+        <el-dialog v-model="isJoinUsDialogVisible" append-to-body align-center width="520px" class="join-us-dialog"
+            @close="closeJoinUsDialog">
+            <template #header>
+                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">加入我们</div>
+            </template>
+            <div class="join-us-modal">
+                <div class="join-us-modal-info">
+                    TasTrips诚聘导游与司机
+                </div>
+            </div>
+            <template #footer>
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                    <!-- <el-button @click="closeContactDialog">关闭</el-button> -->
+                    <el-button type="primary" @click="closeJoinUsDialog">确定</el-button>
+                </div>
+            </template>
+        </el-dialog>
 
         <!-- 联系我们弹窗 -->
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"

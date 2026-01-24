@@ -485,8 +485,6 @@ watch(() => props.serviceName, (newServiceName) => {
 
                 <p class="section-title">车型选择与价格</p>
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
-                    <p class="car-name">{{ advantage?.title || '' }}</p>
-
                     <div class="carousel-container w100">
                         <el-carousel trigger="click" :height="isTablet ? '400px' : '600px'" :interval="5000" type="card"
                             indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
@@ -523,6 +521,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                 advantage.price }}</div> -->
                         </el-carousel>
                     </div>
+                    <p class="car-name">{{ advantage?.title || '' }}</p>
                 </template>
             </div>
         </div>
@@ -864,6 +863,8 @@ watch(() => props.serviceName, (newServiceName) => {
             font-weight: 700;
             color: #111;
             margin: 30px 0 0;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #111010;
         }
 
         .car-price {
@@ -1061,6 +1062,7 @@ watch(() => props.serviceName, (newServiceName) => {
         color: #111;
         // margin: 0 0 20px 0;
         margin: 20px 0 30px 0;
+        // margin-top: 20px;
         letter-spacing: 0;
     }
 
