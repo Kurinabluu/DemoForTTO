@@ -7,7 +7,7 @@ const props = defineProps({
     activeTag: { type: String, required: true },
     subTab: { type: String, default: '景点' },
     s: { type: String, default: '' },
-    dayTripTab: { type: String, default: '景点一日游' },
+    dayTripTab: { type: String, default: '一日游' },
 })
 
 const emit = defineEmits(['openTourDialog', 'openPlaceList'])
@@ -23,18 +23,7 @@ const getDayTripData = () => {
     }
 }
 
-const getMultiDayTripData = () => {
-    try {
-        if (!dataJson) return []
-        const multiDaySection = dataJson.find(item => item.tagName === '多日游')
-        return multiDaySection?.tripConfig || []
-    } catch (error) {
-        return []
-    }
-}
-
 const dayTripNavs = getDayTripData()
-const multiDayTrips = getMultiDayTripData()
 
 const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费参考信息")
 const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
@@ -52,6 +41,32 @@ function getActivityImage(index) {
         new URL('@/assets/img/footer4.jpg', import.meta.url).href
     ]
     return images[index] || images[0]
+}
+
+// 处理图片路径
+function getImageUrl(imgPath) {
+    if (!imgPath) return new URL('@/assets/img/default.png', import.meta.url).href
+
+    // 如果已经是完整的URL，直接返回
+    if (imgPath.startsWith('http') || imgPath.startsWith('data:')) {
+        return imgPath
+    }
+
+    // 如果是@/assets路径，使用import.meta.url处理
+    if (imgPath.startsWith('@/assets/')) {
+        try {
+            return new URL(imgPath.replace('@/', '../'), import.meta.url).href
+        } catch (error) {
+            return new URL('@/assets/img/default.png', import.meta.url).href
+        }
+    }
+
+    // 其他情况尝试直接使用
+    try {
+        return new URL(imgPath, import.meta.url).href
+    } catch (e) {
+        return new URL('@/assets/img/default.png', import.meta.url).href
+    }
 }
 
 // 免费信息：当前子项（如 特别活动/徒步/当地天气/医疗）数据
@@ -81,8 +96,6 @@ const gridItems = computed(() => {
 
         if (props.activeTag === '一日游/多日游') {
             return getDayTripItems(props.dayTripTab)
-        } else if (props.activeTag === '多日游') {
-            return multiDayTrips
         } else {
             // 对于其他标签，保持原有的生成逻辑
             const scenicPlaces = [
@@ -158,9 +171,7 @@ function onOpenTour(item) {
     let tripType = '一日游';
 
     // 根据不同的activeTag确定tripType
-    if (props.activeTag === '多日游') {
-        tripType = '多日游';
-    } else if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点') {
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点') {
         tripType = '景点信息';
     }
 
@@ -173,8 +184,8 @@ function onOpenTour(item) {
         }
     }
 
-    // 如果是一日游或多日游，item本身应该已经包含tripData
-    if (props.activeTag === '一日游/多日游' || props.activeTag === '多日游') {
+    // 如果是一日游/多日游，item本身应该已经包含tripData
+    if (props.activeTag === '一日游/多日游') {
         tripData = item.tripData;
         bannerImage = item.img || bannerImage;
     }
@@ -205,9 +216,6 @@ function onOpenTour(item) {
 function onOpenPlace(groupName, itemType) {
     emit('openPlaceList', { placeName: groupName, itemType })
 }
-
-// 当前是否显示多日游网格（保持与原逻辑一致）
-const showMultiDay = computed(() => props.activeTag === '多日游')
 
 // 从data.json获取一日游数据
 const getDayTripItems = (tabName) => {
@@ -245,8 +253,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div class="coming-grid">
                 <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card" @click="onOpenTour(item)"
                     :data-tour-title="item.title">
-                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
-                    <img src="@/assets/img/default.png" alt="" class="w100">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
                     <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
@@ -329,18 +336,17 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
 
     <!-- 底部网格：景点（无关键词） -->
-    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip" class="coming-grid">
         <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)"
             :data-tour-title="item.title">
-            <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
-            <img src="@/assets/img/default.png" alt="" class="w100">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
             <div class="card-title" :title="item.title">{{ item.title }}</div>
             <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
     </div>
 
     <!-- 底部网格：餐厅（无关键词） -->
-    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip" class="coming-grid">
         <div v-for="item in restaurants.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '餐厅')">
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 周边餐厅</div>
@@ -349,7 +355,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
 
     <!-- 底部网格：住宿（无关键词） -->
-    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && !showMultiDay" class="coming-grid">
+    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" class="coming-grid">
         <div v-for="item in hotels.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '住宿')">
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
@@ -394,17 +400,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
 
-    <!-- 多日游（单独显示网格） -->
-    <template v-if="showMultiDay">
-        <div class="coming-grid">
-            <div v-for="(item, i) in gridItems" :key="'multi-day-trip-' + i" class="coming-card"
-                @click="onOpenTour(item)" :data-tour-title="item.title">
-                <img src="@/assets/img/default.png" alt="" class="w100">
-                <div class="card-title" :title="item.title">{{ item.title }}</div>
-                <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
-            </div>
-        </div>
-    </template>
+
     <!-- </div> -->
 </template>
 

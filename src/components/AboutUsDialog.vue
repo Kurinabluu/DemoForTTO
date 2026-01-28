@@ -1,7 +1,27 @@
 <script setup>
-import { ref, defineExpose } from 'vue'
+import { ref, defineExpose, computed, onMounted, onUnmounted } from 'vue'
 
 const showAboutUsDialog = ref(false)
+
+// 检测是否为移动端（平板竖屏或手机）
+const isMobile = computed(() => {
+    if (typeof window === 'undefined') return false
+    // 平板竖屏宽度 <= 1024px，手机宽度 <= 768px
+    return window.innerWidth <= 1024
+})
+
+// 处理窗口大小变化
+const handleResize = () => {
+    // 触发响应式更新
+}
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 
 defineExpose({
     showAboutUsDialog
@@ -9,7 +29,7 @@ defineExpose({
 </script>
 
 <template>
-    <el-dialog v-model="showAboutUsDialog" title="关于我们" width="580" align-center>
+    <el-dialog v-model="showAboutUsDialog" title="关于我们" align-center :width="isMobile ? '100%' : '60%'">
         <div class="about-us-content">
             <p class="about-text">
                 塔斯马尼亚旅行有限公司(TASMANIA TRIPS

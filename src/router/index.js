@@ -85,24 +85,24 @@ const routes = [
         // redirect: '/DemoForTTO/service/car', // 添加默认重定向
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
-          // {
-          //   path: 'trips/freeinfo',
-          //   name: 'FreeInfo',
-          //   component: () => import('@/views/TripsGrid.vue'),
-          //   props: (route) => (
-          //     {
-          //       activeTag: '自助游/自驾游免费信息',
-          //       subTab: route.query.subNavName || '景点'
-          //     }
-          //   )
-          // },
+          {
+            path: 'trips/freeinfo',
+            name: 'FreeInfo',
+            component: () => import('@/views/TripsGrid.vue'),
+            props: (route) => (
+              {
+                activeTag: '自助游/自驾游免费参考信息',
+                subTab: route.query.subNavName || '景点'
+              }
+            )
+          },
           {
             path: 'trips/routes',
             name: 'Routes',
             component: () => import('@/views/TripsGrid.vue'),
             props: (route) => ({
               activeTag: '一日游/多日游',
-              dayTripTab: route.query.dayTripTab || '景点一日游'
+              dayTripTab: route.query.dayTripTab || '一日游'
             })
           },
           // {

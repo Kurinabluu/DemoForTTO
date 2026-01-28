@@ -396,6 +396,22 @@ watch(() => route.query, (newQuery) => {
         }
     }
 
+    // 如果query中有dayTripTab参数（一日游/多日游页面），使用它
+    if (newQuery.dayTripTab) {
+        // 检查这个子导航是否在当前路由的子导航列表中
+        if (currentRouteData.value && currentRouteData.value.subNav) {
+            const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === newQuery.dayTripTab);
+            if (isValidSubNav) {
+                currentSubNavTab.value = newQuery.dayTripTab;
+                navStore.saveSelectedSubNav(newQuery.dayTripTab);
+                // 清空搜索
+                subSearch.value = '';
+                committedKeyword.value = '';
+                return;
+            }
+        }
+    }
+
     // 如果没有query参数（比如点击网站首页清空了query），使用默认逻辑
     if (currentRouteData.value && currentRouteData.value.hasSubNav && currentRouteData.value.subNav && currentRouteData.value.subNav.length > 0) {
         const savedSubNav = navStore.selectedSubNav;
@@ -496,16 +512,17 @@ onUnmounted(() => {
             <!-- 动态子导航（根据data.json中hasSubNav为true的对象渲染） -->
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
-                <ul class="free-subnav-tabs">
-                    <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
-                        class="free-subnav-tab w100"
-                        :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
-                        @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
-                        {{ subItem.subNavName }}
-                    </li>
-                </ul>
-                <!-- 搜索框（仅对免费信息显示） -->
-                <!-- <div class="free-subnav-search-container">
+                <template v-if="currentRouteData.tagName === '自助游/自驾游免费参考信息'">
+                    <ul class="free-subnav-tabs">
+                        <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
+                            class="free-subnav-tab w100"
+                            :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
+                            @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
+                            {{ subItem.subNavName }}
+                        </li>
+                    </ul>
+                    <!-- 搜索框（仅对免费信息显示） -->
+                    <!-- <div class="free-subnav-search-container">
                     <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'"
                         class="free-subnav-search">
                         <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
@@ -519,6 +536,17 @@ onUnmounted(() => {
                         搜索
                     </el-button>
                 </div> -->
+                </template>
+                <template v-else>
+                    <ul class="free-subnav-tabs days-tab-grid">
+                        <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
+                            class="free-subnav-tab w100"
+                            :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
+                            @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
+                            {{ subItem.subNavName }}
+                        </li>
+                    </ul>
+                </template>
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
                 :s="committedKeyword" />
@@ -746,6 +774,11 @@ onUnmounted(() => {
                 // flex: 0 0 auto;
                 height: 40px;
             }
+        }
+
+        .days-tab-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
         }
 
         .section-heading {

@@ -598,7 +598,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-            }}</h3>
+                }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -863,8 +863,8 @@ watch(() => props.serviceName, (newServiceName) => {
             font-weight: 700;
             color: #111;
             margin: 30px 0 0;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #111010;
+            padding-bottom: 60px;
+            border-bottom: 2px solid #3dc7be;
         }
 
         .car-price {

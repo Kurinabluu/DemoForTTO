@@ -174,7 +174,7 @@ dataSource.forEach((section) => {
       // 检查subNav的isShow属性，如果存在且为false，则跳过
       if (subNav.hasOwnProperty('isShow') && !subNav.isShow) return
 
-      const queryKey = section.tagName === '一日游（固定行程）' ? 'dayTripTab' : 'subNavName'
+      const queryKey = section.tagName === '一日游/多日游' ? 'dayTripTab' : 'subNavName'
       const queryParams = { [queryKey]: subNav.subNavName }
 
       pushResult({
