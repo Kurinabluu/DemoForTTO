@@ -1,16 +1,77 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import dataJson from '@/data/data.json'
-import { onMounted } from 'vue'
 
 const props = defineProps({
     activeTag: { type: String, required: true },
     subTab: { type: String, default: '景点' },
     s: { type: String, default: '' },
-    dayTripTab: { type: String, default: '一日游' },
+    dayTripTab: { type: String, default: '1日行程' },
 })
 
 const emit = defineEmits(['openTourDialog', 'openPlaceList'])
+
+// 懒加载相关状态
+const itemsPerPage = ref(20)
+const currentPage = ref(1)
+const isLoading = ref(false)
+const hasMore = ref(true)
+
+// 监听props变化，重置分页
+watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
+    currentPage.value = 1
+    hasMore.value = true
+    checkHasMore()
+}, { deep: true })
+
+
+
+// 加载更多数据
+function loadMoreItems() {
+    if (isLoading.value || !hasMore.value) return
+
+    isLoading.value = true
+    currentPage.value++
+
+    setTimeout(() => {
+        isLoading.value = false
+        checkHasMore()
+    }, 500)
+}
+
+// 检查是否还有更多数据
+function checkHasMore() {
+    const totalItems = getTotalItems()
+    hasMore.value = currentPage.value * itemsPerPage.value < totalItems
+}
+
+// 获取当前应该显示的数据总数
+function getTotalItems() {
+    if (props.activeTag === '一日游/多日游') {
+        return currentDayTripItems.value.length
+    } else if (props.s?.trim()) {
+        if (props.subTab === '景点') return scenicFiltered.value.length
+        if (props.subTab === '餐厅') return restaurantFiltered.value.length
+        if (props.subTab === '住宿') return hotelFiltered.value.length
+        if (isSpecialSection.value) return activityFiltered.value.length
+    } else {
+        if (props.subTab === '景点') return places?.items?.length || 0
+        if (props.subTab === '餐厅') return displayRestaurants.value.length
+        if (props.subTab === '住宿') return hotels?.items?.length || 0
+        if (isSpecialSection.value) return currentSpecialItems.value.length
+    }
+    return 0
+}
+
+// 获取分页后的数据
+function getPaginatedItems(items) {
+    const endIndex = currentPage.value * itemsPerPage.value
+    return items.slice(0, endIndex)
+}
+
+onMounted(() => {
+    checkHasMore()
+})
 
 // 从data.json获取数据
 const getDayTripData = () => {
@@ -133,13 +194,20 @@ const scenicFiltered = computed(() => {
     return (places?.items || []).filter(item => item.title.toLowerCase().includes(kw))
 })
 
+// 直接处理餐厅数据，与其他数据结构保持一致
 const restaurantFiltered = computed(() => {
     const kw = (props.s || '').trim().toLowerCase()
     if (!kw) return restaurants?.items || []
     return (restaurants?.items || []).filter(item =>
-        item.place.toLowerCase().includes(kw) ||
-        item.enPlace.toLowerCase().includes(kw)
+        item.title.toLowerCase().includes(kw) ||
+        (item.place && item.place.toLowerCase().includes(kw)) ||
+        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
     )
+})
+
+// 用于显示的餐厅列表（直接使用原始数据，与景点保持一致）
+const displayRestaurants = computed(() => {
+    return restaurants?.items || []
 })
 
 const hotelFiltered = computed(() => {
@@ -170,9 +238,13 @@ function onOpenTour(item) {
     let bannerImage = item.img;
     let tripType = '一日游';
 
-    // 根据不同的activeTag确定tripType
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点') {
-        tripType = '景点信息';
+    // 根据不同的activeTag和subTab确定tripType
+    if (props.activeTag === '自助游/自驾游免费参考信息') {
+        if (props.subTab === '景点') {
+            tripType = '景点信息';
+        } else if (props.subTab === '餐厅') {
+            tripType = '餐厅信息';
+        }
     }
 
     // 如果是景点数据，从places中查找完整信息
@@ -208,7 +280,7 @@ function onOpenTour(item) {
         ...item,
         title: item.title,
         enTitle: item.enTitle,
-        banner: bannerImage,
+        banner: getImageUrl(bannerImage),
         tripType: tripType,
         tripData: tripData
     })
@@ -233,31 +305,39 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 </script>
 
 <template>
-    <!-- <div> -->
     <!-- 一日游：根据传入的 dayTripTab 渲染对应数据（忽略 keyword） -->
     <template v-if="showDayTrip">
         <div class="coming-grid">
-            <div v-for="(item, i) in currentDayTripItems" :key="`day-trip-${dayTripTab}-${i}`" class="coming-card"
-                @click="onOpenTour(item)" :data-tour-title="item.title">
-                <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
-                <img src="@/assets/img/default.png" alt="" class="w100">
+            <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
+                class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
                 <div class="card-title" :title="item.title">{{ item.title }}</div>
                 <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
             </div>
         </div>
+        <div v-if="isLoading" class="loading-tip">加载中...</div>
+        <div v-else-if="hasMore && currentDayTripItems.length > 0" class="load-more-section">
+            <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+        </div>
+        <div v-else-if="!hasMore && currentDayTripItems.length > 0" class="no-more-tip">没有更多数据了</div>
     </template>
 
     <!-- 搜索结果区：景点 -->
     <template v-if="(s?.trim()) && subTab === '景点'">
         <template v-if="scenicFiltered.length">
             <div class="coming-grid">
-                <div v-for="(item, i) in scenicFiltered" :key="'sc2-' + i" class="coming-card" @click="onOpenTour(item)"
-                    :data-tour-title="item.title">
+                <div v-for="(item, i) in getPaginatedItems(scenicFiltered)" :key="'sc2-' + i" class="coming-card"
+                    @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
-                    <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && scenicFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && scenicFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -266,14 +346,18 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-else-if="(s?.trim()) && subTab === '餐厅'">
         <template v-if="restaurantFiltered.length">
             <div class="coming-grid">
-                <div v-for="(item, i) in restaurantFiltered" :key="'rt-search-' + i" class="coming-card"
-                    @click="onOpenPlace(item.place, '餐厅')">
-                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
-                    <img src="@/assets/img/default.png" alt="" class="w100">
-                    <div class="card-title">{{ item.place }} 周边餐厅</div>
-                    <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
+                <div v-for="(item, i) in getPaginatedItems(restaurantFiltered)" :key="'rt-search-' + i"
+                    class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && restaurantFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && restaurantFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -282,14 +366,18 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-else-if="(s?.trim()) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
             <div class="coming-grid">
-                <div v-for="(item, i) in hotelFiltered" :key="'ht-search-' + i" class="coming-card"
+                <div v-for="(item, i) in getPaginatedItems(hotelFiltered)" :key="'ht-search-' + i" class="coming-card"
                     @click="onOpenPlace(item.place, '住宿')">
-                    <!-- <img src="@/assets/img/default.png" alt="" class="w100"> -->
                     <img src="@/assets/img/default.png" alt="" class="w100">
                     <div class="card-title">{{ item.place }} 住宿</div>
                     <div class="card-sub">Hotel {{ item.enPlace }}</div>
                 </div>
             </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && hotelFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && hotelFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -303,7 +391,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
 
             <div class="activities-grid">
-                <div v-for="(item, i) in activityFiltered" :key="'ac-filtered-' + i"
+                <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
                     :class="['activity-card', item.cardClass]">
                     <div class="activity-image">
                         <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
@@ -327,6 +415,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     </div>
                 </div>
             </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && activityFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && activityFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
         <div class="activities-footer">
@@ -337,31 +430,54 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
     <!-- 底部网格：景点（无关键词） -->
     <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip" class="coming-grid">
-        <div v-for="(item, i) in places.items" :key="'rt-bottom-' + i" class="coming-card" @click="onOpenTour(item)"
-            :data-tour-title="item.title">
+        <div v-for="(item, i) in getPaginatedItems(places.items)" :key="'rt-bottom-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
             <div class="card-title" :title="item.title">{{ item.title }}</div>
-            <div class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
     </div>
+    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
+    <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && hasMore && places.items.length > 0"
+        class="load-more-section">
+        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    </div>
+    <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && !hasMore && places.items.length > 0"
+        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：餐厅（无关键词） -->
     <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip" class="coming-grid">
-        <div v-for="item in restaurants.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '餐厅')">
-            <img src="@/assets/img/default.png" alt="" class="w100">
-            <div class="card-title">{{ item.place }} 周边餐厅</div>
-            <div class="card-sub">Restaurant {{ item.enPlace }} surrounding</div>
+        <div v-for="(item, i) in getPaginatedItems(displayRestaurants)" :key="'restaurant-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
     </div>
+    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
+    <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && hasMore && displayRestaurants.length > 0"
+        class="load-more-section">
+        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    </div>
+    <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && !hasMore && displayRestaurants.length > 0"
+        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" class="coming-grid">
-        <div v-for="item in hotels.items" :key="item" class="coming-card" @click="onOpenPlace(item.place, '住宿')">
+        <div v-for="(item, i) in getPaginatedItems(hotels.items)" :key="item" class="coming-card"
+            @click="onOpenPlace(item.place, '住宿')">
             <img src="@/assets/img/default.png" alt="" class="w100">
             <div class="card-title">{{ item.place }} 住宿</div>
             <div class="card-sub">Hotel {{ item.enPlace }}</div>
         </div>
     </div>
+    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
+    <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && hasMore && hotels.items.length > 0"
+        class="load-more-section">
+        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    </div>
+    <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && !hasMore && hotels.items.length > 0"
+        class="no-more-tip">没有更多数据了</div>
 
     <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步/当地天气/医疗 等） -->
     <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
@@ -370,7 +486,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
         </div>
         <div class="activities-grid">
-            <div v-for="(activity, index) in currentSpecialItems" :key="'activity-' + index"
+            <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
                 :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
                     <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
@@ -394,6 +510,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
         </div>
+        <div v-if="isLoading" class="loading-tip">加载中...</div>
+        <div v-else-if="hasMore && currentSpecialItems.length > 0" class="load-more-section">
+            <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+        </div>
+        <div v-else-if="!hasMore && currentSpecialItems.length > 0" class="no-more-tip">没有更多数据了</div>
         <div class="activities-footer">
             <div class="update-info"><i class="update-icon">🔄</i><span>信息每2小时更新一次</span></div>
             <div class="contact-info"><span>获取最新活动信息，请联系我们的专业顾问</span></div>
@@ -473,6 +594,56 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     padding: 16px 0 8px;
 }
 
+.loading-tip {
+    text-align: center;
+    color: #3b82f6;
+    font-size: 16px;
+    padding: 16px 0 8px;
+}
+
+.no-more-tip {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 16px 0 40px;
+}
+
+.load-more-section {
+    text-align: center;
+    padding-bottom: 40px;
+}
+
+.load-more-btn {
+    width: 150px;
+    height: 50px;
+    padding: 12px 32px;
+    background-color: #279486;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+    background-color: #33b1a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(51, 177, 163, 0.3);
+}
+
+.load-more-btn:active {
+    transform: translateY(0);
+}
+
+.load-more-btn:disabled {
+    background-color: #93c5fd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 /* 特别活动样式 */
 .special-activities-section {
     width: 90%;
@@ -549,7 +720,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .aurora-badge {
-    background: linear-gradient(135deg, #3dc7be 0%, #2da099 100%);
+    background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
 }
 
 .event-badge {
@@ -557,7 +728,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .season-badge {
-    background: linear-gradient(135deg, #3dc7be 0%, #2da099 100%);
+    background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
 }
 
 .night-badge {
@@ -628,7 +799,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     background: #f9fafb;
     padding: 12px;
     border-radius: 8px;
-    border-left: 4px solid #3dc7be;
+    border-left: 4px solid #33b1a3;
 }
 
 .weather-note {

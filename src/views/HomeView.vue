@@ -90,13 +90,11 @@ function onClickSubTab(tab) {
                     path: '/DemoForTTO/trips/routes',
                     query: { dayTripTab: tab }
                 })
-            } else {
-                // 其他页面（如免费信息页面）使用subNavName参数
-                // 为所有子导航项（包括餐厅、住宿）都添加query参数
+            } else if (currentPath.includes('/DemoForTTO/trips/freeinfo')) {
+                // 免费信息页面使用subNavName参数
                 router.push({
-                    path: '/DemoForTTO/service/car'
-                    // path:'/DemoForTTO/trips/freeinfo',
-                    // query:{subNavName:tab}
+                    path: '/DemoForTTO/trips/freeinfo',
+                    query: { subNavName: tab }
                 })
             }
 
@@ -737,7 +735,7 @@ onUnmounted(() => {
             padding: 10px 16px;
             border-radius: 8px;
             background: #fff;
-            color: #3dc7be;
+            color: #33b1a3;
             border: 1px solid #e5e7eb;
             transition: all .2s ease;
             white-space: nowrap;
@@ -753,7 +751,7 @@ onUnmounted(() => {
         }
 
         .free-subnav-tab.active {
-            background: linear-gradient(180deg, #3dc7be 0%, #2da099 100%);
+            background: linear-gradient(180deg, #33b1a3 0%, #279486 100%);
             color: #fff;
             border-color: transparent;
             box-shadow: 0 6px 16px rgba(61, 199, 190, 0.26);

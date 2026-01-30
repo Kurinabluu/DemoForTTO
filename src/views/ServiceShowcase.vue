@@ -479,7 +479,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <div class="charter-content">
                 <div class="section-title">包车服务包括如下内容：</div>
                 <p class="description">1、包车价格包括以下内容：车、司机、油费、停车费、税金、保险；</p>
-                <p class="description">2、每日用车时长是8-10个小时</p>
+                <p class="description">2、每日用车时长是8个小时（特殊情况可以延长两小时至10个小时）</p>
                 <p class="description">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
                         @click="showAboutUsDialog">关于我们</span>有全部的展示）」</p>
 
@@ -574,7 +574,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
         <div class="steps-box">
             <div class="section-title">{{ currentConfig?.stepsTitle }}</div>
-            <el-steps :active="currentConfig?.steps?.length || 0" align-center :space=150 direction="vertical">
+            <el-steps :active="currentConfig?.steps?.length || 0" align-center :space=80 direction="vertical">
                 <el-step v-for="(step, i) in currentConfig?.steps" :key="i"
                     :title="typeof step === 'object' ? step.title : step"
                     :description="typeof step === 'object' ? step.description : ''" />
@@ -598,7 +598,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-                }}</h3>
+            }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -847,7 +847,7 @@ watch(() => props.serviceName, (newServiceName) => {
         }
 
         .about-us-link {
-            color: #3dc7be;
+            color: #33b1a3;
             cursor: pointer;
             text-decoration: underline;
             font-weight: 500;
@@ -864,12 +864,12 @@ watch(() => props.serviceName, (newServiceName) => {
             color: #111;
             margin: 30px 0 0;
             padding-bottom: 60px;
-            border-bottom: 2px solid #3dc7be;
+            border-bottom: 2px solid #33b1a3;
         }
 
         .car-price {
             font-size: 18px;
-            color: #3dc7be;
+            color: #33b1a3;
             margin: 0 0 8px 0;
         }
 
@@ -977,7 +977,7 @@ watch(() => props.serviceName, (newServiceName) => {
         height: 20px;
         line-height: 20px;
         font-size: 10px;
-        background-color: #3dc7be;
+        background-color: #33b1a3;
         border-radius: 50%;
         margin-right: 5px;
         flex-shrink: 0;
@@ -1120,7 +1120,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .consult-btn {
         padding: 5px 20px;
-        background: #3dc7be;
+        background: #33b1a3;
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -1227,15 +1227,15 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .contact-icon.phone-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2333b1a3'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E");
     }
 
     .contact-icon.email-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2333b1a3'%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z'/%3E%3C/svg%3E");
     }
 
     .contact-icon.wechat-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233dc7be'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2333b1a3'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm7 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/%3E%3C/svg%3E");
     }
 
     /* 展示列表样式 */
@@ -1312,7 +1312,7 @@ watch(() => props.serviceName, (newServiceName) => {
     .scroll-btn svg {
         width: 20px;
         height: 20px;
-        fill: #3dc7be;
+        fill: #33b1a3;
     }
 
     .scroll-btn:disabled {
@@ -1374,7 +1374,7 @@ watch(() => props.serviceName, (newServiceName) => {
         position: absolute;
         top: 12px;
         left: 12px;
-        background: #3dc7be;
+        background: #33b1a3;
         color: white;
         padding: 6px 12px;
         border-radius: 20px;
@@ -1415,7 +1415,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .feature-badge {
         background: #e6f7f6;
-        color: #3dc7be;
+        color: #33b1a3;
         padding: 4px 12px;
         border-radius: 16px;
         font-size: 12px;
@@ -1423,7 +1423,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .consult-btn {
-        background: #3dc7be;
+        background: #33b1a3;
         color: white;
         border: none;
         padding: 10px 20px;

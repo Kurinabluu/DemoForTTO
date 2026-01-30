@@ -44,12 +44,20 @@ const getImageUrl = (imagePath) => {
         }
     }
 
-    // 其他情况直接返回
-    return imagePath
+    // 其他情况尝试直接使用
+    try {
+        return new URL(imagePath, import.meta.url).href
+    } catch (e) {
+        return ''
+    }
 }
 
 // 计算处理后的banner图片URL
-const bannerUrl = computed(() => getImageUrl(props.banner))
+const bannerUrl = computed(() => {
+    const processedUrl = getImageUrl(props.banner)
+    // 如果处理后为空，不显示图片
+    return processedUrl
+})
 
 const emit = defineEmits(['update:visible'])
 
@@ -136,7 +144,7 @@ const routeInfo = computed(() => {
     <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="tour-dialog" align-center :z-index="9300"
         :append-to-body="true" :lock-scroll="true">
         <template #header>
-            <div class="dlg-title">{{ title }}（{{ enTitle }}）</div>
+            <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
         </template>
 
         <div class="dlg-banner" v-if="bannerUrl">

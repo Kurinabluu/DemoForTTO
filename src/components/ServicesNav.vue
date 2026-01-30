@@ -361,7 +361,7 @@ function onSearch() {
         align-items: center;
         justify-content: center;
         background: linear-gradient(180deg, #ffffff 0%, #e6f7f6 100%);
-        color: #3dc7be;
+        color: #33b1a3;
         user-select: none;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.03) inset;
         text-decoration: none;
@@ -395,7 +395,7 @@ function onSearch() {
         padding: 8px 10px;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(180deg, #3dc7be 0%, #2da099 100%);
+        background: linear-gradient(180deg, #33b1a3 0%, #279486 100%);
         color: #fff;
         box-shadow: 0 6px 16px rgba(61, 199, 190, 0.26);
         width: 100%;

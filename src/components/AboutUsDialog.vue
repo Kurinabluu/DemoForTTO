@@ -92,7 +92,7 @@ defineExpose({
         text-align: center;
         margin-top: 24px;
         font-weight: bold;
-        color: #3dc7be;
+        color: #33b1a3;
         font-size: 16px;
     }
 }

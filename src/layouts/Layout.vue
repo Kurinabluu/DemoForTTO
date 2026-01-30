@@ -241,7 +241,7 @@ onMounted(() => {
         <el-dialog v-model="isJoinUsDialogVisible" append-to-body align-center width="520px" class="join-us-dialog"
             @close="closeJoinUsDialog">
             <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">加入我们</div>
+                <div style="font-weight:700; letter-spacing:2px; color:#33b1a3;">加入我们</div>
             </template>
             <div class="join-us-modal">
                 <div class="join-us-modal-info">
@@ -260,7 +260,7 @@ onMounted(() => {
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
             @close="closeContactDialog">
             <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">联系我们</div>
+                <div style="font-weight:700; letter-spacing:2px; color:#33b1a3;">联系我们</div>
             </template>
             <div class="contact-modal">
                 <div class="contact-modal-info">
@@ -430,7 +430,7 @@ onMounted(() => {
         <el-dialog v-model="showDisclaimerModal" align-center width="520px" :close-on-click-modal="false"
             :show-close="false" :append-to-body="true" :lock-scroll="true">
             <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#3dc7be;">免责条款提示</div>
+                <div style="font-weight:700; letter-spacing:2px; color:#33b1a3;">免责条款提示</div>
             </template>
             <div style="color:#333; line-height:1.8; text-align:justify;">
                 【免责条款】本网站之全部内容，不对任何本网站的使用者（以下简称使用者）构成任何的旅行建议或行程建议。
@@ -655,7 +655,7 @@ onMounted(() => {
                         .el-icon {
                             margin-right: 8px;
                             font-size: 18px;
-                            color: #3dc7be;
+                            color: #33b1a3;
                         }
 
                         i {
@@ -684,7 +684,7 @@ onMounted(() => {
                     .title-underline {
                         width: 36px;
                         height: 2px;
-                        background-color: #3dc7be;
+                        background-color: #33b1a3;
                     }
                 }
 
@@ -697,7 +697,7 @@ onMounted(() => {
                 .news-date {
                     font-size: 12px;
                     text-align: right;
-                    color: #3dc7be;
+                    color: #33b1a3;
                 }
 
                 .nav-links {
@@ -718,7 +718,7 @@ onMounted(() => {
 
                         // 英文部分使用指定颜色
                         span {
-                            color: #3dc7be;
+                            color: #33b1a3;
                             margin-left: 8px;
                         }
                     }
@@ -818,7 +818,7 @@ onMounted(() => {
 
             .el-icon {
                 font-size: 18px;
-                color: #3dc7be;
+                color: #33b1a3;
             }
 
         }
@@ -1034,7 +1034,7 @@ onMounted(() => {
                                 margin-right: 6px;
                                 font-size: 14px;
                                 flex-shrink: 0;
-                                color: #3dc7be;
+                                color: #33b1a3;
                             }
 
                             span {

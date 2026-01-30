@@ -226,7 +226,7 @@ onUnmounted(() => {
 
     .el-icon {
       font-size: 20px !important;
-      color: #3dc7be !important;
+      color: #33b1a3 !important;
     }
   }
 }
