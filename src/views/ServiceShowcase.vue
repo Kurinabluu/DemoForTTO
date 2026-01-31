@@ -598,7 +598,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-            }}</h3>
+                }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -895,6 +895,14 @@ watch(() => props.serviceName, (newServiceName) => {
         .order-now:hover {
             color: #2da099;
             border-bottom: 1px solid #2da099;
+        }
+
+        // 修改el-steps的title文字大小
+        :deep(.el-step__title) {
+            font-size: 20px !important;
+        }
+        :deep(.el-step__desciption){
+            font-size: 15px !important;
         }
     }
 
