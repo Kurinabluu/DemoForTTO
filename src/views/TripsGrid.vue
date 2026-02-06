@@ -52,11 +52,15 @@ function getTotalItems() {
     } else if (props.s?.trim()) {
         if (props.subTab === '景点') return scenicFiltered.value.length
         if (props.subTab === '餐厅') return restaurantFiltered.value.length
+        if (props.subTab === '葡萄酒酒庄') return wineFiltered.value.length
+        if (props.subTab === '洋酒酒庄') return spiritFiltered.value.length
         if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return activityFiltered.value.length
     } else {
         if (props.subTab === '景点') return places?.items?.length || 0
         if (props.subTab === '餐厅') return displayRestaurants.value.length
+        if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value.length
+        if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value.length
         if (props.subTab === '住宿') return hotels?.items?.length || 0
         if (isSpecialSection.value) return currentSpecialItems.value.length
     }
@@ -89,7 +93,8 @@ const dayTripNavs = getDayTripData()
 const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费参考信息")
 const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
 const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅")
-
+const wineWineries = datas.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄")
+const spiritWineries = datas.subNav.find(subItem => subItem.subNavName == "洋酒酒庄")
 const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿")
 
 const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动")
@@ -130,7 +135,7 @@ function getImageUrl(imgPath) {
     }
 }
 
-// 免费信息：当前子项（如 特别活动/徒步/当地天气/医疗）数据
+// 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
 const currentFreeInfoSection = computed(() => {
     try {
         if (!datas?.subNav || !props.subTab) return null
@@ -210,6 +215,38 @@ const displayRestaurants = computed(() => {
     return restaurants?.items || []
 })
 
+// 葡萄酒酒庄数据过滤
+const wineFiltered = computed(() => {
+    const kw = (props.s || '').trim().toLowerCase()
+    if (!kw) return wineWineries?.items || []
+    return (wineWineries?.items || []).filter(item =>
+        item.title.toLowerCase().includes(kw) ||
+        (item.place && item.place.toLowerCase().includes(kw)) ||
+        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
+    )
+})
+
+// 用于显示的葡萄酒酒庄列表
+const displayWineWineries = computed(() => {
+    return wineWineries?.items || []
+})
+
+// 洋酒酒庄数据过滤
+const spiritFiltered = computed(() => {
+    const kw = (props.s || '').trim().toLowerCase()
+    if (!kw) return spiritWineries?.items || []
+    return (spiritWineries?.items || []).filter(item =>
+        item.title.toLowerCase().includes(kw) ||
+        (item.place && item.place.toLowerCase().includes(kw)) ||
+        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
+    )
+})
+
+// 用于显示的洋酒酒庄列表
+const displaySpiritWineries = computed(() => {
+    return spiritWineries?.items || []
+})
+
 const hotelFiltered = computed(() => {
     const kw = (props.s || '').trim().toLowerCase()
     if (!kw) return hotels?.items || []
@@ -244,6 +281,12 @@ function onOpenTour(item) {
             tripType = '景点信息';
         } else if (props.subTab === '餐厅') {
             tripType = '餐厅信息';
+        } else if (props.subTab === '葡萄酒酒庄') {
+            tripType = '葡萄酒酒庄信息';
+        } else if (props.subTab === '洋酒酒庄') {
+            tripType = '洋酒酒庄信息';
+        } else if (props.subTab === '住宿') {
+            tripType = '住宿信息';
         }
     }
 
@@ -253,6 +296,42 @@ function onOpenTour(item) {
         if (placeItem) {
             tripData = placeItem.tripData;
             bannerImage = placeItem.img;
+        }
+    }
+
+    // 如果是餐厅数据，从restaurants中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '餐厅' && restaurants && restaurants.items) {
+        const restaurantItem = restaurants.items.find(restaurant => restaurant.title === item.title);
+        if (restaurantItem) {
+            tripData = restaurantItem.tripData;
+            bannerImage = restaurantItem.img;
+        }
+    }
+
+    // 如果是葡萄酒酒庄数据，从wineWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '葡萄酒酒庄' && wineWineries && wineWineries.items) {
+        const wineryItem = wineWineries.items.find(winery => winery.title === item.title);
+        if (wineryItem) {
+            tripData = wineryItem.tripData;
+            bannerImage = wineryItem.img;
+        }
+    }
+
+    // 如果是洋酒酒庄数据，从spiritWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '洋酒酒庄' && spiritWineries && spiritWineries.items) {
+        const wineryItem = spiritWineries.items.find(winery => winery.title === item.title);
+        if (wineryItem) {
+            tripData = wineryItem.tripData;
+            bannerImage = wineryItem.img;
+        }
+    }
+
+    // 如果是住宿数据，从hotels中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '住宿' && hotels && hotels.items) {
+        const hotelItem = hotels.items.find(hotel => hotel.title === item.title);
+        if (hotelItem) {
+            tripData = hotelItem.tripData;
+            bannerImage = hotelItem.img;
         }
     }
 
@@ -362,15 +441,55 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
 
+    <!-- 搜索结果区：葡萄酒酒庄 -->
+    <template v-else-if="(s?.trim()) && subTab === '葡萄酒酒庄'">
+        <template v-if="wineFiltered.length">
+            <div class="coming-grid">
+                <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i" class="coming-card"
+                    @click="onOpenTour(item)" :data-tour-title="item.title">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                </div>
+            </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && wineFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && wineFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
+        </template>
+        <div v-else class="empty-tip">没有搜索结果</div>
+    </template>
+
+    <!-- 搜索结果区：洋酒酒庄 -->
+    <template v-else-if="(s?.trim()) && subTab === '洋酒酒庄'">
+        <template v-if="spiritFiltered.length">
+            <div class="coming-grid">
+                <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
+                    class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                </div>
+            </div>
+            <div v-if="isLoading" class="loading-tip">加载中...</div>
+            <div v-else-if="hasMore && spiritFiltered.length > 0" class="load-more-section">
+                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            </div>
+            <div v-else-if="!hasMore && spiritFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
+        </template>
+        <div v-else class="empty-tip">没有搜索结果</div>
+    </template>
+
     <!-- 搜索结果区：住宿 -->
     <template v-else-if="(s?.trim()) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
             <div class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(hotelFiltered)" :key="'ht-search-' + i" class="coming-card"
-                    @click="onOpenPlace(item.place, '住宿')">
-                    <img src="@/assets/img/default.png" alt="" class="w100">
-                    <div class="card-title">{{ item.place }} 住宿</div>
-                    <div class="card-sub">Hotel {{ item.enPlace }}</div>
+                    @click="onOpenTour(item)" :data-tour-title="item.title">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
@@ -382,7 +501,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
 
-    <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步/当地天气/医疗 等） -->
+    <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
     <div class="special-activities-section" v-else-if="(s?.trim()) && isSpecialSection">
         <template v-if="activityFiltered.length">
             <div class="activities-header">
@@ -462,13 +581,47 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && !hasMore && displayRestaurants.length > 0"
         class="no-more-tip">没有更多数据了</div>
 
+    <!-- 底部网格：葡萄酒酒庄（无关键词） -->
+    <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
+    <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && hasMore && displayWineWineries.length > 0"
+        class="load-more-section">
+        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    </div>
+    <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && !hasMore && displayWineWineries.length > 0"
+        class="no-more-tip">没有更多数据了</div>
+
+    <!-- 底部网格：洋酒酒庄（无关键词） -->
+    <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
+    <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && hasMore && displaySpiritWineries.length > 0"
+        class="load-more-section">
+        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    </div>
+    <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && !hasMore && displaySpiritWineries.length > 0"
+        class="no-more-tip">没有更多数据了</div>
+
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" class="coming-grid">
-        <div v-for="(item, i) in getPaginatedItems(hotels.items)" :key="item" class="coming-card"
-            @click="onOpenPlace(item.place, '住宿')">
-            <img src="@/assets/img/default.png" alt="" class="w100">
-            <div class="card-title">{{ item.place }} 住宿</div>
-            <div class="card-sub">Hotel {{ item.enPlace }}</div>
+        <div v-for="(item, i) in getPaginatedItems(hotels.items)" :key="'hotel-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
         </div>
     </div>
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
@@ -479,7 +632,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && !hasMore && hotels.items.length > 0"
         class="no-more-tip">没有更多数据了</div>
 
-    <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步/当地天气/医疗 等） -->
+    <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
     <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
         <div class="activities-header">
             <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
