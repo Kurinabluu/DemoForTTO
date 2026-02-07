@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
-import TourDialog from '@/components/TourDialog.vue'
+import FreeInfoDialog from '@/components/FreeInfoDialog.vue'
+import TripDialog from '@/components/TripDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
@@ -138,7 +139,8 @@ function doSubSearch() {
 }
 
 // 只保留弹窗相关的状态
-const isTourDialogVisible = ref(false)
+const isFreeInfoDialogVisible = ref(false)
+const isTripDialogVisible = ref(false)
 const dialogEnTitle = ref('')
 const dialogTitle = ref('大堡礁单日游')
 const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
@@ -288,7 +290,12 @@ function openTourDialog(item) {
     dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
     dialogTripData.value = item?.tripData || {}
     dialogTripType.value = item?.tripType || '一日游'
-    isTourDialogVisible.value = true
+
+    if (dialogTripType.value === '一日游' || dialogTripType.value === '多日游') {
+        isTripDialogVisible.value = true
+    } else {
+        isFreeInfoDialogVisible.value = true
+    }
 }
 
 // 响应式选择轮播图（<=1024 为手机/平板）与高度
@@ -551,7 +558,9 @@ onUnmounted(() => {
         </div>
 
         <!-- 弹窗组件 -->
-        <TourDialog v-model:visible="isTourDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
+        <FreeInfoDialog v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" />
+        <TripDialog v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
             :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" />
         <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
             :items="listItems" @select="onSelectPlaceItem" />
