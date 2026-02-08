@@ -83,8 +83,8 @@ const routeInfo = computed(() => {
             <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
         </template>
 
-        <div class="dlg-banner" v-if="banner">
-            <img :src="banner" alt="banner" />
+        <div class="dlg-banner w100" v-if="banner">
+            <img :src="banner" alt="banner" class="w100 h100" />
         </div>
 
         <div class="dlg-section">
@@ -160,13 +160,11 @@ const routeInfo = computed(() => {
 }
 
 .dlg-banner {
-    width: 100%;
-    height: 220px;
+    // width: 100%;
+    height: 240px;
 
     img {
         display: block;
-        width: 100%;
-        height: 100%;
         object-fit: cover;
     }
 }
@@ -178,9 +176,9 @@ const routeInfo = computed(() => {
 }
 
 .section-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     color: #1f2937;
 }
 
@@ -188,6 +186,7 @@ const routeInfo = computed(() => {
     line-height: 1.8;
     color: #4b5563;
     margin-bottom: 16px;
+    font-size: 16px;
 }
 
 .feature-grid {

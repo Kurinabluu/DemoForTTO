@@ -446,13 +446,18 @@ onMounted(() => {
     const dialogType = route.query.dialogType
 
     if (dialogItemId && dialogType === 'tour') {
-        // 延迟执行，确保页面内容已加载完成
-        setTimeout(() => {
-            const decodedId = decodeURIComponent(dialogItemId)
+        const decodedId = decodeURIComponent(dialogItemId)
+        let attempts = 0
+        const maxAttempts = 30 // 最多尝试30次（约3秒）
+        const checkInterval = 100 // 每100ms检查一次
+
+        // 使用轮询机制等待元素出现（因为可能有"加载更多"功能需要时间）
+        const findAndHighlightElement = () => {
+            attempts++
             const targetElement = document.querySelector(`[data-tour-title="${decodedId}"]`)
 
             if (targetElement) {
-                // 滚动到元素位置
+                // 找到元素后，滚动到元素位置
                 targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
                 // 等待滚动完成后添加蓝色边框效果
@@ -473,8 +478,14 @@ onMounted(() => {
                         }, 500) // 等待边框消失动画完成
                     }, 1000) // 边框显示1秒
                 }, 500) // 等待滚动动画完成
+            } else if (attempts < maxAttempts) {
+                // 如果还没找到且未超过最大尝试次数，继续等待
+                setTimeout(findAndHighlightElement, checkInterval)
             }
-        }, 1000)
+        }
+
+        // 开始查找（延迟一点时间，确保组件已挂载）
+        setTimeout(findAndHighlightElement, 500)
     }
 })
 

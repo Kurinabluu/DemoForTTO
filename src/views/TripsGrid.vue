@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import dataJson from '@/data/data.json'
+
+const route = useRoute()
 
 const props = defineProps({
     activeTag: { type: String, required: true },
@@ -17,11 +20,22 @@ const currentPage = ref(1)
 const isLoading = ref(false)
 const hasMore = ref(true)
 
+// 检测是否需要自动加载所有数据（当有新窗口打开且需要高亮时）
+const shouldLoadAll = computed(() => {
+    // 如果有搜索关键词且有 dialogItemId，说明需要高亮显示，需要加载所有数据
+    return !!(route.query.s && route.query.dialogItemId)
+})
+
 // 监听props变化，重置分页
 watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     currentPage.value = 1
     hasMore.value = true
     checkHasMore()
+
+    // 如果需要自动加载所有数据，立即加载
+    if (shouldLoadAll.value) {
+        loadAllItems()
+    }
 }, { deep: true })
 
 
@@ -67,14 +81,48 @@ function getTotalItems() {
     return 0
 }
 
+// 自动加载所有数据（用于新窗口打开时的高亮功能）
+function loadAllItems() {
+    if (isLoading.value) return
+
+    const totalItems = getTotalItems()
+    if (totalItems <= 0) return
+
+    // 计算需要加载的页数
+    const totalPages = Math.ceil(totalItems / itemsPerPage.value)
+
+    if (currentPage.value < totalPages) {
+        isLoading.value = true
+        currentPage.value = totalPages
+        hasMore.value = false
+
+        // 使用 setTimeout 模拟加载过程，确保 DOM 更新
+        setTimeout(() => {
+            isLoading.value = false
+        }, 300)
+    }
+}
+
 // 获取分页后的数据
 function getPaginatedItems(items) {
+    // 如果需要自动加载所有数据，返回所有数据
+    if (shouldLoadAll.value) {
+        return items
+    }
     const endIndex = currentPage.value * itemsPerPage.value
     return items.slice(0, endIndex)
 }
 
 onMounted(() => {
     checkHasMore()
+
+    // 如果检测到需要自动加载所有数据，立即加载
+    if (shouldLoadAll.value) {
+        // 延迟一下，确保数据已经准备好
+        setTimeout(() => {
+            loadAllItems()
+        }, 100)
+    }
 })
 
 // 从data.json获取数据
