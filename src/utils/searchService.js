@@ -159,7 +159,17 @@ dataSource.forEach((section) => {
   if ((section.hasOwnProperty('isShow') && !section.isShow) || section.available === false) return
 
   const basePath = buildBasePath(section.path)
-  const sectionText = collectStrings(section).join(' ')
+  // 只索引板块自身的文字，不把所有子项的内容都算进来，
+  // 避免搜索“inn”等关键词时，把下面所有景点/酒店的词都算到这一层上
+  const sectionText = [
+    section.tagName,
+    summaryFromItem(section),
+    section.heroDesc,
+    section.description
+  ]
+    .filter(Boolean)
+    .map((v) => cleanText(String(v)))
+    .join(' ')
 
   pushResult({
     title: section.tagName,
@@ -183,7 +193,13 @@ dataSource.forEach((section) => {
         sectionTag: section.tagName,
         subNavName: subNav.subNavName,
         targetUrl: buildTargetUrl(basePath, queryParams),
-        source: subNav
+        // 这里同样只索引子导航自身的简介，不包含 items 里的每个景点/酒店，
+        // 否则会出现“景点外面包一层”的结果一起命中
+        source: {
+          subNavName: subNav.subNavName,
+          desc: subNav.desc,
+          summary: summaryFromItem(subNav)
+        }
       })
 
       if (Array.isArray(subNav.items)) {
@@ -294,30 +310,37 @@ export const searchAllContent = (rawKeyword) => {
     .filter(Boolean)
     .sort((a, b) => a.score - b.score)
 
-  // 实现更严格的去重逻辑，特别是针对"私人定制"和"私人定制 - 介绍"这样的情况
-  const uniqueResults = [];
-  const seenContent = new Set();
+  // 去重逻辑：
+  // - 对有 sectionTag 的结果：只去除标题“非常相似”的结果（例如“私人定制”和“私人定制 - 介绍”）
+  // - 对没有 sectionTag 的结果：按 targetUrl 去重
+  const uniqueResults = []
+  const seenUrl = new Set()
 
-  for (let i = 0; i < results.length; i++) {
-    const currentResult = results[i];
+  results.forEach((currentResult) => {
+    const { sectionTag, title, targetUrl } = currentResult
 
-    // 1. 对于有sectionTag的结果，使用sectionTag作为主要去重标识符
-    // 这可以解决"私人定制"和"私人定制 - 介绍"这样的问题，因为它们通常有相同的sectionTag
-    if (currentResult.sectionTag) {
-      const sectionKey = currentResult.sectionTag;
-
-      // 检查是否已经有相同sectionTag的结果
-      if (!seenContent.has(sectionKey)) {
-        seenContent.add(sectionKey);
-        uniqueResults.push(currentResult);
-      }
+    // 没有 sectionTag 的，按 URL 去重
+    if (!sectionTag) {
+      if (seenUrl.has(targetUrl)) return
+      seenUrl.add(targetUrl)
+      uniqueResults.push(currentResult)
+      return
     }
-    // 2. 对于没有sectionTag的结果，使用URL去重
-    else if (!seenContent.has(currentResult.targetUrl)) {
-      seenContent.add(currentResult.targetUrl);
-      uniqueResults.push(currentResult);
+
+    // 有 sectionTag：只在“标题相似”的情况下认为是重复
+    const isDuplicateInSection = uniqueResults.some(
+      (item) =>
+        item.sectionTag === sectionTag &&
+        isSimilarTitle(item.title || '', title || '')
+    )
+
+    if (isDuplicateInSection) {
+      // 标题非常相似，认为是同一内容（比如“私人定制” vs “私人定制 - 介绍”）
+      return
     }
-  }
+
+    uniqueResults.push(currentResult)
+  })
 
   return {
     query: keyword,
