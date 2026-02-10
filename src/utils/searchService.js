@@ -92,7 +92,16 @@ const nextId = () => {
 
 const searchIndex = []
 
-const pushResult = ({ title, summary, sectionTag, subNavName, groupName, targetUrl, source }) => {
+const pushResult = ({
+  title,
+  summary,
+  sectionTag,
+  subNavName,
+  groupName,
+  targetUrl,
+  source,
+  kind = 'item' // section | subNav | service | item
+}) => {
   if (!title || !targetUrl) return
   const rawText = collectStrings(source || summary || title).join(' ')
   searchIndex.push({
@@ -104,7 +113,8 @@ const pushResult = ({ title, summary, sectionTag, subNavName, groupName, targetU
     groupName,
     targetUrl,
     rawText,
-    searchText: rawText.toLowerCase()
+    searchText: rawText.toLowerCase(),
+    kind
   })
 }
 
@@ -131,7 +141,8 @@ const processItemsArray = (items, context = {}) => {
       subNavName: context.subNavName,
       groupName: context.groupName,
       targetUrl: buildTargetUrl(context.basePath, itemParams),
-      source: item
+      source: item,
+      kind: 'item'
     })
 
     if (Array.isArray(item.list)) {
@@ -147,7 +158,8 @@ const processItemsArray = (items, context = {}) => {
           subNavName: context.subNavName,
           groupName: item.place || context.groupName,
           targetUrl: buildTargetUrl(context.basePath, context.queryParams || {}),
-          source: listItem
+          source: listItem,
+          kind: 'item'
         })
       })
     }
@@ -176,7 +188,8 @@ dataSource.forEach((section) => {
     summary: summaryFromItem(section),
     sectionTag: section.tagName,
     targetUrl: basePath,
-    source: sectionText
+    source: sectionText,
+    kind: 'section'
   })
 
   if (Array.isArray(section.subNav)) {
@@ -199,7 +212,8 @@ dataSource.forEach((section) => {
           subNavName: subNav.subNavName,
           desc: subNav.desc,
           summary: summaryFromItem(subNav)
-        }
+        },
+        kind: 'subNav'
       })
 
       if (Array.isArray(subNav.items)) {
@@ -228,7 +242,8 @@ dataSource.forEach((section) => {
       summary: config.heroDesc || config.contactIntro || summaryFromItem(config),
       sectionTag: section.tagName,
       targetUrl: basePath,
-      source: config
+      source: config,
+      kind: 'service'
     })
 
     processItemsArray(config.packages, {
@@ -288,8 +303,8 @@ export const searchAllContent = (rawKeyword) => {
   const lowerKeyword = keyword.toLowerCase()
   const results = searchIndex
     .map((item) => {
-      // 检查item.source中的isShow属性，如果存在且为false，则跳过
-      if (item.source && typeof item.source === 'object' && item.source.hasOwnProperty('isShow') && !item.source.isShow) {
+      // 1. 过滤掉外层“容器类”的结果（板块、本分类标题等），只保留具体条目
+      if (item.kind === 'section' || item.kind === 'subNav') {
         return null
       }
 
@@ -310,41 +325,9 @@ export const searchAllContent = (rawKeyword) => {
     .filter(Boolean)
     .sort((a, b) => a.score - b.score)
 
-  // 去重逻辑：
-  // - 对有 sectionTag 的结果：只去除标题“非常相似”的结果（例如“私人定制”和“私人定制 - 介绍”）
-  // - 对没有 sectionTag 的结果：按 targetUrl 去重
-  const uniqueResults = []
-  const seenUrl = new Set()
-
-  results.forEach((currentResult) => {
-    const { sectionTag, title, targetUrl } = currentResult
-
-    // 没有 sectionTag 的，按 URL 去重
-    if (!sectionTag) {
-      if (seenUrl.has(targetUrl)) return
-      seenUrl.add(targetUrl)
-      uniqueResults.push(currentResult)
-      return
-    }
-
-    // 有 sectionTag：只在“标题相似”的情况下认为是重复
-    const isDuplicateInSection = uniqueResults.some(
-      (item) =>
-        item.sectionTag === sectionTag &&
-        isSimilarTitle(item.title || '', title || '')
-    )
-
-    if (isDuplicateInSection) {
-      // 标题非常相似，认为是同一内容（比如“私人定制” vs “私人定制 - 介绍”）
-      return
-    }
-
-    uniqueResults.push(currentResult)
-  })
-
   return {
     query: keyword,
-    results: uniqueResults
+    results
   }
 }
 
