@@ -19,13 +19,6 @@ const handleScroll = () => {
   const carouselHeight = 800 // 轮播图高度
   const threshold = carouselHeight * 2 / 3 // 约533px
 
-  // 移动端和平板端不显示电梯导航
-  const isMobileOrTablet = window.innerWidth <= 1024
-  if (isMobileOrTablet) {
-    showElevator.value = false
-    return
-  }
-
   // 滚动超过2/3轮播图高度时显示电梯导航
   const shouldShow = scrollTop > threshold
   showElevator.value = shouldShow
@@ -92,11 +85,12 @@ onMounted(() => {
   */
 
   // 添加滚动事件监听器
-  window.addEventListener('scroll', () => {
+  const onScroll = () => {
     handleScroll()
     // 保存滚动位置
     navStore.saveScroll(window.scrollY)
-  })
+  }
+  window.addEventListener('scroll', onScroll)
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
 
@@ -158,12 +152,12 @@ onUnmounted(() => {
 
   <!-- 电梯导航 -->
   <div class="elevator-nav" :class="{ show: showElevator }">
-    <div class="elevator-btn" :class="{ show: showElevator }" @click="scrollToTop">
+    <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="scrollToTop">
       <el-icon>
         <ArrowUp />
       </el-icon>
     </div>
-    <div class="elevator-btn" :class="{ show: showElevator && !isAtBottom }" @click="scrollToBottom">
+    <div class="elevator-btn pointer" :class="{ show: showElevator && !isAtBottom }" @click="scrollToBottom">
       <el-icon>
         <ArrowDown />
       </el-icon>
@@ -184,16 +178,16 @@ onUnmounted(() => {
 // 电梯导航样式 - 全局作用域
 .elevator-nav {
   position: fixed !important;
-  right: 30px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 9200 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+  display: flex;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9200;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 
   &.show {
     opacity: 1 !important;
@@ -201,19 +195,18 @@ onUnmounted(() => {
   }
 
   .elevator-btn {
-    width: 50px !important;
-    height: 50px !important;
-    background-color: #fff !important;
-    border-radius: 8px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease !important;
-    border: 1px solid #e0e0e0 !important;
-    opacity: 0 !important;
-    transition: opacity 0.3s ease, transform 0.3s ease !important;
+    display: flex;
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 
     &.show {
       opacity: 1 !important;
@@ -231,10 +224,17 @@ onUnmounted(() => {
   }
 }
 
-// 移动端和平板端隐藏电梯导航
+// 移动端和平板端：电梯导航位置下移到 70%
 @media (max-width: 1024px) {
   .elevator-nav {
-    display: none !important;
+    top: 70% !important;
+  }
+}
+
+@media (max-width:767px) {
+  .elevator-btn {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>
