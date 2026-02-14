@@ -49,7 +49,7 @@ const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData |
 // 接收配置（保持向后兼容）
 const props = defineProps({
     config: { type: Object, default: null },
-    serviceName: { type: String, default: '代订门票及旅游项目' }
+    serviceName: { type: String, default: '热门项目' }
 })
 
 // 响应式检测屏幕宽度，用于移动端适配
@@ -408,6 +408,13 @@ const titleText = computed(() => {
     return props.config?.serviceName || props.config?.heroTitle || ''
 })
 
+// 将 heroDesc 规范为数组：data 中可能是字符串（热门项目/商务接送/地接地陪/行程管家）或数组（包车/私人定制），v-for 遍历字符串会按字符迭代导致每字一个 p
+const heroDescLines = computed(() => {
+    const desc = currentConfig.value?.heroDesc
+    if (desc == null) return []
+    return Array.isArray(desc) ? desc : [desc]
+})
+
 // 获取服务数据的函数
 const loadServiceData = (serviceName) => {
     if (serviceName) {
@@ -495,7 +502,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                     :initial-index="index" show-close show-toolbar show-index :preview-teleported="true"
                                     :z-index="9888">
-                                    <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
+                                    <template #toolbar="{ actions, prev, next }">
                                         <ElIcon @click="prev">
                                             <Back />
                                         </ElIcon>
@@ -535,7 +542,7 @@ watch(() => props.serviceName, (newServiceName) => {
                 <div class="hero-text w100">
                     <!-- <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2> -->
                     <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
-                    <p class="description center" v-for="desc in currentConfig?.heroDesc">{{ desc }}</p>
+                    <p class="description center" v-for="(desc, idx) in heroDescLines" :key="idx">{{ desc }}</p>
 
 
                     <!-- <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
@@ -572,7 +579,7 @@ watch(() => props.serviceName, (newServiceName) => {
             </div>
         </div>
 
-        <div class="steps-box">
+        <div v-if="currentConfig?.stepsTitle && (currentConfig?.steps?.length > 0)" class="steps-box">
             <div class="section-title">{{ currentConfig?.stepsTitle }}</div>
             <el-steps :active="currentConfig?.steps?.length || 0" align-center :space=80 direction="vertical">
                 <el-step v-for="(step, i) in currentConfig?.steps" :key="i"
@@ -598,7 +605,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-                }}</h3>
+            }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -901,7 +908,8 @@ watch(() => props.serviceName, (newServiceName) => {
         :deep(.el-step__title) {
             font-size: 20px !important;
         }
-        :deep(.el-step__desciption){
+
+        :deep(.el-step__desciption) {
             font-size: 15px !important;
         }
     }

@@ -11121,11 +11121,11 @@
                         }
                     },
                     {
-                        "title": "Iron Blow Lookout",
+                        "title": "Rosny Farm",
                         "img": "",
-                        "enTitle": "Iron Blow Lookout",
+                        "enTitle": "Rosny Farm",
                         "tripData": {
-                            "route": "Iron Blow Lookout",
+                            "route": "Rosny Farm",
                             "desc": "景点描述",
                             "features": [
                                 {
@@ -11157,6 +11157,130 @@
                         "enTitle": "Iron Blow Lookout",
                         "tripData": {
                             "route": "Iron Blow Lookout",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Lake Binney",
+                        "img": "",
+                        "enTitle": "Lake Binney",
+                        "tripData": {
+                            "route": "Lake Binney",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Mathinna Falls",
+                        "img": "",
+                        "enTitle": "Mathinna Falls",
+                        "tripData": {
+                            "route": "Mathinna Falls",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Lobster Ponds Haven",
+                        "img": "",
+                        "enTitle": "Lobster Ponds Haven",
+                        "tripData": {
+                            "route": "Lobster Ponds Haven",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Mayfield Beach",
+                        "img": "",
+                        "enTitle": "Mayfield Beach",
+                        "tripData": {
+                            "route": "Mayfield Beach",
                             "desc": "景点描述",
                             "features": [
                                 {
@@ -23346,7 +23470,7 @@
             },
             {
                 "subNavName": "特别活动",
-                "isShow": false,
+                "isShow": true,
                 "isGrid": false,
                 "activitiesTitle": "塔斯马尼亚特别活动",
                 "activitiesSubtitle": "实时特色活动与极光天气信息111",
@@ -23474,9 +23598,9 @@
             },
             {
                 "subNavName": "徒步线路",
-                "isShow": false,
+                "isShow": true,
                 "isGrid": false,
-                "activitiesTitle": "塔斯马尼亚特别活动222",
+                "activitiesTitle": "徒步线路",
                 "activitiesSubtitle": "实时特色活动与极光天气信息222",
                 "items": [
                     {
@@ -24617,9 +24741,9 @@
             },
             {
                 "subNavName": "塔州露营地",
-                "isShow": false,
+                "isShow": true,
                 "isGrid": false,
-                "activitiesTitle": "塔斯马尼亚特别活动",
+                "activitiesTitle": "塔州露营地",
                 "activitiesSubtitle": "实时特色活动与极光天气信息",
                 "items": [
                     {
@@ -25960,7 +26084,7 @@
     {
         "id": 3,
         "tagName": "热门项目",
-        "available": false,
+        "available": true,
         "hasSubNav": false,
         "isTrip": false,
         "path": "service/ticket",
@@ -25973,6 +26097,13 @@
                 "餐厅预留就座",
                 "行程无缝对接",
                 "全程无忧代办"
+            ],
+            "stepsTitle": "代订门票与热门项目四步流程",
+            "steps": [
+                "告知需求与出行时间",
+                "选择景点门票、餐厅或活动项目",
+                "确认订单与支付",
+                "凭确认函即到即享，省去排队等待"
             ],
             "packagesTitle": "旅行无忧代办计划",
             "packages": [
@@ -26019,10 +26150,10 @@
     {
         "id": 4,
         "tagName": "商务接送",
-        "available": false,
+        "available": true,
         "hasSubNav": false,
         "isTrip": false,
-        "path": "service/steward",
+        "path": "service/pickup",
         "serviceConfig": {
             "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "把麻烦交给我们，把时间留给风景",
@@ -26032,6 +26163,13 @@
                 "服务无处不在，却从不打扰你的旅行节奏",
                 "安心托付，让你在异国他乡也能完全放松，尽享旅程",
                 "我们不只是服务者，更是懂行的同行伙伴"
+            ],
+            "stepsTitle": "商务接送四步流程",
+            "steps": [
+                "告知航班号、日期或行程安排",
+                "确认接送地点与时间",
+                "预约确认与支付",
+                "准时专车接送，省心省力"
             ],
             "packagesTitle": "管家服务套餐",
             "packages": [
@@ -26382,7 +26520,7 @@
     {
         "id": 7,
         "tagName": "地接地陪",
-        "available": false,
+        "available": true,
         "hasSubNav": false,
         "isTrip": false,
         "path": "service/guide",
@@ -26394,6 +26532,13 @@
                 "与你分享风景之外的历史、生态与生活故事",
                 "多语言专业讲解，精通中英双语，深度解读自然景观与人文历史",
                 "随时根据天气、体力与兴趣优化体验"
+            ],
+            "stepsTitle": "地接地陪服务四步流程",
+            "steps": [
+                "沟通行程偏好、人数与天数",
+                "选定陪行方案与档期",
+                "确认预约并支付",
+                "当地向导全程陪同，即到即享"
             ],
             "packagesTitle": "多种接待方案",
             "packages": [
@@ -26462,7 +26607,7 @@
     {
         "id": 8,
         "tagName": "行程管家",
-        "available": false,
+        "available": true,
         "hasSubNav": false,
         "isTrip": false,
         "path": "service/steward",
@@ -26475,6 +26620,13 @@
                 "服务无处不在，却从不打扰你的旅行节奏",
                 "安心托付，让你在异国他乡也能完全放松，尽享旅程",
                 "我们不只是服务者，更是懂行的同行伙伴"
+            ],
+            "stepsTitle": "行程管家服务四步流程",
+            "steps": [
+                "提出需求与预算范围",
+                "获得专属方案与透明报价",
+                "确认方案并签约支付",
+                "管家全程协调执行，随时响应"
             ],
             "packagesTitle": "管家服务套餐",
             "packages": [

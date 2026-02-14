@@ -78,9 +78,9 @@ function onClickTag(tag, event) {
       if (tagData.path === 'trips/freeinfo') {
         fullPath = `/DemoForTTO/${tagData.path}?subNavName=景点`
       }
-      // 如果是oneday路径，添加dayTripTab参数
-      else if (tagData.path === 'trips/oneday') {
-        fullPath = `/DemoForTTO/${tagData.path}?dayTripTab=景点一日游`
+      // 如果是一日游/多日游路径（trips/routes），添加dayTripTab参数
+      else if (tagData.path === 'trips/routes') {
+        fullPath = `/DemoForTTO/${tagData.path}?dayTripTab=1日行程`
       }
 
       // 在新窗口打开前，更新 tto_last_path，确保新窗口能正确渲染内容

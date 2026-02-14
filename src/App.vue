@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import { ArrowUp, ArrowDown, Switch } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
@@ -8,6 +8,9 @@ import { useRouter } from 'vue-router'
 // 电梯导航相关
 const showElevator = ref(false)
 const isAtBottom = ref(false)
+const isLeftPosition = ref(false) // 控制电梯导航位置，false为右侧，true为左侧
+const scrollProgress = ref(0) // 滚动进度
+const showScrollBar = ref(false) // 控制滚动条显示
 
 const router = useRouter()
 
@@ -23,9 +26,17 @@ const handleScroll = () => {
   const shouldShow = scrollTop > threshold
   showElevator.value = shouldShow
 
+  // 只在移动端显示滚动条
+  const isMobile = window.innerWidth <= 767
+  showScrollBar.value = shouldShow && isMobile
+
   // 检查是否到达底部（距离底部10px以内）
   const isNearBottom = scrollTop + windowHeight >= documentHeight - 10
   isAtBottom.value = isNearBottom
+
+  // 计算滚动进度
+  const totalScrollable = Math.max(documentHeight - windowHeight, 1)
+  scrollProgress.value = (scrollTop / totalScrollable) * 100
 }
 
 // 回到顶部
@@ -44,6 +55,108 @@ const scrollToBottom = () => {
   })
 }
 
+// 切换电梯导航和滚动条位置
+const togglePosition = () => {
+  isLeftPosition.value = !isLeftPosition.value
+}
+
+// 滚动条拖动处理
+const isDragging = ref(false)
+const dragOffsetY = ref(0)
+
+const handleScrollBarInput = (e) => {
+  const scrollBar = e.currentTarget
+  if (!scrollBar) return
+
+  const rect = scrollBar.getBoundingClientRect()
+  const clientY = e.clientY || e.touches?.[0]?.clientY
+  if (!clientY) return
+
+  const mouseY = clientY - rect.top
+  const percentage = Math.max(0, Math.min(1, mouseY / rect.height))
+
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight
+  const totalScrollable = documentHeight - windowHeight
+  const scrollTop = percentage * totalScrollable
+
+  window.scrollTo({
+    top: scrollTop,
+    behavior: 'auto'
+  })
+}
+
+const startDrag = (e) => {
+  isDragging.value = true
+  document.body.style.userSelect = 'none'
+  document.body.style.touchAction = 'none'
+
+  const thumb = e.currentTarget
+  const rect = thumb.getBoundingClientRect()
+  const clientY = e.clientY || e.touches?.[0]?.clientY
+
+  if (clientY) {
+    dragOffsetY.value = clientY - rect.top
+  }
+}
+
+const endDrag = () => {
+  isDragging.value = false
+  document.body.style.userSelect = ''
+  document.body.style.touchAction = ''
+}
+
+const onScrollBarClick = (e) => {
+  if (e.target.classList.contains('scrollbar-thumb')) return
+
+  const scrollBar = e.currentTarget
+  if (!scrollBar) return
+
+  const rect = scrollBar.getBoundingClientRect()
+  const clientY = e.clientY || e.touches?.[0]?.clientY
+  if (!clientY) return
+
+  const mouseY = clientY - rect.top
+  const percentage = Math.max(0, Math.min(1, mouseY / rect.height))
+
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight
+  const totalScrollable = documentHeight - windowHeight
+  const scrollTop = percentage * totalScrollable
+
+  window.scrollTo({
+    top: scrollTop,
+    behavior: 'auto'
+  })
+}
+
+// 全局触摸移动处理
+const handleTouchMove = (e) => {
+  if (!isDragging.value) return
+
+  e.preventDefault()
+
+  const scrollBar = document.querySelector('.custom-scrollbar')
+  if (!scrollBar) return
+
+  const rect = scrollBar.getBoundingClientRect()
+  const clientY = e.touches?.[0]?.clientY
+  if (!clientY) return
+
+  const mouseY = clientY - rect.top - dragOffsetY.value
+  const percentage = Math.max(0, Math.min(1, mouseY / rect.height))
+
+  const windowHeight = window.innerHeight
+  const documentHeight = document.documentElement.scrollHeight
+  const totalScrollable = documentHeight - windowHeight
+  const scrollTop = percentage * totalScrollable
+
+  window.scrollTo({
+    top: scrollTop,
+    behavior: 'auto'
+  })
+}
+
 
 //温馨提示弹窗
 const showTipsModal = ref(false)
@@ -56,7 +169,7 @@ const acceptTips = () => {
 }
 
 //敬请期待对话框
-// const isDialogVisible = ref(false)
+const isDialogVisible = ref(false)
 
 // 定义获取导航状态存储
 const navStore = useNavStore()
@@ -68,6 +181,22 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  // 只在移动端隐藏浏览器默认滚动条
+  const isMobile = window.innerWidth <= 767
+  if (isMobile) {
+    document.documentElement.style.overflowY = 'auto'
+    document.documentElement.style.scrollbarWidth = 'none'
+    document.documentElement.style.msOverflowStyle = 'none'
+
+    const style = document.createElement('style')
+    style.textContent = `
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    `
+    document.head.appendChild(style)
+  }
+
   // 检查用户是否设置了不再显示提示
   const shouldNotShow = localStorage.getItem('tto_dont_show_tips') === 'true'
   if (!shouldNotShow) {
@@ -93,6 +222,9 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll)
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
+  // 添加全局触摸移动事件监听器
+  window.addEventListener('touchmove', handleTouchMove, { passive: false })
+  window.addEventListener('touchend', endDrag)
 
   // 非首次进入时，恢复用户上次选择的服务、子导航和滚动位置
   if (!navStore.isFirstVisit()) {
@@ -122,6 +254,8 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('resize', handleResize)
+  window.removeEventListener('touchmove', handleTouchMove)
+  window.removeEventListener('touchend', endDrag)
 })
 
 </script>
@@ -151,16 +285,31 @@ onUnmounted(() => {
   </el-dialog>
 
   <!-- 电梯导航 -->
-  <div class="elevator-nav" :class="{ show: showElevator }">
+  <div class="elevator-nav" :class="{ show: showElevator, 'left-position': isLeftPosition }">
     <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="scrollToTop">
       <el-icon>
         <ArrowUp />
       </el-icon>
     </div>
-    <div class="elevator-btn pointer" :class="{ show: showElevator && !isAtBottom }" @click="scrollToBottom">
+    <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="scrollToBottom">
       <el-icon>
         <ArrowDown />
       </el-icon>
+    </div>
+    <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="togglePosition">
+      <el-icon>
+        <Switch />
+      </el-icon>
+    </div>
+  </div>
+
+  <!-- 滚动条 -->
+  <div class="custom-scrollbar" :class="{ 'left-position': isLeftPosition, 'show': showScrollBar }"
+    @click="onScrollBarClick">
+    <div class="scrollbar-track">
+      <div class="scrollbar-thumb" :style="{ top: scrollProgress + '%' }" @mousedown="startDrag"
+        @touchstart.prevent="startDrag">
+      </div>
     </div>
   </div>
 
@@ -179,7 +328,7 @@ onUnmounted(() => {
 .elevator-nav {
   position: fixed !important;
   display: flex;
-  right: 30px;
+  right: 20px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 9200;
@@ -190,8 +339,13 @@ onUnmounted(() => {
   transition: opacity 0.3s ease, visibility 0.3s ease;
 
   &.show {
-    opacity: 1 !important;
-    visibility: visible !important;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.left-position {
+    right: auto;
+    left: 20px;
   }
 
   .elevator-btn {
@@ -205,12 +359,12 @@ onUnmounted(() => {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    // opacity: 0;
+    transition: display 0.3s ease;
 
-    &.show {
-      opacity: 1 !important;
-    }
+    // &.show {
+    //   display: flex;
+    // }
 
     &:hover {
       transform: translateY(-2px) !important;
@@ -224,17 +378,104 @@ onUnmounted(() => {
   }
 }
 
+// 滚动条样式
+.custom-scrollbar {
+  position: fixed !important;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9199;
+  width: 20px;
+  height: 600px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, left 0.3s ease, right 0.3s ease;
+  cursor: pointer;
+  touch-action: none;
+
+  &.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  &.left-position {
+    left: auto;
+    right: 20px;
+  }
+
+  .scrollbar-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  .scrollbar-thumb {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 80px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    border: 2px solid #e0e0e0;
+    cursor: grab;
+    transition: all 0.3s ease;
+    touch-action: none;
+
+    &:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    &:active {
+      cursor: grabbing;
+      transform: translateX(-50%) scale(1.1);
+    }
+  }
+}
+
 // 移动端和平板端：电梯导航位置下移到 70%
 @media (max-width: 1024px) {
   .elevator-nav {
     top: 70% !important;
   }
+
+  .custom-scrollbar {
+    top: 70% !important;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 500px;
+
+    .scrollbar-thumb {
+      width: 45px;
+      height: 72px;
+    }
+  }
+}
+
+// 只在移动端显示自定义滚动条
+@media (min-width: 769px) {
+  .custom-scrollbar {
+    display: none !important;
+  }
 }
 
 @media (max-width:767px) {
-  .elevator-btn {
-    width: 40px;
-    height: 40px;
+  .custom-scrollbar {
+    width: 16px;
+    height: 400px;
+
+    .scrollbar-thumb {
+      width: 40px;
+      height: 64px;
+    }
   }
 }
 </style>

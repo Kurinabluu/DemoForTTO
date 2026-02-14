@@ -114,12 +114,12 @@ const routes = [
           //   }
           // },
           // Service 路由组 - 使用 ServiceShowcase.vue
-          // {
-          //   path: 'service/ticket',
-          //   name: 'TicketBooking',
-          //   component: () => import('@/views/ServiceShowcase.vue'),
-          //   props: { serviceName: '热门项目' }
-          // },
+          {
+            path: 'service/ticket',
+            name: 'TicketBooking',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '热门项目' }
+          },
           {
             path: 'service/car',
             name: 'CarService',
@@ -127,23 +127,29 @@ const routes = [
             // props: { serviceName: '包车服务（独立成团+专车+司导）' }
             props: { serviceName: '包车服务' }
           },
-          // {
-          //   path: 'service/steward',
-          //   name: 'StewardService',
-          //   component: () => import('@/views/ServiceShowcase.vue'),
-          //   props: { serviceName: '全程旅游管家服务' }
-          // },
-          // {
-          //   path: 'service/guide',
-          //   name: 'GuideService',
-          //   component: () => import('@/views/ServiceShowcase.vue'),
-          //   props: { serviceName: '地接地陪服务' }
-          // },
+          {
+            path: 'service/steward',
+            name: 'StewardService',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '行程管家' }
+          },
+          {
+            path: 'service/guide',
+            name: 'GuideService',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '地接地陪' }
+          },
           {
             path: 'service/custom',
             name: 'CustomService',
             component: () => import('@/views/ServiceShowcase.vue'),
             props: { serviceName: '私人定制' }
+          },
+          {
+            path: 'service/pickup',
+            name: 'PickUp',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '商务接送' }
           },
           {
             path: 'search',

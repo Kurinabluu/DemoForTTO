@@ -377,8 +377,8 @@ onMounted(() => {
                             </RouterLink>
                         </div>
                         <div class="nav-item" @click="showComingSoonDialog">
-                            <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/oneday', query: { dayTripTab: '景点一日游' } }"
-                                @click="navStore.saveSelectedSubNav('景点一日游'); scrollToTop()">
+                            <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/routes', query: { dayTripTab: '1日行程' } }"
+                                @click="navStore.saveSelectedSubNav('1日行程'); scrollToTop()">
                                 精品路线 <span>Tourist route</span>
                             </RouterLink> -->
                             精品路线 <span>Tourist route</span>
