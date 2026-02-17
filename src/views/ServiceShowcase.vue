@@ -22,7 +22,7 @@ import seats22Inside from '@/assets/img/carService/22seats_inside.jpg';
 // import car2CarType from '@/assets/img/carService/car2_carType.png';
 import carType from '@/assets/img/carService/carType.png';
 import defaultCarType from '@/assets/img/carService/carType.png';
-// 导入私人定制服务的图片
+// 导入专属定制服务的图片
 import startFromZero from '@/assets/img/startFromZero.png';
 import capable from '@/assets/img/capable.png';
 import createFreely from '@/assets/img/createFreely.png';
@@ -42,8 +42,8 @@ import hiaceLeftFront from '@/assets/img/carService/hiace_left_front.jpg';
 
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 
-// 从data.json中获取私人定制服务的数据
-const privateCustomService = dataJson.find(item => item.tagName === '私人定制')
+// 从data.json中获取专属定制服务的数据
+const privateCustomService = dataJson.find(item => item.tagName === '专属定制')
 const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
 
 // 接收配置（保持向后兼容）
@@ -120,7 +120,7 @@ const carImagesMap = {
     '22seats_front_left.png': seats22,
     '22seats_inside.jpg': seats22Inside,
     '22seats_left.jpg': seats22Left,
-    // 私人定制服务的图片映射
+    // 专属定制服务的图片映射
     '@/assets/img/startFromZero.png': startFromZero,
     '@/assets/img/capable.png': capable,
     '@/assets/img/createFreely.png': createFreely,
@@ -408,7 +408,7 @@ const titleText = computed(() => {
     return props.config?.serviceName || props.config?.heroTitle || ''
 })
 
-// 将 heroDesc 规范为数组：data 中可能是字符串（热门项目/商务接送/地接地陪/行程管家）或数组（包车/私人定制），v-for 遍历字符串会按字符迭代导致每字一个 p
+// 将 heroDesc 规范为数组：data 中可能是字符串（热门项目/商务接送/地接地陪/行程管家）或数组（包车/专属定制），v-for 遍历字符串会按字符迭代导致每字一个 p
 const heroDescLines = computed(() => {
     const desc = currentConfig.value?.heroDesc
     if (desc == null) return []
@@ -605,7 +605,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-            }}</h3>
+                }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">

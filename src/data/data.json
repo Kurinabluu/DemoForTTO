@@ -11491,6 +11491,37 @@
                                 "tag3"
                             ]
                         }
+                    },
+                    {
+                        "title": "Evolve Spirits Bar",
+                        "img": "",
+                        "enTitle": "Evolve Spirits Bar",
+                        "tripData": {
+                            "route": "Evolve Spirits Bar",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
                     }
                 ]
             },
@@ -15635,6 +15666,294 @@
                     },
                     {
                         "title": "Pyengana Dairy Farmgate Cafe",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "IXL Long Bar",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Institut Polaire",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Dier Makr",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Evolve Spirits Bar",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Lucinda",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Willing Wine Bar",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Void Bar",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Havilah",
+                        "img": "",
+                        "enTitle": "",
+                        "tripData": {
+                            "route": "文本1",
+                            "desc": "描述1",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "待补充"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "待补充"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Rupert & Hound",
                         "img": "",
                         "enTitle": "",
                         "tripData": {
@@ -26733,7 +27052,7 @@
     },
     {
         "id": 6,
-        "tagName": "私人定制",
+        "tagName": "专属定制",
         "available": true,
         "hasSubNav": false,
         "isTrip": false,
@@ -26742,7 +27061,7 @@
             "heroImg": "@/assets/img/footer1.jpg",
             "heroTitle": "专属于你的私人旅行定制",
             "heroDesc": [
-                "「私人定制」，代表着“高端玩家”对专业服务与深度体验的更高要求，它代表“高度专业、个性服务、活动稀有、体验独特与高度沉浸”。世上没有两份相同的风景，也不该有两次雷同的旅程。TTO与你共同创作的，正是这份独一无二的体验脚本。每一次推荐、每一处细节，都只为独一无二的你而存在。"
+                "「专属定制」，代表着“高端玩家”对专业服务与深度体验的更高要求，它代表“高度专业、个性服务、活动稀有、体验独特与高度沉浸”。世上没有两份相同的风景，也不该有两次雷同的旅程。TTO与你共同创作的，正是这份独一无二的体验脚本。每一次推荐、每一处细节，都只为独一无二的你而存在。"
             ],
             "features": [
                 "专属资源匹配",
@@ -26751,7 +27070,7 @@
                 "灵活调整服务",
                 "专属活动安排"
             ],
-            "stepsTitle": "私人定制六步流程",
+            "stepsTitle": "专属定制六步流程",
             "steps": [
                 "告诉我们你的想法，包括但不限于：有多少天时间、感兴趣的景点、感兴趣的餐厅或饮食、感兴趣的旅游项目、感兴趣的酒店或住宿点，喜欢什么节奏的旅行方式等，我们依据这些兴趣和喜好来整理、编排、设定整个行程，使其兼具丰富的项目、充满有趣的活动而又符合实际需求",
                 "选定符合需要的车型，根据车型不同，费用各有差异「具体有：8座最多7位乘客、12座最多11位乘客，22座最多20位乘客（目前的最大车型）」",
@@ -26764,7 +27083,7 @@
                 "行程结束（离岛时送至机场）"
             ],
             "tips": [
-                "私人定制提供两种服务模式，定制费统一为<strong>AUD 30/天</strong>：<br>1.仅定制：委托TTO规划行程并由你自行安排；<br>2.定制并雇佣TTO执行：定制费将作<strong>2倍的金额</strong>抵扣行程费用，如：2天行程定制费AUD 60可作AUD60 X 2=AUD 120抵扣行程费用。<br><strong style='font-style:italic'>此费用在定制之前全额支付到本公司账户。</strong>"
+                "专属定制提供两种服务模式，定制费统一为<strong>AUD 30/天</strong>：<br>1.仅定制：委托TTO规划行程并由你自行安排；<br>2.定制并雇佣TTO执行：定制费将作<strong>2倍的金额</strong>抵扣行程费用，如：2天行程定制费AUD 60可作AUD60 X 2=AUD 120抵扣行程费用。<br><strong style='font-style:italic'>此费用在定制之前全额支付到本公司账户。</strong>"
             ],
             "imgText": [
                 "专属资源匹配",
@@ -26895,8 +27214,8 @@
                     "tag": "商务游"
                 }
             ],
-            "contactTitle": "订购私人定制",
-            "contactIntro": "如需了解详情或预约私人定制，请联系我们的专属顾问"
+            "contactTitle": "订购专属定制",
+            "contactIntro": "如需了解详情或预约专属定制，请联系我们的专属顾问"
         }
     },
     {

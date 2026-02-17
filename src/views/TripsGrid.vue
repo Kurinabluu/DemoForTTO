@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { ElPagination } from 'element-plus'
 import dataJson from '@/data/data.json'
 
 const route = useRoute()
@@ -15,10 +16,51 @@ const props = defineProps({
 const emit = defineEmits(['openTourDialog', 'openPlaceList'])
 
 // 懒加载相关状态
-const itemsPerPage = ref(20)
 const currentPage = ref(1)
 const isLoading = ref(false)
 const hasMore = ref(true)
+const windowWidth = ref(window.innerWidth)
+
+// 根据屏幕尺寸动态计算每页显示数量
+const itemsPerPage = computed(() => {
+    if (windowWidth.value <= 768) {
+        if (window.matchMedia('(orientation: portrait)').matches) {
+            return 3
+        } else {
+            return 2
+        }
+    } else if (windowWidth.value <= 1024) {
+        return 12
+    } else {
+        return 12
+    }
+})
+
+// 根据屏幕尺寸动态计算分页组件尺寸
+const paginationSize = computed(() => {
+    return windowWidth.value <= 768 ? 'small' : 'large'
+})
+
+// 监听窗口大小变化
+const handleResize = () => {
+    windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize)
+    checkHasMore()
+
+    // 如果检测到需要自动加载所有数据，立即加载
+    if (shouldLoadAll.value) {
+        setTimeout(() => {
+            loadAllItems()
+        }, 100)
+    }
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 
 // 检测是否需要自动加载所有数据（当有新窗口打开且需要高亮时）
 const shouldLoadAll = computed(() => {
@@ -38,19 +80,14 @@ watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     }
 }, { deep: true })
 
-
-
-// 加载更多数据
-function loadMoreItems() {
-    if (isLoading.value || !hasMore.value) return
-
-    isLoading.value = true
-    currentPage.value++
-
-    setTimeout(() => {
-        isLoading.value = false
-        checkHasMore()
-    }, 500)
+// 处理页码变化
+const handlePageChange = (page) => {
+    currentPage.value = page
+    const gridElement = document.querySelector('.coming-grid')
+    if (gridElement) {
+        const offsetTop = gridElement.getBoundingClientRect().top + window.pageYOffset
+        window.scrollTo({ top: offsetTop - 180, behavior: 'smooth' })
+    }
 }
 
 // 检查是否还有更多数据
@@ -109,21 +146,10 @@ function getPaginatedItems(items) {
     if (shouldLoadAll.value) {
         return items
     }
-    const endIndex = currentPage.value * itemsPerPage.value
-    return items.slice(0, endIndex)
+    const startIndex = (currentPage.value - 1) * itemsPerPage.value
+    const endIndex = startIndex + itemsPerPage.value
+    return items.slice(startIndex, endIndex)
 }
-
-onMounted(() => {
-    checkHasMore()
-
-    // 如果检测到需要自动加载所有数据，立即加载
-    if (shouldLoadAll.value) {
-        // 延迟一下，确保数据已经准备好
-        setTimeout(() => {
-            loadAllItems()
-        }, 100)
-    }
-})
 
 // 从data.json获取数据
 const getDayTripData = () => {
@@ -443,10 +469,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
-        <div v-else-if="hasMore && currentDayTripItems.length > 0" class="load-more-section">
-            <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+        <div v-else-if="currentDayTripItems.length > 0" class="pagination-section">
+            <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                :total="currentDayTripItems.length" layout="prev, pager, next" :size="paginationSize"
+                @current-change="handlePageChange" />
         </div>
-        <div v-else-if="!hasMore && currentDayTripItems.length > 0" class="no-more-tip">没有更多数据了</div>
     </template>
 
     <!-- 搜索结果区：景点 -->
@@ -461,10 +488,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && scenicFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="scenicFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                    :total="scenicFiltered.length" layout="prev, pager, next" :size="paginationSize"
+                    @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && scenicFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -481,10 +509,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && restaurantFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="restaurantFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                    :total="restaurantFiltered.length" layout="prev, pager, next" :size="paginationSize"
+                    @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && restaurantFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -501,10 +530,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && wineFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="wineFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="wineFiltered.length"
+                    layout="prev, pager, next" :size="paginationSize" @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && wineFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -521,10 +550,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && spiritFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="spiritFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                    :total="spiritFiltered.length" layout="prev, pager, next" :size="paginationSize"
+                    @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && spiritFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -541,10 +571,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && hotelFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="hotelFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                    :total="hotelFiltered.length" layout="prev, pager, next" :size="paginationSize"
+                    @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && hotelFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
     </template>
@@ -583,10 +614,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hasMore && activityFiltered.length > 0" class="load-more-section">
-                <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+            <div v-else-if="activityFiltered.length > 0" class="pagination-section">
+                <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                    :total="activityFiltered.length" layout="prev, pager, next" :size="paginationSize"
+                    @current-change="handlePageChange" />
             </div>
-            <div v-else-if="!hasMore && activityFiltered.length > 0" class="no-more-tip">没有更多数据了</div>
         </template>
         <div v-else class="empty-tip">没有搜索结果</div>
         <div class="activities-footer">
@@ -605,12 +637,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
     <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
-    <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && hasMore && places.items.length > 0"
-        class="load-more-section">
-        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && places.items.length > 0"
+        class="pagination-section">
+        <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="places.items.length"
+            layout="prev, pager, next" :size="paginationSize" @current-change="handlePageChange" />
     </div>
-    <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && !hasMore && places.items.length > 0"
-        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：餐厅（无关键词） -->
     <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip" class="coming-grid">
@@ -622,12 +653,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
     <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
-    <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && hasMore && displayRestaurants.length > 0"
-        class="load-more-section">
-        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && displayRestaurants.length > 0"
+        class="pagination-section">
+        <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="displayRestaurants.length"
+            layout="prev, pager, next" :size="paginationSize" @current-change="handlePageChange" />
     </div>
-    <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && !hasMore && displayRestaurants.length > 0"
-        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：葡萄酒酒庄（无关键词） -->
     <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
@@ -639,12 +669,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
     <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
-    <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && hasMore && displayWineWineries.length > 0"
-        class="load-more-section">
-        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0"
+        class="pagination-section">
+        <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="displayWineWineries.length"
+            layout="prev, pager, next" :size="paginationSize" @current-change="handlePageChange" />
     </div>
-    <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && !hasMore && displayWineWineries.length > 0"
-        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：洋酒酒庄（无关键词） -->
     <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
@@ -656,12 +685,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
     <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
-    <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && hasMore && displaySpiritWineries.length > 0"
-        class="load-more-section">
-        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0"
+        class="pagination-section">
+        <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+            :total="displaySpiritWineries.length" layout="prev, pager, next" :size="paginationSize"
+            @current-change="handlePageChange" />
     </div>
-    <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && !hasMore && displaySpiritWineries.length > 0"
-        class="no-more-tip">没有更多数据了</div>
 
     <!-- 底部网格：住宿（无关键词） -->
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" class="coming-grid">
@@ -673,12 +702,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
     </div>
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
-    <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && hasMore && hotels.items.length > 0"
-        class="load-more-section">
-        <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+    <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && hotels.items.length > 0"
+        class="pagination-section">
+        <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="hotels.items.length"
+            layout="prev, pager, next" :size="paginationSize" @current-change="handlePageChange" />
     </div>
-    <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && !hasMore && hotels.items.length > 0"
-        class="no-more-tip">没有更多数据了</div>
 
     <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
     <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
@@ -712,10 +740,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
-        <div v-else-if="hasMore && currentSpecialItems.length > 0" class="load-more-section">
-            <button @click="loadMoreItems" class="load-more-btn">加载更多</button>
+        <div v-else-if="currentSpecialItems.length > 0" class="pagination-section">
+            <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage"
+                :total="currentSpecialItems.length" layout="prev, pager, next" :size="paginationSize"
+                @current-change="handlePageChange" />
         </div>
-        <div v-else-if="!hasMore && currentSpecialItems.length > 0" class="no-more-tip">没有更多数据了</div>
         <div class="activities-footer">
             <div class="update-info"><i class="update-icon">🔄</i><span>信息每2小时更新一次</span></div>
             <div class="contact-info"><span>获取最新活动信息，请联系我们的专业顾问</span></div>
@@ -744,7 +773,6 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     display: flex;
     flex-direction: column;
     justify-content: center;
-    // padding: 12px;
     cursor: pointer;
     gap: 5px;
     border: 2px solid transparent;
@@ -759,7 +787,6 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     font-weight: 600;
     letter-spacing: 2px;
     color: #1f2937;
-    // margin-bottom: 6px;
     -webkit-line-clamp: 1;
     line-clamp: 1;
 }
@@ -777,15 +804,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 .card-title,
 .card-sub {
     display: -webkit-box;
-    /* 将元素设置为弹性盒子 */
     -webkit-box-orient: vertical;
-    /* 设置盒子方向为垂直 */
-    /* 限制显示的行数 */
     overflow: hidden;
-    /* 隐藏溢出内容 */
     text-overflow: ellipsis;
-    /* 显示省略号 */
-
 }
 
 .empty-tip {
@@ -802,47 +823,32 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     padding: 16px 0 8px;
 }
 
-.no-more-tip {
-    text-align: center;
-    color: #9ca3af;
-    font-size: 14px;
-    padding: 16px 0 40px;
-}
-
-.load-more-section {
+.pagination-section {
     text-align: center;
     padding-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.load-more-btn {
-    width: 150px;
-    height: 50px;
-    padding: 12px 32px;
-    background-color: #279486;
-    color: white;
-    border: none;
-    border-radius: 7px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+:deep(.el-pagination) {
+    .el-pager li {
+        &.is-active {
+            background-color: #279486;
+            color: white;
+        }
 
-.load-more-btn:hover {
-    background-color: #33b1a3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(51, 177, 163, 0.3);
-}
+        &:hover {
+            color: #279486;
+        }
+    }
 
-.load-more-btn:active {
-    transform: translateY(0);
-}
-
-.load-more-btn:disabled {
-    background-color: #93c5fd;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+    .btn-prev,
+    .btn-next {
+        &:hover {
+            color: #279486;
+        }
+    }
 }
 
 /* 特别活动样式 */
@@ -1049,7 +1055,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 /* 平板适配 */
 @media (min-width: 769px) and (max-width: 1024px) {
     .coming-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 
     .special-activities-section {
@@ -1066,7 +1072,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 
     .activities-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
 
@@ -1096,8 +1102,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 }
 
-/* 移动端适配 */
-@media (max-width: 768px) {
+/* 移动端竖屏适配 */
+@media (max-width: 768px) and (orientation: portrait) {
     .coming-grid {
         grid-template-columns: repeat(1, 1fr);
         gap: 20px;
@@ -1168,6 +1174,107 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     .activity-description {
         font-size: 12px;
         padding: 10px;
+    }
+
+    .weather-note {
+        font-size: 11px;
+        padding: 8px 10px;
+    }
+
+    .weather-icon {
+        font-size: 14px;
+    }
+
+    .activities-footer {
+        padding: 15px;
+    }
+
+    .update-info {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .contact-info {
+        font-size: 12px;
+    }
+}
+
+/* 移动端横屏适配 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .coming-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+
+        .coming-card {
+            gap: 8px;
+        }
+
+        img {
+            height: 180px;
+        }
+    }
+
+    .special-activities-section {
+        width: 95%;
+        padding: 10px 0;
+    }
+
+    .activities-header {
+        margin-bottom: 15px;
+    }
+
+    .activities-title {
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+    .activities-subtitle {
+        font-size: 13px;
+    }
+
+    .activities-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .activity-image {
+        height: 140px;
+    }
+
+    .activity-badge {
+        top: 8px;
+        right: 8px;
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .activity-content {
+        padding: 12px;
+    }
+
+    .activity-title {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .activity-info {
+        margin-bottom: 10px;
+    }
+
+    .info-item {
+        margin-bottom: 4px;
+        padding: 2px 0;
+    }
+
+    .info-label,
+    .info-value {
+        font-size: 11px;
+    }
+
+    .activity-description {
+        font-size: 11px;
+        padding: 8px;
     }
 
     .weather-note {

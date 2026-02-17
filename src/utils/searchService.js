@@ -278,7 +278,7 @@ const isSimilarTitle = (title1, title2) => {
   // 如果标题完全相同，直接认为相似
   if (title1 === title2) return true;
 
-  // 如果一个标题是另一个标题的前缀（比如"私人定制" 和 "私人定制 - 介绍"）
+  // 如果一个标题是另一个标题的前缀（比如"专属定制" 和 "专属定制 - 介绍"）
   const shortTitle = title1.length < title2.length ? title1 : title2;
   const longTitle = title1.length < title2.length ? title2 : title1;
 

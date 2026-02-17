@@ -143,7 +143,7 @@ const routes = [
             path: 'service/custom',
             name: 'CustomService',
             component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '私人定制' }
+            props: { serviceName: '专属定制' }
           },
           {
             path: 'service/pickup',

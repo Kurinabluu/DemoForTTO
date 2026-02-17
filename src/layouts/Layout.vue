@@ -564,7 +564,6 @@ onMounted(() => {
                 height: 420px;
                 border-radius: 10px;
                 text-align: left;
-                // height: 400px;
 
                 padding: {
                     top: 25px;
@@ -826,25 +825,47 @@ onMounted(() => {
 }
 
 /* 响应式适配：平板（768px-1024px） */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
     .el-container {
         .el-header {
-            height: 64px;
-            line-height: 64px;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            line-height: 1.4;
+            padding: 8px 0 12px 8px;
 
             .logo {
                 font-size: 20px;
+                text-align: left;
             }
 
             .btns {
-                right: 16px;
+                position: relative !important;
+                right: auto;
+                width: 100%;
+                margin-top: 6px;
 
                 .ul-css {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
+                    gap: 8px;
+                    overflow: visible;
+                    white-space: normal;
+
                     li {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
                         width: auto;
-                        margin-left: 12px;
-                        height: 48px;
+                        height: 40px;
+                        margin-left: 0;
+                        padding: 0 6px;
                     }
+                }
+
+                i {
+                    display: none;
                 }
             }
         }
@@ -855,14 +876,14 @@ onMounted(() => {
             .footer-content {
                 grid-template-columns: 1fr 1fr;
                 // gap: 24px;
-                gap: 80px 24px;
+                column-gap: 30px;
                 padding: 0 16px;
                 height: auto;
             }
 
             .footer-section {
-                height: auto;
                 padding: 12px 0;
+                margin-bottom: 50px;
             }
 
             .route-grid {
@@ -878,7 +899,7 @@ onMounted(() => {
 }
 
 /* 响应式适配：手机（<=768px） */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .el-container {
         .el-header {
             display: flex;
@@ -887,6 +908,7 @@ onMounted(() => {
             height: auto;
             line-height: 1.4;
             padding: 8px 0 12px 8px;
+            position: relative;
 
             .logo {
                 font-size: 18px;
@@ -937,8 +959,8 @@ onMounted(() => {
             }
 
             .footer-section {
-                height: auto;
                 padding: 8px 0;
+                margin-bottom: 50px;
             }
 
             .route-grid {
@@ -987,7 +1009,6 @@ onMounted(() => {
                     li {
                         height: 36px;
                         padding: 0 4px;
-                        font-size: 12px;
                     }
                 }
             }
@@ -1004,7 +1025,7 @@ onMounted(() => {
 
             .footer-section {
                 padding: 6px 0;
-                height: auto;
+                margin-bottom: 50px;
 
                 // 第一个方块 - 关于我们
                 &:first-child {
@@ -1172,6 +1193,7 @@ onMounted(() => {
 
             .footer-section {
                 padding: 4px 0;
+                margin-bottom: 50px;
 
                 // 第一个方块 - 关于我们
                 &:first-child {
