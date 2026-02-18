@@ -27,6 +27,56 @@ const pagedResults = computed(() => {
   return results.value.slice(start, start + pageSize)
 })
 
+// 搜索关键字归一化与高亮分段（用于 result-title）
+const normalizeForSearch = (str) => (str || '').toLowerCase()
+
+const tokenizeForSearch = (str) =>
+  normalizeForSearch(str)
+    .split(/[\s,./\\\-+()'"“”‘’!?;:]+/)
+    .filter(Boolean)
+
+const matchesKeyword = (text, kw) => {
+  const kwRaw = (kw || '').trim()
+  if (!kwRaw) return true
+
+  const kwNorm = normalizeForSearch(kwRaw)
+  const textNorm = normalizeForSearch(text)
+
+  // 有中文或其他非 ASCII 时，用简单包含匹配
+  if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
+    return textNorm.includes(kwNorm)
+  }
+
+  const kwTokens = tokenizeForSearch(kwNorm)
+  if (!kwTokens.length) return true
+
+  const word = textNorm // 这里传入的是单个片段（通常是一个词）
+
+  // 宽松匹配：只要关键字中的任意一个词，与当前这个词是同根（单复数）就高亮
+  return kwTokens.some((kwTok) => {
+    if (word === kwTok) return true
+    if (word === kwTok + 's') return true
+    if (word + 's' === kwTok) return true
+    return false
+  })
+}
+
+const getTitleSegments = (title, kw) => {
+  const raw = title || ''
+  const kwRaw = (kw || '').trim()
+  if (!kwRaw) return [{ text: raw, highlight: false }]
+
+  // 先按空白拆分，保持原有空格
+  const parts = raw.split(/(\s+)/)
+  return parts.map((part) => {
+    if (!part.trim()) {
+      return { text: part, highlight: false }
+    }
+    const isMatch = matchesKeyword(part, kwRaw)
+    return { text: part, highlight: isMatch }
+  })
+}
+
 const updateRoute = ({ queryKeyword, page }) => {
   const query = {}
   if (queryKeyword) {
@@ -186,7 +236,12 @@ onMounted(() => {
             <span v-if="result.subNavName" class="meta-sub">{{ result.subNavName }}</span>
             <span v-if="result.groupName" class="meta-sub">{{ result.groupName }}</span>
           </div>
-          <h3 class="result-title">{{ result.title }}</h3>
+          <h3 class="result-title">
+            <span v-for="(seg, idx) in getTitleSegments(result.title, keyword)" :key="idx">
+              <span v-if="seg.highlight" class="result-title-highlight">{{ seg.text }}</span>
+              <span v-else>{{ seg.text }}</span>
+            </span>
+          </h3>
           <p v-if="result.summary" class="result-summary">{{ result.summary }}</p>
           <p class="result-snippet">{{ result.snippet }}</p>
           <div class="result-actions">
@@ -302,6 +357,11 @@ onMounted(() => {
   font-size: 22px;
   margin: 0;
   color: #0f172a;
+}
+
+.result-title-highlight {
+  color: #33b1a3;
+  font-weight: 700;
 }
 
 .result-summary {

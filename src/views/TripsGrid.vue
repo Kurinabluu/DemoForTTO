@@ -50,11 +50,16 @@ onMounted(() => {
     window.addEventListener('resize', handleResize)
     checkHasMore()
 
-    // 如果检测到需要自动加载所有数据，立即加载
+    // 如果检测到需要自动加载所有数据，立即加载（仅非搜索场景）
     if (shouldLoadAll.value) {
         setTimeout(() => {
             loadAllItems()
         }, 100)
+    }
+
+    // 如果是通过搜索结果携带 dialogItemId 打开的页面，定位到包含该结果的页码
+    if (route.query.dialogItemId) {
+        locateTargetPageForDialogItem()
     }
 })
 
@@ -62,11 +67,69 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
 })
 
-// 检测是否需要自动加载所有数据（当有新窗口打开且需要高亮时）
+// 检测是否需要自动加载所有数据（兼容老的“高亮跳转”逻辑）
+// 说明：
+// - 之前在搜索结果新窗口打开时，会带上 s + dialogItemId，通过 shouldLoadAll 一次性渲染全部结果
+// - 现在景点网格已经改为分页显示，如果继续“加载全部”，会导致所有结果都挤在第一页上，分页按钮形同虚设
+// - 因此：只在“没有搜索关键词时且带有 dialogItemId”才保留旧逻辑；搜索场景一律走正常分页
 const shouldLoadAll = computed(() => {
-    // 如果有搜索关键词且有 dialogItemId，说明需要高亮显示，需要加载所有数据
-    return !!(route.query.s && route.query.dialogItemId)
+    return !!(route.query.dialogItemId && !route.query.s)
 })
+
+// 解析 URL 中需要高亮的条目标题
+const targetItemTitle = computed(() => {
+    const id = route.query.dialogItemId
+    if (!id) return ''
+    try {
+        return decodeURIComponent(String(id))
+    } catch {
+        return String(id)
+    }
+})
+
+// 根据当前上下文获取“完整列表”（未分页的原始数据），用于计算目标条目所在页
+function getFullListForLocate() {
+    // 一日游场景
+    if (props.activeTag === '一日游/多日游') {
+        return currentDayTripItems.value || []
+    }
+
+    // 有搜索关键词时，使用各自的 filtered 列表
+    if (props.s?.trim()) {
+        if (props.subTab === '景点') return scenicFiltered.value || []
+        if (props.subTab === '餐厅') return restaurantFiltered.value || []
+        if (props.subTab === '葡萄酒酒庄') return wineFiltered.value || []
+        if (props.subTab === '洋酒酒庄') return spiritFiltered.value || []
+        if (props.subTab === '住宿') return hotelFiltered.value || []
+        if (isSpecialSection.value) return activityFiltered.value || []
+    } else {
+        // 无搜索时，使用原始数据列表
+        if (props.subTab === '景点') return places?.items || []
+        if (props.subTab === '餐厅') return displayRestaurants.value || []
+        if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value || []
+        if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value || []
+        if (props.subTab === '住宿') return hotels?.items || []
+        if (isSpecialSection.value) return currentSpecialItems.value || []
+    }
+    return []
+}
+
+// 定位“要高亮的结果”所在的页码，并更新 currentPage
+function locateTargetPageForDialogItem() {
+    const title = targetItemTitle.value?.trim()
+    if (!title) return
+
+    const list = getFullListForLocate()
+    if (!Array.isArray(list) || !list.length) return
+
+    // 以 title 精确匹配；如需更宽松可以改成 includes / 忽略大小写
+    const index = list.findIndex(item => item?.title === title)
+    if (index === -1) return
+
+    const pageSize = itemsPerPage.value || 1
+    const page = Math.floor(index / pageSize) + 1
+    currentPage.value = page
+}
 
 // 监听props变化，重置分页
 watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
@@ -78,7 +141,21 @@ watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     if (shouldLoadAll.value) {
         loadAllItems()
     }
+
+    // 如果是通过 dialogItemId 打开，props 变更后重新定位页码
+    if (route.query.dialogItemId) {
+        locateTargetPageForDialogItem()
+    }
 }, { deep: true })
+
+// 当 URL 中的 dialogItemId / 搜索词 / 子标签 或每页数量变化时，尝试重新定位目标页
+watch(
+    () => [targetItemTitle.value, props.s, props.subTab, itemsPerPage.value],
+    () => {
+        if (!route.query.dialogItemId) return
+        locateTargetPageForDialogItem()
+    }
+)
 
 // 处理页码变化
 const handlePageChange = (page) => {
@@ -267,20 +344,76 @@ const gridItems = computed(() => {
     }
 })
 
+// 文本搜索匹配（支持英文单词模糊匹配，如 wonders of 匹配 wonder of）
+function normalizeForSearch(str) {
+    return (str || '').toLowerCase()
+}
+
+function tokenizeForSearch(str) {
+    return normalizeForSearch(str).split(/[\s,./\\\-+()]+/).filter(Boolean)
+}
+
+function matchesKeyword(text, kw) {
+    const kwRaw = (kw || '').trim()
+    if (!kwRaw) return true
+
+    const kwNorm = normalizeForSearch(kwRaw)
+    const textNorm = normalizeForSearch(text)
+
+    // 如果包含非 ASCII 字符（如中文），使用简单包含匹配，避免拆词出错
+    if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
+        return textNorm.includes(kwNorm)
+    }
+
+    const kwTokens = tokenizeForSearch(kwNorm)
+    if (!kwTokens.length) return true
+
+    const textTokens = tokenizeForSearch(textNorm)
+    if (!textTokens.length) return false
+
+    // 规则：关键字中的每个词，都要能在文本词里找到“同根”匹配：
+    // - 完全相同：wonder == wonder
+    // - 复数/单数：wonders == wonder 或 wonder == wonders
+    return kwTokens.every(kwTok =>
+        textTokens.some(tt => {
+            if (tt === kwTok) return true
+            if (tt === kwTok + 's') return true
+            if (tt + 's' === kwTok) return true
+            return false
+        })
+    )
+}
+
+// 生成高亮片段：按空白拆分单词，对匹配的词整体加高亮样式
+function getHighlightSegments(text, kw) {
+    const raw = text || ''
+    const kwRaw = (kw || '').trim()
+    if (!kwRaw) return [{ text: raw, highlight: false }]
+
+    const parts = raw.split(/(\s+)/) // 保留空白作为独立片段
+    return parts.map(part => {
+        if (!part.trim()) {
+            return { text: part, highlight: false }
+        }
+        const isMatch = matchesKeyword(part, kwRaw)
+        return { text: part, highlight: isMatch }
+    })
+}
+
 const scenicFiltered = computed(() => {
-    const kw = (props.s || '').trim().toLowerCase()
+    const kw = (props.s || '').trim()
     if (!kw) return places?.items || []
-    return (places?.items || []).filter(item => item.title.toLowerCase().includes(kw))
+    return (places?.items || []).filter(item => matchesKeyword(item.title, kw))
 })
 
 // 直接处理餐厅数据，与其他数据结构保持一致
 const restaurantFiltered = computed(() => {
-    const kw = (props.s || '').trim().toLowerCase()
+    const kw = (props.s || '').trim()
     if (!kw) return restaurants?.items || []
     return (restaurants?.items || []).filter(item =>
-        item.title.toLowerCase().includes(kw) ||
-        (item.place && item.place.toLowerCase().includes(kw)) ||
-        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
+        matchesKeyword(item.title, kw) ||
+        (item.place && matchesKeyword(item.place, kw)) ||
+        (item.enPlace && matchesKeyword(item.enPlace, kw))
     )
 })
 
@@ -291,12 +424,12 @@ const displayRestaurants = computed(() => {
 
 // 葡萄酒酒庄数据过滤
 const wineFiltered = computed(() => {
-    const kw = (props.s || '').trim().toLowerCase()
+    const kw = (props.s || '').trim()
     if (!kw) return wineWineries?.items || []
     return (wineWineries?.items || []).filter(item =>
-        item.title.toLowerCase().includes(kw) ||
-        (item.place && item.place.toLowerCase().includes(kw)) ||
-        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
+        matchesKeyword(item.title, kw) ||
+        (item.place && matchesKeyword(item.place, kw)) ||
+        (item.enPlace && matchesKeyword(item.enPlace, kw))
     )
 })
 
@@ -307,12 +440,12 @@ const displayWineWineries = computed(() => {
 
 // 洋酒酒庄数据过滤
 const spiritFiltered = computed(() => {
-    const kw = (props.s || '').trim().toLowerCase()
+    const kw = (props.s || '').trim()
     if (!kw) return spiritWineries?.items || []
     return (spiritWineries?.items || []).filter(item =>
-        item.title.toLowerCase().includes(kw) ||
-        (item.place && item.place.toLowerCase().includes(kw)) ||
-        (item.enPlace && item.enPlace.toLowerCase().includes(kw))
+        matchesKeyword(item.title, kw) ||
+        (item.place && matchesKeyword(item.place, kw)) ||
+        (item.enPlace && matchesKeyword(item.enPlace, kw))
     )
 })
 
@@ -322,11 +455,11 @@ const displaySpiritWineries = computed(() => {
 })
 
 const hotelFiltered = computed(() => {
-    const kw = (props.s || '').trim().toLowerCase()
+    const kw = (props.s || '').trim()
     if (!kw) return hotels?.items || []
     return (hotels?.items || []).filter(item =>
-        item.place.toLowerCase().includes(kw) ||
-        item.enPlace.toLowerCase().includes(kw)
+        matchesKeyword(item.place, kw) ||
+        matchesKeyword(item.enPlace, kw)
     )
 })
 
@@ -483,7 +616,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(scenicFiltered)" :key="'sc2-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-title" :title="item.title">
+                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s)" :key="idx">
+                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                            <span v-else>{{ seg.text }}</span>
+                        </span>
+                    </div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
@@ -504,7 +642,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(restaurantFiltered)" :key="'rt-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-title" :title="item.title">
+                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s)" :key="idx">
+                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                            <span v-else>{{ seg.text }}</span>
+                        </span>
+                    </div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
@@ -525,7 +668,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-title" :title="item.title">
+                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s)" :key="idx">
+                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                            <span v-else>{{ seg.text }}</span>
+                        </span>
+                    </div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
@@ -545,7 +693,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-title" :title="item.title">
+                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s)" :key="idx">
+                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                            <span v-else>{{ seg.text }}</span>
+                        </span>
+                    </div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
@@ -566,7 +719,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(hotelFiltered)" :key="'ht-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-title" :title="item.title">
+                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s)" :key="idx">
+                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                            <span v-else>{{ seg.text }}</span>
+                        </span>
+                    </div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
             </div>
@@ -807,6 +965,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.search-highlight {
+    color: #33b1a3;
+    font-weight: 700;
 }
 
 .empty-tip {

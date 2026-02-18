@@ -273,6 +273,45 @@ const getSnippet = (text, keyword) => {
   return `${prefix}${text.slice(start, end)}${suffix}`
 }
 
+// ---- 全站搜索：英文单词级模糊匹配（支持 wonders / wonder 等） ----
+const normalizeForSearch = (str) => (str || '').toLowerCase()
+
+const tokenizeForSearch = (str) =>
+  normalizeForSearch(str)
+    .split(/[\s,./\\\-+()'"“”‘’!?;:]+/)
+    .filter(Boolean)
+
+const textMatchesKeyword = (text, keyword) => {
+  const kwRaw = (keyword || '').trim()
+  if (!kwRaw) return true
+
+  const kwNorm = normalizeForSearch(kwRaw)
+  const textNorm = normalizeForSearch(text)
+
+  // 如果包含非 ASCII 字符（中文等），退化为简单包含匹配，避免拆词出错
+  if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
+    return textNorm.includes(kwNorm)
+  }
+
+  const kwTokens = tokenizeForSearch(kwNorm)
+  if (!kwTokens.length) return true
+
+  const textTokens = tokenizeForSearch(textNorm)
+  if (!textTokens.length) return false
+
+  // 规则（宽松匹配）：
+  // - 只要“关键字里的任意一个词”在文本词中有同根匹配即可（OR 语义）
+  // - 例如：搜索 wonder of 也能匹配包含 wonders 的文本
+  return kwTokens.some((kwTok) =>
+    textTokens.some((tt) => {
+      if (tt === kwTok) return true
+      if (tt === kwTok + 's') return true
+      if (tt + 's' === kwTok) return true
+      return false
+    })
+  )
+}
+
 // 计算字符串相似度（简单实现，检查标题相似度）
 const isSimilarTitle = (title1, title2) => {
   // 如果标题完全相同，直接认为相似
@@ -300,7 +339,6 @@ export const searchAllContent = (rawKeyword) => {
       results: []
     }
   }
-  const lowerKeyword = keyword.toLowerCase()
   const results = searchIndex
     .map((item) => {
       // 1. 过滤掉外层“容器类”的结果（板块、本分类标题等），只保留具体条目
@@ -308,8 +346,12 @@ export const searchAllContent = (rawKeyword) => {
         return null
       }
 
+      // 2. 使用单词级模糊匹配判断是否命中（支持 wonders / wonder 等）
+      if (!textMatchesKeyword(item.searchText, keyword)) return null
+
+      // 3. 依然尝试用原始关键字定位第一次出现的位置，用于排序与 snippet
+      const lowerKeyword = keyword.toLowerCase()
       const matchIndex = item.searchText.indexOf(lowerKeyword)
-      if (matchIndex === -1) return null
       return {
         id: item.id,
         title: item.title,
@@ -319,7 +361,8 @@ export const searchAllContent = (rawKeyword) => {
         groupName: item.groupName,
         targetUrl: item.targetUrl,
         snippet: getSnippet(item.rawText, keyword),
-        score: matchIndex
+        // 如果没有完全匹配的子串，给一个较大的分值，保证排在稍后
+        score: matchIndex === -1 ? Number.MAX_SAFE_INTEGER : matchIndex
       }
     })
     .filter(Boolean)
