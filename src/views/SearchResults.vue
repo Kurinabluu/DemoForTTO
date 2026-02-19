@@ -61,20 +61,60 @@ const matchesKeyword = (text, kw) => {
   })
 }
 
-const getTitleSegments = (title, kw) => {
-  const raw = title || ''
+// 通用的高亮分段函数（用于 title、summary、snippet）
+const getHighlightSegments = (text, kw) => {
+  const raw = text || ''
   const kwRaw = (kw || '').trim()
   if (!kwRaw) return [{ text: raw, highlight: false }]
 
-  // 先按空白拆分，保持原有空格
-  const parts = raw.split(/(\s+)/)
-  return parts.map((part) => {
-    if (!part.trim()) {
-      return { text: part, highlight: false }
+  const kwNorm = normalizeForSearch(kwRaw)
+  const textNorm = normalizeForSearch(raw)
+  
+  // 如果包含非 ASCII 字符（如中文），使用简单包含匹配
+  if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
+    const index = textNorm.indexOf(kwNorm)
+    if (index === -1) return [{ text: raw, highlight: false }]
+    return [
+      { text: raw.slice(0, index), highlight: false },
+      { text: raw.slice(index, index + kwRaw.length), highlight: true },
+      { text: raw.slice(index + kwRaw.length), highlight: false }
+    ].filter(seg => seg.text)
+  }
+
+  // 英文：精确匹配字符，搜 wonder 只高亮 wonder 部分
+  const kwTokens = tokenizeForSearch(kwNorm)
+  if (!kwTokens.length) return [{ text: raw, highlight: false }]
+
+  const segments = []
+  let lastIndex = 0
+  const textLower = raw.toLowerCase()
+
+  for (const kwTok of kwTokens) {
+    let foundIndex = textLower.indexOf(kwTok, lastIndex)
+    if (foundIndex === -1) {
+      // 尝试单复数变体
+      if (kwTok.endsWith('s')) {
+        foundIndex = textLower.indexOf(kwTok.slice(0, -1), lastIndex)
+      } else {
+        foundIndex = textLower.indexOf(kwTok + 's', lastIndex)
+      }
     }
-    const isMatch = matchesKeyword(part, kwRaw)
-    return { text: part, highlight: isMatch }
-  })
+
+    if (foundIndex !== -1) {
+      if (foundIndex > lastIndex) {
+        segments.push({ text: raw.slice(lastIndex, foundIndex), highlight: false })
+      }
+      const matchLength = kwTok.length
+      segments.push({ text: raw.slice(foundIndex, foundIndex + matchLength), highlight: true })
+      lastIndex = foundIndex + matchLength
+    }
+  }
+
+  if (lastIndex < raw.length) {
+    segments.push({ text: raw.slice(lastIndex), highlight: false })
+  }
+
+  return segments.length > 0 ? segments : [{ text: raw, highlight: false }]
 }
 
 const updateRoute = ({ queryKeyword, page }) => {
@@ -163,7 +203,7 @@ const openResult = (result) => {
   const currentUrl = new URL(window.location.href)
   const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`
 
-  // 确保新窗口URL包含搜索参数"s"
+  // 确保新窗口URL包含搜索参数"s"（用于在目标页面显示搜索结果）
   const targetUrl = new URL(fullPath, baseUrl)
   if (route.query.s) {
     targetUrl.searchParams.set('s', route.query.s)
@@ -237,13 +277,23 @@ onMounted(() => {
             <span v-if="result.groupName" class="meta-sub">{{ result.groupName }}</span>
           </div>
           <h3 class="result-title">
-            <span v-for="(seg, idx) in getTitleSegments(result.title, keyword)" :key="idx">
+            <span v-for="(seg, idx) in getHighlightSegments(result.title, keyword)" :key="idx">
               <span v-if="seg.highlight" class="result-title-highlight">{{ seg.text }}</span>
               <span v-else>{{ seg.text }}</span>
             </span>
           </h3>
-          <p v-if="result.summary" class="result-summary">{{ result.summary }}</p>
-          <p class="result-snippet">{{ result.snippet }}</p>
+          <p v-if="result.summary" class="result-summary">
+            <span v-for="(seg, idx) in getHighlightSegments(result.summary, keyword)" :key="idx">
+              <span v-if="seg.highlight" class="result-title-highlight">{{ seg.text }}</span>
+              <span v-else>{{ seg.text }}</span>
+            </span>
+          </p>
+          <p class="result-snippet">
+            <span v-for="(seg, idx) in getHighlightSegments(result.snippet, keyword)" :key="idx">
+              <span v-if="seg.highlight" class="result-title-highlight">{{ seg.text }}</span>
+              <span v-else>{{ seg.text }}</span>
+            </span>
+          </p>
           <div class="result-actions">
             <el-button type="primary" text @click="openResult(result)">新窗口打开</el-button>
           </div>

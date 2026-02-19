@@ -1002,6 +1002,7 @@ onUnmounted(() => {
                         width: 100%;
                         gap: 10px;
                         grid-template-columns: repeat(1, 1fr);
+                        margin-top: 10px;
                     }
 
                     .free-subnav-search-container {
