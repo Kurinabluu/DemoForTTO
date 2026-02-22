@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElPagination } from 'element-plus'
 import dataJson from '@/data/data.json'
@@ -20,6 +20,11 @@ const currentPage = ref(1)
 const isLoading = ref(false)
 const hasMore = ref(true)
 const windowWidth = ref(window.innerWidth)
+
+// 移动端网格 ref（当前可见的网格只有一个）
+const gridRef = ref(null)
+// 移动端根据滚动位置显示的当前页码（划到哪里就是哪一页）
+const mobileScrollPage = ref(1)
 
 // 根据屏幕尺寸动态计算每页显示数量
 const itemsPerPage = computed(() => {
@@ -46,13 +51,53 @@ const isMobile = computed(() => {
     return windowWidth.value <= 1024
 })
 
+// 当前网格总页数（按每页 itemsPerPage 条计算，移动端页码显示用）
+const mobileTotalPages = computed(() => {
+    const total = getTotalItems()
+    const per = itemsPerPage.value || 1
+    return Math.max(1, Math.ceil(total / per))
+})
+
 // 监听窗口大小变化
 const handleResize = () => {
     windowWidth.value = window.innerWidth
 }
 
+// 根据滚动位置更新移动端显示的当前页码（划到哪里就是哪一页，每页条数按 itemsPerPage）
+// 当滚动到某一页的第一行（开头）时就切换页码，而不是等整页内容都展示完
+function updateMobileScrollPage() {
+    if (!isMobile.value || !gridRef.value) return
+    const total = getTotalItems()
+    if (total <= 0) {
+        mobileScrollPage.value = 1
+        return
+    }
+    const per = itemsPerPage.value || 1
+    const totalPages = Math.max(1, Math.ceil(total / per))
+    const grid = gridRef.value
+    const rect = grid.getBoundingClientRect()
+    const gridTop = rect.top + window.pageYOffset
+    const scrollOffset = window.scrollY - gridTop
+    if (scrollOffset <= 0) {
+        mobileScrollPage.value = 1
+        return
+    }
+    const totalHeight = grid.scrollHeight
+    if (totalHeight <= 0) {
+        mobileScrollPage.value = 1
+        return
+    }
+    const pageHeight = (totalHeight / total) * per
+    // 使用 Math.ceil 而不是 Math.floor，这样当滚动到某一页的第一行时就切换页码
+    // 例如：scrollOffset = pageHeight 时，Math.ceil(pageHeight / pageHeight) = 1，page = 2（第2页）
+    // 而 Math.floor 需要 scrollOffset >= pageHeight 才会进入第2页
+    const page = Math.ceil(scrollOffset / pageHeight) + 1
+    mobileScrollPage.value = Math.min(totalPages, Math.max(1, page))
+}
+
 onMounted(() => {
     window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', updateMobileScrollPage, { passive: true })
     checkHasMore()
 
     // 如果检测到需要自动加载所有数据，立即加载（仅非搜索场景）
@@ -66,10 +111,13 @@ onMounted(() => {
     if (route.query.dialogItemId) {
         locateTargetPageForDialogItem()
     }
+
+    nextTick(updateMobileScrollPage)
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
+    window.removeEventListener('scroll', updateMobileScrollPage)
 })
 
 // 检测是否需要自动加载所有数据（兼容老的“高亮跳转”逻辑）
@@ -133,10 +181,10 @@ function locateTargetPageForDialogItem() {
     if (index === -1) return
 
     const pageSize = itemsPerPage.value || 1
-    
+
     // 计算目标结果所在的页数
     const targetPage = Math.floor(index / pageSize) + 1
-    
+
     // 如果是移动端（平板/手机），使用累积显示模式
     // 设置 currentPage 为目标页，这样会显示从第1页到目标页的所有数据
     if (isMobile.value) {
@@ -155,6 +203,7 @@ function locateTargetPageForDialogItem() {
 // 监听props变化，重置分页
 watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     currentPage.value = 1
+    mobileScrollPage.value = 1
     hasMore.value = true
     checkHasMore()
 
@@ -167,6 +216,8 @@ watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     if (route.query.dialogItemId) {
         locateTargetPageForDialogItem()
     }
+
+    nextTick(updateMobileScrollPage)
 }, { deep: true })
 
 // 当 URL 中的 dialogItemId / 搜索词 / 子标签 或每页数量变化时，尝试重新定位目标页
@@ -252,10 +303,9 @@ function getPaginatedItems(items) {
         return items
     }
 
-    // 移动端：显示从第1页到当前页的所有数据（累积显示）
+    // 移动端（手机和平板）：所有网格形式均一次性展示全部数据
     if (isMobile.value) {
-        const endIndex = currentPage.value * itemsPerPage.value
-        return items.slice(0, endIndex)
+        return items
     }
 
     // PC端：只显示当前页的数据（传统分页）
@@ -428,7 +478,7 @@ function getHighlightSegments(text, kw) {
 
     const kwNorm = normalizeForSearch(kwRaw)
     const textNorm = normalizeForSearch(raw)
-    
+
     // 如果包含非 ASCII 字符（如中文），使用简单包含匹配
     if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
         const index = textNorm.indexOf(kwNorm)
@@ -674,7 +724,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 <template>
     <!-- 一日游：根据传入的 dayTripTab 渲染对应数据（忽略 keyword） -->
     <template v-if="showDayTrip">
-        <div class="coming-grid">
+        <div ref="gridRef" class="coming-grid">
             <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
                 class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                 <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -683,13 +733,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
-        <div v-else-if="currentDayTripItems.length > 0" class="pagination-section">
+        <div v-else-if="currentDayTripItems.length > 0" class="pagination-section pagination-section--scenic">
             <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                 :total="currentDayTripItems.length" layout="prev, pager, next" :size="paginationSize"
                 @current-change="handlePageChange" />
-            <div v-else class="custom-pagination">
-                <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                <div class="page-indicator fs16">- 第 <span class="page-num fowe7">{{ currentPage }}</span> 页 -</div>
+            <div v-else class="custom-pagination custom-pagination--fixed">
+                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
             </div>
         </div>
     </template>
@@ -697,7 +746,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：景点 -->
     <template v-if="(s?.trim()) && subTab === '景点'">
         <template v-if="scenicFiltered.length">
-            <div class="coming-grid">
+            <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(scenicFiltered)" :key="'sc2-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -711,13 +760,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="scenicFiltered.length > 0" class="pagination-section">
+            <div v-else-if="scenicFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="scenicFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -727,7 +775,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：餐厅 -->
     <template v-else-if="(s?.trim()) && subTab === '餐厅'">
         <template v-if="restaurantFiltered.length">
-            <div class="coming-grid">
+            <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(restaurantFiltered)" :key="'rt-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -741,13 +789,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="restaurantFiltered.length > 0" class="pagination-section">
+            <div v-else-if="restaurantFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="restaurantFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -757,7 +804,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：葡萄酒酒庄 -->
     <template v-else-if="(s?.trim()) && subTab === '葡萄酒酒庄'">
         <template v-if="wineFiltered.length">
-            <div class="coming-grid">
+            <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -771,13 +818,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="wineFiltered.length > 0" class="pagination-section">
+            <div v-else-if="wineFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="wineFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -787,7 +833,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：洋酒酒庄 -->
     <template v-else-if="(s?.trim()) && subTab === '洋酒酒庄'">
         <template v-if="spiritFiltered.length">
-            <div class="coming-grid">
+            <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -801,13 +847,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="spiritFiltered.length > 0" class="pagination-section">
+            <div v-else-if="spiritFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="spiritFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -817,7 +862,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：住宿 -->
     <template v-else-if="(s?.trim()) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
-            <div class="coming-grid">
+            <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(hotelFiltered)" :key="'ht-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -831,13 +876,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="hotelFiltered.length > 0" class="pagination-section">
+            <div v-else-if="hotelFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="hotelFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -852,7 +896,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
             </div>
 
-            <div class="activities-grid">
+            <div ref="gridRef" class="activities-grid">
                 <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
                     :class="['activity-card', item.cardClass]">
                     <div class="activity-image">
@@ -878,13 +922,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
-            <div v-else-if="activityFiltered.length > 0" class="pagination-section">
+            <div v-else-if="activityFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                     :total="activityFiltered.length" layout="prev, pager, next" :size="paginationSize"
                     @current-change="handlePageChange" />
-                <div v-else class="custom-pagination">
-                    <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+                <div v-else class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -896,7 +939,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
 
     <!-- 底部网格：景点（无关键词） -->
-    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
         <div v-for="(item, i) in getPaginatedItems(places.items)" :key="'rt-bottom-' + i" class="coming-card"
             @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -906,18 +949,17 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
     <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && places.items.length > 0"
-        class="pagination-section">
+        class="pagination-section pagination-section--scenic">
         <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
             :total="places.items.length" layout="prev, pager, next" :size="paginationSize"
             @current-change="handlePageChange" />
-        <div v-else class="custom-pagination">
-            <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+        <div v-else class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
         </div>
     </div>
 
     <!-- 底部网格：餐厅（无关键词） -->
-    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
         <div v-for="(item, i) in getPaginatedItems(displayRestaurants)" :key="'restaurant-' + i" class="coming-card"
             @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -927,18 +969,17 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
     <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && displayRestaurants.length > 0"
-        class="pagination-section">
+        class="pagination-section pagination-section--scenic">
         <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
             :total="displayRestaurants.length" layout="prev, pager, next" :size="paginationSize"
             @current-change="handlePageChange" />
-        <div v-else class="custom-pagination">
-            <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+        <div v-else class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
         </div>
     </div>
 
     <!-- 底部网格：葡萄酒酒庄（无关键词） -->
-    <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
         <div v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i" class="coming-card"
             @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -948,18 +989,17 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
     <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0"
-        class="pagination-section">
+        class="pagination-section pagination-section--scenic">
         <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
             :total="displayWineWineries.length" layout="prev, pager, next" :size="paginationSize"
             @current-change="handlePageChange" />
-        <div v-else class="custom-pagination">
-            <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+        <div v-else class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
         </div>
     </div>
 
     <!-- 底部网格：洋酒酒庄（无关键词） -->
-    <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
         <div v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i" class="coming-card"
             @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -969,18 +1009,17 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
     <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0"
-        class="pagination-section">
+        class="pagination-section pagination-section--scenic">
         <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
             :total="displaySpiritWineries.length" layout="prev, pager, next" :size="paginationSize"
             @current-change="handlePageChange" />
-        <div v-else class="custom-pagination">
-            <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+        <div v-else class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
         </div>
     </div>
 
     <!-- 底部网格：住宿（无关键词） -->
-    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" class="coming-grid">
+    <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
         <div v-for="(item, i) in getPaginatedItems(hotels.items)" :key="'hotel-' + i" class="coming-card"
             @click="onOpenTour(item)" :data-tour-title="item.title">
             <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
@@ -990,13 +1029,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && hotels.items.length > 0"
-        class="pagination-section">
+        class="pagination-section pagination-section--scenic">
         <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
             :total="hotels.items.length" layout="prev, pager, next" :size="paginationSize"
             @current-change="handlePageChange" />
-        <div v-else class="custom-pagination">
-            <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+        <div v-else class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -1006,7 +1044,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
             <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
         </div>
-        <div class="activities-grid">
+        <div ref="gridRef" class="activities-grid">
             <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
                 :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
@@ -1032,13 +1070,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
-        <div v-else-if="currentSpecialItems.length > 0" class="pagination-section">
+        <div v-else-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
             <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
                 :total="currentSpecialItems.length" layout="prev, pager, next" :size="paginationSize"
                 @current-change="handlePageChange" />
-            <div v-else class="custom-pagination">
-                <div v-if="hasMore" class="load-more-btn fs16" @click="handleLoadMore">加载更多</div>
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ currentPage }}</span> 页</div>
+            <div v-else class="custom-pagination custom-pagination--fixed">
+                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
             </div>
         </div>
         <div class="activities-footer">
@@ -1157,6 +1194,21 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     flex-direction: column;
     align-items: center;
     gap: 15px;
+}
+
+/* 手机/平板端景点网格：页码固定在页面下方 */
+@media (max-width: 1024px) {
+    .custom-pagination--fixed {
+        position: fixed;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .load-more-btn {
