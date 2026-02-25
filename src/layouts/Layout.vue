@@ -829,6 +829,7 @@ onMounted(() => {
     .el-container {
         .el-header {
             display: flex;
+            position: relative;
             flex-direction: column;
             height: auto;
             line-height: 1.4;

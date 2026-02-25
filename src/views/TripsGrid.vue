@@ -63,10 +63,10 @@ const handleResize = () => {
     windowWidth.value = window.innerWidth
 }
 
-// 根据滚动位置更新移动端显示的当前页码（划到哪里就是哪一页，每页条数按 itemsPerPage）
+// 根据滚动位置更新显示的当前页码（划到哪里就是哪一页，每页条数按 itemsPerPage）
 // 当滚动到某一页的第一行（开头）时就切换页码，而不是等整页内容都展示完
 function updateMobileScrollPage() {
-    if (!isMobile.value || !gridRef.value) return
+    if (!gridRef.value) return
     const total = getTotalItems()
     if (total <= 0) {
         mobileScrollPage.value = 1
@@ -303,15 +303,8 @@ function getPaginatedItems(items) {
         return items
     }
 
-    // 移动端（手机和平板）：所有网格形式均一次性展示全部数据
-    if (isMobile.value) {
-        return items
-    }
-
-    // PC端：只显示当前页的数据（传统分页）
-    const startIndex = (currentPage.value - 1) * itemsPerPage.value
-    const endIndex = startIndex + itemsPerPage.value
-    return items.slice(startIndex, endIndex)
+    // 所有设备：一次性展示全部数据
+    return items
 }
 
 // 从data.json获取数据
@@ -734,11 +727,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
         <div v-else-if="currentDayTripItems.length > 0" class="pagination-section pagination-section--scenic">
-            <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                :total="currentDayTripItems.length" layout="prev, pager, next" :size="paginationSize"
-                @current-change="handlePageChange" />
-            <div v-else class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+            <div class="custom-pagination custom-pagination--fixed">
+                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                    mobileTotalPages }} 页</div>
             </div>
         </div>
     </template>
@@ -761,11 +752,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="scenicFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="scenicFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -790,11 +779,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="restaurantFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="restaurantFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -819,11 +806,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="wineFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="wineFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -848,11 +833,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="spiritFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="spiritFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -877,11 +860,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="hotelFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="hotelFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -923,11 +904,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="isLoading" class="loading-tip">加载中...</div>
             <div v-else-if="activityFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                    :total="activityFiltered.length" layout="prev, pager, next" :size="paginationSize"
-                    @current-change="handlePageChange" />
-                <div v-else class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -950,11 +929,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '景点' && !(s?.trim()) && !showDayTrip && places.items.length > 0"
         class="pagination-section pagination-section--scenic">
-        <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-            :total="places.items.length" layout="prev, pager, next" :size="paginationSize"
-            @current-change="handlePageChange" />
-        <div v-else class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -970,11 +947,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '餐厅' && !(s?.trim()) && !showDayTrip && displayRestaurants.length > 0"
         class="pagination-section pagination-section--scenic">
-        <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-            :total="displayRestaurants.length" layout="prev, pager, next" :size="paginationSize"
-            @current-change="handlePageChange" />
-        <div v-else class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -990,11 +965,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '葡萄酒酒庄' && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0"
         class="pagination-section pagination-section--scenic">
-        <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-            :total="displayWineWineries.length" layout="prev, pager, next" :size="paginationSize"
-            @current-change="handlePageChange" />
-        <div v-else class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -1010,11 +983,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '洋酒酒庄' && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0"
         class="pagination-section pagination-section--scenic">
-        <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-            :total="displaySpiritWineries.length" layout="prev, pager, next" :size="paginationSize"
-            @current-change="handlePageChange" />
-        <div v-else class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -1030,11 +1001,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">加载中...</div>
     <div v-else-if="subTab === '住宿' && !(s?.trim()) && !showDayTrip && hotels.items.length > 0"
         class="pagination-section pagination-section--scenic">
-        <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-            :total="hotels.items.length" layout="prev, pager, next" :size="paginationSize"
-            @current-change="handlePageChange" />
-        <div v-else class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
         </div>
     </div>
 
@@ -1071,11 +1040,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
         <div v-if="isLoading" class="loading-tip">加载中...</div>
         <div v-else-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
-            <el-pagination v-if="!isMobile" v-model:current-page="currentPage" :page-size="itemsPerPage"
-                :total="currentSpecialItems.length" layout="prev, pager, next" :size="paginationSize"
-                @current-change="handlePageChange" />
-            <div v-else class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{ mobileTotalPages }} 页</div>
+            <div class="custom-pagination custom-pagination--fixed">
+                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                    mobileTotalPages }} 页</div>
             </div>
         </div>
         <div class="activities-footer">
@@ -1197,19 +1164,20 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 /* 手机/平板端景点网格：页码固定在页面下方 */
-@media (max-width: 1024px) {
-    .custom-pagination--fixed {
-        position: fixed;
-        bottom: 60px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 8px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    }
+// @media (max-width: 1024px) {
+.custom-pagination--fixed {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
+
+// }
 
 .load-more-btn {
     padding: 14px 48px;
