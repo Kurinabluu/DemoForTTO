@@ -18769,6 +18769,68 @@
                                 "tag3"
                             ]
                         }
+                    },
+                    {
+                        "title": "St. Albi Bar & Eatery",
+                        "img": "",
+                        "enTitle": "St. Albi Bar & Eatery",
+                        "tripData": {
+                            "route": "St. Albi Bar & Eatery",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Smash Boy",
+                        "img": "",
+                        "enTitle": "Smash Boy",
+                        "tripData": {
+                            "route": "Smash Boy",
+                            "desc": "景点描述",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "文本1",
+                                    "desc": "描述1"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "文本2",
+                                    "desc": "描述2"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "文本3",
+                                    "desc": "描述3"
+                                }
+                            ],
+                            "tags": [
+                                "tag1",
+                                "tag2",
+                                "tag3"
+                            ]
+                        }
                     }
                 ]
             },
@@ -32167,7 +32229,8 @@
                 {
                     "id": 1,
                     "carClass": "car1",
-                    "title": "现代I-Max Elite 行政精英 八座MPV，可坐7位乘客，包车价格AUD $680/天",
+                    "title": "「现代I-Max Elite 行政精英 八座MPV，可座7位乘客」",
+                    "titlePrice": "包车价： AUD $680/日",
                     "urls": [
                         "car2_front_left.jpg",
                         "car2_left.jpg",
@@ -32183,7 +32246,8 @@
                 {
                     "id": 2,
                     "carClass": "car2",
-                    "title": "丰田 格兰维亚（Granvia） 八座MPV，可坐7位乘客，包车价格AUD $780/天",
+                    "title": "「丰田 格兰维亚（Granvia） 八座MPV，可座7位乘客」",
+                    "titlePrice": "包车价： AUD $780/日",
                     "urls": [
                         "car1_front_right.jpg",
                         "car1_right.jpg",
@@ -32200,7 +32264,8 @@
                 {
                     "id": 3,
                     "carClass": "car3",
-                    "title": "丰田 海狮（Hiace） 12座 小型行政级巴士，可坐11位乘客，包车价格AUD $830/天",
+                    "title": "「丰田 海狮（Hiace） 12座 小型行政级巴士，可座11位乘客」",
+                    "titlePrice": "包车价： AUD $930/日",
                     "urls": [
                         "hiace_front.jpg",
                         "hiace_left_front.jpg"
@@ -32211,7 +32276,8 @@
                 {
                     "id": 4,
                     "carClass": "car4",
-                    "title": "丰田 考斯特（coaster） 22座 中型巴士，可坐20位乘客，包车价格AUD $1280/天",
+                    "title": "「丰田 考斯特（coaster） 22座 中型巴士，可座20位乘客」",
+                    "titlePrice": "包车价： AUD $1280/日",
                     "urls": [
                         "22seats_front_left.png",
                         "22seats_inside.jpg",

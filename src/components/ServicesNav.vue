@@ -272,8 +272,8 @@ function onSearch() {
         </a>
       </div>
       <div class="search-container">
-        <el-input v-model="searchKeyword" :placeholder="searchInput || '搜索目的地、景点、路线...'" class="search-input"
-          size="large" clearable @keyup.enter="onSearch">
+        <el-input v-model="searchKeyword" placeholder="搜索全站..." class="search-input" size="large" clearable
+          @keyup.enter="onSearch">
           <template #prefix>
             <el-icon>
               <Search />

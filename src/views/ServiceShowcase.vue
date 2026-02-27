@@ -484,12 +484,6 @@ watch(() => props.serviceName, (newServiceName) => {
         <!-- 包车服务介绍 -->
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
-                <div class="section-title">包车服务包括如下内容：</div>
-                <p class="description">1、包车价格包括以下内容：车、司机、油费、停车费、税金、保险；</p>
-                <p class="description">2、每日用车时长是8个小时（特殊情况可以延长两小时至10个小时）</p>
-                <p class="description">「我们保证所有车辆均证照齐全，百分百符合塔斯马尼亚的相关要求和规定（本网站<span class="about-us-link"
-                        @click="showAboutUsDialog">关于我们</span>有全部的展示）」</p>
-
                 <p class="section-title">车型选择与价格</p>
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
                     <div class="carousel-container w100">
@@ -524,11 +518,16 @@ watch(() => props.serviceName, (newServiceName) => {
                                     </template>
                                 </el-image>
                             </el-carousel-item>
-                            <!-- <div class="car-price-bottom center w100 fowe7">包车价：{{ advantage.currency }}{{
-                                advantage.price }}</div> -->
                         </el-carousel>
                     </div>
-                    <p class="car-name">{{ advantage?.title || '' }}</p>
+                    <div class="car-info-container">
+                        <div class="car-name">{{ advantage?.title || '' }}</div>
+                        <div class="car-name-row">
+                            <p class="car-price fs20">{{ advantage?.titlePrice || '' }}</p>
+                            <button class="consult-btn consult-btn-large fs16 pointer"
+                                @click="openConsultationDialog">立即咨询</button>
+                        </div>
+                    </div>
                 </template>
             </div>
         </div>
@@ -536,7 +535,7 @@ watch(() => props.serviceName, (newServiceName) => {
         <!-- 顶部服务标题（左上角） -->
         <!-- <h1 class="service-title fowe7" v-if="titleText">{{ titleText }}</h1> -->
         <!-- 主要服务介绍区域 -->
-        <div class="hero-section">
+        <div class="hero-section" v-if="currentConfig?.packagesTitle !== '包车服务'">
             <div class="hero-content">
 
                 <div class="hero-text w100">
@@ -579,7 +578,8 @@ watch(() => props.serviceName, (newServiceName) => {
             </div>
         </div>
 
-        <div v-if="currentConfig?.stepsTitle && (currentConfig?.steps?.length > 0)" class="steps-box">
+        <div v-if="currentConfig?.packagesTitle !== '包车服务' && currentConfig?.stepsTitle && (currentConfig?.steps?.length > 0)"
+            class="steps-box">
             <div class="section-title">{{ currentConfig?.stepsTitle }}</div>
             <el-steps :active="currentConfig?.steps?.length || 0" align-center :space=80 direction="vertical">
                 <el-step v-for="(step, i) in currentConfig?.steps" :key="i"
@@ -601,7 +601,8 @@ watch(() => props.serviceName, (newServiceName) => {
         </div>
 
         <!--  横向自动播放展示列表 -->
-        <div v-if="currentConfig?.showcaseData && currentConfig.showcaseData.length > 0" class="showcase-section w100">
+        <div v-if="currentConfig?.packagesTitle !== '包车服务' && currentConfig?.showcaseData && currentConfig.showcaseData.length > 0"
+            class="showcase-section w100">
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
@@ -629,7 +630,7 @@ watch(() => props.serviceName, (newServiceName) => {
                             <div class="showcase-content">
                                 <h4 class="showcase-item-title">{{ item.title }}</h4>
                                 <p class="showcase-description">{{ item.description }}</p>
-                                <button class="consult-btn" @click="openConsultationDialog">立即咨询</button>
+                                <button class="consult-btn fs16 pointer" @click="openConsultationDialog">立即咨询</button>
                             </div>
                         </div>
                     </div>
@@ -739,7 +740,7 @@ watch(() => props.serviceName, (newServiceName) => {
         </div> -->
 
         <!-- 联系方式区域 -->
-        <div class="contact-section" v-if="currentConfig?.contactTitle">
+        <div class="contact-section" v-if="currentConfig?.packagesTitle !== '包车服务' && currentConfig?.contactTitle">
             <h2 class="section-title">{{ currentConfig.contactTitle }}</h2>
             <p class="contact-intro">{{ currentConfig.contactIntro }}</p>
             <div class="contact-info">
@@ -865,25 +866,40 @@ watch(() => props.serviceName, (newServiceName) => {
             }
         }
 
-        .car-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111;
+        .car-info-container {
+            border-bottom: 2px solid #33b1a3;
             margin: 30px 0 0;
             padding-bottom: 60px;
-            border-bottom: 2px solid #33b1a3;
-        }
 
-        .car-price {
-            font-size: 18px;
-            color: #33b1a3;
-            margin: 0 0 8px 0;
-        }
+            .car-name {
+                font-size: 20px;
+                font-weight: 700;
+                color: #111;
+            }
 
-        .car-image {
-            font-size: 16px;
-            color: #999;
-            margin: 0 0 20px 0;
+            .car-name-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 20px;
+
+                .car-name {
+                    margin: 0;
+                    padding-bottom: 0;
+                    border-bottom: none;
+                }
+
+                .consult-btn-large {
+                    padding: 10px 25px;
+                    font-weight: 600;
+                }
+            }
+
+            .car-image {
+                font-size: 16px;
+                color: #999;
+                margin: 0 0 20px 0;
+            }
         }
     }
 
@@ -1140,11 +1156,8 @@ watch(() => props.serviceName, (newServiceName) => {
         color: #fff;
         border: none;
         border-radius: 8px;
-        font-size: 16px;
         font-weight: 500;
-        cursor: pointer;
         transition: background-color .3s;
-        margin-bottom: 20px;
     }
 
     .consult-btn:hover {
@@ -1444,12 +1457,8 @@ watch(() => props.serviceName, (newServiceName) => {
         border: none;
         padding: 10px 20px;
         border-radius: 8px;
-        font-size: 14px;
         font-weight: 600;
-        cursor: pointer;
         transition: all 0.3s ease;
-        margin-top: 16px;
-        margin-bottom: 0;
         // align-self: flex-start;
     }
 
