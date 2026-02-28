@@ -484,7 +484,7 @@ watch(() => props.serviceName, (newServiceName) => {
         <!-- 包车服务介绍 -->
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
-                <p class="section-title">车型选择与价格</p>
+                <p class="section-title">我们提供如下车型的包车服务：</p>
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
                     <div class="carousel-container w100">
                         <el-carousel trigger="click" :height="isTablet ? '400px' : '600px'" :interval="5000" type="card"

@@ -299,10 +299,10 @@ const textMatchesKeyword = (text, keyword) => {
   const textTokens = tokenizeForSearch(textNorm)
   if (!textTokens.length) return false
 
-  // 规则（宽松匹配）：
-  // - 只要“关键字里的任意一个词”在文本词中有同根匹配即可（OR 语义）
-  // - 例如：搜索 wonder of 也能匹配包含 wonders 的文本
-  return kwTokens.some((kwTok) =>
+  // 规则：关键字中的每个词，都要能在文本词里找到“同根”匹配：
+  // - 完全相同：wonder == wonder
+  // - 复数/单数：wonders == wonder 或 wonder == wonders
+  return kwTokens.every((kwTok) =>
     textTokens.some((tt) => {
       if (tt === kwTok) return true
       if (tt === kwTok + 's') return true

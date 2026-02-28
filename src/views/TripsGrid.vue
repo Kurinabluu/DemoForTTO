@@ -180,7 +180,7 @@ const targetItemTitle = computed(() => {
 function getFullListForLocate() {
     // 一日游场景
     if (props.activeTag === '一日游/多日游') {
-        return currentDayTripItems.value || []
+        return dayTripFiltered.value || []
     }
 
     // 有搜索关键词时，使用各自的 filtered 列表
@@ -294,7 +294,7 @@ function getTotalItems() {
     const hasSearch = searchKeyword.trim().length > 0
 
     if (props.activeTag === '一日游/多日游') {
-        return currentDayTripItems.value.length
+        return dayTripFiltered.value.length
     } else if (hasSearch) {
         if (props.subTab === '景点') return scenicFiltered.value.length
         if (props.subTab === '餐厅') return restaurantFiltered.value.length
@@ -627,14 +627,14 @@ const hotelFiltered = computed(() => {
 })
 
 const activityFiltered = computed(() => {
-    const kw = (props.s || searchQuery.value || '').trim().toLowerCase()
+    const kw = (props.s || searchQuery.value || '').trim()
     const base = currentSpecialItems.value || []
     if (!kw) return base
     return base.filter(item =>
-        item.title.toLowerCase().includes(kw) ||
-        (item.location && item.location.toLowerCase().includes(kw)) ||
-        (Array.isArray(item.tags) && item.tags.some(tag => (tag || '').toLowerCase().includes(kw))) ||
-        (Array.isArray(item.tagItems) && item.tagItems.some(t => (t?.text || '').toLowerCase().includes(kw)))
+        matchesKeyword(item.title, kw) ||
+        (item.location && matchesKeyword(item.location, kw)) ||
+        (Array.isArray(item.tags) && item.tags.some(tag => matchesKeyword(tag, kw))) ||
+        (Array.isArray(item.tagItems) && item.tagItems.some(t => matchesKeyword(t?.text, kw)))
     )
 })
 
@@ -749,13 +749,23 @@ const currentDayTripItems = computed(() => {
     return getDayTripItems(props.dayTripTab)
 })
 
+// 一日游/多日游搜索过滤
+const dayTripFiltered = computed(() => {
+    const kw = (props.s || searchQuery.value || '').trim()
+    if (!kw) return currentDayTripItems.value
+    return currentDayTripItems.value.filter(item =>
+        matchesKeyword(item.title, kw) ||
+        (item.sub && matchesKeyword(item.sub, kw))
+    )
+})
+
 const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 </script>
 
 <template>
     <!-- 搜索框：只在非一日游页面显示 -->
-    <div v-if="!showDayTrip" class="search-container">
+    <div class="search-container">
         <el-input v-model="localSearchKeyword" placeholder="搜索当前内容" clearable size="large" class="search-input"
             @keyup.enter="handleSearchEnter" @clear="handleSearchClear">
             <template #prefix>
@@ -776,23 +786,56 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         element-loading-background="rgba(255, 255, 255, 0.8)"></div>
 
     <!-- 主内容区 -->
-    <!-- 一日游：根据传入的 dayTripTab 渲染对应数据（忽略 keyword） -->
+    <!-- 一日游：根据传入的 dayTripTab 渲染对应数据 -->
     <template v-if="showDayTrip">
-        <div ref="gridRef" class="coming-grid">
-            <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
-                class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                <div class="card-title" :title="item.title">{{ item.title }}</div>
-                <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
+        <template v-if="(s?.trim() || isLocalSearch)">
+            <template v-if="dayTripFiltered.length">
+                <div ref="gridRef" class="coming-grid">
+                    <div v-for="(item, i) in getPaginatedItems(dayTripFiltered)" :key="`day-trip-${dayTripTab}-${i}`"
+                        class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
+                                :key="idx">
+                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                                <span v-else>{{ seg.text }}</span>
+                            </span>
+                        </div>
+                        <div class="card-sub" :title="item.sub">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.sub, s || localSearchKeyword.value)"
+                                :key="idx">
+                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                                <span v-else>{{ seg.text }}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
+                    <div class="custom-pagination custom-pagination--fixed">
+                        <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                            {{
+                                mobileTotalPages }} 页</div>
+                    </div>
+                </div>
+            </template>
+            <div v-else class="empty-tip">没有搜索结果</div>
+        </template>
+        <template v-else>
+            <div ref="gridRef" class="coming-grid">
+                <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
+                    class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <div class="card-title" :title="item.title">{{ item.title }}</div>
+                    <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
+                </div>
             </div>
-        </div>
-        <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
-        <div v-if="currentDayTripItems.length > 0" class="pagination-section pagination-section--scenic">
-            <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
-                    mobileTotalPages }} 页</div>
+            <div v-if="currentDayTripItems.length > 0" class="pagination-section pagination-section--scenic">
+                <div class="custom-pagination custom-pagination--fixed">
+                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                        mobileTotalPages }} 页</div>
+                </div>
             </div>
-        </div>
+        </template>
     </template>
 
     <!-- 搜索结果区：景点 -->
