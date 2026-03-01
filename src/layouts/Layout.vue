@@ -280,6 +280,12 @@ onMounted(() => {
                         <el-icon>
                             <i></i>
                         </el-icon>
+                        <span>微信咨询：TasmaniaTrips（欢迎添加微信号咨询）</span>
+                    </div>
+                    <div class="item">
+                        <el-icon>
+                            <i></i>
+                        </el-icon>
                         <span>地址：1/18 WENDOVER PLACE NEW TOWN, TAS 7008, Australia</span>
                     </div>
                 </div>
@@ -337,7 +343,7 @@ onMounted(() => {
                                 <ChatRound />
                             </el-icon>
                             <!-- <span>tto.operator@gmail.com（业务用邮箱）</span> -->
-                            <span>TasmaniaTrips（欢迎添加微信咨询）</span>
+                            <span>TasmaniaTrips（欢迎添加微信号咨询）</span>
                         </div>
                         <!-- <div class="contact-item">
                             <el-icon />

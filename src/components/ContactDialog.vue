@@ -58,8 +58,8 @@ const fullscreen = computed(() => isMobile.value)
                 <i class="contact-icon wechat-icon"></i>
                 <div class="contact-details">
                     <div class="contact-label">微信咨询</div>
-                    <div class="contact-value">TasmaniaTrips</div>
-                    <div class="contact-note">欢迎加微咨询</div>
+                    <div class="contact-value">微信号：TasmaniaTrips</div>
+                    <div class="contact-note">欢迎加微咨询（输入微信号“TasmaniaTrips”进行搜索）</div>
                 </div>
             </div>
         </div>
