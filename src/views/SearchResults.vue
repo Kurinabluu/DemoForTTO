@@ -69,7 +69,7 @@ const getHighlightSegments = (text, kw) => {
 
   const kwNorm = normalizeForSearch(kwRaw)
   const textNorm = normalizeForSearch(raw)
-  
+
   // 如果包含非 ASCII 字符（如中文），使用简单包含匹配
   if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
     const index = textNorm.indexOf(kwNorm)

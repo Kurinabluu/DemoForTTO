@@ -1221,8 +1221,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .coming-card {
-    border-radius: 12px;
     display: flex;
+    border-radius: 12px;
     flex-direction: column;
     justify-content: center;
     cursor: pointer;
@@ -1281,9 +1281,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .pagination-section {
+    display: flex;
     text-align: center;
     padding-bottom: 40px;
-    display: flex;
     justify-content: center;
     align-items: center;
 }

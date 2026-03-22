@@ -4,7 +4,7 @@ import { ref, defineExpose } from 'vue'
 const showComingDialog = ref(false)
 
 defineExpose({
-  showComingDialog
+    showComingDialog
 })
 </script>
 

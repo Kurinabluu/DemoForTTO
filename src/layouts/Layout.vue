@@ -488,7 +488,6 @@ onMounted(() => {
 .el-container {
     min-height: 100vh;
 
-
     .el-header {
         position: sticky;
         top: 0;
