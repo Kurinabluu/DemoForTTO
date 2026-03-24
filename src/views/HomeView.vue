@@ -240,9 +240,9 @@ function openPlaceList({ placeName, itemType }) {
     listItemType.value = itemType
 
     // 从data.json中获取数据
-    const freeInfo = data.find(item => item.tagName === '自助游/自驾游免费信息')
-    if (freeInfo && freeInfo.subNav) {
-        const subNav = freeInfo.subNav.find(sub => sub.subNavName === itemType)
+    const placeData = data.find(item => item.tagName === '一日游/多日游')
+    if (placeData && placeData.subNav) {
+        const subNav = placeData.subNav.find(sub => sub.subNavName === itemType)
         if (subNav && subNav.items) {
             if (itemType === '餐厅' || itemType === '住宿') {
                 const placeItem = subNav.items.find(item => item.place === placeName)
@@ -528,41 +528,14 @@ onUnmounted(() => {
             <!-- 动态子导航（根据data.json中hasSubNav为true的对象渲染） -->
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
-                <template v-if="currentRouteData.tagName === '自助游/自驾游免费参考信息'">
-                    <ul class="free-subnav-tabs">
-                        <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
-                            class="free-subnav-tab w100"
-                            :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
-                            @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
-                            {{ subItem.subNavName }}
-                        </li>
-                    </ul>
-                    <!-- 搜索框（仅对免费信息显示） -->
-                    <!-- <div class="free-subnav-search-container">
-                    <div v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'"
-                        class="free-subnav-search">
-                        <el-input v-model="subSearch" placeholder="搜索景点/餐厅/住宿/特别活动..." size="large" clearable
-                            @keyup.enter="doSubSearch" @clear="doSubSearch" />
-                    </div>
-                    <el-button v-if="currentRouteData && currentRouteData.tagName === '自助游/自驾游免费信息'" type="primary"
-                        class="free-subnav-search-btn fs16" size="large" @click="doSubSearch">
-                        <el-icon>
-                            <Search />
-                        </el-icon>
-                        搜索
-                    </el-button>
-                </div> -->
-                </template>
-                <template v-else>
-                    <ul class="free-subnav-tabs days-tab-grid">
-                        <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
-                            class="free-subnav-tab w100"
-                            :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
-                            @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
-                            {{ subItem.subNavName }}
-                        </li>
-                    </ul>
-                </template>
+                <ul class="free-subnav-tabs days-tab-grid">
+                    <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
+                        class="free-subnav-tab w100"
+                        :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
+                        @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
+                        {{ subItem.subNavName }}
+                    </li>
+                </ul>
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
                 :s="committedKeyword" />

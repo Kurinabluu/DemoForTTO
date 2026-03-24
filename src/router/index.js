@@ -2,17 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useNavStore } from '@/stores/nav'
 import data from '@/data/data.json'
 
-const DEFAULT_FREEINFO_SUBNAV = (() => {
-  try {
-    const freeInfoSection = data.find((item) => item.tagName === '自助游/自驾游免费参考信息')
-    if (freeInfoSection?.subNav?.length) {
-      return freeInfoSection.subNav[0].subNavName || '景点'
-    }
-  } catch (e) {
-    // ignore
-  }
-  return '景点'
-})()
+const DEFAULT_FREEINFO_SUBNAV = '景点'
 
 // 处理404重定向的hash路径
 export function processHashRedirect() {
@@ -86,17 +76,6 @@ const routes = [
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
           {
-            path: 'trips/freeinfo',
-            name: 'FreeInfo',
-            component: () => import('@/views/TripsGrid.vue'),
-            props: (route) => (
-              {
-                activeTag: '自助游/自驾游免费参考信息',
-                subTab: route.query.subNavName || '景点'
-              }
-            )
-          },
-          {
             path: 'trips/routes',
             name: 'Routes',
             component: () => import('@/views/TripsGrid.vue'),
@@ -115,23 +94,11 @@ const routes = [
           // },
           // Service 路由组 - 使用 ServiceShowcase.vue
           {
-            path: 'service/ticket',
-            name: 'TicketBooking',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '热门项目' }
-          },
-          {
             path: 'service/car',
             name: 'CarService',
             component: () => import('@/views/ServiceShowcase.vue'),
             // props: { serviceName: '包车服务（独立成团+专车+司导）' }
             props: { serviceName: '包车服务' }
-          },
-          {
-            path: 'service/steward',
-            name: 'StewardService',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '行程管家' }
           },
           {
             path: 'service/guide',
@@ -144,12 +111,6 @@ const routes = [
             name: 'CustomService',
             component: () => import('@/views/ServiceShowcase.vue'),
             props: { serviceName: '专属定制' }
-          },
-          {
-            path: 'service/pickup',
-            name: 'PickUp',
-            component: () => import('@/views/ServiceShowcase.vue'),
-            props: { serviceName: '商务接送' }
           },
           {
             path: 'search',
