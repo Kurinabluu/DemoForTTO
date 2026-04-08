@@ -16,8 +16,8 @@ function showComingSoonDialog() {
   }
 }
 
-// 从data.json中提取指定的tagName
-const tags = data.filter(item => ['一日游/多日游', '包车服务', '专属定制', '地接地陪'].includes(item.tagName)).map(item => item.tagName)
+// 从data.json中提取所有导航tagName（恢复8大导航）
+const tags = data.map(item => item.tagName)
 
 // 本地搜索输入值（用于占位显示当前标签）
 const searchInput = ref('')
@@ -253,45 +253,48 @@ function onSearch() {
 </script>
 
 <template>
-  <div class="search-fixed">
-    <el-card class="search-card" shadow="hover">
-      <div class="search-tags">
-        <a v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs18" :class="{
-          active: activeTag === tag
-        }" @click="onClickTag(tag, $event)" :data-service="tag" href="javascript:void(0)">
-          <span class="tag-content">
-            <template v-if="tag.includes('免费参考信息')">
-              {{ tag.split('免费参考信息')[0] }}
-              <br />
-              免费参考信息
+  <div>
+    <div class="search-fixed">
+      <el-card class="search-card" shadow="hover">
+        <div class="search-tags">
+          <a v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs18" :class="{
+            active: activeTag === tag,
+            disabled: !data[index].available || data[index].available === false
+          }" @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag, $event)"
+            :data-service="tag" href="javascript:void(0)">
+            <span class="tag-content">
+              <template v-if="tag.includes('免费参考信息')">
+                {{ tag.split('免费参考信息')[0] }}
+                <br />
+                免费参考信息
+              </template>
+              <template v-else>
+                {{ tag }}
+              </template>
+            </span>
+          </a>
+        </div>
+        <div class="search-container">
+          <el-input v-model="searchKeyword" placeholder="搜索全站..." class="search-input" size="large" clearable
+            @keyup.enter="onSearch">
+            <template #prefix>
+              <el-icon>
+                <Search />
+              </el-icon>
             </template>
-            <template v-else>
-              {{ tag }}
-            </template>
-          </span>
-        </a>
-      </div>
-      <div class="search-container">
-        <el-input v-model="searchKeyword" placeholder="搜索全站..." class="search-input" size="large" clearable
-          @keyup.enter="onSearch">
-          <template #prefix>
+          </el-input>
+          <el-button type="primary" size="large" class="search-btn fs16" @click="onSearch">
             <el-icon>
               <Search />
             </el-icon>
-          </template>
-        </el-input>
-        <el-button type="primary" size="large" class="search-btn fs16" @click="onSearch">
-          <el-icon>
-            <Search />
-          </el-icon>
-          搜索
-        </el-button>
-      </div>
-    </el-card>
+            搜索
+          </el-button>
+        </div>
+      </el-card>
+    </div>
+
+    <ComingSoonDialog ref="comingSoonDialogRef" />
   </div>
-
-  <ComingSoonDialog ref="comingSoonDialogRef" />
-
 </template>
 
 <style lang="scss" scoped>
@@ -636,9 +639,6 @@ function onSearch() {
           margin: 2px 0;
         }
 
-        .small-text {
-          // font-size: 10px;
-        }
       }
     }
   }

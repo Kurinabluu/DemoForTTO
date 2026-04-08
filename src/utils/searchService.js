@@ -276,10 +276,29 @@ const getSnippet = (text, keyword) => {
 // ---- 全站搜索：英文单词级模糊匹配（支持 wonders / wonder 等） ----
 const normalizeForSearch = (str) => (str || '').toLowerCase()
 
+const isAsciiToken = (token) => /^[a-z0-9]+$/i.test(token)
+
 const tokenizeForSearch = (str) =>
   normalizeForSearch(str)
     .split(/[\s,./\\\-+()'"“”‘’!?;:]+/)
     .filter(Boolean)
+
+const buildEffectiveQueryTokens = (keyword) => {
+  const rawTokens = tokenizeForSearch(keyword)
+  const compactQuery = normalizeForSearch(keyword).replace(/\s+/g, '')
+
+  // 英文/数字词至少 2 个字符，避免 "r i c h..." 把单字母当关键词
+  const filtered = rawTokens.filter((token) => {
+    if (isAsciiToken(token)) return token.length >= 2
+    return token.length >= 1
+  })
+
+  // 兜底：如果被过滤后为空，则按整体词匹配
+  if (!filtered.length && compactQuery.length >= 2) {
+    return [compactQuery]
+  }
+  return filtered
+}
 
 const textMatchesKeyword = (text, keyword) => {
   const kwRaw = (keyword || '').trim()
@@ -293,16 +312,13 @@ const textMatchesKeyword = (text, keyword) => {
     return textNorm.includes(kwNorm)
   }
 
-  const kwTokens = tokenizeForSearch(kwNorm)
-  if (!kwTokens.length) return true
+  const kwTokens = buildEffectiveQueryTokens(kwNorm)
+  if (!kwTokens.length) return false
 
   const textTokens = tokenizeForSearch(textNorm)
   if (!textTokens.length) return false
 
-  // 规则：关键字中的每个词，都要能在文本词里找到“同根”匹配：
-  // - 完全相同：wonder == wonder
-  // - 复数/单数：wonders == wonder 或 wonder == wonders
-  return kwTokens.every((kwTok) =>
+  const allTokensHit = kwTokens.every((kwTok) =>
     textTokens.some((tt) => {
       if (tt === kwTok) return true
       if (tt === kwTok + 's') return true
@@ -310,6 +326,15 @@ const textMatchesKeyword = (text, keyword) => {
       return false
     })
   )
+
+  if (allTokensHit) return true
+
+  // 多词查询允许部分命中（至少2词，且命中率>=60%）
+  const tokenHits = kwTokens.filter((kwTok) =>
+    textTokens.some((tt) => tt === kwTok || tt === kwTok + 's' || tt + 's' === kwTok)
+  ).length
+  const tokenHitRatio = kwTokens.length > 0 ? tokenHits / kwTokens.length : 0
+  return kwTokens.length > 1 && tokenHits >= 2 && tokenHitRatio >= 0.6
 }
 
 // 计算字符串相似度（简单实现，检查标题相似度）

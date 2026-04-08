@@ -182,6 +182,24 @@ function getFullListForLocate() {
     if (props.activeTag === '一日游/多日游') {
         return dayTripFiltered.value || []
     }
+
+    // 有搜索关键词时，使用各自的 filtered 列表
+    if (props.s?.trim()) {
+        if (props.subTab === '景点') return scenicFiltered.value || []
+        if (props.subTab === '餐厅') return restaurantFiltered.value || []
+        if (props.subTab === '葡萄酒酒庄') return wineFiltered.value || []
+        if (props.subTab === '洋酒酒庄') return spiritFiltered.value || []
+        if (props.subTab === '住宿') return hotelFiltered.value || []
+        if (isSpecialSection.value) return activityFiltered.value || []
+    } else {
+        // 无搜索时，使用原始数据列表
+        if (props.subTab === '景点') return places?.items || []
+        if (props.subTab === '餐厅') return displayRestaurants.value || []
+        if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value || []
+        if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value || []
+        if (props.subTab === '住宿') return hotels?.items || []
+        if (isSpecialSection.value) return currentSpecialItems.value || []
+    }
     return []
 }
 
@@ -277,6 +295,20 @@ function getTotalItems() {
 
     if (props.activeTag === '一日游/多日游') {
         return dayTripFiltered.value.length
+    } else if (hasSearch) {
+        if (props.subTab === '景点') return scenicFiltered.value.length
+        if (props.subTab === '餐厅') return restaurantFiltered.value.length
+        if (props.subTab === '葡萄酒酒庄') return wineFiltered.value.length
+        if (props.subTab === '洋酒酒庄') return spiritFiltered.value.length
+        if (props.subTab === '住宿') return hotelFiltered.value.length
+        if (isSpecialSection.value) return activityFiltered.value.length
+    } else {
+        if (props.subTab === '景点') return places?.items?.length || 0
+        if (props.subTab === '餐厅') return displayRestaurants.value.length
+        if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value.length
+        if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value.length
+        if (props.subTab === '住宿') return hotels?.items?.length || 0
+        if (isSpecialSection.value) return currentSpecialItems.value.length
     }
     return 0
 }
@@ -327,14 +359,14 @@ const getDayTripData = () => {
 
 const dayTripNavs = getDayTripData()
 
-const datas = null
-const places = null
-const restaurants = null
-const wineWineries = null
-const spiritWineries = null
-const hotels = null
+const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费参考信息")
+const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
+const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅")
+const wineWineries = datas.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄")
+const spiritWineries = datas.subNav.find(subItem => subItem.subNavName == "洋酒酒庄")
+const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿")
 
-const activityItems = null
+const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动")
 
 function getActivityImage(index) {
     const images = [
@@ -372,6 +404,26 @@ function getImageUrl(imgPath) {
     }
 }
 
+// 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
+const currentFreeInfoSection = computed(() => {
+    try {
+        if (!datas?.subNav || !props.subTab) return null
+        return datas.subNav.find(subItem => subItem.subNavName === props.subTab) || null
+    } catch (e) {
+        return null
+    }
+})
+
+// 是否为免费信息下的“内容块模式”（isGrid=false）
+const isSpecialSection = computed(() => {
+    return props.activeTag === '自助游/自驾游免费参考信息' && currentFreeInfoSection?.value?.isGrid === false
+})
+
+// 当前展示用的“特别内容”列表与标题
+const currentSpecialItems = computed(() => currentFreeInfoSection?.value?.items || [])
+const currentSpecialTitle = computed(() => currentFreeInfoSection?.value?.activitiesTitle || '塔斯马尼亚特别内容')
+const currentSpecialSubtitle = computed(() => currentFreeInfoSection?.value?.activitiesSubtitle || '')
+
 // 派生数据 - 从data.json获取适合当前标签的数据
 const gridItems = computed(() => {
     try {
@@ -380,11 +432,32 @@ const gridItems = computed(() => {
         if (props.activeTag === '一日游/多日游') {
             return getDayTripItems(props.dayTripTab)
         } else {
-            // 对于其他标签，返回空数组
-            return []
+            // 对于其他标签，保持原有的生成逻辑
+            const scenicPlaces = [
+                '菲欣拿国家公园', '摇篮山', '火焰湾', '酒杯湾', '玛丽亚岛', '塔斯曼半岛', '布鲁尼岛', '霍巴特海滨',
+                '朗塞斯顿峡谷', '圣海伦斯', '比切诺', '斯坦利小镇', '里士满古桥', '亚瑟港', '德文波特', '塔拉娜自然保护区'
+            ]
+
+            function seededRandom(seed) {
+                let x = Math.sin(seed) * 10000
+                return x - Math.floor(x)
+            }
+
+            const items = []
+            for (let i = 0; i < 32; i++) {
+                const r = seededRandom(i + (props.activeTag?.length || 0))
+                const idx = Math.floor(r * scenicPlaces.length) % scenicPlaces.length
+                const place = scenicPlaces[idx]
+
+                const driveThemes = ['自驾环线', '观景台', '徒步步道', '日落观景点', '海岸公路', '森林小径', '瀑布探秘', '轻装徒步']
+                const themeIdx = Math.floor(seededRandom(idx + i) * driveThemes.length) % driveThemes.length
+                const subTitle = driveThemes[themeIdx]
+
+                items.push({ title: `${place}`, sub: subTitle })
+            }
+            return items
         }
-    } catch (e) {
-        console.error('Error fetching grid items:', e)
+    } catch (error) {
         return []
     }
 })
@@ -571,6 +644,66 @@ function onOpenTour(item) {
     let tripData = item.tripData;
     let bannerImage = item.img;
     let tripType = '一日游';
+
+    // 根据不同的activeTag和subTab确定tripType
+    if (props.activeTag === '自助游/自驾游免费参考信息') {
+        if (props.subTab === '景点') {
+            tripType = '景点信息';
+        } else if (props.subTab === '餐厅') {
+            tripType = '餐厅信息';
+        } else if (props.subTab === '葡萄酒酒庄') {
+            tripType = '葡萄酒酒庄信息';
+        } else if (props.subTab === '洋酒酒庄') {
+            tripType = '洋酒酒庄信息';
+        } else if (props.subTab === '住宿') {
+            tripType = '住宿信息';
+        }
+    }
+
+    // 如果是景点数据，从places中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点' && places && places.items) {
+        const placeItem = places.items.find(place => place.title === item.title);
+        if (placeItem) {
+            tripData = placeItem.tripData;
+            bannerImage = placeItem.img;
+        }
+    }
+
+    // 如果是餐厅数据，从restaurants中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '餐厅' && restaurants && restaurants.items) {
+        const restaurantItem = restaurants.items.find(restaurant => restaurant.title === item.title);
+        if (restaurantItem) {
+            tripData = restaurantItem.tripData;
+            bannerImage = restaurantItem.img;
+        }
+    }
+
+    // 如果是葡萄酒酒庄数据，从wineWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '葡萄酒酒庄' && wineWineries && wineWineries.items) {
+        const wineryItem = wineWineries.items.find(winery => winery.title === item.title);
+        if (wineryItem) {
+            tripData = wineryItem.tripData;
+            bannerImage = wineryItem.img;
+        }
+    }
+
+    // 如果是洋酒酒庄数据，从spiritWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '洋酒酒庄' && spiritWineries && spiritWineries.items) {
+        const wineryItem = spiritWineries.items.find(winery => winery.title === item.title);
+        if (wineryItem) {
+            tripData = wineryItem.tripData;
+            bannerImage = wineryItem.img;
+        }
+    }
+
+    // 如果是住宿数据，从hotels中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '住宿' && hotels && hotels.items) {
+        const hotelItem = hotels.items.find(hotel => hotel.title === item.title);
+        if (hotelItem) {
+            tripData = hotelItem.tripData;
+            bannerImage = hotelItem.img;
+        }
+    }
 
     // 如果是一日游/多日游，item本身应该已经包含tripData
     if (props.activeTag === '一日游/多日游') {
@@ -884,10 +1017,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
             </div>
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
-            <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
+            <div v-if="activityFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
                     <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
-                        {{ mobileTotalPages }} 页</div>
+                        {{
+                            mobileTotalPages }} 页</div>
                 </div>
             </div>
         </template>
@@ -897,6 +1031,152 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div class="contact-info"><span>获取最新活动信息，请联系我们的专业顾问</span></div>
         </div>
     </div>
+
+    <!-- 底部网格：景点（无关键词） -->
+    <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(places.items)" :key="'rt-bottom-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <!-- <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
+        加载中...
+    </div> -->
+    <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && places.items.length > 0"
+        class="pagination-section pagination-section--scenic">
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
+        </div>
+    </div>
+
+    <!-- 底部网格：餐厅（无关键词） -->
+    <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(displayRestaurants)" :key="'restaurant-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <!-- <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
+        加载中...
+    </div> -->
+    <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displayRestaurants.length > 0"
+        class="pagination-section pagination-section--scenic">
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
+        </div>
+    </div>
+
+    <!-- 底部网格：葡萄酒酒庄（无关键词） -->
+    <div v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <!-- <div v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
+        加载中...
+    </div> -->
+    <div v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0"
+        class="pagination-section pagination-section--scenic">
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
+        </div>
+    </div>
+
+    <!-- 底部网格：洋酒酒庄（无关键词） -->
+    <div v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <!-- <div v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
+        加载中...
+    </div> -->
+    <div v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0"
+        class="pagination-section pagination-section--scenic">
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
+        </div>
+    </div>
+
+    <!-- 底部网格：住宿（无关键词） -->
+    <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip" ref="gridRef" class="coming-grid">
+        <div v-for="(item, i) in getPaginatedItems(hotels.items)" :key="'hotel-' + i" class="coming-card"
+            @click="onOpenTour(item)" :data-tour-title="item.title">
+            <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+            <div class="card-title" :title="item.title">{{ item.title }}</div>
+            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+        </div>
+    </div>
+    <!-- <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
+        加载中...
+    </div> -->
+    <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && hotels.items.length > 0"
+        class="pagination-section pagination-section--scenic">
+        <div class="custom-pagination custom-pagination--fixed">
+            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                mobileTotalPages }} 页</div>
+        </div>
+    </div>
+
+    <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
+    <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
+        <div class="activities-header">
+            <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
+            <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
+        </div>
+        <div ref="gridRef" class="activities-grid">
+            <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
+                :class="['activity-card', activity.cardClass]">
+                <div class="activity-image">
+                    <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
+                    <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
+                </div>
+                <div class="activity-content">
+                    <h3 class="activity-title">{{ activity.title }}</h3>
+                    <div class="activity-info">
+                        <div v-for="(infoItem, infoIndex) in activity.info" :key="infoIndex" class="info-item">
+                            <span class="info-label">{{ infoItem.label }}：</span>
+                            <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value }}</span>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <div v-for="(tagItem, tagIndex) in activity.tagItems" :key="tagIndex"
+                            :class="tagItem.icon ? 'weather-note' : 'activity-description'">
+                            <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
+                            <span>{{ tagItem.text }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
+        <div v-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
+            <div class="custom-pagination custom-pagination--fixed">
+                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                    mobileTotalPages }} 页</div>
+            </div>
+        </div>
+        <div class="activities-footer">
+            <div class="update-info"><i class="update-icon">🔄</i><span>信息每2小时更新一次</span></div>
+            <div class="contact-info"><span>获取最新活动信息，请联系我们的专业顾问</span></div>
+        </div>
+    </div>
+
+
     <!-- </div> -->
 </template>
 

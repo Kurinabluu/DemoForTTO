@@ -32,7 +32,7 @@ const routes = [
       {
         path: '/',
         // redirect: '/DemoForTTO/trips/freeinfo' // 默认重定向到自助游页面
-        redirect: '/DemoForTTO/service/car' // 默认重定向到自助游页面
+        redirect: '/DemoForTTO/trips/freeinfo?subNavName=景点' // 默认重定向到自助游页面
       },
       // 兼容直接访问 /DemoForTTO/index.html 的情况（例如静态托管 404 回退）
       // 无论本地存储是否有记录，都先跳转到默认首页或上次访问页面
@@ -50,8 +50,7 @@ const routes = [
             // ignore
           }
           // 如果没有保存记录，则跳到默认自助游页面
-          // return '/DemoForTTO/trips/freeinfo'
-          return '/DemoForTTO/service/car'
+          return '/DemoForTTO/trips/freeinfo?subNavName=景点'
         }
       },
       {
@@ -69,12 +68,20 @@ const routes = [
           } catch (e) {
             // ignore
           }
-          // return '/DemoForTTO/trips/freeinfo'
-          return '/DemoForTTO/service/car'
+          return '/DemoForTTO/trips/freeinfo?subNavName=景点'
         }, // 添加默认重定向
         // redirect: '/DemoForTTO/service/car', // 添加默认重定向
         children: [
           // Trips 路由组 - 使用 TripsGrid.vue
+          {
+            path: 'trips/freeinfo',
+            name: 'FreeInfo',
+            component: () => import('@/views/TripsGrid.vue'),
+            props: (route) => ({
+              activeTag: '自助游/自驾游免费参考信息',
+              subTab: route.query.subNavName || '景点'
+            })
+          },
           {
             path: 'trips/routes',
             name: 'Routes',
@@ -94,11 +101,23 @@ const routes = [
           // },
           // Service 路由组 - 使用 ServiceShowcase.vue
           {
+            path: 'service/ticket',
+            name: 'TicketBooking',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '热门项目' }
+          },
+          {
             path: 'service/car',
             name: 'CarService',
             component: () => import('@/views/ServiceShowcase.vue'),
             // props: { serviceName: '包车服务（独立成团+专车+司导）' }
             props: { serviceName: '包车服务' }
+          },
+          {
+            path: 'service/steward',
+            name: 'StewardService',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '行程管家' }
           },
           {
             path: 'service/guide',
@@ -111,6 +130,12 @@ const routes = [
             name: 'CustomService',
             component: () => import('@/views/ServiceShowcase.vue'),
             props: { serviceName: '专属定制' }
+          },
+          {
+            path: 'service/pickup',
+            name: 'PickUp',
+            component: () => import('@/views/ServiceShowcase.vue'),
+            props: { serviceName: '商务接送' }
           },
           {
             path: 'search',
@@ -165,8 +190,7 @@ router.beforeEach((to, from, next) => {
       localStorage.setItem('tto_selected_subnav', DEFAULT_FREEINFO_SUBNAV);
       // 首次访问，重定向到默认路由
       if (to.path === '/' || to.path === '/DemoForTTO' || to.path === '/DemoForTTO/index.html') {
-        return next('/DemoForTTO/service/car');
-        // return next('/DemoForTTO/trips/freeinfo');
+        return next('/DemoForTTO/trips/freeinfo?subNavName=景点');
       }
       return next();
     }

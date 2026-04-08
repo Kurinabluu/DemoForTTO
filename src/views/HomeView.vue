@@ -75,6 +75,15 @@ const showSubNav = computed(() => {
     return currentRouteData.value && currentRouteData.value.hasSubNav && currentSubNavTab.value
 })
 
+const hiddenFreeInfoSubNav = new Set(['葡萄酒酒庄', '洋酒酒庄'])
+const visibleSubNavItems = computed(() => {
+    const items = currentRouteData.value?.subNav || []
+    if (currentRouteData.value?.tagName === '自助游/自驾游免费参考信息') {
+        return items.filter(item => !hiddenFreeInfoSubNav.has(item.subNavName))
+    }
+    return items
+})
+
 // 当前显示的服务配置
 const currentServiceConfig = ref(null)
 
@@ -529,8 +538,7 @@ onUnmounted(() => {
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
                 <ul class="free-subnav-tabs days-tab-grid">
-                    <li v-for="subItem in currentRouteData?.subNav" :key="subItem.subNavName"
-                        class="free-subnav-tab w100"
+                    <li v-for="subItem in visibleSubNavItems" :key="subItem.subNavName" class="free-subnav-tab w100"
                         :class="{ active: currentSubNavTab === subItem.subNavName, disabled: subItem.isShow === false }"
                         @click="subItem.isShow !== false && onClickSubTab(subItem.subNavName)">
                         {{ subItem.subNavName }}
@@ -769,7 +777,9 @@ onUnmounted(() => {
 
         .days-tab-grid {
             display: grid;
-            grid-template-columns: repeat(8, 1fr);
+            // 子导航项数量会动态变化，使用 auto-fit 避免右侧留白
+            // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(6, 1fr);
         }
 
         .section-heading {
