@@ -16545,33 +16545,34 @@
                     },
                     {
                         "title": "The Kentish Hotel",
-                        "img": "",
+                        "img": "@/assets/img/restaurants/thekentishhotel.jpg",
                         "enTitle": "",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "The Kentish Hotel",
+                            "desc": "位于塔斯马尼亚历史小镇Oatlands的遗产乡村酒店，建于1832年。餐厅提供塔斯马尼亚新鲜农产品，午餐和晚餐服务。周三至周日营业。",
                             "website": "",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "60 High Street, Oatlands TAS 7120"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "(03) 6254 1119"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周三至周日 11:30开始；午餐12:00-14:30，晚餐17:30-20:30（周日仅午餐）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "遗产酒店",
+                                "塔斯马尼亚食材",
+                                "乡村酒吧",
+                                "乔治亚建筑"
                             ]
                         }
                     },
@@ -20606,6 +20607,301 @@
                                 "Cider",
                                 "Dog Friendly",
                                 "Event Space"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Great Lake Hotel",
+                        "img": "@/assets/img/restaurants/greatlakehotel.png",
+                        "enTitle": "Great Lake Hotel",
+                        "tripData": {
+                            "route": "Great Lake Hotel",
+                            "desc": "位于塔斯马尼亚中央高地Miena的获奖乡村酒店餐厅，由主厨Paul Foreman掌勺，主打新鲜当地食材（鱼、野味等），提供现代乡村酒吧风格的午餐和晚餐。荣获2022及2023年塔斯马尼亚酒店/酒吧年度金奖。需提前预订，座位有限。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "3096 Marlborough Highway, Miena TAS 7030"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "+61 (3) 6236 4000"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周日11:00-15:00；周一、周二休息；周三、周四11:00-21:00；周五、周六11:00至深夜（午餐12:00-14:30，晚餐17:30-19:30）"
+                                }
+                            ],
+                            "tags": [
+                                "乡村酒吧",
+                                "当地食材",
+                                "获奖餐厅",
+                                "鳟鱼钓鱼",
+                                "中央高地"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Callington Mill Restaurant",
+                        "img": "",
+                        "enTitle": "Callington Mill Restaurant",
+                        "tripData": {
+                            "route": "Callington Mill Restaurant",
+                            "desc": "位于塔斯马尼亚Oatlands历史风车遗址内的蒸馏厂餐厅，每日营业。菜单以塔斯马尼亚本地食材为主，包括世界级新鲜海鲜、本地肉类及农产品，提供多种素食及无麸质选项。曾获2024 AGFG奖项及2024 Icons of Whisky全球游客景点奖。周末及公共假日加收10%附加费。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "6 Mill Lane, Oatlands TAS 7120"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "+61 482 509 019"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每天10:00 - 17:00"
+                                }
+                            ],
+                            "tags": [
+                                "塔斯马尼亚食材",
+                                "蒸馏厂餐厅",
+                                "海鲜",
+                                "获奖餐厅",
+                                "历史遗址"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Mill Kitchen at Clyde Mill",
+                        "img": "@/assets/img/restaurants/millkitchen.jpg",
+                        "enTitle": "Mill Kitchen at Clyde Mill",
+                        "tripData": {
+                            "route": "Mill Kitchen at Clyde Mill",
+                            "desc": "位于塔斯马尼亚Bothwell历史水磨坊内的餐厅，主打季节性、本地食材，提供丰盛家常菜。开放5天（周二、周三关闭），周六营业至深夜。可预订品鉴和导览。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "254 Nant Lane, Bothwell TAS, Australia"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "0499 017 211"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一、周四、周五、周日11:00-17:00；周六11:00至深夜；周二、周三关闭"
+                                }
+                            ],
+                            "tags": [
+                                "塔斯马尼亚食材",
+                                "季节性菜单",
+                                "历史建筑",
+                                "蒸馏厂餐厅"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Castle Hotel Bothwell",
+                        "img": "",
+                        "enTitle": "Castle Hotel Bothwell",
+                        "tripData": {
+                            "route": "Castle Hotel Bothwell",
+                            "desc": "位于塔斯马尼亚Bothwell的乔治亚风格酒店，自1829年起连续持有酒牌，是澳大利亚最古老的持牌酒店之一。提供酒吧餐饮服务，价格中等（$$）。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "14 Patrick Street, Bothwell TAS, Australia"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "+61 3 6259 5502"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "请通过电话或Facebook页面查询当前营业时间"
+                                }
+                            ],
+                            "tags": [
+                                "历史酒店",
+                                "持牌酒吧",
+                                "乔治亚建筑",
+                                "塔斯马尼亚"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Omotenashi Hobart",
+                        "img": "",
+                        "enTitle": "Omotenashi Hobart",
+                        "tripData": {
+                            "route": "Omotenashi Hobart",
+                            "desc": "位于霍巴特Lexus展厅内的10座位日式怀石料理餐厅，融合日本传统与塔斯马尼亚纯净风土。多道式菜单以塔斯马尼亚顶级海鲜和农产品为主。每晚仅接待10位客人，价格为$312/人（含欢迎清酒和茶）。可接待鱼素者、低麸质、低乳制品，不接待素食、纯素及乳糜泻患者。8-10人可包场（周四至周日）。需提前预约。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "4/160 Elizabeth Street, Hobart TAS（入口在Lexus of Tasmania/Roxburgh House旁巷内，留意Omotenashi标识）"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "邮箱：info@omotenashihobart.com（无电话）"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "请通过邮件预约；仅晚间营业，具体时间需咨询"
+                                }
+                            ],
+                            "tags": [
+                                "怀石料理",
+                                "10座位",
+                                "塔斯马尼亚食材",
+                                "预约制",
+                                "日式"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Oirthir",
+                        "img": "",
+                        "enTitle": "Oirthir",
+                        "tripData": {
+                            "route": "Oirthir",
+                            "desc": "位于塔斯马尼亚东海岸Bream Creek的餐厅，融合苏格兰根源与经典法式技术，使用塔斯马尼亚本地季节性食材。由一对苏格兰籍夫妻主厨（均为法式古典训练出身）经营。周五至周一提供午餐。需预约。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "357 Marion Bay Road, Bream Creek TAS 7175"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0474 299 471；邮箱：welcome@oirthir.com；Instagram: @oirthir_restaurant"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周五至周一午餐（具体时间请通过电话或邮件确认）"
+                                }
+                            ],
+                            "tags": [
+                                "法式技术",
+                                "苏格兰根源",
+                                "塔斯马尼亚食材",
+                                "季节性菜单",
+                                "预约制"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Frank Restaurant",
+                        "img": "",
+                        "enTitle": "Frank Restaurant",
+                        "tripData": {
+                            "route": "Frank Restaurant",
+                            "desc": "位于霍巴特Franklin Wharf的餐厅，提供午餐和晚餐。可选分享式“feed me”套餐：Menos（3道咸味，$85）或Más（5道含生蚝+甜点，$110）。单点菜单包括火烤生蚝、扇贝、牛排、猪肉、鸡肉、鱼肉及素食选项。公共假日加收15%附加费。部分饮食限制可能无法满足。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "1 Franklin Wharf, Hobart TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "(03) 6231 5005"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日午餐12:00-15:30；晚餐分时段：17:00-21:00（周一至周四、周日），周五周六至21:30"
+                                }
+                            ],
+                            "tags": [
+                                "分享式套餐",
+                                "火烤海鲜",
+                                "牛排",
+                                "公共假日附加费",
+                                "霍巴特"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "WunderBar",
+                        "img": "",
+                        "enTitle": "WunderBar",
+                        "tripData": {
+                            "route": "WunderBar",
+                            "desc": "位于霍巴特Goulburn St的餐厅，法式传统与塔斯马尼亚时令食材融合。提供早午餐（周三至周日9am-3pm）及小酒馆晚餐（周四至周日3pm至深夜）。设有多功能厅和私人用餐空间，可预订活动。仅接受无现金支付。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "45 Goulburn St, Hobart TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6251 3040；邮箱：hungry@wunderbar.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "早午餐：周三至周日9:00-15:00；小酒馆+晚餐：周四至周日15:00至深夜；周一、周二休息"
+                                }
+                            ],
+                            "tags": [
+                                "法式小酒馆",
+                                "塔斯马尼亚食材",
+                                "早午餐",
+                                "无现金",
+                                "私人用餐"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Farzi Hobart",
+                        "img": "",
+                        "enTitle": "Farzi Hobart",
+                        "tripData": {
+                            "route": "Farzi Hobart",
+                            "desc": "位于霍巴特Battery Point海滨的现代咖啡馆与餐厅，以萨拉曼卡地区最佳咖啡著称。使用塔斯马尼亚本地时令食材，提供创新当代菜肴，包括多种素食和无麸质选项。现代装饰，适合早午餐、咖啡及周五周六晚餐。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "13 Castray Esplanade, Battery Point TAS 7004"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 401 091 055；邮箱：info@farzi.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一至周五7:00-14:00；周六至周日8:00-14:00（晚餐周五周六营业，具体时间请咨询）"
+                                }
+                            ],
+                            "tags": [
+                                "精品咖啡",
+                                "早午餐",
+                                "塔斯马尼亚食材",
+                                "素食友好",
+                                "海滨"
                             ]
                         }
                     }
@@ -25075,6 +25371,72 @@
                                 "Brandy",
                                 "Single Cask",
                                 "Award Winning"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Callington Mill Distillery",
+                        "img": "",
+                        "enTitle": "Callington Mill Distillery",
+                        "tripData": {
+                            "route": "Callington Mill Distillery",
+                            "desc": "位于塔斯马尼亚Oatlands历史风车遗址的威士忌蒸馏厂，使用最新塔斯马尼亚蒸馏技术，生产单一麦芽威士忌（如Quagmire Peated、El Sol）及桶陈金酒（Poltergeist Barrel Aged Gin）。提供威士忌品鉴、自导览参观、导览体验（$150）及个性化调酒体验（$295）。曾获2024 Icons of Whisky全球游客景点奖。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "6 Mill Lane, Oatlands TAS 7120"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 482 509 019；邮箱：info@callingtonmilldistillery.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每天10:00 - 17:00（品酒室及自导览）"
+                                }
+                            ],
+                            "tags": [
+                                "单一麦芽威士忌",
+                                "桶陈金酒",
+                                "导览体验",
+                                "获奖蒸馏厂",
+                                "历史遗址"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Clyde Mill Distillery",
+                        "img": "@/assets/img/restaurants/clydemillwhiskybottles.jpeg",
+                        "enTitle": "Clyde Mill Distillery",
+                        "tripData": {
+                            "route": "Clyde Mill Distillery",
+                            "desc": "位于塔斯马尼亚中央高地Bothwell的历史水动力面粉厂改造而成的威士忌蒸馏厂，由Ramsay家族运营。生产单一麦芽威士忌和定制金酒，提供蒸馏厂导览（周四至周一10:00和14:30，约45分钟）、品鉴体验。餐厅Mill Kitchen使用本地食材。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "254 Nant Lane, Bothwell TAS, Australia"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0499 017 211；邮箱：hello@clydemill.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "品鉴室：周一、周四、周五、周日11:00-17:00，周六11:00至深夜；周二、周三关闭（10人以上团体7天开放）。导览：周四至周一10:00和14:30，周二、周三需预约。"
+                                }
+                            ],
+                            "tags": [
+                                "单一麦芽威士忌",
+                                "金酒",
+                                "历史水磨坊",
+                                "导览体验",
+                                "家族经营"
                             ]
                         }
                     }
@@ -31774,6 +32136,145 @@
                                 "tag1",
                                 "tag2",
                                 "tag3"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Great Lake Hotel Accommodation",
+                        "img": "@/assets/img/hotels/greatlakehotel.png",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "Great Lake Hotel Accommodation",
+                            "desc": "位于塔斯马尼亚中央高地Miena小镇，大湖岸边，提供多种经济型住宿选择：国王自炊客房、家庭客房、国王客房及新建钓鱼小屋。所有房间均配有高品质床品、戴森取暖器、电热毯及独立卫浴（钓鱼小屋为公共卫浴）。部分房间配有小厨房或全套厨房。含欧陆早餐（送房）。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "3096 Marlborough Highway, Miena TAS 7030"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "+61 (3) 6236 4000"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住办理",
+                                    "desc": "建议电话或官网预订；前台随餐厅营业时间（请提前确认）"
+                                }
+                            ],
+                            "tags": [
+                                "经济型住宿",
+                                "家庭客房",
+                                "自炊设施",
+                                "钓鱼小屋",
+                                "大湖景观",
+                                "中央高地"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "The Kentish Hotel Accommodation",
+                        "img": "",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "The Kentish Hotel Accommodation",
+                            "desc": "位于历史悠久的Oatlands小镇，The Kentish Hotel提供8间客房。每间客房均为自助式（self-contained），充满特色与魅力，适合过夜住宿。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "60 High Street, Oatlands TAS 7120"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "(03) 6254 1119"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "建议电话咨询（酒店周三至周日11:30开始营业）"
+                                }
+                            ],
+                            "tags": [
+                                "遗产住宿",
+                                "自助式客房",
+                                "乡村酒店",
+                                "Oatlands"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Castle Hotel Bothwell Accommodation",
+                        "img": "",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "Castle Hotel Bothwell Accommodation",
+                            "desc": "位于Bothwell的乔治亚风格历史酒店，提供住宿服务。连续持牌自1829年，是澳大利亚最古老的持牌酒店之一。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "14 Patrick Street, Bothwell TAS, Australia"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "+61 3 6259 5502"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "请致电咨询"
+                                }
+                            ],
+                            "tags": [
+                                "历史住宿",
+                                "遗产酒店",
+                                "塔斯马尼亚",
+                                "Bothwell"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Villa Rochford",
+                        "img": "",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "Villa Rochford",
+                            "desc": "位于塔斯马尼亚东南部 Kellevie 的现代农舍，拥有定制工业风格内饰（回收木梁、铸铁灯具、抛光骨料混凝土地板）。可容纳最多5位客人，两间卧室均带独立卫浴，king size床可拆分为单人床。坐拥山丘全景，夜晚可观银河。距离霍巴特CBD 40分钟车程，距离马里恩湾海岸线10分钟。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "8 Jacobsons Road, Kellevie TAS 7176"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "0418 527 022 / 0417 325 923"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "需电话或邮件预约（邮箱：rochfordhall@bigpond.com）"
+                                }
+                            ],
+                            "tags": [
+                                "农舍",
+                                "工业风格",
+                                "星空观测",
+                                "塔斯马尼亚东南部",
+                                "近海岸"
                             ]
                         }
                     }
