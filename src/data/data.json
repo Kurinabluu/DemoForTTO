@@ -13514,38 +13514,6 @@
                         }
                     },
                     {
-                        "title": "Omotenashi Restaurant",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.omotenashihobart.com/",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "联系方式",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "待补充"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
                         "title": "Windows on Westella",
                         "img": "",
                         "enTitle": "",
@@ -20904,6 +20872,460 @@
                                 "海滨"
                             ]
                         }
+                    },
+                    {
+                        "title": "Buscombe's Restaurant",
+                        "img": "",
+                        "enTitle": "Buscombe's Restaurant",
+                        "tripData": {
+                            "route": "Buscombe's Restaurant",
+                            "desc": "位于Prospect Country House内的餐厅，主打本地时令食材的精致餐饮。每日晚餐开放（7天）。团体预订请致电。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "Prospect Country House, Coal River Valley, 塔斯马尼亚（具体地址同住宿）"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "(03) 6205 9740"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日晚餐（具体时段请电话确认）"
+                                }
+                            ],
+                            "tags": [
+                                "精致餐饮",
+                                "塔斯马尼亚食材",
+                                "历史庄园"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "The Shed Restaurant",
+                        "img": "",
+                        "enTitle": "The Shed Restaurant",
+                        "tripData": {
+                            "route": "The Shed Restaurant",
+                            "desc": "位于Derwent Estate内的餐厅，原为剪切棚改造，沿用原建筑足迹。提供午餐，使用本地食材。可举办活动。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "329 Lyell Hwy, Granton TAS 7030"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "03 6263 5802"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周三至周四12:00-15:00；周五至周日11:30-15:00；场馆17:00关闭"
+                                }
+                            ],
+                            "tags": [
+                                "历史建筑",
+                                "塔斯马尼亚食材",
+                                "酒庄餐厅"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Da Angelo Ristorante",
+                        "img": "@/assets/img/restaurants/DaAngeloRistorante.jpg",
+                        "enTitle": "Da Angelo Ristorante",
+                        "tripData": {
+                            "route": "Da Angelo Ristorante",
+                            "desc": "位于霍巴特Battery Point的意大利餐厅，自1994年营业至今。以每日新鲜制作的意面（宽面、意式馄饨、土豆团子、通心粉）和传统比萨闻名。提供温暖友好的就餐氛围，适合家庭聚餐、纪念日等。被多次评为霍巴特顶级意大利餐厅。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "47 Hampden Road, Battery Point, Hobart TAS 7004"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "03 6223 7011"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一至周四17:00-21:30；周五12:00-14:30（午餐）及17:00-22:00；周六17:00-22:00；周日17:00-21:30"
+                                }
+                            ],
+                            "tags": [
+                                "意大利菜",
+                                "新鲜意面",
+                                "比萨",
+                                "家庭经营",
+                                "Battery Point"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Cataract on Paterson",
+                        "img": "@/assets/img/restaurants/CataractonPaterson.jpg",
+                        "enTitle": "Cataract on Paterson",
+                        "tripData": {
+                            "route": "Cataract on Paterson",
+                            "desc": "位于朗塞斯顿CBD边缘的现代餐厅，以火山石烧烤（Stonegrill）为特色，提供创新且价格合理的菜单。使用塔斯马尼亚本地食材（牛羊肉、海鲜、散养鸡肉等）。设有私密包间（最多18人）和功能空间。酒吧提供精选塔斯马尼亚葡萄酒、啤酒和烈酒及创意鸡尾酒。每天晚餐营业。同时有社区回馈项目“Giving Back”。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "135 Paterson Street, Launceston TAS 7250"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "03 6331 4446"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日晚餐 17:00至深夜（厨房约冬季20:00、夏季21:00关闭，可电话协商晚点）"
+                                }
+                            ],
+                            "tags": [
+                                "火山石烧烤",
+                                "塔斯马尼亚食材",
+                                "私密包间",
+                                "创新料理",
+                                "朗塞斯顿"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "The Lost Captain",
+                        "img": "",
+                        "enTitle": "The Lost Captain",
+                        "tripData": {
+                            "route": "The Lost Captain",
+                            "desc": "位于塔斯马尼亚Huonville的餐厅，灵感源自1791年航海探险故事。提供午餐和晚餐，可承接10-40人坐席或80-100人站立式活动/聚会。功能空间可用于生日派对、鸡尾酒会等。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "2-4 Short Street, Huonville TAS, Australia"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "03 6108 1396"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一至周五12:00-21:00；周六12:00-21:00；周日12:00-18:00；公共假日12:00-18:00"
+                                }
+                            ],
+                            "tags": [
+                                "航海主题",
+                                "活动场地",
+                                "午餐晚餐",
+                                "Huonville"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Flora's Restaurant",
+                        "img": "@/assets/img/restaurants/florasrestaurant.jpg",
+                        "enTitle": "Flora's Restaurant",
+                        "tripData": {
+                            "route": "Flora's Restaurant",
+                            "desc": "位于Craigie Knowe Vineyard内的餐厅，在葡萄园中的帐篷内提供现代塔斯马尼亚菜单，融合亚洲风味。食材部分来自庄园。周五至周二午餐，周六晚餐。可举办婚礼、生日、商务聚会等活动。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "80 Glen Gala Road, Cranbrook TAS 7190 (Craigie Knowe Vineyard内)"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "0499 901 109 (Glenn)"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周五至周二午餐（具体时间请电话确认）；周六晚餐"
+                                }
+                            ],
+                            "tags": [
+                                "现代塔斯马尼亚菜",
+                                "亚洲风味",
+                                "葡萄园餐厅",
+                                "婚礼场地"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Luz Restaurant",
+                        "img": "",
+                        "enTitle": "Luz Restaurant",
+                        "tripData": {
+                            "route": "Luz Restaurant",
+                            "desc": "位于朗塞斯顿的餐厅，主厨Louis拥有25年以上经验，曾在Gordon Ramsay等米其林星级餐厅工作。菜单以塔斯马尼亚本地新鲜食材为主，提供生蚝、章鱼、扇贝、袋鼠肉、鸭胸、牛排、意面等。周二至周六晚餐营业。可承办最多30人坐席或50人鸡尾酒会。公共假日休息。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "61 Cameron Street, Launceston TAS 7250"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0472 585 277 / 0428 044 438；邮箱：luzrestaurantandbar@gmail.com"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周二至周六 17:30起（具体关闭时间请电话确认）"
+                                }
+                            ],
+                            "tags": [
+                                "米其林背景主厨",
+                                "塔斯马尼亚食材",
+                                "晚餐",
+                                "朗塞斯顿",
+                                "可承办活动"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Rockwall Bar and Grill",
+                        "img": "@/assets/img/restaurants/rockwallbar.jpg",
+                        "enTitle": "Rockwall Bar and Grill",
+                        "tripData": {
+                            "route": "Rockwall Bar and Grill",
+                            "desc": "位于霍巴特历史悠久的Salamanca Place乔治亚砂岩仓库内的餐厅，以塔斯马尼亚优质牛排闻名。菜单主打塔斯马尼亚农产品：草饲牛排、布鲁尼岛生蚝、自由放养Scottsdale猪肉等。大部分菜品无麸质，提供乳糜泻安全用餐体验。设有私人用餐空间，可承办活动和公司聚会。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "89 Salamanca Place, Hobart TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6224 2929；邮箱：info@rockwallbarandgrill.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一至周二17:00至深夜；周三至周五12:00至深夜；周六至周日17:00至深夜"
+                                }
+                            ],
+                            "tags": [
+                                "牛排",
+                                "塔斯马尼亚食材",
+                                "无麸质友好",
+                                "历史建筑",
+                                "私人用餐"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "12 Mile Steakhouse",
+                        "img": "",
+                        "enTitle": "12 Mile Steakhouse",
+                        "tripData": {
+                            "route": "12 Mile Steakhouse",
+                            "desc": "位于塔斯马尼亚Granton的牛排餐厅，以实惠价格提供优质炭烤牛排（如500克肋眼牛排配蘑菇肉汁）。菜品还包括海鲜篮、鸡肉、意面等。历史建筑内用餐，服务友好，适合家庭、私人用餐。建议提前预订，生意繁忙。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "622 Main Rd, Granton TAS 7030"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6263 6670"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日11:00-21:00"
+                                }
+                            ],
+                            "tags": [
+                                "牛排",
+                                "炭烤",
+                                "家庭友好",
+                                "历史建筑",
+                                "性价比"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Jungle Restaurant",
+                        "img": "",
+                        "enTitle": "Jungle Restaurant",
+                        "tripData": {
+                            "route": "Jungle Restaurant",
+                            "desc": "位于霍巴特CBD的亚洲融合餐厅，主打中餐、泰式风味，提供多种川菜、咖喱、炒饭、面食等。特色菜品包括Jungle烤盲曹、香辣鸭汤、盐焗软壳蟹、咸蛋虾仁豆腐等。有素食选项，可外卖/配送。营业至凌晨6:30。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "141 Liverpool Street, Hobart CBD TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "通过 Uber Eats 配送或电话联系（未提供直接电话，建议通过外卖平台）"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日17:00 - 次日6:30"
+                                }
+                            ],
+                            "tags": [
+                                "亚洲融合",
+                                "中餐",
+                                "泰式",
+                                "深夜营业",
+                                "素食选项"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Syra Restaurant",
+                        "img": "@/assets/img/restaurants/syrarestaurant.jpg",
+                        "enTitle": "Syra Restaurant",
+                        "tripData": {
+                            "route": "Syra Restaurant",
+                            "desc": "位于霍巴特Battery Point Salamanca Square的餐厅，提供晚餐服务。周三至周日营业，周五至周日中午开始。可通过网站预订或联系。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "8 Salamanca Square, Battery Point TAS"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "03 6287 6286"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周三、周四17:00至深夜；周五、周六、周日12:00至深夜"
+                                }
+                            ],
+                            "tags": [
+                                "晚餐",
+                                "Salamanca Square",
+                                "Battery Point"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Du Cane Dining Hall",
+                        "img": "",
+                        "enTitle": "Du Cane Dining Hall",
+                        "tripData": {
+                            "route": "Du Cane Dining Hall",
+                            "desc": "位于Du Cane Brewery内的餐厅，主打木火披萨，配料丰富、薄底。提供室内外座位，儿童攀岩区，狗友好。可品尝啤酒。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "60/64 Elizabeth St, Launceston TAS 7250"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 3 6323 6000"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周二至周日 12:00起（具体闭店时间请电话确认）"
+                                }
+                            ],
+                            "tags": [
+                                "木火披萨",
+                                "家庭友好",
+                                "儿童攀岩",
+                                "狗友好",
+                                "啤酒吧"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "The Astor Grill",
+                        "img": "@/assets/img/restaurants/theastorgrill.jpg",
+                        "enTitle": "The Astor Grill",
+                        "tripData": {
+                            "route": "The Astor Grill",
+                            "desc": "位于霍巴特Macquarie Street 1920年代装饰艺术建筑Astor House内的当代餐厅。主打塔斯马尼亚本地食材，提供无麸质、素食、纯素、无乳制品选项。设有两个功能厅（Macquarie Room和Blue Room），可容纳55人坐席/65人站席。周三至周五午餐，周二至周六晚餐。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "157 Macquarie Street, Hobart TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6234 3122；邮箱：info@astorgrill.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "午餐：周三至周五 12:00起；晚餐：周二至周六 17:30起；周日、周一及公共假日休息"
+                                }
+                            ],
+                            "tags": [
+                                "装饰艺术建筑",
+                                "塔斯马尼亚食材",
+                                "无麸质友好",
+                                "素食选项",
+                                "私人用餐"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "The Den",
+                        "img": "@/assets/img/restaurants/theden.jpg",
+                        "enTitle": "The Den",
+                        "tripData": {
+                            "route": "The Den",
+                            "desc": "位于霍巴特Salamanca Place的餐厅与鸡尾酒吧，主打创意鸡尾酒和塔斯马尼亚风味小食。每日中午营业至深夜，提供Jalapeno poppers、烤串等分享式菜品。近马拉松终点线，适合赛后放松。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "63 Salamanca Place, Battery Point TAS"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0499 888 233；通过网站联系表单"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日12:00至深夜（食品从12:00开始）"
+                                }
+                            ],
+                            "tags": [
+                                "鸡尾酒",
+                                "塔斯马尼亚风味",
+                                "酒吧",
+                                "Salamanca Place",
+                                "深夜"
+                            ]
+                        }
                     }
                 ]
             },
@@ -24051,6 +24473,71 @@
                                 "Old Vines"
                             ]
                         }
+                    },
+                    {
+                        "title": "Derwent Estate",
+                        "img": "",
+                        "enTitle": "Derwent Estate",
+                        "tripData": {
+                            "route": "Derwent Estate",
+                            "desc": "位于塔斯马尼亚Granton的葡萄酒庄，坐落在德文特河畔。设有Cellar Door（每日10am-5pm）和The Shed Restaurant。餐厅使用本地食材，周三至周日午餐。酒庄可举办活动。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "329 Lyell Hwy, Granton TAS 7030"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6263 5802；邮箱：cellarclub@derwentestate.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "Cellar Door：每日10:00-17:00；餐厅：周三至周四12:00-15:00，周五至周日11:30-15:00，场馆17:00关闭"
+                                }
+                            ],
+                            "tags": [
+                                "塔斯马尼亚葡萄酒",
+                                "河畔酒庄",
+                                "酒窖门",
+                                "活动场地"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Craigie Knowe Vineyard",
+                        "img": "@/assets/img/wineries/craigieknowevineyard.jpg",
+                        "enTitle": "Craigie Knowe Vineyard",
+                        "tripData": {
+                            "route": "Craigie Knowe Vineyard",
+                            "desc": "塔斯马尼亚东海岸最古老的葡萄园，成立于1979年。家族经营，种植黑比诺、雷司令、赤霞珠、灰比诺、霞多丽等。提供品酒（导览式就坐）、野餐桌、巧克力配酒体验。7天开放，狗友好。可露营（$25/晚）。购买6瓶以上澳大利亚境内免运费。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "80 Glen Gala Road, Cranbrook TAS 7190"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0499 901 109；邮箱：glenn@craigieknowe.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日11:00-16:00；周六晚餐（Flora's餐厅周六晚营业）"
+                                }
+                            ],
+                            "tags": [
+                                "东海岸最老酒庄",
+                                "黑比诺",
+                                "家族经营",
+                                "狗友好",
+                                "露营"
+                            ]
+                        }
                     }
                 ]
             },
@@ -25437,6 +25924,39 @@
                                 "历史水磨坊",
                                 "导览体验",
                                 "家族经营"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Du Cane Brewery",
+                        "img": "",
+                        "enTitle": "Du Cane Brewery",
+                        "tripData": {
+                            "route": "Du Cane Brewery",
+                            "desc": "位于朗塞斯顿Elizabeth St的精酿啤酒厂，提供多种手工啤酒，可品尝啤酒飞行套餐（beer paddle）。空间宽敞、家庭友好，设有儿童攀岩区、户外座位。可外带，狗友好，LGBTQ+友好。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "60/64 Elizabeth St, Launceston TAS 7250"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 3 6323 6000；官网：ducanebrewing.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周二至周日 12:00起（具体闭店时间请电话确认）"
+                                }
+                            ],
+                            "tags": [
+                                "精酿啤酒",
+                                "家庭友好",
+                                "狗友好",
+                                "攀岩墙",
+                                "LGBTQ+友好"
                             ]
                         }
                     }
@@ -32277,6 +32797,76 @@
                                 "近海岸"
                             ]
                         }
+                    },
+                    {
+                        "title": "Prospect Country House",
+                        "img": "",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "Prospect Country House",
+                            "desc": "位于塔斯马尼亚Coal River Valley的豪华住宿，建于1830年，拥有11间奢华客房。提供无障碍设施、每日欧陆早餐、下午茶，以及Pooley Wines酒庄的免费品酒。不举办婚礼。荣获2023 Tripadvisor旅行者之选。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "Coal River Valley, 距离霍巴特20分钟（具体门牌未提供，建议联系酒店）"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "(03) 6205 9740"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "请电话或邮件预约：reservations@prospectcountryhouse.com.au"
+                                }
+                            ],
+                            "tags": [
+                                "历史豪宅",
+                                "无障碍设施",
+                                "含早餐",
+                                "Coal River Valley",
+                                "奢华住宿"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "One Above Cataract",
+                        "img": "",
+                        "enTitle": "",
+                        "website": "",
+                        "tripData": {
+                            "route": "One Above Cataract",
+                            "desc": "位于朗塞斯顿CBD边缘的豪华公寓，可欣赏Tamar River和城市全景。2卧室（1 queen，1 king），客厅可加单人床、幼儿床或婴儿床。设施齐全：厨房、1.5卫浴、洗衣设施、Netflix、WiFi、私人阳台、电梯、免费停车。适合家庭或小团体，靠近餐厅和Cataract Gorge。",
+                            "website": "",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "135 Paterson Street, Launceston TAS 7250"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "03 6331 4446（同餐厅预订）"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "需通过电话或官网预订；自助式公寓，无传统前台"
+                                }
+                            ],
+                            "tags": [
+                                "豪华公寓",
+                                "河景",
+                                "家庭友好",
+                                "朗塞斯顿",
+                                "自助式"
+                            ]
+                        }
                     }
                 ]
             },
@@ -33639,6 +34229,49 @@
                             {
                                 "icon": "🌌",
                                 "text": "观测条件极佳"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "Craigie Knowe Vineyard Camping",
+                        "sub": "葡萄园中的自给自足露营地",
+                        "img": "@/assets/img/campsites/CraigieKnoweVineyard.jpg",
+                        "location": "80 Glen Gala Road, Cranbrook TAS 7190",
+                        "tags": [
+                            "葡萄园露营",
+                            "自给自足",
+                            "狗友好"
+                        ],
+                        "badge": "露营推荐",
+                        "cardClass": "camping-card",
+                        "badgeClass": "camping-badge",
+                        "info": [
+                            {
+                                "label": "价格",
+                                "value": "$25/晚",
+                                "valueClass": ""
+                            },
+                            {
+                                "label": "预订方式",
+                                "value": "无需预订，直接到访"
+                            },
+                            {
+                                "label": "设施要求",
+                                "value": "完全自给自足"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🏕️",
+                                "text": "葡萄园露营"
+                            },
+                            {
+                                "icon": "🐕",
+                                "text": "狗友好"
+                            },
+                            {
+                                "icon": "🍷",
+                                "text": "邻近酒窖门"
                             }
                         ]
                     }

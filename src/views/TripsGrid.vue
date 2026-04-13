@@ -368,14 +368,8 @@ const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿")
 
 const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动")
 
-function getActivityImage(index) {
-    const images = [
-        new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-        new URL('@/assets/img/footer4.jpg', import.meta.url).href
-    ]
-    return images[index] || images[0]
+function getActivityImage(imgPath) {
+    return getImageUrl(imgPath)
 }
 
 // 处理图片路径
@@ -995,7 +989,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
                     :class="['activity-card', item.cardClass]">
                     <div class="activity-image">
-                        <img :src="getActivityImage(i)" alt="特别活动" class="activity-img">
+                        <img :src="getActivityImage(item.img)" alt="特别活动" class="activity-img">
                         <div :class="['activity-badge', item.badgeClass]">{{ item.badge }}</div>
                     </div>
                     <div class="activity-content">
@@ -1142,7 +1136,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
                 :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
-                    <img :src="getActivityImage(index)" alt="特别活动" class="activity-img">
+                    <img :src="getActivityImage(activity.img)" alt="特别活动" class="activity-img">
                     <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
                 </div>
                 <div class="activity-content">
