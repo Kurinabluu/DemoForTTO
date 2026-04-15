@@ -15,7 +15,7 @@
                 "items": [
                     {
                         "title": "测试标题",
-                        "img": "@/assets/img/default.png",
+                        "img": "../assets/img/default.png",
                         "enTitle": "Test",
                         "tripData": {
                             "route": "Location",
@@ -54,7 +54,7 @@
                     },
                     {
                         "title": "圣克莱尔湖国家公园",
-                        "img": "@/assets/img/default.png",
+                        "img": "../assets/img/default.png",
                         "enTitle": "Cradle Mountain-Lake St Clair National Park",
                         "tripData": {
                             "route": "塔斯马尼亚州北部中央高地",
@@ -616,7 +616,7 @@
                     },
                     {
                         "title": "酒杯湾",
-                        "img": "@/assets/img/places/wineglassbay.jpg",
+                        "img": "../assets/img/places/wineglassbay.jpg",
                         "enTitle": "Wineglass Bay",
                         "tripData": {
                             "route": "塔斯马尼亚州东海岸",
@@ -12059,7 +12059,7 @@
                 "items": [
                     {
                         "title": "The Kentish Hotel",
-                        "img": "@/assets/img/restaurants/thekentishhotel.jpg",
+                        "img": "../assets/img/restaurants/thekentishhotel.jpg",
                         "enTitle": "The Kentish Hotel",
                         "tripData": {
                             "route": "The Kentish Hotel",
@@ -12092,7 +12092,7 @@
                     },
                     {
                         "title": "Great Lake Hotel",
-                        "img": "@/assets/img/restaurants/greatlakehotel.png",
+                        "img": "../assets/img/restaurants/greatlakehotel.png",
                         "enTitle": "Great Lake Hotel",
                         "tripData": {
                             "route": "Great Lake Hotel",
@@ -12125,7 +12125,7 @@
                     },
                     {
                         "title": "Mill Kitchen at Clyde Mill",
-                        "img": "@/assets/img/restaurants/millkitchen.jpg",
+                        "img": "../assets/img/restaurants/millkitchen.jpg",
                         "enTitle": "Mill Kitchen at Clyde Mill",
                         "tripData": {
                             "route": "Mill Kitchen at Clyde Mill",
@@ -12157,7 +12157,7 @@
                     },
                     {
                         "title": "Da Angelo Ristorante",
-                        "img": "@/assets/img/restaurants/DaAngeloRistorante.jpg",
+                        "img": "../assets/img/restaurants/DaAngeloRistorante.jpg",
                         "enTitle": "Da Angelo Ristorante",
                         "tripData": {
                             "route": "Da Angelo Ristorante",
@@ -12190,7 +12190,7 @@
                     },
                     {
                         "title": "Cataract on Paterson",
-                        "img": "@/assets/img/restaurants/CataractonPaterson.jpg",
+                        "img": "../assets/img/restaurants/CataractonPaterson.jpg",
                         "enTitle": "Cataract on Paterson",
                         "tripData": {
                             "route": "Cataract on Paterson",
@@ -12223,7 +12223,7 @@
                     },
                     {
                         "title": "Flora's Restaurant",
-                        "img": "@/assets/img/restaurants/florasrestaurant.jpg",
+                        "img": "../assets/img/restaurants/florasrestaurant.jpg",
                         "enTitle": "Flora's Restaurant",
                         "tripData": {
                             "route": "Flora's Restaurant",
@@ -12255,7 +12255,7 @@
                     },
                     {
                         "title": "Rockwall Bar and Grill",
-                        "img": "@/assets/img/restaurants/rockwallbar.jpg",
+                        "img": "../assets/img/restaurants/rockwallbar.jpg",
                         "enTitle": "Rockwall Bar and Grill",
                         "tripData": {
                             "route": "Rockwall Bar and Grill",
@@ -12288,7 +12288,7 @@
                     },
                     {
                         "title": "Syra Restaurant",
-                        "img": "@/assets/img/restaurants/syrarestaurant.jpg",
+                        "img": "../assets/img/restaurants/syrarestaurant.jpg",
                         "enTitle": "Syra Restaurant",
                         "tripData": {
                             "route": "Syra Restaurant",
@@ -12319,7 +12319,7 @@
                     },
                     {
                         "title": "The Astor Grill",
-                        "img": "@/assets/img/restaurants/theastorgrill.jpg",
+                        "img": "../assets/img/restaurants/theastorgrill.jpg",
                         "enTitle": "The Astor Grill",
                         "tripData": {
                             "route": "The Astor Grill",
@@ -12352,7 +12352,7 @@
                     },
                     {
                         "title": "The Den",
-                        "img": "@/assets/img/restaurants/theden.jpg",
+                        "img": "../assets/img/restaurants/theden.jpg",
                         "enTitle": "The Den",
                         "tripData": {
                             "route": "The Den",
@@ -12385,7 +12385,7 @@
                     },
                     {
                         "title": "Tullah Lakeside Bar and Grill",
-                        "img": "@/assets/img/restaurants/TullahLakesideBarandGrill.jpg",
+                        "img": "../assets/img/restaurants/TullahLakesideBarandGrill.jpg",
                         "enTitle": "Tullah Lakeside Bar and Grill",
                         "tripData": {
                             "route": "Tullah Lakeside Bar and Grill",
@@ -12417,7 +12417,7 @@
                     },
                     {
                         "title": "Central Restaurant & Bar",
-                        "img": "@/assets/img/restaurants/CentralRestaurant.jpg",
+                        "img": "../assets/img/restaurants/CentralRestaurant.jpg",
                         "enTitle": "Central Restaurant & Bar",
                         "tripData": {
                             "route": "Central Restaurant & Bar",
@@ -12450,7 +12450,7 @@
                     },
                     {
                         "title": "Taste. by Bold Cuisine",
-                        "img": "@/assets/img/restaurants/boldcuisine.jpg",
+                        "img": "../assets/img/restaurants/boldcuisine.jpg",
                         "enTitle": "Taste. by Bold Cuisine",
                         "tripData": {
                             "route": "Taste. by Bold Cuisine",
@@ -12483,7 +12483,7 @@
                     },
                     {
                         "title": "Eat. by Bold Cuisine",
-                        "img": "@/assets/img/restaurants/boldcuisine.jpg",
+                        "img": "../assets/img/restaurants/boldcuisine.jpg",
                         "enTitle": "Eat. by Bold Cuisine",
                         "tripData": {
                             "route": "Eat. by Bold Cuisine",
@@ -12516,7 +12516,7 @@
                     },
                     {
                         "title": "The Lighthouse Bistro",
-                        "img": "@/assets/img/restaurants/TheLighthouseBistro.jpg",
+                        "img": "../assets/img/restaurants/TheLighthouseBistro.jpg",
                         "enTitle": "The Lighthouse Bistro",
                         "tripData": {
                             "route": "The Lighthouse Bistro",
@@ -12549,7 +12549,7 @@
                     },
                     {
                         "title": "Kauri Bistro",
-                        "img": "@/assets/img/restaurants/KauriBistro.jpg",
+                        "img": "../assets/img/restaurants/KauriBistro.jpg",
                         "enTitle": "Kauri Bistro",
                         "tripData": {
                             "route": "Kauri Bistro",
@@ -12582,7 +12582,7 @@
                     },
                     {
                         "title": "Rosevears Hotel Restaurant",
-                        "img": "@/assets/img/restaurants/RosevearsHotelRestaurant.jpg",
+                        "img": "../assets/img/restaurants/RosevearsHotelRestaurant.jpg",
                         "enTitle": "Rosevears Hotel Restaurant",
                         "tripData": {
                             "route": "Rosevears Hotel Restaurant",
@@ -12615,7 +12615,7 @@
                     },
                     {
                         "title": "Railton Hotel Pub",
-                        "img": "@/assets/img/restaurants/RailtonHotelPub.jpg",
+                        "img": "../assets/img/restaurants/RailtonHotelPub.jpg",
                         "enTitle": "Railton Hotel Pub",
                         "tripData": {
                             "route": "Railton Hotel Pub",
@@ -12648,7 +12648,7 @@
                     },
                     {
                         "title": "Bridge Bistro",
-                        "img": "@/assets/img/restaurants/bridgebistro.jpg",
+                        "img": "../assets/img/restaurants/bridgebistro.jpg",
                         "enTitle": "Bridge Bistro",
                         "tripData": {
                             "route": "Bridge Bistro",
@@ -12680,7 +12680,7 @@
                     },
                     {
                         "title": "Beach Hotel Burnie Bistro",
-                        "img": "@/assets/img/restaurants/BeachHotelBurnieBistro.jpg",
+                        "img": "../assets/img/restaurants/BeachHotelBurnieBistro.jpg",
                         "enTitle": "Beach Hotel Burnie Bistro",
                         "tripData": {
                             "route": "Beach Hotel Burnie Bistro",
@@ -25030,7 +25030,7 @@
                     },
                     {
                         "title": "Craigie Knowe Vineyard",
-                        "img": "@/assets/img/wineries/craigieknowevineyard.jpg",
+                        "img": "../assets/img/wineries/craigieknowevineyard.jpg",
                         "enTitle": "Craigie Knowe Vineyard",
                         "tripData": {
                             "route": "Craigie Knowe Vineyard",
@@ -26418,7 +26418,7 @@
                     },
                     {
                         "title": "Clyde Mill Distillery",
-                        "img": "@/assets/img/restaurants/clydemillwhiskybottles.jpeg",
+                        "img": "../assets/img/restaurants/clydemillwhiskybottles.jpeg",
                         "enTitle": "Clyde Mill Distillery",
                         "tripData": {
                             "route": "Clyde Mill Distillery",
@@ -26491,7 +26491,7 @@
                 "items": [
                     {
                         "title": "Great Lake Hotel Accommodation",
-                        "img": "@/assets/img/hotels/greatlakehotel.png",
+                        "img": "../assets/img/hotels/greatlakehotel.png",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26527,7 +26527,7 @@
                     },
                     {
                         "title": "Tullah Lakeside Lodge",
-                        "img": "@/assets/img/hotels/tullahlakesidelodge.jpg",
+                        "img": "../assets/img/hotels/tullahlakesidelodge.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26562,7 +26562,7 @@
                     },
                     {
                         "title": "Formby Hotel",
-                        "img": "@/assets/img/hotels/FormbyHotel.jpg",
+                        "img": "../assets/img/hotels/FormbyHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26597,7 +26597,7 @@
                     },
                     {
                         "title": "The Lighthouse Hotel",
-                        "img": "@/assets/img/hotels/TheLighthouseHotel.jpg",
+                        "img": "../assets/img/hotels/TheLighthouseHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26632,7 +26632,7 @@
                     },
                     {
                         "title": "The Somerset Hotel",
-                        "img": "@/assets/img/hotels/TheSomersetHotel.jpg",
+                        "img": "../assets/img/hotels/TheSomersetHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26667,7 +26667,7 @@
                     },
                     {
                         "title": "Railton Hotel Accommodation",
-                        "img": "@/assets/img/hotels/RailtonHotelAccommodation.jpg",
+                        "img": "../assets/img/hotels/RailtonHotelAccommodation.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26702,7 +26702,7 @@
                     },
                     {
                         "title": "The Bridge Hotel",
-                        "img": "@/assets/img/hotels/thebridgehotel.jpg",
+                        "img": "../assets/img/hotels/thebridgehotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26737,7 +26737,7 @@
                     },
                     {
                         "title": "Beach Hotel Burnie",
-                        "img": "@/assets/img/hotels/BeachHotelBurnie.jpg",
+                        "img": "../assets/img/hotels/BeachHotelBurnie.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26772,7 +26772,7 @@
                     },
                     {
                         "title": "BIG4 Tassie Getaway Parks Ulverstone",
-                        "img": "@/assets/img/hotels/BIG4TassieGetawayParksUlverstone.jpg",
+                        "img": "../assets/img/hotels/BIG4TassieGetawayParksUlverstone.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26807,7 +26807,7 @@
                     },
                     {
                         "title": "Auldington Hotel",
-                        "img": "@/assets/img/hotels/AuldingtonHotel.jpg",
+                        "img": "../assets/img/hotels/AuldingtonHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26842,7 +26842,7 @@
                     },
                     {
                         "title": "Rosevears Hotel",
-                        "img": "@/assets/img/hotels/RosevearsHotel.jpg",
+                        "img": "../assets/img/hotels/RosevearsHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -26877,7 +26877,7 @@
                     },
                     {
                         "title": "Heemskirk Motor Hotel",
-                        "img": "@/assets/img/hotels/HeemskirkMotorHotel.jpg",
+                        "img": "../assets/img/hotels/HeemskirkMotorHotel.jpg",
                         "enTitle": "",
                         "website": "",
                         "tripData": {
@@ -35492,7 +35492,7 @@
                     {
                         "title": "Craigie Knowe Vineyard Camping",
                         "sub": "葡萄园中的自给自足露营地",
-                        "img": "@/assets/img/campsites/CraigieKnoweVineyard.jpg",
+                        "img": "../assets/img/campsites/CraigieKnoweVineyard.jpg",
                         "location": "80 Glen Gala Road, Cranbrook TAS 7190",
                         "tags": [
                             "葡萄园露营",
@@ -35535,7 +35535,7 @@
                     {
                         "title": "Railton Hotel Camping",
                         "sub": "Railton Hotel后院的非供电露营地",
-                        "img": "@/assets/img/campsites/RailtonHotelCamping.jpg",
+                        "img": "../assets/img/campsites/RailtonHotelCamping.jpg",
                         "location": "3 Foster Street, Railton TAS 7305",
                         "tags": [
                             "非供电",
@@ -36930,7 +36930,7 @@
         "isTrip": false,
         "path": "service/ticket",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "让等待不再是旅行难题，高效管理时间",
             "heroDesc": "在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为你省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把你的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。",
             "features": [
@@ -36956,7 +36956,7 @@
                     "price": "99",
                     "amount": "/ 人",
                     "info": "（包含门票）",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
@@ -36966,7 +36966,7 @@
                     "price": "199",
                     "amount": "",
                     "info": "",
-                    "img": "@/assets/img/footer2.jpg"
+                    "img": "../assets/img/footer2.jpg"
                 }
             ],
             "advantagesTitle": "TTO能做到的，不止这些",
@@ -36975,13 +36975,13 @@
                     "id": 1,
                     "title": "无忧畅行通行证，帮你即到即入",
                     "description": "无需担忧购票问题，支付问题不是事",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 2,
                     "title": "臻享体验规划，让你坐下即享",
                     "description": "没有饥肠辘辘等待美食的烦恼，没有等待清理酒店房间的疲惫，即到即享",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 }
             ],
             "contactTitle": "订购代订门票及旅游项目服务",
@@ -36996,7 +36996,7 @@
         "isTrip": false,
         "path": "service/pickup",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "把麻烦交给我们，把时间留给风景",
             "heroDesc": "带着对塔斯马尼亚的深度解读，根据你的品味，为你定制独一无二的礼宾专案：从私人庄园的品酒盛宴，到跟随生态学家探访袋熊栖息地；从专属直升机俯瞰酒杯湾，到在世界遗产地享受匠心打造的野餐体验。每一处细节都经过精心策划，每一次体验都彰显独特个性。TTO是你懂塔州、懂旅行的专业伙伴，是你在塔斯马尼亚的“自己人”。",
             "features": [
@@ -37022,7 +37022,7 @@
                     "price": "688",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 }
             ],
             "advantagesTitle": "全方位的旅行支持",
@@ -37031,25 +37031,25 @@
                     "id": 1,
                     "title": "行程规划与优化",
                     "description": "为你打造真正个性化的旅程，让每个景点都符合你的旅行节奏与兴趣偏好",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 2,
                     "title": "安排交通住宿与活动安排",
                     "description": "为你安排全程交通、精选住宿与特色活动，实现各环节间的无缝衔接。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 3,
                     "title": "随时需求响应与协调",
                     "description": "配备专属管家及时响应你的需求，灵活调整安排，从容应对旅途变化。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 4,
                     "title": "应急支持与本地建议",
                     "description": "提供全天候应急支持，并分享当地人才知道的实用资讯与隐藏景点。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 }
             ],
             "contactTitle": "订购专属管家服务",
@@ -37064,7 +37064,7 @@
         "isTrip": false,
         "path": "service/car",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "专车座驾，你的移动休息室，你的专属节奏",
             "heroDesc": [
                 "在塔斯马尼亚，公共交通的局限让许多美景遥不可及。",
@@ -37104,7 +37104,7 @@
                     "price": "39",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
@@ -37114,7 +37114,7 @@
                     "price": "59",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer2.jpg"
+                    "img": "../assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
@@ -37124,7 +37124,7 @@
                     "price": "388",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer3.jpg"
+                    "img": "../assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "舒适车型任你挑选",
@@ -37202,7 +37202,7 @@
         "isTrip": false,
         "path": "service/custom",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "专属于你的私人旅行定制",
             "heroDesc": [
                 "「专属定制」，代表着“高端玩家”对专业服务与深度体验的更高要求，它代表“高度专业、个性服务、活动稀有、体验独特与高度沉浸”。世上没有两份相同的风景，也不该有两次雷同的旅程。TTO与你共同创作的，正是这份独一无二的体验脚本。每一次推荐、每一处细节，都只为独一无二的你而存在。"
@@ -37245,7 +37245,7 @@
                     "price": "68",
                     "amount": "一次咨询",
                     "info": "（一次咨询即从沟通到确定计划为一次）",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
@@ -37255,7 +37255,7 @@
                     "price": "288",
                     "amount": "一次咨询",
                     "info": "（一次咨询即从沟通到确定计划为一次）",
-                    "img": "@/assets/img/footer2.jpg"
+                    "img": "../assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
@@ -37265,7 +37265,7 @@
                     "price": "388",
                     "amount": "一次咨询",
                     "info": "（一次咨询即从沟通到确定计划为一次）",
-                    "img": "@/assets/img/footer3.jpg"
+                    "img": "../assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "定制，为何选择TTO？",
@@ -37274,25 +37274,25 @@
                     "id": 1,
                     "title": "真正的从零开始",
                     "description": "我们不修改模板，而是基于你的想法、习惯甚至预算，构建完全属于你的行程",
-                    "url": "@/assets/img/startFromZero.png"
+                    "url": "../assets/img/startFromZero.png"
                 },
                 {
                     "id": 2,
                     "title": "专注落地与可行性",
                     "description": "每个推荐都经过实地验证，确保你的想法能够顺利实现，不只是一纸空谈",
-                    "url": "@/assets/img/capable.png"
+                    "url": "../assets/img/capable.png"
                 },
                 {
                     "id": 3,
                     "title": "像朋友一样的共创体验",
                     "description": "你将参与设计过程，我们提供专业建议，共同完善旅程，这本身已成为旅行的一部分",
-                    "url": "@/assets/img/createFreely.png"
+                    "url": "../assets/img/createFreely.png"
                 },
                 {
                     "id": 4,
                     "title": "持续优化直到出发",
                     "description": "在出行前，你可随时调整方案，我们始终耐心配合，只为呈现最完美的塔斯马尼亚之旅",
-                    "url": "@/assets/img/finalPlan.png"
+                    "url": "../assets/img/finalPlan.png"
                 }
             ],
             "showcaseTitle": "「没想好？联系我们直接咨询一日游或多日游！」",
@@ -37370,7 +37370,7 @@
         "isTrip": false,
         "path": "service/guide",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "当地向导地接地陪服务",
             "heroDesc": "在塔斯马尼亚，风景的背后是故事，路途中藏着只有当地人才知道的秘境。TTO地接地陪服务，让一位真正了解这片土地的向导，带你跨越游客的边界，走进真实的塔州：领你探访游客地图上未标注的私人海湾，讲述山脉与海岸背后的历史与传说，在最适合的时刻避开人潮，独享摇篮山最宁静的晨光。我们不仅是向导，更是你在塔斯马尼亚的“旅行之眼”与“本地朋友”，让每一次停留都充满意义，每一次出发都心怀期待。",
             "features": [
@@ -37395,7 +37395,7 @@
                     "price": "68",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 },
                 {
                     "id": 2,
@@ -37405,7 +37405,7 @@
                     "price": "128",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer2.jpg"
+                    "img": "../assets/img/footer2.jpg"
                 },
                 {
                     "id": 3,
@@ -37415,7 +37415,7 @@
                     "price": "288",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer3.jpg"
+                    "img": "../assets/img/footer3.jpg"
                 }
             ],
             "advantagesTitle": "选择TTO地接地陪服务的理由",
@@ -37424,25 +37424,25 @@
                     "id": 1,
                     "title": "像本地人一样旅行",
                     "description": "TTO不会带你走常规攻略里“大量消耗体力花费时间”的路线",
-                    "url": "@/assets/img/footer4.jpg"
+                    "url": "../assets/img/footer4.jpg"
                 },
                 {
                     "id": 2,
                     "title": "行程自由而轻松",
                     "description": "你可随时提出“今天不想去这里了”“想多停留一会儿”，行程不赶场，节奏由你掌控",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 3,
                     "title": "商务伙伴式陪同",
                     "description": "我们协助安排商务会面动线，推荐得体餐饮场所，让你的商务行程高效又从容",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 4,
                     "title": "不止于陪同，更负责安心",
                     "description": "我们从接送到送回，处理交通、沟通与应急状况，你只需沉浸于旅程之中",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 }
             ],
             "contactTitle": "订购地接地陪服务",
@@ -37457,7 +37457,7 @@
         "isTrip": false,
         "path": "service/steward",
         "serviceConfig": {
-            "heroImg": "@/assets/img/footer1.jpg",
+            "heroImg": "../assets/img/footer1.jpg",
             "heroTitle": "把麻烦交给我们，把时间留给风景",
             "heroDesc": "带着对塔斯马尼亚的深度解读，根据你的品味，为你定制独一无二的礼宾专案：从私人庄园的品酒盛宴，到跟随生态学家探访袋熊栖息地；从专属直升机俯瞰酒杯湾，到在世界遗产地享受匠心打造的野餐体验。每一处细节都经过精心策划，每一次体验都彰显独特个性。TTO是你懂塔州、懂旅行的专业伙伴，是你在塔斯马尼亚的“自己人”。",
             "features": [
@@ -37483,7 +37483,7 @@
                     "price": "688",
                     "amount": "/ 人",
                     "info": "",
-                    "img": "@/assets/img/footer1.jpg"
+                    "img": "../assets/img/footer1.jpg"
                 }
             ],
             "advantagesTitle": "全方位的旅行支持",
@@ -37492,25 +37492,25 @@
                     "id": 1,
                     "title": "行程规划与优化",
                     "description": "为你打造真正个性化的旅程，让每个景点都符合你的旅行节奏与兴趣偏好",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 2,
                     "title": "安排交通住宿与活动安排",
                     "description": "为你安排全程交通、精选住宿与特色活动，实现各环节间的无缝衔接。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 3,
                     "title": "随时需求响应与协调",
                     "description": "配备专属管家及时响应你的需求，灵活调整安排，从容应对旅途变化。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 },
                 {
                     "id": 4,
                     "title": "应急支持与本地建议",
                     "description": "提供全天候应急支持，并分享当地人才知道的实用资讯与隐藏景点。",
-                    "url": "@/assets/img/carService/carType.png"
+                    "url": "../assets/img/carService/carType.png"
                 }
             ],
             "contactTitle": "订购专属管家服务",

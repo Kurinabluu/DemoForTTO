@@ -132,14 +132,23 @@ const getImageUrl = (imagePath, advantage = null) => {
     if (!imagePath || typeof imagePath !== 'string') {
         return defaultCarType;
     }
+    const normalizedPath = imagePath.trim()
+        // 兼容误写的 ../assetes
+        .replace(/^(\.\.\/)assetes\//, '$1assets/')
 
     // 完整URL直接返回
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-        return imagePath;
+    if (normalizedPath.startsWith('http://') || normalizedPath.startsWith('https://')) {
+        return normalizedPath;
+    }
+
+    // 将 ../assets 或 ../assetes 风格转换为映射表统一键
+    let lookupKey = normalizedPath
+    if (lookupKey.startsWith('../assets/')) {
+        lookupKey = `@/${lookupKey.slice(3)}`
     }
 
     // 从映射表中获取图片，如果不存在则返回默认图片
-    const image = carImagesMap[imagePath];
+    const image = carImagesMap[lookupKey] || carImagesMap[normalizedPath];
     return image || defaultCarType;
 }
 

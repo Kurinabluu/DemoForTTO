@@ -376,26 +376,33 @@ function getActivityImage(imgPath) {
 function getImageUrl(imgPath) {
     if (!imgPath) return new URL('@/assets/img/default.png', import.meta.url).href
 
+    const normalizedPath = String(imgPath).trim()
+        // 兼容误写的 ../assetes
+        .replace(/^(\.\.\/)assetes\//, '$1assets/')
+
     // 如果已经是完整的URL，直接返回
-    if (imgPath.startsWith('http') || imgPath.startsWith('data:')) {
-        return imgPath
+    if (normalizedPath.startsWith('http') || normalizedPath.startsWith('data:')) {
+        return normalizedPath
     }
 
-    // 如果是@/assets路径，使用import.meta.url处理
-    if (imgPath.startsWith('@/assets/')) {
+    const candidates = [normalizedPath]
+    if (normalizedPath.startsWith('@/')) {
+        candidates.push(`../${normalizedPath.slice(2)}`)
+    }
+    if (normalizedPath.startsWith('../assets/')) {
+        candidates.push(normalizedPath.replace('../assets/', '@/assets/'))
+    }
+
+    for (const candidate of candidates) {
         try {
-            return new URL(imgPath.replace('@/', '../'), import.meta.url).href
-        } catch (error) {
-            return new URL('@/assets/img/default.png', import.meta.url).href
+            // new URL 不支持 @ 前缀，跳过
+            if (candidate.startsWith('@/')) continue
+            return new URL(candidate, import.meta.url).href
+        } catch (e) {
+            // continue
         }
     }
-
-    // 其他情况尝试直接使用
-    try {
-        return new URL(imgPath, import.meta.url).href
-    } catch (e) {
-        return new URL('@/assets/img/default.png', import.meta.url).href
-    }
+    return new URL('@/assets/img/default.png', import.meta.url).href
 }
 
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
