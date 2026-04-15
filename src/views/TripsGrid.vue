@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import dataJson from '@/data/data.json'
+import { resolveDataImage } from '@/utils/dataImageResolver'
 
 const route = useRoute()
 
@@ -374,35 +375,7 @@ function getActivityImage(imgPath) {
 
 // 处理图片路径
 function getImageUrl(imgPath) {
-    if (!imgPath) return new URL('@/assets/img/default.png', import.meta.url).href
-
-    const normalizedPath = String(imgPath).trim()
-        // 兼容误写的 ../assetes
-        .replace(/^(\.\.\/)assetes\//, '$1assets/')
-
-    // 如果已经是完整的URL，直接返回
-    if (normalizedPath.startsWith('http') || normalizedPath.startsWith('data:')) {
-        return normalizedPath
-    }
-
-    const candidates = [normalizedPath]
-    if (normalizedPath.startsWith('@/')) {
-        candidates.push(`../${normalizedPath.slice(2)}`)
-    }
-    if (normalizedPath.startsWith('../assets/')) {
-        candidates.push(normalizedPath.replace('../assets/', '@/assets/'))
-    }
-
-    for (const candidate of candidates) {
-        try {
-            // new URL 不支持 @ 前缀，跳过
-            if (candidate.startsWith('@/')) continue
-            return new URL(candidate, import.meta.url).href
-        } catch (e) {
-            // continue
-        }
-    }
-    return new URL('@/assets/img/default.png', import.meta.url).href
+    return resolveDataImage(imgPath)
 }
 
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据

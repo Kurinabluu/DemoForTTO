@@ -27,6 +27,7 @@ import startFromZero from '@/assets/img/startFromZero.png';
 import capable from '@/assets/img/capable.png';
 import createFreely from '@/assets/img/createFreely.png';
 import finalPlan from '@/assets/img/finalPlan.png';
+import { resolveDataImage } from '@/utils/dataImageResolver'
 // 导入car2的所有图片
 import car2Left from '@/assets/img/carService/car2_left.jpg';
 import car2FrontLeft from '@/assets/img/carService/car2_front_left.jpg';
@@ -149,7 +150,7 @@ const getImageUrl = (imagePath, advantage = null) => {
 
     // 从映射表中获取图片，如果不存在则返回默认图片
     const image = carImagesMap[lookupKey] || carImagesMap[normalizedPath];
-    return image || defaultCarType;
+    return image || resolveDataImage(normalizedPath, defaultCarType);
 }
 
 

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { resolveDataImage } from '@/utils/dataImageResolver'
 
 const props = defineProps({
     modelValue: { type: Boolean, default: false },
@@ -10,33 +11,7 @@ const props = defineProps({
 
 // 处理图片URL的函数
 const getImageUrl = (imagePath) => {
-    if (!imagePath) return ''
-    const normalizedPath = String(imagePath).trim()
-        // 兼容误写的 ../assetes
-        .replace(/^(\.\.\/)assetes\//, '$1assets/')
-
-    // 如果已经是完整的URL，直接返回
-    if (normalizedPath.startsWith('http') || normalizedPath.startsWith('data:')) {
-        return normalizedPath
-    }
-
-    const candidates = [normalizedPath]
-    if (normalizedPath.startsWith('@/')) {
-        candidates.push(`../${normalizedPath.slice(2)}`)
-    }
-    if (normalizedPath.startsWith('../assets/')) {
-        candidates.push(normalizedPath.replace('../assets/', '@/assets/'))
-    }
-
-    for (const candidate of candidates) {
-        try {
-            if (candidate.startsWith('@/')) continue
-            return new URL(candidate, import.meta.url).href
-        } catch (error) {
-            // continue
-        }
-    }
-    return normalizedPath
+    return resolveDataImage(imagePath, '')
 }
 
 const emits = defineEmits(['update:modelValue', 'select'])
