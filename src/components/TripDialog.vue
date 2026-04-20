@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
+import { resolveDataImage } from '@/utils/dataImageResolver'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -82,6 +83,26 @@ const routeInfo = computed(() => {
     }
     return getTripRouteInfo(props.title, props.tripType);
 })
+
+const dialogImages = computed(() => {
+    const imageGroups = [
+        routeInfo.value?.images,
+        routeInfo.value?.banners,
+        routeInfo.value?.bannerList,
+        routeInfo.value?.imgs
+    ]
+
+    const multiImages = imageGroups
+        .flatMap(group => Array.isArray(group) ? group : [])
+        .map(image => resolveDataImage(image, ''))
+        .filter(Boolean)
+
+    if (multiImages.length > 0) {
+        return multiImages
+    }
+
+    return props.banner ? [props.banner] : []
+})
 </script>
 
 <template>
@@ -97,10 +118,13 @@ const routeInfo = computed(() => {
         </template>
 
         <div class="dlg-section">
-            <div class="dlg-banner" v-if="banner">
-                <el-carousel :interval="0" indicator-position="inside" arrow="hover" height="240px">
-                    <el-carousel-item>
-                        <img :src="banner" alt="banner" class="carousel-image" />
+            <div class="dlg-banner" v-if="dialogImages.length">
+                <el-carousel :interval="0" indicator-position="inside" arrow="hover" height="350px">
+                    <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
+                        <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
+                            :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
+                            :min-scale="0.2" show-progress show-close show-toolbar show-index
+                            :preview-teleported="true" :z-index="9888" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -249,7 +273,7 @@ const routeInfo = computed(() => {
     overflow-y: auto;
 
     .dlg-banner {
-        height: 240px;
+        height: 350px;
 
         // :deep(.el-carousel) {
         //     height: 100%;

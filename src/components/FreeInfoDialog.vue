@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
+import { resolveDataImage } from '@/utils/dataImageResolver'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -74,6 +75,26 @@ const routeInfo = computed(() => {
     }
     return getFreeInfoData(props.title);
 })
+
+const dialogImages = computed(() => {
+    const imageGroups = [
+        routeInfo.value?.images,
+        routeInfo.value?.banners,
+        routeInfo.value?.bannerList,
+        routeInfo.value?.imgs
+    ]
+
+    const multiImages = imageGroups
+        .flatMap(group => Array.isArray(group) ? group : [])
+        .map(image => resolveDataImage(image, ''))
+        .filter(Boolean)
+
+    if (multiImages.length > 0) {
+        return multiImages
+    }
+
+    return props.banner ? [props.banner] : []
+})
 </script>
 
 <template>
@@ -83,25 +104,34 @@ const routeInfo = computed(() => {
             <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
         </template>
 
-        <div class="dlg-banner w100" v-if="banner">
-            <img :src="banner" alt="banner" class="w100 h100" />
-        </div>
-
         <div class="dlg-section">
-            <div class="section-title" v-if="routeInfo.route">{{ routeInfo.route }}</div>
-            <div class="section-desc">
-                {{ routeInfo.desc }}
+            <div class="dlg-banner w100" v-if="dialogImages.length">
+                <el-carousel :interval="0" indicator-position="inside" arrow="hover" height="350px">
+                    <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
+                        <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
+                            :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
+                            :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
+                            :z-index="9888" />
+                    </el-carousel-item>
+                </el-carousel>
             </div>
 
-            <div class="feature-grid">
-                <div class="feature-card" v-for="(feature, index) in routeInfo.features" :key="index">
-                    <div class="icon" :style="{ background: feature.icon }"></div>
-                    <div class="f-title">{{ feature.title }}</div>
-                    <div class="f-desc">{{ feature.desc }}</div>
+            <div class="dlg-text">
+                <div class="section-title" v-if="routeInfo.route">{{ routeInfo.route }}</div>
+                <div class="section-desc">
+                    {{ routeInfo.desc }}
                 </div>
-            </div>
-            <div class="tag-row">
-                <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
+
+                <div class="feature-grid">
+                    <div class="feature-card" v-for="(feature, index) in routeInfo.features" :key="index">
+                        <div class="icon" :style="{ background: feature.icon }"></div>
+                        <div class="f-title">{{ feature.title }}</div>
+                        <div class="f-desc">{{ feature.desc }}</div>
+                    </div>
+                </div>
+                <div class="tag-row">
+                    <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
+                </div>
             </div>
         </div>
 
@@ -160,19 +190,25 @@ const routeInfo = computed(() => {
 }
 
 .dlg-banner {
-    // width: 100%;
-    height: 240px;
+    height: 350px;
 
-    img {
+    .carousel-image {
+        width: 100%;
+        height: 100%;
         display: block;
         object-fit: cover;
     }
 }
 
 .dlg-section {
-    padding: 18px 20px 10px;
     letter-spacing: normal;
     text-align: left;
+    max-height: 560px;
+    overflow-y: auto;
+
+    .dlg-text {
+        padding: 18px 20px 10px;
+    }
 }
 
 .section-title {
@@ -240,7 +276,7 @@ const routeInfo = computed(() => {
 .dlg-footer {
     position: relative;
     padding: 0 12px 12px;
-    margin-top: 48px;
+    margin-top: 10px;
 }
 
 .info-disclaimer {
