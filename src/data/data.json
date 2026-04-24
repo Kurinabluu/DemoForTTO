@@ -12065,6 +12065,8 @@
                             "route": "The Kentish Hotel",
                             "desc": "位于塔斯马尼亚历史小镇Oatlands的遗产乡村酒店，建于1832年。餐厅提供塔斯马尼亚新鲜农产品，午餐和晚餐服务。周三至周日营业。",
                             "website": "",
+                            "region": "中部地区",
+                            "town": "Oatlands",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12097,6 +12099,8 @@
                         "tripData": {
                             "route": "Great Lake Hotel",
                             "desc": "位于塔斯马尼亚中央高地Miena的获奖乡村酒店餐厅，由主厨Paul Foreman掌勺，主打新鲜当地食材（鱼、野味等），提供现代乡村酒吧风格的午餐和晚餐。荣获2022及2023年塔斯马尼亚酒店/酒吧年度金奖。需提前预订，座位有限。",
+                            "region": "中部地区",
+                            "town": "Miena",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12130,6 +12134,8 @@
                         "tripData": {
                             "route": "Mill Kitchen at Clyde Mill",
                             "desc": "位于塔斯马尼亚Bothwell历史水磨坊内的餐厅，主打季节性、本地食材，提供丰盛家常菜。开放5天（周二、周三关闭），周六营业至深夜。可预订品鉴和导览。",
+                            "region": "中部地区",
+                            "town": "Bothwell",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12162,6 +12168,8 @@
                         "tripData": {
                             "route": "Da Angelo Ristorante",
                             "desc": "位于霍巴特Battery Point的意大利餐厅，自1994年营业至今。以每日新鲜制作的意面（宽面、意式馄饨、土豆团子、通心粉）和传统比萨闻名。提供温暖友好的就餐氛围，适合家庭聚餐、纪念日等。被多次评为霍巴特顶级意大利餐厅。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12195,6 +12203,8 @@
                         "tripData": {
                             "route": "Cataract on Paterson",
                             "desc": "位于朗塞斯顿CBD边缘的现代餐厅，以火山石烧烤（Stonegrill）为特色，提供创新且价格合理的菜单。使用塔斯马尼亚本地食材（牛羊肉、海鲜、散养鸡肉等）。设有私密包间（最多18人）和功能空间。酒吧提供精选塔斯马尼亚葡萄酒、啤酒和烈酒及创意鸡尾酒。每天晚餐营业。同时有社区回馈项目“Giving Back”。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12228,6 +12238,8 @@
                         "tripData": {
                             "route": "Flora's Restaurant",
                             "desc": "位于Craigie Knowe Vineyard内的餐厅，在葡萄园中的帐篷内提供现代塔斯马尼亚菜单，融合亚洲风味。食材部分来自庄园。周五至周二午餐，周六晚餐。可举办婚礼、生日、商务聚会等活动。",
+                            "region": "东海岸",
+                            "town": "Cranbrook",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12260,6 +12272,8 @@
                         "tripData": {
                             "route": "Rockwall Bar and Grill",
                             "desc": "位于霍巴特历史悠久的Salamanca Place乔治亚砂岩仓库内的餐厅，以塔斯马尼亚优质牛排闻名。菜单主打塔斯马尼亚农产品：草饲牛排、布鲁尼岛生蚝、自由放养Scottsdale猪肉等。大部分菜品无麸质，提供乳糜泻安全用餐体验。设有私人用餐空间，可承办活动和公司聚会。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12293,6 +12307,8 @@
                         "tripData": {
                             "route": "Syra Restaurant",
                             "desc": "位于霍巴特Battery Point Salamanca Square的餐厅，提供晚餐服务。周三至周日营业，周五至周日中午开始。可通过网站预订或联系。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12324,6 +12340,8 @@
                         "tripData": {
                             "route": "The Astor Grill",
                             "desc": "位于霍巴特Macquarie Street 1920年代装饰艺术建筑Astor House内的当代餐厅。主打塔斯马尼亚本地食材，提供无麸质、素食、纯素、无乳制品选项。设有两个功能厅（Macquarie Room和Blue Room），可容纳55人坐席/65人站席。周三至周五午餐，周二至周六晚餐。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12357,6 +12375,8 @@
                         "tripData": {
                             "route": "The Den",
                             "desc": "位于霍巴特Salamanca Place的餐厅与鸡尾酒吧，主打创意鸡尾酒和塔斯马尼亚风味小食。每日中午营业至深夜，提供Jalapeno poppers、烤串等分享式菜品。近马拉松终点线，适合赛后放松。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12390,6 +12410,8 @@
                         "tripData": {
                             "route": "Tullah Lakeside Bar and Grill",
                             "desc": "位于Tullah Lakeside Lodge内的餐厅，提供早餐、午餐、晚餐。菜单以塔斯马尼亚本地食材为主，包括牛排、鸡肉、海鲜、沙拉等。每周四为Parmi之夜（鸡肉帕尔马）。提供精酿啤酒、本地葡萄酒和鸡尾酒。可在线点餐，有室外座位。",
+                            "region": "西海岸",
+                            "town": "Tullah",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12422,6 +12444,8 @@
                         "tripData": {
                             "route": "Central Restaurant & Bar",
                             "desc": "位于Formby Hotel内的餐厅与酒吧，以丰富菜单著称，提供共享拼盘、披萨、意面、牛排、海鲜等。设有儿童菜单、葡萄酒单（塔斯马尼亚及澳洲葡萄酒）。生日当天出示证件可免费用主餐。每日黑板特价（如Vale Lamb Feast）。不主动提供蒜香小披萨则可免费获得。可举办功能活动：The Deck（最多32人晚餐）、The Front Room（最多60人）。酒吧周四至周六16:00至深夜，有欢乐时光和现场音乐。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12455,6 +12479,8 @@
                         "tripData": {
                             "route": "Taste. by Bold Cuisine",
                             "desc": "位于塔斯马尼亚Devonport的高级餐厅，由厨师Simon Bold主理，提供每月更换的融合传统与现代风味的品尝菜单。可选择3道菜（$95/人）或6道菜厨师精选（$120/人），可选配酒。餐厅有丰富酒单和烈酒推车。营业时间周三至周六18:00起。小型场所，不适合15岁以下儿童。不接受严格素食、无乳制品、严重过敏、无洋葱大蒜、无糖及FODMAP饮食。需信用卡预授权，取消或未到场收取$50/人。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12488,6 +12514,8 @@
                         "tripData": {
                             "route": "Eat. by Bold Cuisine",
                             "desc": "位于塔斯马尼亚Devonport的休闲咖啡馆，提供早餐、午餐及咖啡。菜单注重新鲜时令食材，创意与品质并重。空间现代、温馨，适合放松用餐。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12521,6 +12549,8 @@
                         "tripData": {
                             "route": "The Lighthouse Bistro",
                             "desc": "位于塔斯马尼亚西北海岸Ulverstone的餐厅，以休闲优雅的氛围、海鲜、烧烤及酒吧经典菜品著称。设有儿童游乐区Goody's Playhouse。提供早餐、午餐、晚餐。促销活动：周一至周四午餐扇贝套餐；儿童免费用餐（条件适用）；生日当天免费用餐；若不主动问是否需要蒜香面包则免费赠送。有老年人折扣。可举办会议及私人活动，Trade Winds会议室最多容纳30人。",
+                            "region": "西北部",
+                            "town": "Ulverstone",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12554,6 +12584,8 @@
                         "tripData": {
                             "route": "Kauri Bistro",
                             "desc": "位于Tall Timbers Hotel内的获奖餐厅，以塔斯马尼亚本地新鲜食材为特色，尤其以Cape Grim牛排闻名。餐厅以Kauri Timber Company命名，可容纳150人。提供早餐和晚餐，儿童菜单、丰富酒单及鸡尾酒。设有儿童游乐区和足球场，深受家庭客人欢迎。",
+                            "region": "西北部",
+                            "town": "Smithton",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12587,6 +12619,8 @@
                         "tripData": {
                             "route": "Rosevears Hotel Restaurant",
                             "desc": "位于Rosevears Hotel内的水滨餐厅，拥有落地玻璃窗，可欣赏塔马河全景。供应午餐和晚餐（周一至周日），周末提供吧台简餐（15:00-17:00）。需提前预订（特别是8人以上或24小时内预订）。圣诞节休息。提供正餐、甜点、吧台菜单及酒水单。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Rosevears",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12620,6 +12654,8 @@
                         "tripData": {
                             "route": "Railton Hotel Pub",
                             "desc": "位于Railton Hotel内的乡村酒吧，提供啤酒、苹果酒、葡萄酒和酒吧餐食。有台球桌和飞镖。可预订Oregon Room用于私人活动或会议（最多35人）。周二至周日营业。",
+                            "region": "西北部",
+                            "town": "Railton",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12653,6 +12689,8 @@
                         "tripData": {
                             "route": "Bridge Bistro",
                             "desc": "位于塔斯马尼亚Smithton的餐厅，提供单点正餐和乡村风格吧台餐。设有餐桌、私人卡座和吧台用餐区。促销活动：生日当天免费用餐、若服务员未主动问询则免费赠送蒜香面包、老年人优惠。有儿童菜单。毗邻The Nut、Stanley和Tarkine荒野等景点。",
+                            "region": "西北部",
+                            "town": "Smithton",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12685,6 +12723,8 @@
                         "tripData": {
                             "route": "Beach Hotel Burnie Bistro",
                             "desc": "位于Beach Hotel Burnie内的获奖餐厅，提供早餐、午餐和晚餐。菜单使用塔斯马尼亚本地食材，包括Cape Grim牛排和当地龙虾。餐厅可容纳120人，适合生日、庆典等。提供宴会、自助餐、定制菜单等选项。",
+                            "region": "西北部",
+                            "town": "Burnie",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12712,48 +12752,23 @@
                         }
                     },
                     {
-                        "title": "Pressing Matters",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "711 Middle Tea Tree Road, Tea Tree 7017"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "0474 380 107"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "每日上午10:00至下午5:00（Open daily 10am to 5pm）"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
                         "title": "Get Shucked",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/GetShucked/getshuckedCover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/GetShucked/getshuckedname.jpg",
+                            "../assets/img/restaurants/GetShucked/getshuckedmusttry.jpg"
+                        ],
+                        "enTitle": "Get Shucked",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Get Shucked",
+                            "desc": "位于塔斯马尼亚布鲁尼岛的生蚝农场直营餐厅，提供从海湾到餐桌的新鲜太平洋生蚝。菜单包括天然生蚝及多种烹饪方式（Kilpatrick、亚洲风味等），可点混合拼盘。设有生蚝外带服务（含柠檬）及全球首家生蚝汽车穿梭店。餐厅供应塔斯马尼亚葡萄酒、啤酒、苹果酒及软饮。",
+                            "region": "霍巴特及南部",
+                            "town": "Bruny Island",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "ease 204, 1735 Bruny Island Main Road, Great Bay, North Bruny, Tasmania 7150"
+                                    "desc": "Lease 204, 1735 Bruny Island Main Road, Great Bay, North Bruny TAS 7150"
                                 },
                                 {
                                     "icon": "#3b82f6",
@@ -12763,76 +12778,91 @@
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午9:30至下午4:30（9:30am - 4:30pm daily）；圣诞节当日将关闭"
+                                    "desc": "每日9:30-16:30；厨房15:45关闭，生蚝供应至16:30；圣诞节及元旦关闭"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "生蚝",
+                                "海鲜",
+                                "布鲁尼岛",
+                                "农场直供",
+                                "外带"
                             ]
                         }
                     },
                     {
                         "title": "Ashgrove Cheese",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Ashgrove Cheese",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Ashgrove Cheese",
+                            "desc": "位于塔斯马尼亚Elizabeth Town的家族乳制品农场及奶酪工厂，自1993年起生产优质奶酪、牛奶、奶油和黄油。Dairy Door提供早餐、午餐、奶酪吐司、松露奶酪火锅、High Cheese（奶酪版下午茶）、Cheesy Flight等体验。可观看奶酪制作过程，购买农场特产和礼品。",
+                            "region": "西北部",
+                            "town": "Elizabeth Town",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "6173 Bass Highway, Elizabeth Town, Tasmania 7304"
+                                    "desc": "6173 Bass Highway, Elizabeth Town TAS 7304"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "电话",
-                                    "desc": "(03)6368 1105"
+                                    "desc": "(03) 6368 1105"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午8:30至下午5:00（Open daily 8:30 am — 5 pm）"
+                                    "desc": "每日 8:30 - 17:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "奶酪工厂",
+                                "农场餐厅",
+                                "High Cheese",
+                                "塔斯马尼亚",
+                                "家庭友好"
                             ]
                         }
                     },
                     {
                         "title": "Tesoro",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/Tesoro/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/Tesoro/inside1.jpg",
+                            "../assets/img/restaurants/Tesoro/inside2.jpg",
+                            "../assets/img/restaurants/Tesoro/dishes1.jpg",
+                            "../assets/img/restaurants/Tesoro/dishes2.jpg"
+                        ],
+                        "enTitle": "Tesoro Italian Restaurant Hobart",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://tesorohobart.com.au/",
+                            "route": "Tesoro",
+                            "desc": "位于霍巴特市中心的现代意大利餐厅，主厨Glen Tilly融合塔斯马尼亚本地食材与传统意大利烹饪，提供早餐、早午餐、午餐、晚餐及开胃酒。设有私人包间（可容纳34人），适合举办活动。招牌菜品包括桌边奶酪车轮黑椒意面，特色体验包括High Cheese、芝士飞行拼盘等。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "28 Elizabeth Street,Hobart,TAS 7000"
+                                    "desc": "28 Elizabeth Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "0429 074 401；tesoro.hobart@movenpick.com"
+                                    "desc": "电话：0429 074 401；邮箱：tesoro.hobart@movenpick.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "早餐供应时间：周一至周五6:30-10:30、周六7:00-10:30、周日7:00-11:00；早午餐供应：周二至周六11:30-14:00；午餐供应：周二至周六12:00-14:30；Aperitivo：每日15:00-17：00；晚餐：最后点餐时间 周日至周四21:00；周五至周六21:30"
+                                    "desc": "早餐：周一至周五6:30-10:30，周六7:00-10:30，周日7:00-11:00；早午餐：周二至周六11:30-14:00；午餐：周二至周六12:00-14:30；Aperitivo：每日15:00-17:00；晚餐最后点单：周日至周四21:00，周五至周六21:30"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "意大利餐厅",
+                                "塔斯马尼亚食材",
+                                "私人包间",
+                                "早餐",
+                                "霍巴特"
                             ]
                         }
                     },
@@ -25058,6 +25088,41 @@
                                 "家族经营",
                                 "狗友好",
                                 "露营"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Pressing Matters",
+                        "img": "",
+                        "enTitle": "Pressing Matters",
+                        "tripData": {
+                            "route": "Pressing Matters",
+                            "desc": "位于塔斯马尼亚煤河谷（Coal River Valley）Tea Tree 的精品酒庄，成立于2002年，专注于雷司令、黑比诺、霞多丽和赤霞珠等欧洲贵族品种。葡萄园采用高密度种植，注重土壤健康和树冠管理，力求表现独特的风土。酒窖门每日开放，提供品鉴及小食。现任酿酒师为 Jimmy Watson 奖得主 Liam McElhinney。",
+                            "region": "煤河谷",
+                            "town": "Tea Tree",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "711 Middle Tea Tree Road, Tea Tree TAS 7017"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "0474 380 109"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "每日 10:00 - 17:00"
+                                }
+                            ],
+                            "tags": [
+                                "煤河谷",
+                                "雷司令",
+                                "黑比诺",
+                                "精品酒庄",
+                                "Jimmy Watson酿酒师"
                             ]
                         }
                     }

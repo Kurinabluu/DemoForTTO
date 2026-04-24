@@ -22,6 +22,48 @@ const localSearchKeyword = ref('')
 const searchQuery = ref('') // 实际执行的搜索词
 const isSearching = ref(false) // 搜索加载状态
 const isLocalSearch = computed(() => searchQuery.value.trim().length > 0)
+const selectedRegion = ref('')
+const selectedTown = ref('')
+
+const FREE_INFO_FILTER_SUBTABS = ['景点', '餐厅', '住宿']
+const UNCATEGORIZED_REGION = '暂未分类分区'
+const UNCATEGORIZED_TOWN = '暂未分类城镇'
+
+const regionTownGroups = [
+    {
+        region: '霍巴特及南部',
+        towns: ['Hobart', 'Kingston', 'Huonville', 'Richmond', 'Cygnet', 'Geeveston', 'Bruny Island', 'South Hobart', 'Sandy Bay', 'Battery Point', 'North Hobart', 'Taroona', 'Port Arthur', 'Tasman Peninsula']
+    },
+    {
+        region: '朗塞斯顿及北部',
+        towns: ['Launceston', 'Tamar Valley', 'Rosevears', 'Beauty Point', 'Legana', 'Exeter', 'George Town', 'Grindelwald', 'Beaconsfield', 'Deloraine', 'Riverside', 'Prospect']
+    },
+    {
+        region: '东海岸',
+        towns: ['Swansea', 'Bicheno', 'Coles Bay', 'St Helens', 'Orford', 'Scamander', 'Freycinet', 'St Marys', 'Triabunna']
+    },
+    {
+        region: '西北部',
+        towns: ['Devonport', 'Burnie', 'Ulverstone', 'Wynyard', 'Smithton', 'Penguin', 'Stanley', 'Somerset', 'Latrobe', 'Sheffield', 'Railton', 'Cradle Mountain', 'Moina', 'Mole Creek', 'Wilmot']
+    },
+    {
+        region: '西海岸',
+        towns: ['Strahan', 'Queenstown', 'Zeehan', 'Rosebery', 'Tullah', 'Granville', 'Corinna', 'Trial Harbour']
+    },
+    {
+        region: '中部地区',
+        towns: ['Oatlands', 'Bothwell', 'Ross', 'Campbell Town', 'Kempton', 'Perth', 'Longford', "Miena"]
+    },
+    {
+        region: '金岛',
+        towns: ['Currie', 'Naracoopa']
+    }
+]
+
+const townToRegionMap = new Map(
+    regionTownGroups.flatMap(group => group.towns.map(town => [town.toLowerCase(), group.region]))
+)
+const regionOrderMap = new Map(regionTownGroups.map((group, index) => [group.region, index]))
 
 // 执行搜索函数
 const executeSearch = async () => {
@@ -193,12 +235,12 @@ function getFullListForLocate() {
         if (props.subTab === '住宿') return hotelFiltered.value || []
         if (isSpecialSection.value) return activityFiltered.value || []
     } else {
-        // 无搜索时，使用原始数据列表
-        if (props.subTab === '景点') return places?.items || []
-        if (props.subTab === '餐厅') return displayRestaurants.value || []
+        // 无搜索时，免费信息场景也使用筛选后的列表
+        if (props.subTab === '景点') return scenicFiltered.value || []
+        if (props.subTab === '餐厅') return restaurantFiltered.value || []
         if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value || []
         if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value || []
-        if (props.subTab === '住宿') return hotels?.items || []
+        if (props.subTab === '住宿') return hotelFiltered.value || []
         if (isSpecialSection.value) return currentSpecialItems.value || []
     }
     return []
@@ -266,6 +308,20 @@ watch(
     }
 )
 
+watch(() => [selectedRegion.value, selectedTown.value], () => {
+    currentPage.value = 1
+    mobileScrollPage.value = 1
+    hasMore.value = true
+    checkHasMore()
+    nextTick(updateMobileScrollPage)
+})
+
+watch(() => selectedRegion.value, () => {
+    if (selectedTown.value && !townOptions.value.includes(selectedTown.value)) {
+        selectedTown.value = ''
+    }
+})
+
 // 处理页码变化
 const handlePageChange = (page) => {
     currentPage.value = page
@@ -304,11 +360,11 @@ function getTotalItems() {
         if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return activityFiltered.value.length
     } else {
-        if (props.subTab === '景点') return places?.items?.length || 0
-        if (props.subTab === '餐厅') return displayRestaurants.value.length
+        if (props.subTab === '景点') return scenicFiltered.value.length
+        if (props.subTab === '餐厅') return restaurantFiltered.value.length
         if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value.length
         if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value.length
-        if (props.subTab === '住宿') return hotels?.items?.length || 0
+        if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return currentSpecialItems.value.length
     }
     return 0
@@ -378,6 +434,21 @@ function getImageUrl(imgPath) {
     return resolveDataImage(imgPath)
 }
 
+function normalizeImageList(images) {
+    if (!Array.isArray(images)) return []
+    return images.map(img => getImageUrl(img)).filter(Boolean)
+}
+
+function getRestaurantGridImageUrl(item) {
+    const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
+    if (hasCoverField) {
+        const coverPath = String(item?.cover || '').trim()
+        if (!coverPath) return ''
+        return resolveDataImage(coverPath, '')
+    }
+    return getImageUrl(item?.img)
+}
+
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
 const currentFreeInfoSection = computed(() => {
     try {
@@ -397,6 +468,132 @@ const isSpecialSection = computed(() => {
 const currentSpecialItems = computed(() => currentFreeInfoSection?.value?.items || [])
 const currentSpecialTitle = computed(() => currentFreeInfoSection?.value?.activitiesTitle || '塔斯马尼亚特别内容')
 const currentSpecialSubtitle = computed(() => currentFreeInfoSection?.value?.activitiesSubtitle || '')
+
+const shouldShowAreaFilters = computed(() => {
+    return props.activeTag === '自助游/自驾游免费参考信息' && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+})
+
+watch(() => shouldShowAreaFilters.value, (enabled) => {
+    if (!enabled) {
+        selectedRegion.value = ''
+        selectedTown.value = ''
+    }
+})
+function normalizeAreaInfo(item) {
+    const regionRaw = String(item?.region || item?.tripData?.region || '').trim()
+    const townRaw = String(item?.town || item?.tripData?.town || '').trim()
+    const lowerTown = townRaw.toLowerCase()
+
+    let normalizedRegion = ''
+    if (regionRaw && regionTownGroups.some(group => group.region === regionRaw)) {
+        normalizedRegion = regionRaw
+    } else if (townRaw && townToRegionMap.has(lowerTown)) {
+        normalizedRegion = townToRegionMap.get(lowerTown) || ''
+    } else if (regionRaw) {
+        normalizedRegion = regionRaw
+    } else {
+        normalizedRegion = UNCATEGORIZED_REGION
+    }
+
+    return {
+        region: normalizedRegion,
+        town: townRaw || UNCATEGORIZED_TOWN
+    }
+}
+
+function filterByRegionAndTown(items) {
+    const sourceItems = Array.isArray(items) ? items : []
+    if (!shouldShowAreaFilters.value) return sourceItems
+
+    return sourceItems.filter(item => {
+        const areaInfo = normalizeAreaInfo(item)
+        const regionMatched = !selectedRegion.value || areaInfo.region === selectedRegion.value
+        const townMatched = !selectedTown.value || areaInfo.town === selectedTown.value
+        return regionMatched && townMatched
+    })
+}
+
+const regionOptions = computed(() => {
+    const defaultOptions = regionTownGroups.map(group => group.region)
+    const regionSet = new Set(defaultOptions)
+    const currentItems = props.subTab === '景点'
+        ? places?.items || []
+        : props.subTab === '餐厅'
+            ? restaurants?.items || []
+            : props.subTab === '住宿'
+                ? hotels?.items || []
+                : []
+
+    currentItems.forEach(item => {
+        const normalized = normalizeAreaInfo(item)
+        if (normalized.region && normalized.region !== UNCATEGORIZED_REGION) {
+            regionSet.add(normalized.region)
+        }
+    })
+
+    return Array.from(regionSet)
+})
+
+const townOptions = computed(() => {
+    if (!selectedRegion.value) return []
+
+    const grouped = regionTownGroups.find(group => group.region === selectedRegion.value)
+    const baseTowns = grouped ? [...grouped.towns] : []
+    const townSet = new Set(baseTowns)
+    const currentItems = props.subTab === '景点'
+        ? places?.items || []
+        : props.subTab === '餐厅'
+            ? restaurants?.items || []
+            : props.subTab === '住宿'
+                ? hotels?.items || []
+                : []
+
+    currentItems.forEach(item => {
+        const normalized = normalizeAreaInfo(item)
+        if (normalized.region === selectedRegion.value && normalized.town && normalized.town !== UNCATEGORIZED_TOWN) {
+            townSet.add(normalized.town)
+        }
+    })
+
+    return Array.from(townSet)
+})
+
+function getRegionDisplayName(item) {
+    const region = normalizeAreaInfo(item).region
+    return region === UNCATEGORIZED_REGION ? '暂未分类' : region
+}
+
+function getRegionSortOrder(item) {
+    const region = normalizeAreaInfo(item).region
+    if (region === UNCATEGORIZED_REGION) return 9999
+    if (regionOrderMap.has(region)) return regionOrderMap.get(region)
+    return 9998
+}
+
+function sortByRegion(items) {
+    const list = Array.isArray(items) ? [...items] : []
+    return list.sort((a, b) => {
+        const regionOrderDiff = getRegionSortOrder(a) - getRegionSortOrder(b)
+        if (regionOrderDiff !== 0) return regionOrderDiff
+
+        const aTown = normalizeAreaInfo(a).town
+        const bTown = normalizeAreaInfo(b).town
+        const townDiff = String(aTown).localeCompare(String(bTown), 'zh-Hans-CN')
+        if (townDiff !== 0) return townDiff
+
+        return String(a?.title || '').localeCompare(String(b?.title || ''), 'zh-Hans-CN')
+    })
+}
+
+function shouldShowRegionTitle(list, index) {
+    if (!Array.isArray(list) || !list.length) return false
+    if (index === 0) return true
+    return getRegionDisplayName(list[index]) !== getRegionDisplayName(list[index - 1])
+}
+
+const scenicDisplayItems = computed(() => sortByRegion(scenicFiltered.value))
+const restaurantDisplayItems = computed(() => sortByRegion(restaurantFiltered.value))
+const hotelDisplayItems = computed(() => sortByRegion(hotelFiltered.value))
 
 // 派生数据 - 从data.json获取适合当前标签的数据
 const gridItems = computed(() => {
@@ -539,24 +736,32 @@ function getHighlightSegments(text, kw) {
 
 const scenicFiltered = computed(() => {
     const kw = (props.s || searchQuery.value || '').trim()
-    if (!kw) return places?.items || []
-    return (places?.items || []).filter(item => matchesKeyword(item.title, kw))
+    const baseItems = filterByRegionAndTown(places?.items || [])
+    if (!kw) return baseItems
+    return baseItems.filter(item =>
+        matchesKeyword(item.title, kw) ||
+        (item.town && matchesKeyword(item.town, kw)) ||
+        (item.region && matchesKeyword(item.region, kw))
+    )
 })
 
 // 直接处理餐厅数据，与其他数据结构保持一致
 const restaurantFiltered = computed(() => {
     const kw = (props.s || searchQuery.value || '').trim()
-    if (!kw) return restaurants?.items || []
-    return (restaurants?.items || []).filter(item =>
+    const baseItems = filterByRegionAndTown(restaurants?.items || [])
+    if (!kw) return baseItems
+    return baseItems.filter(item =>
         matchesKeyword(item.title, kw) ||
         (item.place && matchesKeyword(item.place, kw)) ||
-        (item.enPlace && matchesKeyword(item.enPlace, kw))
+        (item.enPlace && matchesKeyword(item.enPlace, kw)) ||
+        (item.town && matchesKeyword(item.town, kw)) ||
+        (item.region && matchesKeyword(item.region, kw))
     )
 })
 
 // 用于显示的餐厅列表（直接使用原始数据，与景点保持一致）
 const displayRestaurants = computed(() => {
-    return restaurants?.items || []
+    return filterByRegionAndTown(restaurants?.items || [])
 })
 
 // 葡萄酒酒庄数据过滤
@@ -593,10 +798,14 @@ const displaySpiritWineries = computed(() => {
 
 const hotelFiltered = computed(() => {
     const kw = (props.s || searchQuery.value || '').trim()
-    if (!kw) return hotels?.items || []
-    return (hotels?.items || []).filter(item =>
+    const baseItems = filterByRegionAndTown(hotels?.items || [])
+    if (!kw) return baseItems
+    return baseItems.filter(item =>
+        matchesKeyword(item.title, kw) ||
         matchesKeyword(item.place, kw) ||
-        matchesKeyword(item.enPlace, kw)
+        matchesKeyword(item.enPlace, kw) ||
+        (item.town && matchesKeyword(item.town, kw)) ||
+        (item.region && matchesKeyword(item.region, kw))
     )
 })
 
@@ -699,13 +908,29 @@ function onOpenTour(item) {
         };
     }
 
+    const resolvedBannerImages = normalizeImageList(bannerImage)
+    const resolvedBanner = resolvedBannerImages[0] || getImageUrl(Array.isArray(bannerImage) ? '' : bannerImage)
+
+    const normalizedTripData = tripData && typeof tripData === 'object'
+        ? { ...tripData }
+        : tripData
+
+    if (
+        normalizedTripData &&
+        typeof normalizedTripData === 'object' &&
+        resolvedBannerImages.length > 0 &&
+        (!Array.isArray(normalizedTripData.images) || normalizedTripData.images.length === 0)
+    ) {
+        normalizedTripData.images = resolvedBannerImages
+    }
+
     emit('openTourDialog', {
         ...item,
         title: item.title,
         enTitle: item.enTitle,
-        banner: getImageUrl(bannerImage),
+        banner: resolvedBanner,
         tripType: tripType,
-        tripData: tripData
+        tripData: normalizedTripData
     })
 }
 function onOpenPlace(groupName, itemType) {
@@ -739,7 +964,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 <template>
     <!-- 搜索框：只在非一日游页面显示 -->
-    <div class="search-container">
+    <div class="search-container" :class="{ 'search-container--with-filter': shouldShowAreaFilters }">
         <el-input v-model="localSearchKeyword" placeholder="搜索当前内容" clearable size="large" class="search-input"
             @keyup.enter="handleSearchEnter" @clear="handleSearchClear">
             <template #prefix>
@@ -753,6 +978,16 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </el-button>
             </template>
         </el-input>
+        <template v-if="shouldShowAreaFilters">
+            <el-select v-model="selectedRegion" clearable filterable placeholder="一级分类（分区）" class="area-select"
+                size="large">
+                <el-option v-for="region in regionOptions" :key="region" :label="region" :value="region" />
+            </el-select>
+            <el-select v-model="selectedTown" clearable filterable placeholder="二级分类（城镇）" class="area-select"
+                size="large" :disabled="!selectedRegion">
+                <el-option v-for="town in townOptions" :key="town" :label="town" :value="town" />
+            </el-select>
+        </template>
     </div>
 
     <!-- 全屏加载 -->
@@ -764,7 +999,6 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-if="showDayTrip">
         <template v-if="(s?.trim() || isLocalSearch)">
             <template v-if="dayTripFiltered.length">
-                <h1 class="region-title">Hobart</h1>
                 <div ref="gridRef" class="coming-grid">
                     <div v-for="(item, i) in getPaginatedItems(dayTripFiltered)" :key="`day-trip-${dayTripTab}-${i}`"
                         class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
@@ -796,7 +1030,6 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div v-else class="empty-tip">没有搜索结果</div>
         </template>
         <template v-else>
-            <h1 class="region-title">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
@@ -817,20 +1050,24 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：景点 -->
     <template v-if="(s?.trim() || isLocalSearch) && subTab === '景点'">
         <template v-if="scenicFiltered.length">
-            <h1 class="region-title">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
-                <div v-for="(item, i) in getPaginatedItems(scenicFiltered)" :key="'sc2-' + i" class="coming-card"
-                    @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">
-                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
-                            :key="idx">
-                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
-                            <span v-else>{{ seg.text }}</span>
-                        </span>
+                <template v-for="(item, i) in getPaginatedItems(scenicDisplayItems)" :key="'sc2-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(scenicDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
+                                :key="idx">
+                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                                <span v-else>{{ seg.text }}</span>
+                            </span>
+                        </div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
+                </template>
             </div>
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="scenicFiltered.length > 0" class="pagination-section pagination-section--scenic">
@@ -847,20 +1084,24 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：餐厅 -->
     <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '餐厅'">
         <template v-if="restaurantFiltered.length">
-            <h1 class="region-title">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
-                <div v-for="(item, i) in getPaginatedItems(restaurantFiltered)" :key="'rt-search-' + i"
-                    class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">
-                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
-                            :key="idx">
-                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
-                            <span v-else>{{ seg.text }}</span>
-                        </span>
+                <template v-for="(item, i) in getPaginatedItems(restaurantDisplayItems)" :key="'rt-search-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(restaurantDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
+                                :key="idx">
+                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                                <span v-else>{{ seg.text }}</span>
+                            </span>
+                        </div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
+                </template>
             </div>
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="restaurantFiltered.length > 0" class="pagination-section pagination-section--scenic">
@@ -877,7 +1118,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：葡萄酒酒庄 -->
     <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '葡萄酒酒庄'">
         <template v-if="wineFiltered.length">
-            <h1 class="region-title">Hobart</h1>
+            <h1 class="region-title center">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
@@ -907,7 +1148,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：洋酒酒庄 -->
     <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '洋酒酒庄'">
         <template v-if="spiritFiltered.length">
-            <h1 class="region-title">Hobart</h1>
+            <h1 class="region-title center">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
@@ -937,20 +1178,24 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <!-- 搜索结果区：住宿 -->
     <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '住宿'">
         <template v-if="hotelFiltered.length">
-            <h1 class="region-title">Hobart</h1>
             <div ref="gridRef" class="coming-grid">
-                <div v-for="(item, i) in getPaginatedItems(hotelFiltered)" :key="'ht-search-' + i" class="coming-card"
-                    @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">
-                        <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
-                            :key="idx">
-                            <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
-                            <span v-else>{{ seg.text }}</span>
-                        </span>
+                <template v-for="(item, i) in getPaginatedItems(hotelDisplayItems)" :key="'ht-search-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(hotelDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
+                                :key="idx">
+                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
+                                <span v-else>{{ seg.text }}</span>
+                            </span>
+                        </div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
+                </template>
             </div>
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="hotelFiltered.length > 0" class="pagination-section pagination-section--scenic">
@@ -1015,21 +1260,27 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
     <!-- 底部网格：景点（无关键词） -->
     <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-        <div ref="gridRef" class="coming-grid">
-            <template v-for="(item, i) in getPaginatedItems(places.items)" :key="'rt-bottom-' + i">
-                <h1 v-if="i % 16 === 0" class="region-title">Hobart</h1>
-                <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
-            </template>
-        </div>
+        <template v-if="scenicDisplayItems.length">
+            <div ref="gridRef" class="coming-grid">
+                <template v-for="(item, i) in getPaginatedItems(scenicDisplayItems)" :key="'rt-bottom-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(scenicDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">{{ item.title }}</div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <div v-else class="empty-tip">该分类下暂无结果</div>
     </template>
     <!-- <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...
     </div> -->
-    <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && places.items.length > 0">
+    <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && scenicFiltered.length > 0">
         <div class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
                 <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
@@ -1040,17 +1291,22 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
     <!-- 底部网格：餐厅（无关键词） -->
     <template v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-        <!-- <h1 class="region-title">Hobart</h1> -->
-        <div class="coming-grid" ref="gridRef">
-            <template v-for="(item, i) in getPaginatedItems(displayRestaurants)" :key="'restaurant-' + i">
-                <h1 v-if="i % 16 === 0" class="region-title">Hobart</h1>
-                <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
-            </template>
-        </div>
+        <template v-if="restaurantDisplayItems.length">
+            <div class="coming-grid" ref="gridRef">
+                <template v-for="(item, i) in getPaginatedItems(restaurantDisplayItems)" :key="'restaurant-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(restaurantDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">{{ item.title }}</div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <div v-else class="empty-tip">该分类下暂无结果</div>
     </template>
 
     <!-- <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
@@ -1069,7 +1325,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
         <div ref="gridRef" class="coming-grid">
             <template v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i">
-                <h1 v-if="i % 16 === 0" class="region-title">Hobart</h1>
+                <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
                 <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -1096,7 +1352,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
         <div ref="gridRef" class="coming-grid">
             <template v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i">
-                <h1 v-if="i % 16 === 0" class="region-title">Hobart</h1>
+                <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
                 <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                     <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -1120,21 +1376,27 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
     <!-- 底部网格：住宿（无关键词） -->
     <template v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-        <div ref="gridRef" class="coming-grid">
-            <template v-for="(item, i) in getPaginatedItems(hotels.items)" :key="'hotel-' + i">
-                <h1 v-if="i % 16 === 0" class="region-title">Hobart</h1>
-                <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
-                    <div class="card-title" :title="item.title">{{ item.title }}</div>
-                    <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                </div>
-            </template>
-        </div>
+        <template v-if="hotelDisplayItems.length">
+            <div ref="gridRef" class="coming-grid">
+                <template v-for="(item, i) in getPaginatedItems(hotelDisplayItems)" :key="'hotel-' + i">
+                    <h1 v-if="shouldShowRegionTitle(getPaginatedItems(hotelDisplayItems), i)"
+                        class="region-title center">
+                        {{ getRegionDisplayName(item) }}
+                    </h1>
+                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
+                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <div class="card-title" :title="item.title">{{ item.title }}</div>
+                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                    </div>
+                </template>
+            </div>
+        </template>
+        <div v-else class="empty-tip">该分类下暂无结果</div>
     </template>
     <!-- <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...
     </div> -->
-    <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && hotels.items.length > 0"
+    <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && hotelFiltered.length > 0"
         class="pagination-section pagination-section--scenic">
         <div class="custom-pagination custom-pagination--fixed">
             <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
@@ -1218,6 +1480,18 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     width: 100%;
 }
 
+.search-container--with-filter {
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 240px 240px;
+    gap: 12px;
+    align-items: center;
+}
+
+.area-select {
+    width: 100%;
+}
+
 .coming-grid {
     width: 90%;
     display: grid;
@@ -1233,6 +1507,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 .region-title {
     grid-column: 1 / -1;
     margin: 18px 0;
+    text-align: center;
 }
 
 .region-title:first-child {
@@ -1587,6 +1862,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 /* 平板适配 */
 @media (min-width: 769px) and (max-width: 1024px) {
+    .search-container--with-filter {
+        grid-template-columns: minmax(220px, 1fr) 1fr 1fr;
+    }
+
     .coming-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -1637,6 +1916,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 /* 移动端竖屏适配 */
 @media (max-width: 768px) and (orientation: portrait) {
+    .search-container--with-filter {
+        grid-template-columns: 1fr;
+    }
+
     .coming-grid {
         grid-template-columns: repeat(1, 1fr);
         gap: 20px;
@@ -1734,6 +2017,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 /* 移动端横屏适配 */
 @media (max-width: 768px) and (orientation: landscape) {
+    .search-container--with-filter {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
     .coming-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;

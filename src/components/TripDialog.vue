@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
@@ -23,6 +23,7 @@ const dialogVisible = computed({
 
 const contactDialogVisible = ref(false)
 const infoDialogVisible = ref(false)
+const bannerCarouselRef = ref(null)
 
 const openContactDialog = () => {
     contactDialogVisible.value = true
@@ -103,6 +104,15 @@ const dialogImages = computed(() => {
 
     return props.banner ? [props.banner] : []
 })
+
+watch(dialogVisible, (visible) => {
+    if (!visible) return
+    nextTick(() => {
+        if (bannerCarouselRef.value?.setActiveItem) {
+            bannerCarouselRef.value.setActiveItem(0)
+        }
+    })
+})
 </script>
 
 <template>
@@ -119,7 +129,7 @@ const dialogImages = computed(() => {
 
         <div class="dlg-section">
             <div class="dlg-banner" v-if="dialogImages.length">
-                <el-carousel :interval="0" indicator-position="inside" arrow="hover" height="350px">
+                <el-carousel ref="bannerCarouselRef" :interval="0" indicator-position="inside" arrow="hover" height="350px">
                     <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
                         <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
