@@ -116,7 +116,8 @@ watch(dialogVisible, (visible) => {
 
         <div class="dlg-section">
             <div class="dlg-banner w100" v-if="dialogImages.length">
-                <el-carousel ref="bannerCarouselRef" :interval="0" indicator-position="inside" arrow="hover" height="350px">
+                <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
+                    arrow="hover" height="350px">
                     <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
                         <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"

@@ -12868,12 +12868,16 @@
                     },
                     {
                         "title": "Bruny Island Cheese Co.",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/BrunyIslandCheeseCo/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/BrunyIslandCheeseCo/dishes1.jpg"
+                        ],
+                        "enTitle": "Bruny Island Cheese Co.",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://brunyislandcheese.com.au/",
+                            "route": "Bruny Island Cheese Co.",
+                            "desc": "位于布鲁尼岛的 artisan 奶酪工厂兼品鉴室，由 Nick Haddow 于 2003 年创立。现场可免费品尝奶酪和啤酒，观看奶酪制作，并设有 dine-in 菜单（奶酪拼盘、午餐）。提供付费品鉴体验（$40/人，周一至周六 11:30），需预约。同时销售自产精酿啤酒和调味品。",
+                            "region": "霍巴特及南部",
+                            "town": "Bruny Island",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -12883,576 +12887,586 @@
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "cheese@brunyislandcheese.com.au；cellardoor@brunyislandcheese.com.au（品鉴室团队）"
+                                    "desc": "邮箱：cheese@brunyislandcheese.com.au（品鉴室：cellardoor@brunyislandcheese.com.au）"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "品鉴室营业时间：每日10:00-16:00；奶酪品鉴体验：周一至周六11:30"
+                                    "desc": "品鉴室每日 10:00-16:00；品鉴体验周一至周六 11:30（需预订）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "奶酪",
+                                "精酿啤酒",
+                                "品鉴体验",
+                                "布鲁尼岛",
+                                "农场直营"
                             ]
                         }
                     },
                     {
                         "title": "Suzie Lucks Restaurant + Bar",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/SuzieLucksRestaurantAndBar/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/SuzieLucksRestaurantAndBar/restaurantName.jpg",
+                            "../assets/img/restaurants/SuzieLucksRestaurantAndBar/inside1.jpg",
+                            "../assets/img/restaurants/SuzieLucksRestaurantAndBar/inside2.jpg",
+                            "../assets/img/restaurants/SuzieLucksRestaurantAndBar/dishes1.jpg"
+                        ],
+                        "enTitle": "Suzie Lucks Restaurant + Bar",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://suzielucks.com.au/",
+                            "route": "Suzie Lucks Restaurant + Bar",
+                            "desc": "位于霍巴特Battery Point Salamanca Square的亚洲融合餐厅与酒吧，以南亚风味为灵感，使用塔斯马尼亚本地食材。提供午餐、晚餐及创意鸡尾酒，有专门的素食、纯素及无麸质选项。可举办私人活动，主餐厅可容纳150人，私密中庭适合14-100人。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "2 Salamanca Square, Battery Point, TAS 7000"
+                                    "desc": "2 Salamanca Square, Battery Point TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "(03) 6224 2554"
+                                    "desc": "电话：(03) 6224 2554"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "餐厅与酒吧：周一至周二17:00-22:30、周三至周四12:00-22:30、周五12:00-24:00、周六17:00-24:00、周日17:00-21:00；厨房最后点餐时间：周一、二、三、四、日21:00,周五、六22:00"
+                                    "desc": "餐厅及酒吧：周一、二17:00-22:30，周三、四12:00-22:30，周五12:00-00:00，周六17:00-00:00，周日17:00-21:00；厨房最后点餐周一至周四及周日21:00，周五、六22:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "亚洲融合",
+                                "鸡尾酒",
+                                "私人活动"
                             ]
                         }
                     },
                     {
                         "title": "Mr. Good Guy",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/MrGoodGuy/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/MrGoodGuy/name.jpg",
+                            "../assets/img/restaurants/MrGoodGuy/inside1.png",
+                            "../assets/img/restaurants/MrGoodGuy/dishes1.jpg"
+                        ],
+                        "enTitle": "Mr. Good Guy",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://mrgoodguy.com.au/",
+                            "route": "Mr. Good Guy",
+                            "desc": "位于德文港和霍巴特的两家现代亚洲餐厅，主打东南亚街头风味，融合塔斯马尼亚本地食材。提供午餐、晚餐及创意鸡尾酒，设有酒吧和私人活动空间。德文港分店获评塔斯马尼亚最佳亚洲餐厅（2018）。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "2 Best Street, Devonport TAS 7310（另有霍巴特分店：173 Macquarie Street, Hobart）"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：03 6420 5555（德文港）；0437 587 233（霍巴特）；邮箱：mrgoodguy.devonport@accor.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "午餐12:00-15:00，晚餐周日-周四17:30-21:30、周五周六17:00-22:00，酒吧11:00至深夜"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "亚洲融合",
+                                "东南亚菜",
+                                "鸡尾酒吧"
                             ]
                         }
                     },
                     {
                         "title": "Lost Farm Sports Bar",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Lost Farm Sports Bar",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://barnbougle.com.au/wine-dine/lost-farm-sports-bar/",
+                            "route": "Lost Farm Sports Bar",
+                            "desc": "位于塔斯马尼亚Barnbougle Lost Farm高尔夫度假村内的体育酒吧，提供赛后小酌和休闲餐饮。每天中午开放至深夜，供应冷饮和酒吧简餐，可自烤BBQ包，设有台球桌、Tote投注和超过10个体育频道。是放松、观赛、社交的理想场所。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "425 Waterhouse Rd, Bridport TAS 7262, Australia"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6310 8400（度假村总机）"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 12:00 至深夜"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "Lost Farm Restaurant",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://barnbougle.com.au/wine-dine/lost-farm-restaurant/",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "联系方式",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "待补充"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "体育酒吧",
+                                "台球",
+                                "BBQ",
+                                "高尔夫度假村"
                             ]
                         }
                     },
                     {
                         "title": "The Dunes Clubhouse",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "The Dunes Clubhouse",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://barnbougle.com.au/wine-dine/the-dunes-clubhouse/",
+                            "route": "The Dunes Clubhouse",
+                            "desc": "位于塔斯马尼亚Barnbougle The Dunes高尔夫球场内的海滨俱乐部餐厅，每日供应早餐、午餐和晚餐，主打新鲜塔斯马尼亚食材的丰盛餐食。设有酒吧和休息区，冬季开放壁炉，营业至深夜。欢迎预订晚餐。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "425 Waterhouse Rd, Bridport TAS 7262, Australia (Barnbougle度假村内)"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6310 8400"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日早餐、午餐、晚餐；酒吧至深夜"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "Devil in the Dune Coffee Shop",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.eastbeachtouristpark.com/copy-of-things-to-do",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "联系方式",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "待补充"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海滨餐厅",
+                                "塔斯马尼亚食材",
+                                "高尔夫俱乐部",
+                                "壁炉"
                             ]
                         }
                     },
                     {
                         "title": "Fork it Farm",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/ForkitFarm/cover.jpeg",
+                        "enTitle": "Fork it Farm",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.forkitfarm.com.au/eatsevents.html",
+                            "route": "Fork it Farm",
+                            "desc": "位于塔斯马尼亚Lebrina的农场、肉制品工坊及餐饮体验场地，专注饲养伯克郡猪，制作手工香肠、培根、火腿等。提供私人餐饮体验：长桌宴（10-12人，$1900起）和户外野餐派对（最多20人，$35/人），可自带酒水。也可参观农场、入住农场民宿。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Lebrina",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "311 Adams Rd, Lebrina TAS（建议使用GPS导航时经Pipers Brook Rd）"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：Daniel 0431 862 560 / Kim 0435 250 586；邮箱：forkitfarm@gmail.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "私人活动需预订；农场商店及具体开放时间请致电或邮件确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "农场",
+                                "猪肉",
+                                "手工肉制品",
+                                "长桌宴"
                             ]
                         }
                     },
                     {
                         "title": "Restaurant MARIA",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/RestaurantMARIA/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/RestaurantMARIA/inside1.jpg",
+                            "../assets/img/restaurants/RestaurantMARIA/inside2.jpg",
+                            "../assets/img/restaurants/RestaurantMARIA/inside3.jpg",
+                            "../assets/img/restaurants/RestaurantMARIA/dishes.jpg"
+                        ],
+                        "enTitle": "Restaurant MARIA",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://restaurantmaria.com.au/",
+                            "route": "Restaurant MARIA",
+                            "desc": "位于霍巴特布鲁克街码头的地中海风味餐厅，灵感源自20世纪60年代地中海沿岸的浪漫与优雅。提供厨师精选菜单（$140/人，配酒+$100），不接受单点，可满足素食/鱼素等饮食需求。设有私人包间（最多20人）及全店包场（130人站立/62人就坐）。营业时间为周二至周六17:30-22:00。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "Brooke Street Pier, 12 Franklin Whrf, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6128-3860；邮箱：info@restaurantmaria.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周二至周六 17:30-22:00；周日至周一休息"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "地中海菜",
+                                "厨师菜单",
+                                "私人包间",
+                                "码头景观"
                             ]
                         }
                     },
                     {
                         "title": "Pitzi Pasta Bar",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/PitziPastaBar/cover.jpg",
+                        "enTitle": "Pitzi Pasta Bar",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.pitzipitzi.com.au/",
+                            "route": "Pitzi Pasta Bar",
+                            "desc": "位于霍巴特市中心的意式手工面食吧，专营新鲜手工意面和季节性开胃菜。5人以上团体须选择每位$95的套餐。取消预约需提前12小时以上，否则收取$50/人。不接受素食或生酮饮食。欢迎儿童但无高脚椅和儿童菜单。提供私人活动承办。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "4 Victoria Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "邮箱：info@pitzipitzi.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周二至周六 17:00 至深夜；周五同时提供 12:00 至深夜 以及 15:00-18:00 开胃酒时光"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "意式手工面",
+                                "开胃菜",
+                                "预约取消收费",
+                                "私人活动"
                             ]
                         }
                     },
                     {
                         "title": "Pigeon Whole Bakers",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/PigeonWholeBakers/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/PigeonWholeBakers/dishes1.jpg"
+                        ],
+                        "enTitle": "Pigeon Whole Bakers",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.pigeonwholebakers.com.au/",
+                            "route": "Pigeon Whole Bakers",
+                            "desc": "位于霍巴特CBD的手工面包房，成立于2011年，以新鲜酸面包、糕点、三明治和咖啡闻名。店内设有少量靠窗堂食座位，主要以外带为主。提供多种面包（石磨酸面包、蔓越莓核桃、淡黑麦等）、可颂、巧克力面包、杏仁可颂、三明治等。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "24-32 Argyle St, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "邮箱：hello@pigeonwholebakers.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周一至周五 7:30-15:00；周六至周日 7:30-13:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "面包店",
+                                "咖啡",
+                                "早餐",
+                                "午餐"
                             ]
                         }
                     },
                     {
                         "title": "Shambles Brewery",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Shambles Brewery",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://shamblesbrewery.com.au/",
+                            "route": "Shambles Brewery",
+                            "desc": "位于霍巴特Elizabeth Street的精酿啤酒厂和酒吧，由前科学老师Cornel和朋友于2015年创立，场地前身为肉加工厂，故名‘Shambles’。主打多种自酿啤酒（如夏日艾尔、美式IPA、赛松IPA、波特等）。设有啤酒花园、大型功能空间、乒乓球桌。提供零食、简餐（可查看官网）。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "222 Elizabeth Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6289 5639；邮箱：info@shamblesbrewery.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周三、周四 16:00 至深夜；周五、周六 12:00 至深夜；周日 12:00 至 20:00；假期休息"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精酿啤酒",
+                                "工业风格",
+                                "户外啤酒花园",
+                                "活动场地"
                             ]
                         }
                     },
                     {
                         "title": "Hobart Brewing Co.",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/HobartBrewingCo/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/HobartBrewingCo/name.jpg",
+                            "../assets/img/restaurants/HobartBrewingCo/dishes1.jpg"
+                        ],
+                        "enTitle": "Hobart Brewing Co.",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://hobartbrewingco.com.au/",
+                            "route": "Hobart Brewing Co.",
+                            "desc": "位于霍巴特水滨红棚内的精酿啤酒厂，2015年创立。提供16+款新鲜桶装啤酒，另有葡萄酒和烈酒。设有台球桌、火坑，常有餐车驻场（周四至周日）。Taproom 7天开放，周一至周五15:00起，周末12:00起。不设预订，先到先得。无现金支付。可承办活动。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "16 Evans Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "邮箱：info@hobartbrewingco.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周一至周五 15:00 起；周六、周日 12:00 起；全天开放"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精酿啤酒",
+                                " waterfront",
+                                "火坑",
+                                "餐车",
+                                "无现金"
                             ]
                         }
                     },
                     {
                         "title": "Melshell Oyster Shack",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/MelshellOysterShack/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/MelshellOysterShack/dishes1.jpg"
+                        ],
+                        "enTitle": "Melshell Oyster Shack",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://melshelloysters.com.au/",
+                            "route": "Melshell Oyster Shack",
+                            "desc": "位于塔斯马尼亚东海岸 Dolphin Sands 的家庭生蚝农场，自1984年经营。提供现开新鲜生蚝（$28/打起）、自烤海鲜串（含虾、生蚝、扇贝等）及塔斯马尼亚葡萄酒（$12/杯起）。设有水滨座位，可参加农场导览。仅工作日开放（10am-4pm），周末及公共假日休息。",
+                            "region": "东海岸",
+                            "town": "Dolphin Sands",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "9 Yellow Sandbanks Road, Dolphin Sands TAS 7190"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6257 0269"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周一至周五 10:00-16:00；周末及公共假日关闭"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "生蚝",
+                                "农场直供",
+                                "自烤海鲜",
+                                "葡萄酒"
                             ]
                         }
                     },
                     {
                         "title": "Tarkine Fresh Oysters",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/TarkineFreshOysters/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/TarkineFreshOysters/name.jpg",
+                            "../assets/img/restaurants/TarkineFreshOysters/inside1.jpg",
+                            "../assets/img/restaurants/TarkineFreshOysters/dishes1.jpg",
+                            "../assets/img/restaurants/TarkineFreshOysters/dishes2.jpg",
+                            "../assets/img/restaurants/TarkineFreshOysters/dishes3.jpg"
+                        ],
+                        "enTitle": "Tarkine Fresh Oysters",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.tarkinefreshoysters.com.au/",
+                            "route": "Tarkine Fresh Oysters",
+                            "desc": "位于塔斯马尼亚西北部Smithton的生蚝农场零售店与咖啡馆，拥有超过40年养殖历史。提供新鲜现开生蚝、预包装生蚝（新鲜或调味）、特色海鲜浓汤、生蚝宝包等。可参与岸上生蚝农场参观（$30/人或$60/人含品鉴和葡萄酒/啤酒）。零售店和咖啡馆周二至周六营业，可预约游览。",
+                            "region": "西北部",
+                            "town": "Smithton",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "21/25 West Esplanade, Smithton TAS 7330"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6452 2262；邮箱：laura@tasmanianoysterco.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "零售店：周二至周六 10:00-15:00（周日、周一及公共假日休息）；咖啡馆座位：周二至周六 11:00-15:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "生蚝",
+                                "农场直供",
+                                "农场参观"
                             ]
                         }
                     },
                     {
                         "title": "Freycinet Marine Farm",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/FreycinetMarineFarm/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/FreycinetMarineFarm/inside1.jpg",
+                            "../assets/img/restaurants/FreycinetMarineFarm/dishes1.jpg"
+                        ],
+                        "enTitle": "Freycinet Marine Farm",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.freycinetmarinefarm.com/",
+                            "route": "Freycinet Marine Farm",
+                            "desc": "位于塔斯马尼亚东海岸Coles Bay的海鲜餐厅和零售点，主营太平洋生蚝、塔斯马尼亚蓝青口、扇贝、龙虾、三文鱼等本地海鲜。提供现开生蚝、青口、炸鱼薯条、海鲜浓汤等，有户外甲板座位。也提供外带和海鲜礼盒。不设预订，欢迎散客。",
+                            "region": "东海岸",
+                            "town": "Coles Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "1784 Coles Bay Rd, Coles Bay TAS 7215"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6257 0261；邮箱：oysters@freycinetmarinefarm.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "9月-5月：9:00-17:00（厨房至16:00）；6月-8月：9:00-16:00（厨房至15:00）；关闭：耶稣受难日、12月25-26日、1月1日"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜",
+                                "生蚝",
+                                "青口",
+                                "外带"
                             ]
                         }
                     },
                     {
                         "title": "Lobster Shack Tasmania",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/LobsterShackTasmania/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/LobsterShackTasmania/inside1.jpg",
+                            "../assets/img/restaurants/LobsterShackTasmania/dishes1.jpg"
+                        ],
+                        "enTitle": "Lobster Shack Tasmania",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.lobstershacktasmania.com.au/",
+                            "route": "Lobster Shack Tasmania",
+                            "desc": "位于塔斯马尼亚东海岸Bicheno水滨的龙虾主题咖啡馆，每日供应新鲜南部岩龙虾（活龙虾现场烹饪），招牌龙虾卷、芝士焗龙虾、蒜蓉黄油龙虾等。同时提供生蚝、扇贝、海鲜拼盘、炸鱼薯条、无麸质选项。设有户外甲板、小型海事博物馆。仅限Walk-in，可外带，宠物狗允许上甲板。",
+                            "region": "东海岸",
+                            "town": "Bicheno",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "40 Waubs Esplanade, Bicheno TAS 7215"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：03 6375 1588"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 11:00-19:00（仅圣诞节和节礼日关闭，公共假日开放）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "龙虾",
+                                "海鲜",
+                                "水滨",
+                                "无麸质可选"
                             ]
                         }
                     },
                     {
                         "title": "Aloft",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Aloft",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Aloft",
+                            "desc": "位于霍巴特布鲁克街码头顶层的水滨餐厅，提供俯瞰德文特河的壮丽景色。主打塔斯马尼亚本地时令食材，菜单为厨师精选品尝菜单（$150/人，可选配酒$100），融合泛亚洲风味，有素食/纯素/鱼素选项。仅供应晚餐，周二至周六17:30起。设有开放式厨房吧台座位。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "Brooke Street Pier Hobart 7000"
+                                    "desc": "Brooke Street Pier, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "+61 3 6223 1619"
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 3 6223 1619；邮箱：info@aloftrestaurant.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每周二至周六下午5:30直至深夜"
+                                    "desc": "周二至周六 17:30 至深夜"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "水景",
+                                "品尝菜单",
+                                "泛亚洲风味"
                             ]
                         }
                     },
                     {
                         "title": "The Point Revolving Restaurant",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/ThePointRevolvingRestaurant/cover.jpg",
+                        "enTitle": "The Point Revolving Restaurant",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "The Point Revolving Restaurant",
+                            "desc": "位于霍巴特Wrest Point酒店17层的旋转餐厅，俯瞰德文特河，提供法式灵感菜单。选用塔斯马尼亚优质食材，招牌菜包括桌边烹制的Crêpes Suzette。母亲节午餐（5月10日）$175/人，儿童$75。晚餐周二至周六18:00起。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "410 Sandy Bay Rd, Hobart 7005, Tasmania, Australia"
+                                    "desc": "410 Sandy Bay Rd, Hobart TAS 7005"
                                 },
                                 {
                                     "icon": "#3b82f6",
@@ -13462,770 +13476,931 @@
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每周二至周六下午6:00"
+                                    "desc": "周二至周六 18:00起"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "旋转餐厅",
+                                "法式",
+                                "海鲜"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Boardwalk Café",
+                        "cover": "../assets/img/restaurants/BoardwalkCafe/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/BoardwalkCafe/inside1.jpg",
+                            "../assets/img/restaurants/BoardwalkCafe/dishes1.jpg"
+                        ],
+                        "enTitle": "Boardwalk Café",
+                        "tripData": {
+                            "route": "Boardwalk Café",
+                            "desc": "位于霍巴特Wrest Point酒店内的河畔咖啡馆，提供新鲜咖啡、小吃、自制糕点、吐司、披萨等，可欣赏德文特河景。宽敞明亮的中庭空间，适合朋友聚会。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "410 Sandy Bay Rd, Hobart TAS 7005"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：1800 030 611（Wrest Point总机）"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周日至周四 6:30-00:00；周五至周六 6:30-02:00"
+                                }
+                            ],
+                            "tags": [
+                                "咖啡",
+                                "小吃",
+                                "河景"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Longhorn Smokehouse",
+                        "cover": "../assets/img/restaurants/LonghornSmokehouse/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/LonghornSmokehouse/name.jpg",
+                            "../assets/img/restaurants/LonghornSmokehouse/dishes1.jpg"
+                        ],
+                        "enTitle": "Longhorn Smokehouse",
+                        "tripData": {
+                            "route": "Longhorn Smokehouse",
+                            "desc": "位于霍巴特Wrest Point内的美式烧烤餐厅，主打‘低温慢煮’烟熏肉类，如猪肋排、手撕猪肉、和牛西冷、熏牛胸肉等，使用本地食材和自制酱汁。设有多种美酒及鸡尾酒。可接待团体活动。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "410 Sandy Bay Rd, Hobart TAS 7005"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：1800 030 611 或预订链接"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "未提供具体时段，建议电话确认"
+                                }
+                            ],
+                            "tags": [
+                                "美式烧烤",
+                                "烟熏肉",
+                                "河景"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Kwan Ho",
+                        "cover": "../assets/img/restaurants/KwanHo/cover.jpg",
+                        "img": "../assets/img/restaurants/KwanHo/dishes1.jpg",
+                        "enTitle": "Kwan Ho",
+                        "tripData": {
+                            "route": "Kwan Ho",
+                            "desc": "位于霍巴特Wrest Point内的中餐厅，由Me Wah餐厅经营，提供粤菜、川菜、上海菜等，适合共享宴会。餐厅俯瞰德文特河、塔斯曼大桥和码头。2026年6月8-22日关闭。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "410 Sandy Bay Rd, Hobart TAS 7005"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6225 7888；邮箱：info@kwanho.com.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "周一至周六 午餐12:00-14:30，晚餐17:30-22:30；6月8-22日关闭"
+                                }
+                            ],
+                            "tags": [
+                                "中餐",
+                                "粤菜",
+                                "川菜",
+                                "共享宴会"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Boardwalk Bistro",
+                        "img": "../assets/img/restaurants/BoardwalkBistro/cover.jpg",
+                        "enTitle": "Boardwalk Bistro",
+                        "tripData": {
+                            "route": "Boardwalk Bistro",
+                            "desc": "位于霍巴特Wrest Point内的家庭友好餐厅，提供自助早餐、午餐、晚餐。菜单包括烤肉、披萨、汉堡，设有无麸质、无乳糖、素食、清真等选项。特色甜品为‘无限圣代’（$16/人）。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "410 Sandy Bay Rd, Hobart TAS 7005"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6221 1888"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "早餐6:30-10:00；午餐12:00-14:00；晚餐17:30-20:30（每日）"
+                                }
+                            ],
+                            "tags": [
+                                "家庭友好",
+                                "自助餐",
+                                "无限圣代",
+                                "河景"
                             ]
                         }
                     },
                     {
                         "title": "Barilla Bay",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Barilla Bay Oysters & Restaurant",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Barilla Bay",
+                            "desc": "位于塔斯马尼亚Cambridge的生蚝农场与海鲜餐厅，俯瞰皮特沃特保护区。提供新鲜生蚝及多种塔斯马尼亚海鲜、非海鲜选项。设有零售店及楼上餐厅（需预订）。每月最后一个周四（10-4月，除12月）举办畅吃生蚝之夜（$65/人）。可参加生蚝农场、姜汁啤酒及鲍鱼加工厂之旅（周四至周六11:00）。也可承办婚礼和活动。",
+                            "region": "霍巴特及南部",
+                            "town": "Cambridge",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "1388 Tasman Highway Cambridge TAS 7170"
+                                    "desc": "1388 Tasman Highway, Cambridge TAS 7170"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "(03) 6248 5458"
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6248 5458；邮箱：restaurant@barillabay.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "午餐（一/四/五/六/日）：11:00-14:30、晚餐（四/五/六）：17:00-19:30；※注意：必须提前电话预约"
+                                    "desc": "午餐：周一、周四至周日 11:00-14:30；晚餐：周四至周六 17:00-19:30；周二、周三休息；零售店每日 9:30-17:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "生蚝",
+                                "海鲜餐厅",
+                                "农场参观",
+                                "畅吃"
                             ]
                         }
                     },
                     {
                         "title": "Pearl + Co",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/PearlCo/cover.jpg",
+                        "enTitle": "Pearl + Co",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Pearl + Co",
+                            "desc": "位于霍巴特维多利亚码头的水滨生蚝吧与餐厅，提供新鲜塔斯马尼亚生蚝、生鱼片、生腌鱼塔可、海鲜意面、龙虾等。饮品包括鸡尾酒、本地葡萄酒、精酿啤酒和苹果酒。设有户外甲板座位，可欣赏码头美景。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "Victoria Dock, Hobart TAS, Australia, 7000"
+                                    "desc": "Victoria Dock, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "+61 (0)3 6231 1790"
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6231 1790；邮箱：pearl@mures.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午11:00至下午9:00"
+                                    "desc": "每日 11:00-21:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "生蚝吧",
+                                "海鲜",
+                                "鸡尾酒",
+                                "码头景观"
                             ]
                         }
                     },
                     {
                         "title": "Kelp Bar",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/KelpBar/cover.jpg",
+                        "img": "../assets/img/restaurants/KelpBar/inside1.jpg",
+                        "enTitle": "Kelp Bar",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Kelp Bar",
+                            "desc": "位于霍巴特维多利亚码头Mures顶层的海滨酒吧与餐厅，可欣赏宪法码头及威灵顿山美景。提供塔斯马尼亚海鲜、本地精酿啤酒、国际烈酒、丰富葡萄酒及创意鸡尾酒。设有户外阳台和室内壁炉区，每日下午4-6点为鸡尾酒欢乐时光（$15）。可承办私人活动。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "711 Middle Tea Tree Road, Tea Tree 7017"
+                                    "desc": "Mures Top Level, Victoria Dock, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "+61 (0)3 6277 5500"
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6240 8536；邮箱：kelpbar@mures.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午11:00至下午10:30"
+                                    "desc": "每日 11:00-22:30"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海滨酒吧",
+                                "海鲜",
+                                "鸡尾酒",
+                                "欢乐时光",
+                                "霍巴特"
                             ]
                         }
                     },
                     {
                         "title": "Fish Frenzy",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/FishFrenzy/cover.jpg",
+                        "img": "../assets/img/restaurants/FishFrenzy/dishes1.jpg",
+                        "enTitle": "Fish Frenzy",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Fish Frenzy",
+                            "desc": "位于霍巴特Sullivans Cove伊丽莎白街码头的水滨海鲜餐厅，以新鲜鱼薯、海鲜拼盘、海鲜浓汤闻名。荣获2020年TripAdvisor旅行者选择奖。提供室内外座位，可堂食或外带。不提供预订和电话订单，快速服务。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "Sullivans Cove, Elizabeth Street Pier, Hobart TAS 7000, Australia"
+                                    "desc": "Elizabeth Street Pier, Sullivans Cove, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "03 6231 2134"
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6231 2134；邮箱：info@fishfrenzy.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午11：30至下午9:00；圣诞节当日将关闭"
+                                    "desc": "周日至周四 11:30-20:30；周五至周六 11:30-21:00；圣诞节当日关闭"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜",
+                                "鱼薯",
+                                "水滨",
+                                "外带"
                             ]
                         }
                     },
                     {
                         "title": "Drunken Admiral",
-                        "img": "",
-                        "enTitle": "",
+                        "cover": "../assets/img/restaurants/DrunkenAdmiral/cover.jpg",
+                        "img": [
+                            "../assets/img/restaurants/DrunkenAdmiral/name.jpg",
+                            "../assets/img/restaurants/DrunkenAdmiral/inside1.jpg",
+                            "../assets/img/restaurants/DrunkenAdmiral/inside2.jpg",
+                            "../assets/img/restaurants/DrunkenAdmiral/dishes1.jpg"
+                        ],
+                        "enTitle": "Drunken Admiral",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Drunken Admiral",
+                            "desc": "位于霍巴特旧码头猎人街的家庭经营海鲜餐厅，自1979年营业，以独特的航海主题氛围和新鲜塔斯马尼亚海鲜著称。菜单提供海鲜、非海鲜选项（鸡肉、牛肉等），每日更新渔获，可按喜好烹饪。设有全套酒吧，精选塔州葡萄酒、啤酒、金酒和威士忌。可接待大型团体、提供套餐菜单，也可预订蛋糕。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "17-19 Hunter Street Old Wharf, Hobart, Tasmania, Australia 7000"
+                                    "desc": "17-19 Hunter Street, Old Wharf, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "(03) 62 341 903"
+                                    "title": "联系方式",
+                                    "desc": "电话：(03) 6234 1903；邮箱：info@drunkenadmiral.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每天下午5:00开始营业"
+                                    "desc": "每日 17:00 起"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜",
+                                "航海主题",
+                                "家庭经营",
+                                "团体接待"
                             ]
                         }
                     },
                     {
                         "title": "Blue Eye",
+                        "enTitle": "Blue Eye",
                         "img": "",
-                        "enTitle": "",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Blue Eye",
+                            "desc": "位于霍巴特Salamanca Place历史谷物筒仓内的海鲜餐厅，主打新鲜本地塔斯马尼亚鱼和海鲜，提供生蚝、烤鱼、鱼薯以及每日季节特色菜。下午3-5点为生蚝特惠时段（$2.5/个）。有无麸质、无乳制品及非海鲜选项。周二至周六营业，可堂食或外带。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "1 Castray Esplanade, Hobart Tasmania 7004"
+                                    "desc": "1 Castray Esplanade, Hobart TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "03 6223 5297"
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6223 5297"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "周二至周六上午12:00至晚上10:00"
+                                    "desc": "周二至周六 12:00-22:00；周日、周一休息"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜",
+                                "生蚝",
+                                "本地鱼",
+                                "外带"
                             ]
                         }
                     },
                     {
-                        "title": "Prem’s Seafood Bar&Grill/The Elegance Lounge Seafood Bar & Grill",
-                        "img": "",
-                        "enTitle": "",
+                        "title": "The Elegance Lounge Seafood Bar & Grill",
+                        "img": [
+                            "../assets/img/restaurants/EleganceLounge/name.jpg"
+                        ],
+                        "cover": "../assets/img/restaurants/EleganceLounge/cover.jpg",
+                        "enTitle": "The Elegance Lounge Seafood Bar & Grill",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "The Elegance Lounge Seafood Bar & Grill",
+                            "desc": "位于德文港Rooke Street的斯里兰卡-塔斯马尼亚融合海鲜烧烤餐厅，主打火焰炙烤的塔斯马尼亚海鲜（生蚝、扇贝、龙虾、牛肉等），提供午餐和晚餐，拥有多个风格各异的私人活动空间（Sunset Bay、The Pearl等）。融合斯里兰卡热情与塔州纯净食材，环境优雅而温馨。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "161 Rooke St, Devonport Tasmania 7310"
+                                    "desc": "161 Rooke St, Devonport TAS 7310"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "+61 364 243 313/+61 472 620 234"
+                                    "title": "联系方式",
+                                    "desc": "电话：+61 364 243 313 / +61 472 620 234；邮箱：info@elegancelounge.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每天营业，午餐供应时间为上午12:00至下午1:45，晚餐供应时间为下午5:00至下午8:45"
+                                    "desc": "每日午餐 12:00-13:45；晚餐 17:00-20:45"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "The Oyster Bay Restaurant",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "40 Franklin St, Swansea Tasmania 7190"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "+61 3 6257 8998"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "每周一至周五上午11:00至下午7:00、每周五至周六上午7:30至下午7:00"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜烧烤",
+                                "斯里兰卡风味",
+                                "私人活动",
+                                "火焰烧烤"
                             ]
                         }
                     },
                     {
                         "title": "Hamlet Cafe",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/restaurants/HamletCafe/name.jpg",
+                            "../assets/img/restaurants/HamletCafe/dishes1.jpeg"
+                        ],
+                        "cover": "../assets/img/restaurants/HamletCafe/cover.jpeg",
+                        "enTitle": "Hamlet Cafe",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Hamlet Cafe",
+                            "desc": "位于霍巴特Molle Street的社会企业咖啡馆，为残障、神经多样性及有心理健康问题的人士提供培训与就业机会。使用塔斯马尼亚时令食材，供应早餐和午餐，周一至周五营业。所有收益用于支持包容性就业项目。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "40 Molle Street, Hobart"
+                                    "desc": "40 Molle Street, Hobart TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "0428 132 280"
+                                    "title": "联系方式",
+                                    "desc": "电话：0428 132 280；邮箱：hello@hamlet.org.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每周一到周五上午7:30至下午2:30；周末及公共节假日关闭"
+                                    "desc": "周一至周五 7:30-14:30；周末及公共假日休息"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "社会企业",
+                                "早餐",
+                                "午餐",
+                                "培训餐厅"
                             ]
                         }
                     },
                     {
                         "title": "Sunbear",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/Sunbear/cover.jpg",
+                        "enTitle": "Sunbear",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Sunbear",
+                            "desc": "位于霍巴特Collins Street的家庭经营咖啡馆，营造宾至如归的温馨氛围。使用塔斯马尼亚本地食材自制食品（面包、酱料、糕点等），提供早餐和午餐简餐。店内装修采用回收材料，注重环保。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "145 Collins Street, Hobart, Tasmania, 7000"
+                                    "desc": "145 Collins Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "邮箱",
-                                    "desc": "sunbearhobart@gmail.com"
+                                    "title": "联系方式",
+                                    "desc": "邮箱：sunbearhobart@gmail.com"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每周一至周五上午7:30至下午3:00，每周六上午8:00至下午20:00"
+                                    "desc": "周一至周五 7:30-15:00；周六 8:00-14:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡馆",
+                                "早餐",
+                                "午餐",
+                                "自制食品"
                             ]
                         }
                     },
                     {
                         "title": "Jam Packed Cafe",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Jam Packed Cafe",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
+                            "route": "Jam Packed Cafe",
+                            "desc": "位于霍巴特历史水滨猎人街的咖啡馆，每日供应咖啡、甜品及全日餐点。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "25 Hunter Street, Hobart, Tasmania, Australia 7000"
+                                    "desc": "25 Hunter Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "电话",
-                                    "desc": "03 6210 7700"
+                                    "title": "联系方式",
+                                    "desc": "电话：03 6210 7700"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日上午6:30至下午2:00"
+                                    "desc": "每日 6:30-14:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡馆",
+                                "早餐",
+                                "甜点",
+                                "水滨"
                             ]
                         }
                     },
                     {
                         "title": "Landscape Restaurant & Grill",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/restaurants/LandscapeRestaurantGrill/inside1.jpg",
+                            "../assets/img/restaurants/LandscapeRestaurantGrill/inside2.jpg",
+                            "../assets/img/restaurants/LandscapeRestaurantGrill/dishes1.jpg"
+                        ],
+                        "cover": "../assets/img/restaurants/LandscapeRestaurantGrill/cover.jpg",
+                        "enTitle": "Landscape Restaurant & Grill",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://landscaperestaurant.com.au/",
+                            "route": "Landscape Restaurant & Grill",
+                            "desc": "位于霍巴特猎人街水滨区历史悠久的IXL果酱工厂内的获奖高级餐厅，专注于塔斯马尼亚优质食材，采用Asado炭烤方式烹饪。设有私人包间，展示约翰·格洛弗艺术奖获奖作品。2025年塔斯马尼亚酒店奖最佳高级餐厅得主。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "23 Hunter Street, Hobart, Tasmania, Australia 7000"
+                                    "desc": "23 Hunter Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "(03) 6210 7712；landscape@landscaperestaurant.com.au"
+                                    "desc": "电话：(03) 6210 7712；邮箱：landscape@landscaperestaurant.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "每日下午5:45开始营业"
+                                    "desc": "每日 17:45 起"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "La Villa Wines",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.lavillawines.com.au/",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "地址",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "联系方式",
-                                    "desc": "待补充"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "营业时间",
-                                    "desc": "待补充"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "高级餐厅",
+                                "炭烤",
+                                "艺术氛围",
+                                "私人包间"
                             ]
                         }
                     },
                     {
                         "title": "Leaping Goat",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Leaping Goat",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.leapinggoatcoffee.com.au/",
+                            "route": "Leaping Goat",
+                            "desc": "位于塔斯马尼亚西北部Quoiba的特色咖啡烘焙店兼咖啡馆，自2014年起小批量烘焙精品咖啡豆，提供多种拼配和单一产地咖啡。店内可品尝咖啡、购买咖啡豆及设备，也有咖啡饮用。团队拥有超过20年行业经验。",
+                            "region": "西北部",
+                            "town": "Quoiba",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "2 Ferguson Dr, Quoiba TAS 7310"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：0499 555 177；邮箱：hello@leapinggoatcoffee.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周一至周五 7:00-15:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡馆",
+                                "咖啡烘焙",
+                                "咖啡豆零售"
                             ]
                         }
                     },
                     {
                         "title": "Infuse Coffee Roasters",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/InfuseCoffeeRoasters/cover.jpg",
+                        "enTitle": "Infuse Coffee Roasters",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://infusecoffee.com.au/",
+                            "route": "Infuse Coffee Roasters",
+                            "desc": "位于塔斯马尼亚西北部South Burnie的精品咖啡烘焙坊和咖啡馆，成立于2010年。提供多款获奖咖啡豆、单品豆、冲泡器具及配件，设有Espresso Bar，可品尝现做咖啡及轻食。店内还有多种冲泡演示和器具销售。",
+                            "region": "西北部",
+                            "town": "South Burnie",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "46 Strahan Street, South Burnie TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：0499 250 470"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "请通过电话或官网查询具体营业时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡烘焙",
+                                "咖啡馆",
+                                "单品咖啡",
+                                "冲泡器具",
+                                "西北部"
                             ]
                         }
                     },
                     {
                         "title": "Mount Gnomon Farm",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Mount Gnomon Farm",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://mountgnomonfarm.com.au/",
+                            "route": "Mount Gnomon Farm",
+                            "desc": "位于塔斯马尼亚西北部Penguin的农场餐厅与住宿体验地，以自由放养稀有品种猪、羊、牛以及菜园农产为基础。食材来自自家农场，主打从农场到餐桌。同时设有五座豪华穹顶住宿、婚礼及活动场地。",
+                            "region": "西北部",
+                            "town": "Penguin",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "886 Ironcliffe Rd, Penguin TAS 7316"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：0448 067 779；邮箱：events@mountgnomonfarm.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周六晚餐 18:00；周日午餐 12:00-16:00（需预订，可能因私人活动关闭）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "农场餐厅",
+                                "从农场到餐桌",
+                                "本地食材"
                             ]
                         }
                     },
                     {
                         "title": "Mudbar Restaurant",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/restaurants/MudbarRestaurant/dishes1.jpg",
+                            "../assets/img/restaurants/MudbarRestaurant/dishes2.jpg"
+                        ],
+                        "cover": "../assets/img/restaurants/MudbarRestaurant/cover.jpg",
+                        "enTitle": "Mudbar Restaurant",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://mudbar.com.au/",
+                            "route": "Mudbar Restaurant",
+                            "desc": "位于朗塞斯顿Seaport Boulevard的水滨餐厅和酒吧，主营新鲜塔斯马尼亚本地食材，融合亚洲与欧洲风味。提供午餐、晚餐及丰富鸡尾酒，拥有私人酒窖和活动空间。食材部分来自自有农场，践行从农场到餐桌理念。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "28 Seaport Boulevard, Launceston TAS 7250"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：+61 3 6334 5066"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 11:30 - 次日00:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海鲜",
+                                "鸡尾酒吧",
+                                "自有农场"
                             ]
                         }
                     },
                     {
-                        "title": "R. Stephens Tasmanian Honey",
+                        "title": "Van Diemens Land Creamery",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Van Diemens Land Creamery",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.stephenstasmanianhoney.com.au/",
+                            "route": "Van Diemens Land Creamery - Elizabeth Town",
+                            "desc": "位于塔斯马尼亚Elizabeth Town的冰激凌工厂与咖啡馆，自2005年家族经营，使用自家农场的鲜奶制作冰激凌。提供午餐（11:00-15:00）和甜点，经典及特色冰激凌口味如胡椒浆果与革木蜂蜜、咸焦糖等。可观看冰激凌制作过程。",
+                            "region": "西北部",
+                            "town": "Elizabeth Town",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "10 Christmas Hills Road, Elizabeth Town TAS 7250"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6362 4200；邮箱：admin@vdlcreamery.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 11:00-17:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "冰激凌",
+                                "甜品咖啡厅",
+                                "工厂店"
                             ]
                         }
                     },
                     {
-                        "title": "Van Diemens Land Creamery/VDL Creamery",
+                        "title": "Van Diemens Land Creamery - Waterfront Punt",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Van Diemens Land Creamery - Waterfront Punt",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://vdlcreamery.com.au/",
+                            "route": "VDLC Waterfront Punt",
+                            "desc": "位于霍巴特宪法码头的浮动冰激凌店，提供由自家牧场新鲜制作的冰激凌和甜品，可欣赏水滨景色。提供多种纯素选项（使用蚕豆蛋白制成）。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "Constitution Dock, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：0448 849 724；邮箱：hobart@vdlcreamery.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周日至周四 12:00-21:00；周五至周六 12:00-22:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "冰激凌",
+                                "水滨",
+                                "甜品",
+                                "纯素选项"
                             ]
                         }
                     },
                     {
                         "title": "Miners Gold Brewery",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/MinersGoldBrewery/cover.jpg",
+                        "enTitle": "Miners Gold Brewery",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.minersgold.com.au/",
+                            "route": "Miners Gold Brewery",
+                            "desc": "位于塔斯马尼亚Beaconsfield的精酿啤酒厂与餐厅，成立于2019年，以Beaconsfield金矿历史命名。主打新鲜塔斯马尼亚手工啤酒（含IPA、酸啤酒等），餐厅提供当地食材制作的菜肴，包括澳洲经典、Cape Grim牛排、垂直烤串及无麸质/素食选项。设有户外啤酒花园和木柴壁炉。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Beaconsfield",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "5 West Street, Beaconsfield TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6311 1891；邮箱：info@minersgold.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周四 16:00-21:00；周五、周六 11:00-21:00；周日 11:00-16:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精酿啤酒",
+                                "餐厅",
+                                "本地食材",
+                                "历史主题"
                             ]
                         }
                     },
                     {
                         "title": "Ghost Rock",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Ghost Rock",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.ghostrock.com.au/",
+                            "route": "Ghost Rock Eatery",
+                            "desc": "位于塔斯马尼亚西北部Cradle Coast产区的酒庄餐厅，提供午餐（每日11:00-15:30）和酒庄品鉴（11:00-17:00），主打本地塔斯马尼亚农产品。餐厅和酒窖门俯瞰葡萄园和巴斯海峡。可在餐厅享用午餐后参加品鉴。设有三卧室庄园住宿。",
+                            "region": "西北部",
+                            "town": "Devonport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "近Devonport（具体地址见官网或致电）"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：(03) 6428 4005；邮箱：mail@ghostrock.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 11:00-17:00（厨房至15:30）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "酒庄餐厅",
+                                "午餐",
+                                "本地食材",
+                                "葡萄园景观"
                             ]
                         }
                     },
                     {
                         "title": "The Berry Patch",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "The Berry Patch",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://theberrypatch.com.au/",
+                            "route": "The Berry Patch",
+                            "desc": "位于塔斯马尼亚Turners Beach的家庭经营农场，拥有超过20年浆果种植历史。设有农场咖啡馆和乡村商店，提供新鲜时令浆果、蔬菜、自制果酱等农产品。菜单主打从农场到餐桌的料理。",
+                            "region": "西北部",
+                            "town": "Turners Beach",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "24 Blackburn Dr, Turners Beach TAS 7315"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：0487 410749；邮箱：enquiry@theberrypatch.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周三至周日 08:30-16:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡馆",
+                                "农场商店",
+                                "浆果",
+                                "本地食材"
                             ]
                         }
                     },
                     {
                         "title": "Fico",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/restaurants/Fico/name.jpg",
+                            "../assets/img/restaurants/Fico/inside1.jpg",
+                            "../assets/img/restaurants/Fico/dishes1.jpg"
+                        ],
+                        "cover": "../assets/img/restaurants/Fico/cover.jpg",
+                        "enTitle": "Fico",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.ficofico.net/",
+                            "route": "Fico",
+                            "desc": "位于霍巴特Macquarie Street的休闲高级餐厅，提供9道菜套餐（经典$185，含牡蛎/鱼子酱/松露/奶酪的$240）。菜单每周更换，使用塔斯马尼亚本地时令可持续食材。曾获多项奖项，包括2021/2022年塔斯马尼亚年度餐厅。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "151 Macquarie Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：03 6245 3391；邮箱：bookings@ficofico.net"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "周四至周六晚餐（具体时间请致电）；周日午餐"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "高级餐厅",
+                                "品尝菜单",
+                                "本地食材",
+                                "获奖"
                             ]
                         }
                     },
                     {
                         "title": "Windows on Westella",
-                        "img": "",
-                        "enTitle": "",
+                        "img": "../assets/img/restaurants/WindowsOnWestella/cover.jpg",
+                        "enTitle": "Windows on Westella",
                         "tripData": {
-                            "route": "文本1",
-                            "desc": "描述1",
-                            "website": "https://www.windowsonwestella.com.au/",
+                            "route": "Windows on Westella",
+                            "desc": "位于塔斯马尼亚Ulverstone的全天候现代咖啡馆，提供塔斯马尼亚本地食品和葡萄酒。特色菜包括腌洋葱和美味华夫饼。可参观相邻的塔州腌洋葱生产设施，并俯瞰Broad Acres葡萄园。",
+                            "region": "西北部",
+                            "town": "Ulverstone",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "地址",
-                                    "desc": "待补充"
+                                    "desc": "100 Westella Drive, Ulverstone TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "联系方式",
-                                    "desc": "待补充"
+                                    "desc": "电话：03 6425 4166；邮箱：hello@windowsonwestella.com.au"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "营业时间",
-                                    "desc": "待补充"
+                                    "desc": "每日 8:30-15:30（公共假日休息）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "咖啡馆",
+                                "本地食材",
+                                "葡萄园",
+                                "全日菜单"
                             ]
                         }
                     },
@@ -25123,6 +25298,40 @@
                                 "黑比诺",
                                 "精品酒庄",
                                 "Jimmy Watson酿酒师"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "La Villa Wines",
+                        "img": "",
+                        "enTitle": "La Villa Wines",
+                        "tripData": {
+                            "route": "La Villa Wines",
+                            "desc": "位于塔斯马尼亚西北部Spreyton的家族酒庄，仿意大利农庄风格，以凉爽气候葡萄酒闻名，品种包括Savagnin、Nebbiolo Rose、黑比诺、霞多丽等。酒庄由果园转型而来，葡萄园9公顷。酒窖门每年10月至5月开放。",
+                            "region": "西北部",
+                            "town": "Devonport",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "347 Mersey Main Road, Spreyton, Devonport TAS 7310"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "联系方式",
+                                    "desc": "电话：0418 642 722；邮箱：lavillawines@iinet.net.au"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "营业时间",
+                                    "desc": "酒窖门10月-5月开放（具体时间请致电）；6月-9月关闭"
+                                }
+                            ],
+                            "tags": [
+                                "酒庄",
+                                "意大利品种",
+                                "凉爽气候",
+                                "西北部"
                             ]
                         }
                     }

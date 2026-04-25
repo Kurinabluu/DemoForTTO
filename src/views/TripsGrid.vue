@@ -443,10 +443,23 @@ function getRestaurantGridImageUrl(item) {
     const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
     if (hasCoverField) {
         const coverPath = String(item?.cover || '').trim()
-        if (!coverPath) return ''
-        return resolveDataImage(coverPath, '')
+        if (coverPath) {
+            const resolvedCover = resolveDataImage(coverPath, '')
+            if (resolvedCover) return resolvedCover
+        }
     }
-    return getImageUrl(item?.img)
+    if (Array.isArray(item?.img)) {
+        for (const imagePath of item.img) {
+            const normalizedPath = String(imagePath || '').trim()
+            if (!normalizedPath) continue
+            const resolvedImage = resolveDataImage(normalizedPath, '')
+            if (resolvedImage) return resolvedImage
+        }
+        return getImageUrl('')
+    }
+    const resolvedImage = getImageUrl(item?.img)
+    if (resolvedImage) return resolvedImage
+    return getImageUrl('')
 }
 
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
@@ -1299,7 +1312,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         {{ getRegionDisplayName(item) }}
                     </h1>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
