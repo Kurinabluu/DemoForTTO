@@ -440,6 +440,7 @@ function normalizeImageList(images) {
 }
 
 function getRestaurantGridImageUrl(item) {
+    // 检查 cover
     const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
     if (hasCoverField) {
         const coverPath = String(item?.cover || '').trim()
@@ -448,17 +449,88 @@ function getRestaurantGridImageUrl(item) {
             if (resolvedCover) return resolvedCover
         }
     }
-    if (Array.isArray(item?.img)) {
-        for (const imagePath of item.img) {
-            const normalizedPath = String(imagePath || '').trim()
-            if (!normalizedPath) continue
-            const resolvedImage = resolveDataImage(normalizedPath, '')
+    // cover 为空，检查 img
+    if (item?.img) {
+        if (Array.isArray(item.img)) {
+            if (item.img.length >= 2) {
+                // 餐厅使用第二张图片
+                const secondImagePath = String(item.img[1] || '').trim()
+                if (secondImagePath) {
+                    const resolvedImage = resolveDataImage(secondImagePath, '')
+                    if (resolvedImage) return resolvedImage
+                }
+            }
+            // 如果没有第二张或解析失败，使用第一张
+            for (const imagePath of item.img) {
+                const normalizedPath = String(imagePath || '').trim()
+                if (!normalizedPath) continue
+                const resolvedImage = resolveDataImage(normalizedPath, '')
+                if (resolvedImage) return resolvedImage
+            }
+        } else {
+            // img 不是数组，直接使用
+            const resolvedImage = getImageUrl(item.img)
             if (resolvedImage) return resolvedImage
         }
-        return getImageUrl('')
     }
-    const resolvedImage = getImageUrl(item?.img)
-    if (resolvedImage) return resolvedImage
+    return getImageUrl('')
+}
+
+function getScenicGridImageUrl(item) {
+    // 检查 cover
+    const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
+    if (hasCoverField) {
+        const coverPath = String(item?.cover || '').trim()
+        if (coverPath) {
+            const resolvedCover = resolveDataImage(coverPath, '')
+            if (resolvedCover) return resolvedCover
+        }
+    }
+    // cover 为空，检查 img
+    if (item?.img) {
+        if (Array.isArray(item.img)) {
+            // 景点使用第一张图片
+            for (const imagePath of item.img) {
+                const normalizedPath = String(imagePath || '').trim()
+                if (!normalizedPath) continue
+                const resolvedImage = resolveDataImage(normalizedPath, '')
+                if (resolvedImage) return resolvedImage
+            }
+        } else {
+            // img 不是数组，直接使用
+            const resolvedImage = getImageUrl(item.img)
+            if (resolvedImage) return resolvedImage
+        }
+    }
+    return getImageUrl('')
+}
+
+function getHotelGridImageUrl(item) {
+    // 检查 cover
+    const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
+    if (hasCoverField) {
+        const coverPath = String(item?.cover || '').trim()
+        if (coverPath) {
+            const resolvedCover = resolveDataImage(coverPath, '')
+            if (resolvedCover) return resolvedCover
+        }
+    }
+    // cover 为空，检查 img
+    if (item?.img) {
+        if (Array.isArray(item.img)) {
+            // 住宿使用第一张图片
+            for (const imagePath of item.img) {
+                const normalizedPath = String(imagePath || '').trim()
+                if (!normalizedPath) continue
+                const resolvedImage = resolveDataImage(normalizedPath, '')
+                if (resolvedImage) return resolvedImage
+            }
+        } else {
+            // img 不是数组，直接使用
+            const resolvedImage = getImageUrl(item.img)
+            if (resolvedImage) return resolvedImage
+        }
+    }
     return getImageUrl('')
 }
 
@@ -1015,7 +1087,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div ref="gridRef" class="coming-grid">
                     <div v-for="(item, i) in getPaginatedItems(dayTripFiltered)" :key="`day-trip-${dayTripTab}-${i}`"
                         class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1070,7 +1142,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         {{ getRegionDisplayName(item) }}
                     </h1>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1198,7 +1270,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         {{ getRegionDisplayName(item) }}
                     </h1>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1397,7 +1469,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         {{ getRegionDisplayName(item) }}
                     </h1>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
