@@ -4,6 +4,7 @@ import ContactDialog from './ContactDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
+import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -11,10 +12,36 @@ const props = defineProps({
     enTitle: { type: String, default: 'Tasmania Day Trip' },
     banner: { type: String, default: '' },
     tripType: { type: String, default: '一日游' },
-    tripData: { type: Object, default: () => ({}) }
+    tripData: { type: Object, default: () => ({}) },
+    itemId: { type: [Number, String], default: null },
+    itemType: { type: String, default: 'scenic' }
 })
 
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'favorite-change'])
+
+// 收藏相关
+const isFavorite = computed(() => {
+    return checkFavorite(props.itemId, props.itemType, props.title)
+})
+
+const handleToggleFavorite = () => {
+    const item = {
+        id: props.itemId,
+        type: props.itemType,
+        title: props.title,
+        enTitle: props.enTitle,
+        image: resolveDataImage(props.banner),
+        banner: resolveDataImage(props.banner),
+        region: props.tripData?.region || '',
+        town: props.tripData?.town || '',
+        tripData: props.tripData
+    }
+    const result = toggleFavorite(item)
+    if (result === 'limit' || result === 'exists') {
+        window.dispatchEvent(new CustomEvent('favoriteMessage', { detail: { type: result } }))
+    }
+    emit('favorite-change', result)
+}
 
 const dialogVisible = computed({
     get: () => props.visible,
@@ -90,7 +117,9 @@ const dialogImages = computed(() => {
         routeInfo.value?.images,
         routeInfo.value?.banners,
         routeInfo.value?.bannerList,
-        routeInfo.value?.imgs
+        routeInfo.value?.imgs,
+        routeInfo.value?.img,
+        routeInfo.value?.cover ? [routeInfo.value.cover] : []
     ]
 
     const multiImages = imageGroups
@@ -102,7 +131,7 @@ const dialogImages = computed(() => {
         return multiImages
     }
 
-    return props.banner ? [props.banner] : []
+    return props.banner ? [resolveDataImage(props.banner)] : []
 })
 
 watch(dialogVisible, (visible) => {
@@ -116,11 +145,16 @@ watch(dialogVisible, (visible) => {
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="trip-dialog" align-center :z-index="9300"
+    <el-dialog v-model="dialogVisible" :show-close="true" width="980px" class="trip-dialog" align-center :z-index="900"
         :append-to-body="true" :lock-scroll="true">
         <template #header>
             <div class="dlg-header">
-                <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
+                <div class="dlg-title-wrap">
+                    <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
+                </div>
+                <span class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    {{ isFavorite ? '★' : '☆' }}
+                </span>
                 <div class="dlg-header-actions">
                     <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
                 </div>
@@ -135,7 +169,7 @@ watch(dialogVisible, (visible) => {
                         <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
                             :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
-                            :z-index="9888" />
+                            :z-index="850" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -242,8 +276,8 @@ watch(dialogVisible, (visible) => {
 
     <ContactDialog v-model:visible="contactDialogVisible" />
 
-    <el-dialog v-model="infoDialogVisible" :z-index="9999" :append-to-body="true" title="信息参考来源" align-center
-        width="80%" class="source-dia">
+    <el-dialog v-model="infoDialogVisible" :z-index="999" :append-to-body="true" title="信息参考来源" align-center width="80%"
+        class="source-dia">
         <el-table :data="tripData.source" border>
             <el-table-column prop="title" label="条目/文章标题" width="200" />
             <el-table-column prop="desc" label="来源名称" width="200" />
@@ -262,6 +296,12 @@ watch(dialogVisible, (visible) => {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    width: 100%;
+}
+
+.dlg-title-wrap {
+    display: flex;
+    align-items: center;
 }
 
 .dlg-header-actions {
@@ -275,6 +315,21 @@ watch(dialogVisible, (visible) => {
     font-weight: 800;
     letter-spacing: 2px;
     color: #111827;
+}
+
+.favorite-btn {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: #f59e0b;
+    }
+
+    &.active {
+        color: #f59e0b;
+    }
 }
 
 .dlg-section {

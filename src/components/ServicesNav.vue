@@ -260,7 +260,8 @@ function onSearch() {
           <a v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs18" :class="{
             active: activeTag === tag,
             disabled: !data[index].available || data[index].available === false
-          }" @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag, $event)"
+          }"
+            @click="(data[index].available !== false && data[index].available !== undefined) && onClickTag(tag, $event)"
             :data-service="tag" href="javascript:void(0)">
             <span class="tag-content">
               <template v-if="tag.includes('免费参考信息')">
@@ -306,7 +307,7 @@ function onSearch() {
   top: 25px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 100;
   padding: 0 20px;
 
   :deep(.el-card__body) {

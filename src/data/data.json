@@ -27302,737 +27302,818 @@
                     },
                     {
                         "title": "Battery Point Manor",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/BatteryPointManor/pic1.jpg",
+                            "../assets/img/hotels/BatteryPointManor/pic2.jpg"
+                        ],
+                        "enTitle": "Battery Point Manor",
                         "tripData": {
                             "route": "Battery Point Manor",
-                            "desc": "描述",
-                            "website": "http://www.batterypointmanor.com.au",
+                            "desc": "位于霍巴特Battery Point的乔治亚风格庄园，建于1834年，享有德文特河、船只和山脉的壮丽景色。提供宽敞舒适的客房和公寓，距离萨拉曼卡广场和霍巴特水滨仅5分钟步行路程。周边环绕餐厅、咖啡馆和商店。免费WiFi、免费街边停车。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "13-15 Cromwell Street, Battery Point TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "0437 633 464"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "河景",
+                                "免费停车",
+                                "Battery Point"
                             ]
                         }
                     },
                     {
                         "title": "Mayfair Plaza Motel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/MayfairPlazaMotel/pic1.jpg",
+                            "../assets/img/hotels/MayfairPlazaMotel/pic2.jpg"
+                        ],
+                        "enTitle": "Mayfair Plaza Motel",
                         "tripData": {
                             "route": "Mayfair Plaza Motel",
-                            "desc": "描述",
-                            "website": "http://www.mayfairplaza.com.au",
+                            "desc": "位于塔斯马尼亚Sandy Bay的经济型汽车旅馆，提供免费WiFi、免费停车、客用洗衣房。房间分布于两层（有斜坡通道），设有无障碍客房。接待时间有限，晚到需提前联系。",
+                            "region": "霍巴特及南部",
+                            "town": "Sandy Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "236 Sandy Bay Road, Sandy Bay TAS 7005"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6220 9900"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00起；前台周一至周六8:00-18:00，周日9:00-17:00，公共假日10:00-14:00；圣诞节及元旦休息"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "汽车旅馆",
+                                "免费停车",
+                                "无障碍设施",
+                                "Sandy Bay"
                             ]
                         }
                     },
                     {
                         "title": "Peppers Silo Hotel",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Peppers Silo Hotel",
                         "tripData": {
                             "route": "Peppers Silo Hotel",
-                            "desc": "描述",
-                            "website": "https://all.accor.com/hotel/B3X5/index.zh.shtml",
+                            "desc": "位于朗塞斯顿塔马河畔的精品酒店，由历史谷仓改建而成，融合现代奢华与工业风格。提供塔马河景房、峡谷河景房等，房间宽敞。设有Silos餐厅（名厨Massimo Mele主理）、咖啡厅、Woody's酒吧、Silo Day水疗中心和健身房。不接收现金支付。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "89 to 91 Lindsay Street, Invermay TAS 7248"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6700 0600"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房11:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "河景",
+                                "水疗",
+                                "名厨餐厅",
+                                "朗塞斯顿"
                             ]
                         }
                     },
                     {
                         "title": "Alice’s Cottages",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Alice’s Cottages",
                         "tripData": {
                             "route": "Alice’s Cottages",
-                            "desc": "描述",
-                            "website": "https://www.alicescottages.com.au/",
+                            "desc": "位于朗塞斯顿宁静街道的遗产名录小屋群，提供7栋独具特色的自助式情侣小屋（英、爱、苏格兰、威尔士、法、外乡人、铁皮木主题）。每栋小屋配备壁炉、水疗或爪足浴缸、早餐篮、反向循环空调、免费WiFi、停车位。无前台，全程自助入住。步行可达市中心餐厅和咖啡馆。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "129 Balfour Street, Launceston TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "0417 607 585"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "自助入住（14:00起）；退房10:00前；无实体前台"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "自助式小屋",
+                                "情侣住宿",
+                                "壁炉",
+                                "水疗浴缸"
                             ]
                         }
                     },
                     {
                         "title": "The Dunes Cottages",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "The Dunes Cottages",
                         "tripData": {
                             "route": "The Dunes Cottages",
-                            "desc": "描述",
-                            "website": "https://barnbougle.com.au/stay/the-dunes-cottages/",
+                            "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村内的3.5星 cottage，共22栋两卧室小屋，可住2-4人。每栋配有deck、高尔夫球场景观、独立空调、平板电视、FOXTEL、小冰箱、茶咖设施。价格随季节和入住人数变动。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "Barnbougle, Bridport TAS（具体地址请参考度假村官网）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过Barnbougle度假村总机联系"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请参考度假村前台时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "高尔夫度假村",
+                                "经济型",
+                                "两卧室",
+                                "Bridport"
                             ]
                         }
                     },
                     {
                         "title": "Ocean Villas",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Ocean Villas",
                         "tripData": {
                             "route": "Ocean Villas",
-                            "desc": "描述",
-                            "website": "https://barnbougle.com.au/stay/ocean-villas/",
+                            "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村The Dunes球场的海滨豪华别墅，面积为114平方米，可欣赏巴斯海峡和Barnbougle海滩的无间断海景。两卧室、两浴室，配有开放式起居/用餐区、设备齐全的厨房、独立洗衣房和66平方米的露台。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "Barnbougle, Bridport TAS（具体地址请参考度假村官网）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过Barnbougle度假村总机联系"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请参考度假村前台时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海滨别墅",
+                                "奢华",
+                                "海景",
+                                "Bridport"
                             ]
                         }
                     },
                     {
                         "title": "Bunker Villas",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Bunker Villas",
                         "tripData": {
                             "route": "Bunker Villas",
-                            "desc": "描述",
-                            "website": "https://barnbougle.com.au/stay/bunker-villas/",
+                            "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村The Dunes的住宿，共4间行政卧室（每间带皇后床和独立卫浴），设有开放式起居/用餐区、小厨房（含电磁炉）、洗衣设施和球场景观。适合团体或家庭入住。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "Barnbougle, Bridport TAS（具体地址请参考度假村官网）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过Barnbougle度假村总机联系"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请参考度假村前台时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "团体住宿",
+                                "四卧室",
+                                "球场景观",
+                                "Bridport"
                             ]
                         }
                     },
                     {
                         "title": "Lost Farm Lodge",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Lost Farm Lodge",
                         "tripData": {
                             "route": "Lost Farm Lodge",
-                            "desc": "描述",
-                            "website": "https://barnbougle.com.au/stay/lost-farm-lodge/",
+                            "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村Lost Farm球场的住宿，提供单皇后套房和双皇后套房。可选择海景或球场景观，房间配有电视、茶咖设施、大型步入式淋浴和独立空调。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Bridport",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "Barnbougle, Bridport TAS（具体地址请参考度假村官网）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过Barnbougle度假村总机联系"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请参考度假村前台时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "高尔夫景观",
+                                "海景",
+                                "套房",
+                                "Bridport"
                             ]
                         }
                     },
                     {
                         "title": "East Beach Tourist Park",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "East Beach Tourist Park",
                         "tripData": {
                             "route": "East Beach Tourist Park",
-                            "desc": "描述",
-                            "website": "https://www.eastbeachtouristpark.com/accommodation",
+                            "desc": "位于塔斯马尼亚Low Head的海滨假日公园，占地22英亩，提供小木屋（带独立卫浴、厨房设施）、供电/无供电营地、自给自足房车营地。设有营地厨房、浴室、洗衣房、免费WiFi、宠物友好（需牵引）。距离朗塞斯顿40分钟车程。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Low Head",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "40 Gunn Parade, Low Head TAS 7253"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6382 1000"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "前台10:00-17:00（需要提前预约晚到入住）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "假日公园",
+                                "海滨",
+                                "木屋",
+                                "供电/无供电营地",
+                                "宠物友好"
                             ]
                         }
                     },
                     {
                         "title": "Fork it Farm - Farmstay",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/ForkitFarmFarmstay/pic1.jpeg"
+                        ],
+                        "enTitle": "Fork it Farm - Farmstay",
                         "tripData": {
-                            "route": "East Beach Tourist Park",
-                            "desc": "描述",
-                            "website": "https://www.forkitfarm.com.au/farmstay-tasmania.html",
+                            "route": "Fork it Farm - Farmstay",
+                            "desc": "位于塔斯马尼亚Lebrina的再生农场生态农舍，半独立一卧室自助式小屋，使用太阳能和雨水收集系统。包含农场自制早餐（培根、鸡蛋、酸面包等），可参观农场、采摘香草、收集鸡蛋、品尝室内烟熏肉拼盘。坐落在Pipers Brook葡萄酒产区中心，可观赏农场、林地和葡萄园景观。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Lebrina",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "311 Adams Rd, Lebrina TAS 7254, Australia"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过官网联系"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "自助入住；具体时间以预订确认为准"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "农场住宿",
+                                "自助式小屋",
+                                "生态环保",
+                                "早餐包含",
+                                "葡萄酒产区"
                             ]
                         }
                     },
                     {
                         "title": "The Dragonfly Inn",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "The Dragonfly Inn",
                         "tripData": {
                             "route": "The Dragonfly Inn",
-                            "desc": "描述",
-                            "website": "https://www.thedragonflyinn.com.au/",
+                            "desc": "位于朗塞斯顿西郊的维多利亚式遗产 mansion，提供10间风格各异的客房，每间均带独立卫浴、休息区、反向循环空调。自助入住（15:00起），含早餐篮（可在Grand Dining Room享用）。酒店屡获殊荣，支持可持续旅行和LGBTQ+友好。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "West Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "14 St Andrews Street, West Launceston TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "0417 607 585"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住15:00起，退房11:00前；自助入住，无前台"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "遗产建筑",
+                                "精品住宿",
+                                "自助入住",
+                                "早餐包含"
                             ]
                         }
                     },
                     {
                         "title": "Art Hotel on York",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/ArtHotelOnYork/pic1.jpg",
+                            "../assets/img/hotels/ArtHotelOnYork/pic2.jpg",
+                            "../assets/img/hotels/ArtHotelOnYork/pic3.jpg"
+                        ],
+                        "enTitle": "Art Hotel on York",
                         "tripData": {
                             "route": "Art Hotel on York",
-                            "desc": "描述",
-                            "website": "https://www.arthotelonyork.com/",
+                            "desc": "位于朗塞斯顿CBD的特色艺术酒店，由1870年代老面包店改建而成，客房装饰有国际艺术家Cristina Palacios的版画。提供双人房、行政大床房、豪华大床房、庭院大床房、阳台大床房、高级大床套房、双床房及国王套房。免费WiFi、免费停车（车位有限）、空调、部分房间有小阳台。餐厅目前暂停营业。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "270-280 York St, Launceston TAS 7250"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6331 7900"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00起；可提前联系安排延迟入住；退房10:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "艺术酒店",
+                                "历史建筑",
+                                "免费停车"
                             ]
                         }
                     },
                     {
                         "title": "Pod Inn",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/PodInn/pic1.jpg"
+                        ],
+                        "enTitle": "Pod Inn",
                         "tripData": {
                             "route": "Pod Inn",
-                            "desc": "描述",
-                            "website": "https://www.podinn.com.au/",
+                            "desc": "位于朗塞斯顿市中心的胶囊旅馆，提供单人/双人胶囊床位（侧开门胶囊，内部尺寸宽100-160cm，长200cm）。胶囊配备刷卡推门、可调氛围灯、电脑桌、保险箱、阅读灯、空调等。共用浴室和厕所，提供免费WiFi、小厨房、休息区。无停车场，附近有公共停车选项。接待时间有限，非工作时间自助入住。附带日式餐厅（Gatsu Gatsu），住客用餐9.5折。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "17-19 Wellington St, Launceston TAS 7250"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 (03) 6311 1519"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "前台周一至周五9:30-17:30，周末及公共假日12:30-17:00；非工作时间自助入住"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "胶囊旅馆",
+                                "经济型",
+                                "自助入住"
                             ]
                         }
                     },
                     {
                         "title": "Moss Hotel",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Moss Hotel",
                         "tripData": {
                             "route": "Moss Hotel",
-                            "desc": "描述",
-                            "website": "https://www.mosshotel.com.au/",
+                            "desc": "位于霍巴特Salamanca Place的精品酒店，由19世纪中期仓库改建而成，提供独特设计的客房（25号及39号两栋）。房间内融合自然元素和历史特色，部分带阳台。提供限量安全停车位（$20/天）。酒店注重健康卫生措施，无现金支付。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "25 & 39 Salamanca Place, Hobart TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "1300 772 270 (澳洲境内) / +61 (0)3 6281 3600 (境外)"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精品酒店",
+                                "历史建筑",
+                                "Salamanca Place",
+                                "霍巴特"
                             ]
                         }
                     },
                     {
                         "title": "Hotel Grand Chancellor Launceston",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/HotelGrandChancellorLaunceston/pic1.jpg",
+                            "../assets/img/hotels/HotelGrandChancellorLaunceston/pic2.jpg"
+                        ],
+                        "enTitle": "Hotel Grand Chancellor Launceston",
                         "tripData": {
                             "route": "Hotel Grand Chancellor Launceston",
-                            "desc": "描述",
-                            "website": "https://www.grandchancellorhotels.com/hotel-grand-chancellor-launceston/",
+                            "desc": "位于朗塞斯顿市中心的4.5星酒店，提供165间客房和套房，部分可欣赏城市景观。设有The Avenue Restaurant & Lobby Bar、Grand High Tea、24小时客房送餐、健身中心、收费停车场。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "29 Cameron Street, Launceston TAS 7250"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 (3) 6334 3434"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "城市景观"
                             ]
                         }
                     },
                     {
                         "title": "Ibis Styles Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/IbisStylesHobart/pic1.jpg"
+                        ],
+                        "enTitle": "Ibis Styles Hobart",
                         "tripData": {
                             "route": "Ibis Styles Hobart",
-                            "desc": "描述",
-                            "website": "https://ibisstyles.hobartahotel.com/en/",
+                            "desc": "位于霍巴特Macquarie Street的4星级酒店，提供室内游泳池、健身中心、餐厅（Mr Good Guy Restaurant，印尼菜）和酒吧。客房配备免费Wi-Fi、平板电视、空调、独立卫浴（部分带步入式淋浴）。酒店设有无烟环境、无障碍设施、24小时前台、行李寄存、洗衣服务、会议设施。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "173 Macquarie Street, Hobart TAS"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "请通过官网查询"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00-23:59，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "游泳池",
+                                "健身中心"
                             ]
                         }
                     },
                     {
                         "title": "Clydesdale Manor",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Clydesdale Manor",
                         "tripData": {
                             "route": "Clydesdale Manor",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Sandy Bay的历史庄园风格住宿，提供舒适客房和便捷的设施，靠近市中心和萨拉曼卡区。可提供免费WiFi、行李寄存、洗衣服务。",
+                            "region": "霍巴特及南部",
+                            "town": "Sandy Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "292 Sandy Bay Rd, Sandy Bay TAS 7005, Australia"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61487234599"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房10:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "庄园"
                             ]
                         }
                     },
                     {
                         "title": "Crowne Plaza Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/CrownePlazaHobart/pic1.jpg",
+                            "../assets/img/hotels/CrownePlazaHobart/pic1.jpg"
+                        ],
+                        "enTitle": "Crowne Plaza Hobart",
                         "tripData": {
                             "route": "Crowne Plaza Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特CBD的4.5星酒店，距离萨拉曼卡广场、宪法码头和水滨仅几步之遥。客房位于5-9层，可欣赏海港、山景或城景，配备55寸智能电视、触摸控制、Antipodes洗浴用品。设有Club Lounge（顶层12层，提供早餐和晚间小食）、健身中心、餐厅。提供会议和活动空间（含屋顶AURA场地）。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "110 Liverpool Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "61-3-62134200"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住15:00，退房11:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "俱乐部酒廊",
+                                "城景"
                             ]
                         }
                     },
                     {
                         "title": "Grande Vue Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/GrandeVueHotel/pic1.jpg",
+                            "../assets/img/hotels/GrandeVueHotel/pic2.jpg"
+                        ],
+                        "enTitle": "Grande Vue Hotel",
                         "tripData": {
                             "route": "Grande Vue Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Battery Point的Queen Anne风格 mansion，建于1906年，2020年翻新为私人酒店。提供9间带独立卫浴和小厨房的独特客房，设有公共客用厨房（提供塔斯马尼亚早餐备品）、休息室、餐厅、景观花园。酒店无前台，无电梯，提供免费街边停车（部分房间有停车许可证）。欢迎12岁以上儿童。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "8 Mona Street, Battery Point TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6223 3388"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住15:00起，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "精品酒店",
+                                "自助厨房"
                             ]
                         }
                     },
                     {
                         "title": "Hadley’s Orient Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/HadleysOrientHotel/pic1.webp",
+                            "../assets/img/hotels/HadleysOrientHotel/pic2.webp"
+                        ],
+                        "enTitle": "Hadley’s Orient Hotel",
                         "tripData": {
                             "route": "Hadley’s Orient Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Murray Street的遗产精品酒店，始建于1834年，是塔斯马尼亚最古老的持续运营酒店。提供维多利亚套房、行政套房、高级房、家庭房等多种房型，客房近期翻新，设有现代卫浴和步入式淋浴。酒店内设Orient Bar（每日16:00起营业，提供鸡尾酒、塔斯马尼亚葡萄酒及小吃），并定期举办艺术展览。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "34 Murray Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6237 2999 (预订24小时)"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史酒店",
+                                "遗产建筑",
+                                "精品酒店"
                             ]
                         }
                     },
                     {
                         "title": "Islington Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/IslingtonHotel/pic1.webp",
+                            "../assets/img/hotels/IslingtonHotel/pic2.webp",
+                            "../assets/img/hotels/IslingtonHotel/pic3.webp",
+                            "../assets/img/hotels/IslingtonHotel/pic4.webp"
+                        ],
+                        "enTitle": "Islington Hotel",
                         "tripData": {
                             "route": "Islington Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特South Hobart的五星级精品酒店，始建于1847年，属于Small Luxury Hotels of the World成员，荣获米其林一钥。拥有11间各具特色的客房及套房，配备定制大床、大理石浴室、花园或威灵顿山景观。提供免费早餐、全天咖啡茶点、免费WiFi和停车。餐厅供应塔斯马尼亚本地可持续食材。仅限成人入住。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "321 Davey Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6220 2123"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "奢华酒店",
+                                "历史建筑",
+                                "小型豪华酒店",
+                                "米其林一钥"
                             ]
                         }
                     },
                     {
                         "title": "Salamanca Terraces",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/SalamancaTerraces/pic1.jpg",
+                            "../assets/img/hotels/SalamancaTerraces/pic2.jpg",
+                            "../assets/img/hotels/SalamancaTerraces/pic3.jpg",
+                            "../assets/img/hotels/SalamancaTerraces/pic4.webp"
+                        ],
+                        "enTitle": "Salamanca Terraces",
                         "tripData": {
                             "route": "Salamanca Terraces",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Salamanca Place的自助式公寓，提供一室、两室联排别墅和顶层公寓。所有公寓均配备设施齐全的厨房（工作室公寓配小厨房）、洗衣设施、空调、免费WiFi和免费停车。24小时前台位于对街的Lenna of Hobart。位置优越，毗邻水滨和Battery Point历史区，步行可达萨拉曼卡市场。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "93 Salamanca Pl, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6232 3900"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "24小时前台（Lenna of Hobart）；入住/退房时间请直接联系确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "免费停车",
+                                "免费WiFi",
+                                "Salamanca Place"
                             ]
                         }
                     },
                     {
                         "title": "MACq 01 Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/MACq01Hotel/pic1.webp"
+                        ],
+                        "enTitle": "MACq 01 Hotel",
                         "tripData": {
                             "route": "MACq 01 Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特水滨猎人街的奢华故事主题酒店，以讲述塔斯马尼亚故事为特色。提供猎人客房、水滨客房等多种房型，设有Evolve Bar、The Story Bar和餐厅。酒店提供免费故事导览，讲述原住民、囚犯、捕鲸者等历史。客房可欣赏水滨或城市景观，配备高端设施。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "18 Hunter Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6210 7600"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "奢华酒店",
+                                "故事主题",
+                                "水景",
+                                "霍巴特",
+                                "文化体验"
                             ]
                         }
                     },

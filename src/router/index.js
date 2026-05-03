@@ -91,15 +91,11 @@ const routes = [
               dayTripTab: route.query.dayTripTab || '1日行程'
             })
           },
-          // {
-          //   path: 'trips/multiday',
-          //   name: 'MultiDayTour',
-          //   component: () => import('@/views/TripsGrid.vue'),
-          //   props: {
-          //     activeTag: '多日游'
-          //   }
-          // },
-          // Service 路由组 - 使用 ServiceShowcase.vue
+          {
+            path: 'favorites',
+            name: 'Favorites',
+            component: () => import('@/views/Favorites.vue')
+          },
           {
             path: 'service/ticket',
             name: 'TicketBooking',
@@ -205,7 +201,6 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
-
 
 
 export default router;

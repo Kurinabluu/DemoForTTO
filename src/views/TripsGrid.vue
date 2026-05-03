@@ -5,6 +5,7 @@ import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import dataJson from '@/data/data.json'
 import { resolveDataImage } from '@/utils/dataImageResolver'
+import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 
 const route = useRoute()
 
@@ -24,6 +25,7 @@ const isSearching = ref(false) // 搜索加载状态
 const isLocalSearch = computed(() => searchQuery.value.trim().length > 0)
 const selectedRegion = ref('')
 const selectedTown = ref('')
+const selectedDistance = ref('')
 
 const FREE_INFO_FILTER_SUBTABS = ['景点', '餐厅', '住宿']
 const UNCATEGORIZED_REGION = '暂未分类分区'
@@ -40,7 +42,7 @@ const regionTownGroups = [
     },
     {
         region: '东海岸',
-        towns: ['Swansea', 'Bicheno', 'Coles Bay', 'St Helens', 'Orford', 'Scamander', 'Freycinet', 'St Marys', 'Triabunna']
+        towns: ['Swansea', 'Bicheno', 'Coles Bay', 'St Helens', 'Orford', 'Scamander', 'Freycinet', 'St Marys', 'Triabunna', 'Flinders Island']
     },
     {
         region: '西北部',
@@ -308,7 +310,7 @@ watch(
     }
 )
 
-watch(() => [selectedRegion.value, selectedTown.value], () => {
+watch(() => [selectedRegion.value, selectedTown.value, selectedDistance.value], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
     hasMore.value = true
@@ -670,15 +672,79 @@ function sortByRegion(items) {
     })
 }
 
+function getItemDistance(item) {
+    const areaInfo = normalizeAreaInfo(item)
+    if (areaInfo.town === UNCATEGORIZED_TOWN) {
+        return null
+    }
+    return getDistanceBetweenTowns(selectedDistance.value, areaInfo.town)
+}
+
+function sortByDistance(items) {
+    const list = Array.isArray(items) ? [...items] : []
+
+    const sortableItems = []
+    const unsortableItems = []
+
+    list.forEach(item => {
+        const distance = getItemDistance(item)
+        if (distance !== null) {
+            sortableItems.push({ item, distance })
+        } else {
+            unsortableItems.push(item)
+        }
+    })
+
+    sortableItems.sort((a, b) => {
+        if (a.distance !== b.distance) {
+            return a.distance - b.distance
+        }
+        return String(a.item?.title || '').localeCompare(String(b.item?.title || ''), 'zh-Hans-CN')
+    })
+
+    return [...sortableItems.map(s => s.item), ...unsortableItems]
+}
+
 function shouldShowRegionTitle(list, index) {
     if (!Array.isArray(list) || !list.length) return false
     if (index === 0) return true
     return getRegionDisplayName(list[index]) !== getRegionDisplayName(list[index - 1])
 }
 
-const scenicDisplayItems = computed(() => sortByRegion(scenicFiltered.value))
-const restaurantDisplayItems = computed(() => sortByRegion(restaurantFiltered.value))
-const hotelDisplayItems = computed(() => sortByRegion(hotelFiltered.value))
+function getTownDisplayName(item) {
+    const town = normalizeAreaInfo(item).town
+    return town === UNCATEGORIZED_TOWN ? '暂未分类城镇' : town
+}
+
+function shouldShowTownTitle(list, index) {
+    if (!Array.isArray(list) || !list.length) return false
+    if (index === 0) return true
+    const currentTown = normalizeAreaInfo(list[index]).town
+    const prevTown = normalizeAreaInfo(list[index - 1]).town
+    return currentTown !== prevTown
+}
+
+const scenicDisplayItems = computed(() => {
+    const baseItems = sortByRegion(scenicFiltered.value)
+    if (selectedDistance.value) {
+        return sortByDistance(baseItems)
+    }
+    return baseItems
+})
+const restaurantDisplayItems = computed(() => {
+    const baseItems = sortByRegion(restaurantFiltered.value)
+    if (selectedDistance.value) {
+        return sortByDistance(baseItems)
+    }
+    return baseItems
+})
+const hotelDisplayItems = computed(() => {
+    const baseItems = sortByRegion(hotelFiltered.value)
+    if (selectedDistance.value) {
+        return sortByDistance(baseItems)
+    }
+    return baseItems
+})
 
 // 派生数据 - 从data.json获取适合当前标签的数据
 const gridItems = computed(() => {
@@ -1072,6 +1138,12 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 size="large" :disabled="!selectedRegion">
                 <el-option v-for="town in townOptions" :key="town" :label="town" :value="town" />
             </el-select>
+            <el-select v-model="selectedDistance" clearable filterable placeholder="按距离排序" class="distance-select"
+                size="large">
+                <el-option-group v-for="group in regionTownGroups" :key="group.region" :label="`— ${group.region} —`">
+                    <el-option v-for="town in group.towns" :key="town" :label="town" :value="town" />
+                </el-option-group>
+            </el-select>
         </template>
     </div>
 
@@ -1141,6 +1213,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(scenicDisplayItems), i)" class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
@@ -1175,6 +1250,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(restaurantDisplayItems), i)"
+                        class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
@@ -1269,6 +1348,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(hotelDisplayItems), i)" class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">
@@ -1352,6 +1434,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(scenicDisplayItems), i)" class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -1383,6 +1468,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(restaurantDisplayItems), i)"
+                        class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -1468,6 +1557,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         class="region-title center">
                         {{ getRegionDisplayName(item) }}
                     </h1>
+                    <h2 v-if="shouldShowTownTitle(getPaginatedItems(hotelDisplayItems), i)" class="town-title center">
+                        — {{ getTownDisplayName(item) }} —
+                    </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
                         <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
@@ -1568,7 +1660,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 .search-container--with-filter {
     max-width: 1200px;
     display: grid;
-    grid-template-columns: minmax(280px, 1fr) 240px 240px;
+    grid-template-columns: minmax(280px, 1fr) 240px 240px 240px;
     gap: 12px;
     align-items: center;
 }
@@ -1597,6 +1689,15 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 .region-title:first-child {
     margin-top: 0;
+}
+
+.town-title {
+    grid-column: 1 / -1;
+    margin: 0 0 8px 0;
+    text-align: center;
+    font-size: 20px;
+    color: #57595f;
+    font-weight: normal;
 }
 
 .coming-card {

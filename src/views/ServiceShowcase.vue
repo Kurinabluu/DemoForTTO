@@ -505,7 +505,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                     :initial-index="index" show-close show-toolbar show-index :preview-teleported="true"
-                                    :z-index="9888">
+                                    :z-index="850">
                                     <template #toolbar="{ actions, prev, next }">
                                         <ElIcon @click="prev">
                                             <Back />
@@ -616,7 +616,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-                }}</h3>
+            }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -695,7 +695,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                     :initial-index="index" fit="cover" show-close show-toolbar show-index
-                                    :preview-teleported="true" :z-index="9888">
+                                    :preview-teleported="true" :z-index="850">
                                     <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
                                         <ElIcon @click="prev">
                                             <Back />

@@ -467,7 +467,7 @@ onMounted(() => {
 }
 
 .el-dropdown-menu {
-    z-index: 3000 !important;
+    z-index: 300 !important;
 }
 </style>
 <style lang="scss" scoped>
@@ -496,7 +496,7 @@ onMounted(() => {
         height: 70px;
         line-height: 70px;
         // background-color: #39c5bb;
-        z-index: 2000;
+        z-index: 200;
         overflow: visible;
 
         .logo,

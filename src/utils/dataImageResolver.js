@@ -27,12 +27,7 @@ const resolveAssetModule = (inputPath) => {
 
   const directMatch = assetModules[normalized]
   if (directMatch) return directMatch
-
-  const fileName = normalized.split('/').pop()?.toLowerCase()
-  if (!fileName) return ''
-
-  const fuzzyKey = Object.keys(assetModules).find((key) => key.toLowerCase().endsWith(`/${fileName}`))
-  return fuzzyKey ? assetModules[fuzzyKey] : ''
+  return ''
 }
 
 const resolveDataImage = (inputPath, fallback = defaultImg) => {

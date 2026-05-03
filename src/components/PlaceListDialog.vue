@@ -103,7 +103,7 @@ const visibleItems = computed(() => props.items.slice(0, visibleLimit.value))
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9000;
+    z-index: 600;
     padding: 20px;
 }
 

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue'
 import TripDialog from '@/components/TripDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
@@ -9,11 +10,21 @@ import data from '@/data/data.json'
 import { useNavStore } from '@/stores/nav'
 import { Search } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
+import { MAX_FAVORITES } from '@/utils/favoritesStore'
 
 const navStore = useNavStore()
 const route = useRoute()
 const router = useRouter()
 
+// 收藏消息处理
+const handleFavoriteMessage = (event) => {
+    const { type } = event.detail
+    if (type === 'limit') {
+        ElMessage.warning(`收藏数量已达上限（${MAX_FAVORITES}个），请先取消部分收藏后再添加`)
+    } else if (type === 'exists') {
+        ElMessage.info('该项目已在收藏列表中')
+    }
+}
 
 // 当前选中的子导航
 const currentSubNavTab = ref('')
@@ -155,6 +166,8 @@ const dialogTitle = ref('大堡礁单日游')
 const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
 const dialogTripData = ref({})
 const dialogTripType = ref('一日游')
+const dialogItemId = ref(null)
+const dialogItemType = ref('scenic')
 
 const isPlaceListVisible = ref(false)
 const listPlaceName = ref('')
@@ -299,6 +312,8 @@ function openTourDialog(item) {
     dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
     dialogTripData.value = item?.tripData || {}
     dialogTripType.value = item?.tripType || '一日游'
+    dialogItemId.value = item?.tripData?.id ?? item?.id ?? null
+    dialogItemType.value = item?.tripType || 'scenic'
 
     if (dialogTripType.value === '一日游' || dialogTripType.value === '多日游') {
         isTripDialogVisible.value = true
@@ -447,6 +462,7 @@ onMounted(() => {
     selectSlides()
     if (typeof window !== 'undefined') {
         window.addEventListener('resize', handleResizeForSlides)
+        window.addEventListener('favoriteMessage', handleFavoriteMessage)
     }
     initializeSubNav()
 
@@ -497,13 +513,6 @@ onMounted(() => {
         setTimeout(findAndHighlightElement, 500)
     }
 })
-
-onUnmounted(() => {
-    if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', handleResizeForSlides)
-    }
-})
-
 </script>
 
 <template>
@@ -551,9 +560,11 @@ onUnmounted(() => {
 
         <!-- 弹窗组件 -->
         <FreeInfoDialog v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" />
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
+            :item-type="dialogItemType" />
         <TripDialog v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" />
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
+            :item-type="dialogItemType" />
         <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
             :items="listItems" @select="onSelectPlaceItem" />
     </el-main>

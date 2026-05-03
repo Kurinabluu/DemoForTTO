@@ -50,7 +50,10 @@ const togglePosition = () => {
   isLeftPosition.value = !isLeftPosition.value
 }
 
-//温馨提示弹窗
+const goToFavorites = () => {
+  router.push('/DemoForTTO/favorites')
+}
+
 const showTipsModal = ref(false)
 const dontShowAgain = ref(false)
 const acceptTips = () => {
@@ -138,7 +141,7 @@ onUnmounted(() => {
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-    :show-close="false" :z-index="9999">
+    :show-close="false" :z-index="999">
     <template #header>
       <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>
@@ -167,6 +170,9 @@ onUnmounted(() => {
         <ArrowDown />
       </el-icon>
     </div>
+    <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="goToFavorites">
+      <span style="font-size: 20px;">⭐</span>
+    </div>
     <div class="elevator-btn pointer" :class="{ show: showElevator }" @click="togglePosition">
       <el-icon>
         <Switch />
@@ -192,7 +198,7 @@ onUnmounted(() => {
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 9200;
+  z-index: 500;
   flex-direction: column;
   gap: 10px;
   opacity: 0;
