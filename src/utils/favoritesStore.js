@@ -1,7 +1,7 @@
 // 收藏状态管理
 import { ref, watch } from 'vue';
 const STORAGE_KEY = 'tto_favorites';
-const MAX_FAVORITES = 8; // TODO: 测试用，修改此值可调整收藏上限
+const MAX_FAVORITES = 500; // TODO: 测试用，修改此值可调整收藏上限
 // 从localStorage加载收藏数据
 const loadFavorites = () => {
     try {
