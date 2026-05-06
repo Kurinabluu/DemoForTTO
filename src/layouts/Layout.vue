@@ -173,7 +173,7 @@ onMounted(() => {
 
 <template>
     <el-container>
-        <el-header class="fs15 bgfff">
+        <el-header class="fs16 bgfff">
             <span class="logo fowe7 no-select pointer">
                 <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
                 <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">
@@ -469,6 +469,34 @@ onMounted(() => {
 .el-dropdown-menu {
     z-index: 300 !important;
 }
+
+// 修复语言dropdown的黑框问题
+.el-header .ul-css li.dropdown .el-dropdown-link {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+// 修复focus时的黑框
+.el-header .ul-css li.dropdown .el-dropdown-link:focus,
+.el-header .ul-css li.dropdown .el-dropdown-link:active,
+.el-header .ul-css li.dropdown .el-dropdown-link:focus-visible {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+// 修复语言dropdown的高度对齐问题 - 保持与其他li一致的line-height布局
+.el-header .ul-css li.dropdown .el-dropdown {
+    display: inline-block;
+    height: 100%;
+}
+
+.el-header .ul-css li.dropdown .el-dropdown-link {
+    display: inline-block;
+    line-height: 70px;
+    vertical-align: middle;
+}
 </style>
 <style lang="scss" scoped>
 .clicked {
@@ -508,7 +536,7 @@ onMounted(() => {
             // font-size: 24px;
 
             .logo-img {
-                width: 200px;
+                width: 198px;
                 vertical-align: middle;
             }
         }
@@ -535,7 +563,7 @@ onMounted(() => {
                 display: inline-block;
                 height: 40px;
                 line-height: 70px;
-                font-size: 14px;
+                font-size: 12px;
             }
         }
 
@@ -638,7 +666,7 @@ onMounted(() => {
                         font-style: italic;
 
                         .logo-img {
-                            width: 215px;
+                            width: 213px;
                             margin-top: -15px;
                             vertical-align: middle;
                         }
@@ -660,7 +688,7 @@ onMounted(() => {
 
                         .el-icon {
                             margin-right: 8px;
-                            font-size: 18px;
+                            font-size: 16px;
                             color: #33b1a3;
                         }
 
@@ -683,7 +711,7 @@ onMounted(() => {
 
                     h3 {
                         margin: 0 0 8px 0;
-                        font-size: 18px;
+                        font-size: 16px;
                         font-weight: bold;
                     }
 
@@ -741,8 +769,8 @@ onMounted(() => {
                         align-items: center;
 
                         .route-img {
-                            width: 88px;
-                            height: 88px;
+                            width: 86px;
+                            height: 86px;
                             object-fit: cover;
                             border-radius: 8px;
                             cursor: pointer;

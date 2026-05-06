@@ -534,7 +534,7 @@ watch(() => props.serviceName, (newServiceName) => {
                         <div class="car-name">{{ advantage?.title || '' }}</div>
                         <div class="car-name-row">
                             <p class="car-price fs20">{{ advantage?.titlePrice || '' }}</p>
-                            <button class="consult-btn consult-btn-large fs16 pointer"
+                            <button class="consult-btn consult-btn-large fs14 pointer"
                                 @click="openConsultationDialog">立即咨询</button>
                         </div>
                     </div>
@@ -607,7 +607,7 @@ watch(() => props.serviceName, (newServiceName) => {
                 <el-step title="行程结束，完成尾款" />
                 <el-step title="服务反馈，持续优化" /> -->
             </el-steps>
-            <div class="order-now fowe7 fs16 pointer" @click="openConsultationDialog">立即咨询 >></div>
+            <div class="order-now fowe7 fs14 pointer" @click="openConsultationDialog">立即咨询 >></div>
         </div>
 
         <!--  横向自动播放展示列表 -->
@@ -616,7 +616,7 @@ watch(() => props.serviceName, (newServiceName) => {
             <!-- <h3 v-if="currentConfig?.showcaseTitle" class="showcase-title center">{{ currentConfig.showcaseTitle
             }}</h3> -->
             <h3 v-if="currentConfig?.showcaseTitle" class="section-title">{{ currentConfig.showcaseTitle
-            }}</h3>
+                }}</h3>
 
             <!-- 左侧滚动按钮 -->
             <button class="scroll-btn scroll-btn-left" @click="scrollLeftClick" :disabled="!canScrollLeft">
@@ -640,7 +640,7 @@ watch(() => props.serviceName, (newServiceName) => {
                             <div class="showcase-content">
                                 <h4 class="showcase-item-title">{{ item.title }}</h4>
                                 <p class="showcase-description">{{ item.description }}</p>
-                                <button class="consult-btn fs16 pointer" @click="openConsultationDialog">立即咨询</button>
+                                <button class="consult-btn fs14 pointer" @click="openConsultationDialog">立即咨询</button>
                             </div>
                         </div>
                     </div>
@@ -793,7 +793,7 @@ watch(() => props.serviceName, (newServiceName) => {
     /* 全局去除字距 */
 
     .service-title {
-        font-size: 30px;
+        font-size: 28px;
         color: #111827;
         margin: 0 0 16px 0;
     }
@@ -803,21 +803,21 @@ watch(() => props.serviceName, (newServiceName) => {
         padding: 40px 20px 30px;
 
         .top-intro-phone {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #111;
             margin: 0 0 8px 0;
         }
 
         .top-intro-title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #111;
             margin: 0 0 10px 0;
         }
 
         .top-intro-desc {
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
             margin: 0;
         }
@@ -852,13 +852,13 @@ watch(() => props.serviceName, (newServiceName) => {
                     position: absolute;
                     bottom: 0;
                     margin-top: 10px;
-                    font-size: 20px;
+                    font-size: 18px;
                 }
             }
         }
 
         .charter-main-title {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #111;
             margin: 0 0 15px 0;
@@ -882,7 +882,7 @@ watch(() => props.serviceName, (newServiceName) => {
             padding-bottom: 60px;
 
             .car-name {
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: 700;
                 color: #111;
             }
@@ -906,7 +906,7 @@ watch(() => props.serviceName, (newServiceName) => {
             }
 
             .car-image {
-                font-size: 16px;
+                font-size: 14px;
                 color: #999;
                 margin: 0 0 20px 0;
             }
@@ -932,11 +932,11 @@ watch(() => props.serviceName, (newServiceName) => {
 
         // 修改el-steps的title文字大小
         :deep(.el-step__title) {
-            font-size: 20px !important;
+            font-size: 18px !important;
         }
 
         :deep(.el-step__desciption) {
-            font-size: 15px !important;
+            font-size: 13px !important;
         }
     }
 
@@ -953,10 +953,10 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .image-placeholder {
         width: 100%;
-        height: 400px;
-        line-height: 400px;
+        height: 398px;
+        line-height: 398px;
         background-color: #39c5bb;
-        font-size: 32px;
+        font-size: 30px;
         border-radius: 8px;
     }
 
@@ -973,7 +973,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .advantage-img {
-        width: 300px;
+        width: 298px;
         height: auto;
     }
 
@@ -983,7 +983,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .subtitle {
         // font-size: 28px;
-        font-size: 42px;
+        font-size: 40px;
         font-weight: 700;
         color: #333;
         margin-bottom: 30px;
@@ -991,7 +991,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .description {
-        font-size: 20px;
+        font-size: 18px;
         line-height: 1.8;
         color: #363030;
         margin-bottom: 24px;
@@ -1010,15 +1010,15 @@ watch(() => props.serviceName, (newServiceName) => {
         float: none;
         align-items: center;
         margin-bottom: 12px;
-        font-size: 16px;
+        font-size: 14px;
         color: #333;
     }
 
     .feature-dot {
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
-        font-size: 10px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 8px;
         background-color: #33b1a3;
         border-radius: 50%;
         margin-right: 5px;
@@ -1060,7 +1060,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .tips-icon {
-        font-size: 32px;
+        font-size: 30px;
         flex-shrink: 0;
     }
 
@@ -1070,7 +1070,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .tips-title {
         color: #856404;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         margin: 0 0 8px 0;
         text-transform: uppercase;
@@ -1079,7 +1079,7 @@ watch(() => props.serviceName, (newServiceName) => {
 
     .tips-text {
         color: #721c24;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 1.5;
         margin: 0;
         font-weight: 500;
@@ -1099,7 +1099,7 @@ watch(() => props.serviceName, (newServiceName) => {
     .section-title {
         // font-size: 26px;
         //font-size: 42px;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 700;
         color: #111;
         // margin: 0 0 20px 0;
@@ -1129,7 +1129,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .package-image {
-        height: 200px;
+        height: 198px;
     }
 
     .package-content {
@@ -1137,14 +1137,14 @@ watch(() => props.serviceName, (newServiceName) => {
 
         .package-price {
             .package-num {
-                font-size: 24px;
+                font-size: 22px;
                 margin-right: 5px;
             }
         }
     }
 
     .package-title {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 700;
         color: #111;
         margin-bottom: 8px;
@@ -1153,7 +1153,7 @@ watch(() => props.serviceName, (newServiceName) => {
     }
 
     .package-description {
-        font-size: 14px;
+        font-size: 12px;
         color: #555;
         line-height: 1.6;
         margin-bottom: 16px;
@@ -1178,7 +1178,7 @@ watch(() => props.serviceName, (newServiceName) => {
         position: absolute;
         bottom: 0;
         margin-top: 10px;
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .advantages-flex {
@@ -1543,7 +1543,7 @@ watch(() => props.serviceName, (newServiceName) => {
     // }
 
     .service-showcase .subtitle {
-        font-size: 24px;
+        font-size: 22px;
     }
 
     .service-showcase .packages-grid {

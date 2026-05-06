@@ -159,7 +159,7 @@ watch(dialogVisible, (visible) => {
                         <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
                             :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
-                            :z-index="850" />
+                            :z-index="950" />
                     </el-carousel-item>
                 </el-carousel>
             </div>

@@ -58,7 +58,7 @@ const getCoverImageUrl = (item) => {
       }
     }
   }
-  
+
   // 如果找不到原始数据，使用收藏数据中的图片
   if (item?.image) {
     const resolvedImage = resolveDataImage(item.image, '');
@@ -239,7 +239,7 @@ onUnmounted(() => {
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 600;
   color: #333;
   margin: 0;
@@ -281,7 +281,7 @@ onUnmounted(() => {
 
 .card-image {
   width: 100%;
-  height: 200px;
+  height: 198px;
   object-fit: cover;
 }
 
@@ -290,7 +290,7 @@ onUnmounted(() => {
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
   margin: 0 0 8px;
@@ -300,7 +300,7 @@ onUnmounted(() => {
 }
 
 .card-region {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   margin: 0 0 10px;
 }
@@ -311,7 +311,7 @@ onUnmounted(() => {
 }
 
 .remove-btn {
-  font-size: 12px;
+  font-size: 10px;
   color: #f59e0b;
   cursor: pointer;
   padding: 4px 8px;
@@ -334,12 +334,12 @@ onUnmounted(() => {
 }
 
 .empty-icon {
-  font-size: 48px;
+  font-size: 46px;
   margin-bottom: 16px;
 }
 
 .empty-state p {
-  font-size: 18px;
+  font-size: 16px;
   color: #999;
 }
 

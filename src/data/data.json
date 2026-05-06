@@ -27766,7 +27766,7 @@
                             "route": "Moss Hotel",
                             "desc": "位于霍巴特Salamanca Place的精品酒店，由19世纪中期仓库改建而成，提供独特设计的客房（25号及39号两栋）。房间内融合自然元素和历史特色，部分带阳台。提供限量安全停车位（$20/天）。酒店注重健康卫生措施，无现金支付。",
                             "region": "霍巴特及南部",
-                            "town": "Hobart",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -27898,7 +27898,8 @@
                         "title": "Crowne Plaza Hobart",
                         "img": [
                             "../assets/img/hotels/CrownePlazaHobart/pic1.jpg",
-                            "../assets/img/hotels/CrownePlazaHobart/pic1.jpg"
+                            "../assets/img/hotels/CrownePlazaHobart/pic2.jpg",
+                            "../assets/img/hotels/CrownePlazaHobart/pic3.jpg"
                         ],
                         "enTitle": "Crowne Plaza Hobart",
                         "tripData": {
@@ -27915,7 +27916,7 @@
                                 {
                                     "icon": "#3b82f6",
                                     "title": "电话",
-                                    "desc": "61-3-62134200"
+                                    "desc": "+61 (03) 6213 4200"
                                 },
                                 {
                                     "icon": "#f59e0b",
@@ -27926,6 +27927,7 @@
                             "tags": [
                                 "商务酒店",
                                 "俱乐部酒廊",
+                                "健身中心",
                                 "城景"
                             ]
                         }
@@ -28015,7 +28017,7 @@
                             "route": "Islington Hotel",
                             "desc": "位于霍巴特South Hobart的五星级精品酒店，始建于1847年，属于Small Luxury Hotels of the World成员，荣获米其林一钥。拥有11间各具特色的客房及套房，配备定制大床、大理石浴室、花园或威灵顿山景观。提供免费早餐、全天咖啡茶点、免费WiFi和停车。餐厅供应塔斯马尼亚本地可持续食材。仅限成人入住。",
                             "region": "霍巴特及南部",
-                            "town": "Hobart",
+                            "town": "South Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -28054,7 +28056,7 @@
                             "route": "Salamanca Terraces",
                             "desc": "位于霍巴特Salamanca Place的自助式公寓，提供一室、两室联排别墅和顶层公寓。所有公寓均配备设施齐全的厨房（工作室公寓配小厨房）、洗衣设施、空调、免费WiFi和免费停车。24小时前台位于对街的Lenna of Hobart。位置优越，毗邻水滨和Battery Point历史区，步行可达萨拉曼卡市场。",
                             "region": "霍巴特及南部",
-                            "town": "Hobart",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -28090,7 +28092,7 @@
                             "route": "MACq 01 Hotel",
                             "desc": "位于霍巴特水滨猎人街的奢华故事主题酒店，以讲述塔斯马尼亚故事为特色。提供猎人客房、水滨客房等多种房型，设有Evolve Bar、The Story Bar和餐厅。酒店提供免费故事导览，讲述原住民、囚犯、捕鲸者等历史。客房可欣赏水滨或城市景观，配备高端设施。",
                             "region": "霍巴特及南部",
-                            "town": "Hobart",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -28119,897 +28121,966 @@
                     },
                     {
                         "title": "Maylands Lodge",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/MaylandsLodge/pic1.jpg",
+                            "../assets/img/hotels/MaylandsLodge/pic2.jpg",
+                            "../assets/img/hotels/MaylandsLodge/pic3.jpg"
+                        ],
+                        "enTitle": "Maylands Lodge",
                         "tripData": {
                             "route": "Maylands Lodge",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特New Town的历史遗产精品酒店，拥有12间融合现代与历史奢华的客房和套房。提供猎人套房、皮尔斯房、布朗内尔房等多种房型，部分房间可欣赏威灵顿山景观。酒店内设高茶服务，曾荣获多项旅游及酒店业奖项。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "40 Swanston Street, New Town TAS 7008"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6162 4758"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房10:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "精品酒店",
+                                "高茶"
                             ]
                         }
                     },
                     {
                         "title": "RACV Hobart Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/RACVHobartHotel/pic1.jpg"
+                        ],
+                        "enTitle": "RACV Hobart Hotel",
                         "tripData": {
                             "route": "RACV Hobart Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Collins Street的现代酒店，距离萨拉曼卡广场和市中心步行可达。提供酒店客房、一室公寓、家庭连通房、德文特河景公寓及顶层套房。内设Charcoal餐厅（塔斯马尼亚食材）、Cascade on Collins酒吧、健身房、电动汽车充电站、停车场。拥有会议和婚礼场地，获可持续旅游认证。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "154-156 Collins Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6270 8600"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房10:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "河景公寓",
+                                "可持续认证"
                             ]
                         }
                     },
                     {
                         "title": "Salamanca Inn",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/SalamancaInn/pic1.jpg"
+                        ],
+                        "enTitle": "Salamanca Inn",
                         "tripData": {
                             "route": "Salamanca Inn",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Battery Point的4.5星全套房酒店，毗邻萨拉曼卡广场和历史水滨。60间套房均配备全套厨房、洗衣设施、55英寸智能电视、Foxtel、空调、WiFi。设施包括地下停车场、4个快充电动车位、屋顶恒温泳池和水疗中心、餐厅、酒吧、会议室。家庭经营，提供单间、复式及多卧室套房，部分可赏萨拉曼卡或德文特河景。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "10 Gladstone Street, Battery Point TAS 7001"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6223 3300"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房10:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "全套房",
+                                "厨房设施",
+                                "泳池",
+                                "电动车充电"
                             ]
                         }
                     },
                     {
                         "title": "Salamanca Wharf Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/SalamancaWharfHotel/pic1.webp",
+                            "../assets/img/hotels/SalamancaWharfHotel/pic2.webp",
+                            "../assets/img/hotels/SalamancaWharfHotel/pic3.webp"
+                        ],
+                        "enTitle": "Salamanca Wharf Hotel",
                         "tripData": {
                             "route": "Salamanca Wharf Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Castray Esplanade的精品公寓酒店，由两座1840年砂岩仓库改建而成。提供22间自助式套房（阁楼顶层公寓、高级公寓、一室公寓及无障碍公寓），配备花岗岩厨房、洗衣设施、智能电视、Foxtel、私人保险箱、豪华床品。部分客房设有水疗浴缸或阳台，可欣赏萨拉曼卡或德文特河景。酒店内设Gigi's Diner餐厅，提供早餐和汉堡。设施包括室内停车库（限高限长）、电动汽车充电、24小时前台。步行可达萨拉曼卡市场、码头和市中心。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "17a Castray Esplanade, Battery Point TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6224 7007"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房10:00；前台周一至周六9:00-17:00，周日9:00-16:00（晚到需提前联系）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精品酒店",
+                                "自助式公寓",
+                                "历史建筑",
+                                "水滨"
                             ]
                         }
                     },
                     {
                         "title": "Sullivans Cove Apartments",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/SullivansCoveApartments/pic1.jpg"
+                        ],
+                        "enTitle": "Sullivans Cove Apartments",
                         "tripData": {
                             "route": "Sullivans Cove Apartments",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特水滨精选自炊式公寓，分布在四个标志性地点（Battery Point & Salamanca、Hunter Street & IXL、Wapping）。提供从豪华一室公寓到三卧室顶层公寓等50多套独特公寓，所有1-3卧室公寓均配备全套厨房和洗衣设施（Kelly Street Studio除外带厨房）。免费WiFi，部分地点可提供停车位（需额外收费）。前台24小时协助，无传统酒店服务。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "21 Hunter Street, Hobart TAS 7000（统一接待及入住办理）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6234 5063"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "前台9:00-17:00（可能随季节调整）；晚到需提前联系，提供24小时自助入住及服务"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "水滨",
+                                "多地点",
+                                "家庭友好"
                             ]
                         }
                     },
                     {
                         "title": "The Henry Jones Art Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/TheHenryJonesArtHotel/pic1.jpg"
+                        ],
+                        "enTitle": "The Henry Jones Art Hotel",
                         "tripData": {
                             "route": "The Henry Jones Art Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Hunter Street水滨的澳洲首家艺术酒店，由历史悠久的码头仓库改建而成（含IXL果酱工厂旧址），2018年全面翻新。酒店内陈列500多件艺术品，设有Landscape Restaurant & Grill（曾获厨师帽奖）、IXL Long Bar、Jam Packed咖啡馆。提供豪华客房和套房，可欣赏水景或城市景观。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "25 Hunter Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6210 7700"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "艺术酒店",
+                                "历史建筑",
+                                "水景",
+                                "厨师帽餐厅"
                             ]
                         }
                     },
                     {
                         "title": "The Old Woolstore Apartment Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/TheOldWoolstoreApartmentHotel/pic1.webp"
+                        ],
+                        "enTitle": "The Old Woolstore Apartment Hotel",
                         "tripData": {
                             "route": "The Old Woolstore Apartment Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Macquarie Street的现代公寓酒店，提供工作室、一室、两室、三室及无障碍公寓，均配备厨房或小厨房。内设Stockmans Restaurant和Baaa Bar，提供自助洗衣、停车场、自行车清洗设施。酒店获得多项旅游和可持续认证。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "1 Macquarie Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6235 5355"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房11:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "公寓酒店",
+                                "自助式厨房",
+                                "认证可持续"
                             ]
                         }
                     },
                     {
                         "title": "Vibe Hotel Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/VibeHotelHobart/pic1.avif"
+                        ],
+                        "enTitle": "Vibe Hotel Hobart",
                         "tripData": {
                             "route": "Vibe Hotel Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特CBD Argyle Street的精品生活方式酒店，是TFE Hotels旗下品牌。提供标准客房、无障碍房、海景/山景房、豪华套房、一卧及两卧公寓、顶层公寓。设施包括游泳池、健身房、餐厅（Belvedere）、酒吧、会议室（最多180人）。可步行至萨拉曼卡市场和水滨，靠近MONA渡轮。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "36 Argyle Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6235 5355（总机） / 13 84 23（预订）"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00后，退房11:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精品酒店",
+                                "游泳池",
+                                "健身房",
+                                "公寓式"
                             ]
                         }
                     },
                     {
                         "title": "Zero Davey Boutique Apartment Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/ZeroDaveyBoutiqueApartmentHotel/pic1.png"
+                        ],
+                        "enTitle": "Zero Davey Boutique Apartment Hotel",
                         "tripData": {
                             "route": "Zero Davey Boutique Apartment Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Sullivans Cove海滨的精品公寓酒店，2004年开业。提供工作室公寓、两卧、三卧公寓及顶层公寓，均配备厨房设施（陶瓷炉、微波炉）、洗衣干衣机、迷你吧、免费WiFi、反向循环空调。设施包括小型健身房、桑拿、有限安全停车场（需提前预订）。步行可达MONA渡轮码头、萨拉曼卡广场、CBD。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "15 Hunter Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6270 1444"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "Crowne Plaza Hobart By Ihg Hotel",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "Crowne Plaza Hobart By Ihg Hotel",
-                            "desc": "描述",
-                            "website": "",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "Hadley'S Orient Hotel",
-                        "img": "",
-                        "enTitle": "",
-                        "tripData": {
-                            "route": "Hadley'S Orient Hotel",
-                            "desc": "描述",
-                            "website": "",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "精品公寓",
+                                "海滨",
+                                "自助式厨房",
+                                "桑拿"
                             ]
                         }
                     },
                     {
                         "title": "429 Apartments & Suites",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/429ApartmentsSuites/pic1.webp"
+                        ],
+                        "enTitle": "429 Apartments & Suites",
                         "tripData": {
                             "route": "429 Apartments & Suites",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Sandy Bay的公寓式住宿，俯瞰德文特河，对面是Wrest Point Casino。提供多种房型：豪华水景房、豪华自助式单间/双床房、皇后房等。房间配备超高清电视、免费WiFi，自助式客房带小厨房。设施包括免费停车、付费洗衣、可购买早餐包。部分客房享有河景。",
+                            "region": "霍巴特及南部",
+                            "town": "Sandy Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "429 Sandy Bay Rd, Sandy Bay TAS 7005"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6225 2511"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "河景",
+                                "免费停车"
                             ]
                         }
                     },
                     {
                         "title": "Airone Capsule Hotel",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Airone Capsule Hotel",
                         "tripData": {
                             "route": "Airone Capsule Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Collins Road的胶囊酒店，提供经济型胶囊住宿，24小时营业。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "152 Collins Rd, Hobart TAS, Australia"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 413 162 998"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "24小时营业（具体入住/退房时间请直接联系酒店确认）"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "胶囊旅馆",
+                                "经济型",
+                                "24小时"
                             ]
                         }
                     },
                     {
                         "title": "Allurity Hotel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/AllurityHotel/pic1.jpg",
+                            "../assets/img/hotels/AllurityHotel/pic2.jpg"
+                        ],
+                        "enTitle": "Allurity Hotel",
                         "tripData": {
                             "route": "Allurity Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特CBD Bathurst Street的现代酒店，提供多种房型（标准皇后/双床、豪华皇后/双床、套房、水疗套房、家庭房、无障碍房）。设施包括安全停车位、免费WiFi、行李寄存。前台8:00-21:00，晚到可预约。位置便利，周日门口有农夫市集和工艺品市场。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "96 Bathurst St, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6128 3636"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "前台8:00-21:00；入住/退房时间请直接联系酒店确认；晚到可预约"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "家庭房",
+                                "无障碍房"
                             ]
                         }
                     },
                     {
                         "title": "Bay View Villas",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/BayViewVillas/pic1.webp",
+                            "../assets/img/hotels/BayViewVillas/pic2.webp"
+                        ],
+                        "enTitle": "Bay View Villas",
                         "tripData": {
                             "route": "Bay View Villas",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于西霍巴特的自助式公寓住宿，提供一卧、两卧、三卧海景或标准公寓。所有公寓均配备设施齐全的厨房、宽敞起居区、部分带阳台和海港景观。设施包括室内恒温泳池、游戏室（台球、乒乓球）、户外烧烤区、免费WiFi、免费停车、电梯、客用洗衣房。前台8:00-17:00，可自助晚到入住。",
+                            "region": "霍巴特及南部",
+                            "town": "West Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "34 Poets Rd, West Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6234 7611"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "前台8:00-17:00；入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "海景",
+                                "室内泳池",
+                                "游戏室",
+                                "免费停车"
                             ]
                         }
                     },
                     {
                         "title": "Best Western Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/BestWesternHobart/pic1.jpg",
+                            "../assets/img/hotels/BestWesternHobart/pic2.jpg"
+                        ],
+                        "enTitle": "Best Western Hobart",
                         "tripData": {
                             "route": "Best Western Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Bathurst Street的新装修酒店，拥有140余间客房，可欣赏城市、威灵顿山或德文特河景。房型包括带阳台的国王房、双床房、行政房、豪华套房、家庭套房、两卧室公寓及无障碍房。设施包括Embers Bar-Pizza-Grill餐厅（塔州农产品）、5间会议室（最多300人）、24小时前台、免费WiFi、付费停车、电动车充电、商务中心、礼品店、客用洗衣房。步行10分钟可达萨拉曼卡广场和水滨。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "156 Bathurst Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6232 6255"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "24小时前台；入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "家庭套房",
+                                "会议室"
                             ]
                         }
                     },
                     {
                         "title": "Blue Hills Motel",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/BlueHillsMotel/pic1.avif"
+                        ],
+                        "enTitle": "Blue Hills Motel",
                         "tripData": {
                             "route": "Blue Hills Motel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Battery Point的经济型汽车旅馆，提供皇后房（近期翻新）和预算双床房（未翻新）。部分房间可欣赏威灵顿山、德文特河或赌场景观。设施包括免费高速WiFi、电视、有限停车位（先到先得）、客用洗衣房。步行可达萨拉曼卡市场、水滨、CBD和渡轮码头。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "96 Sandy Bay Road, Battery Point TAS 7004（停车场入口在Crelin Street尽头）"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 6223 1777"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "经济型",
+                                "汽车旅馆",
+                                "免费WiFi",
+                                "Battery Point"
                             ]
                         }
                     },
                     {
                         "title": "Central Hotel",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Central Hotel",
                         "tripData": {
                             "route": "Central Hotel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Collins Street的历史酒吧兼住宿场所，提供经济型客房（需通过预订合作伙伴或直接联系酒店）。酒店内设餐厅（供应午餐和晚餐）、酒吧、游戏区、Keno/TOTE投注和现场音乐（周五晚5-7点）。提供多种餐饮选择，包括牛排、海鲜、汉堡、沙拉、儿童餐等。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "73 Collins St, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "03 62 344 419"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请直接联系酒店确认住宿预订及入住细节"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "经济住宿",
+                                "历史酒吧",
+                                "现场音乐"
                             ]
                         }
                     },
                     {
                         "title": "DoubleTree By Hilton Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/DoubleTreeByHiltonHobart/pic1.jpg"
+                        ],
+                        "enTitle": "DoubleTree By Hilton Hobart",
                         "tripData": {
                             "route": "DoubleTree By Hilton Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Macquarie Street的4星级酒店，拥有206间客房和套房，可欣赏城市景观。设施包括室内游泳池、健身中心、餐厅（Leatherwood）、24小时酒吧、24小时前台、商务中心、电动车充电站、自助停车（$37/天）。酒店提供免费WiFi、客房送餐、残疾人设施。步行可达萨拉曼卡广场、宪法码头和德文特河。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "179 Macquarie St, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+1-800-222-TREE (希尔顿全球预订) "
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住15:00-23:59，退房12:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "商务酒店",
+                                "室内泳池",
+                                "健身中心",
+                                "希尔顿"
                             ]
                         }
                     },
                     {
                         "title": "Graham Apartments",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Graham Apartments",
                         "tripData": {
                             "route": "Graham Apartments",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特New Town的自助式公寓酒店，提供一卧、两卧、三卧公寓（部分为经济型或带双层床）。所有公寓均配备齐全厨房、免费WiFi、Netflix、舒适起居区。设施包括免费街外停车、可供租用的汽车、婴儿用品（婴儿床、高椅、洗澡盆、幼儿玩具）。位置便利，靠近北霍巴特餐饮区和公共交通。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "15 Pirie Street, New Town, Hobart TAS 7008"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6278 1333"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "家庭友好",
+                                "免费停车",
+                                "Netflix"
                             ]
                         }
                     },
                     {
                         "title": "Hobart Waterfront Apartments",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/HobartWaterfrontApartments/pic1.jpg"
+                        ],
+                        "enTitle": "Hobart Waterfront Apartments",
                         "tripData": {
                             "route": "Hobart Waterfront Apartments",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特水滨Brooke Street的公寓式住宿，提供酒店房、豪华单间公寓和一卧公寓。所有房型均配备免费WiFi、空调、电视、厨房设施（咖啡机、微波炉等），部分房型最多可入住5人。设施包括客用洗衣房、每日清洁（周日和公共假日除外），停车位需预订（$20/晚）。步行可至水滨景点。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "3 Brooke St, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6240 8555"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请直接联系酒店确认入住/退房时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "水滨",
+                                "厨房设施",
+                                "付费停车"
                             ]
                         }
                     },
                     {
                         "title": "Mantra One Sandy Bay Road Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/MantraOneSandyBayRoadHobart/pic1.jpg",
+                            "../assets/img/hotels/MantraOneSandyBayRoadHobart/pic2.jpg"
+                        ],
+                        "enTitle": "Mantra One Sandy Bay Road Hobart",
                         "tripData": {
                             "route": "Mantra One Sandy Bay Road Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Sandy Bay Road的城市酒店，提供单间公寓、一卧行政公寓、一卧公寓、两卧家庭公寓及一卧高级公寓（配备厨房）。所有公寓均带厨房或小厨房、洗衣设施、电视、DVD播放器、FOXTEL、空调。设施包括停车场（$28/晚，需预订）、前台每日有限时段服务。步行可达萨拉曼卡广场、水滨和MONA渡轮码头。",
+                            "region": "霍巴特及南部",
+                            "town": "Sandy Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "1 Sandy Bay Road, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6221 6000"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房10:00；前台周一至周五8:00-20:00，周末9:00-17:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "公寓酒店",
+                                "全功能厨房",
+                                "近码头",
+                                "萨拉曼卡"
                             ]
                         }
                     },
                     {
                         "title": "Motel Mayfair On Cavell",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Motel Mayfair On Cavell",
                         "tripData": {
                             "route": "Motel Mayfair On Cavell",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于西霍巴特的历史汽车旅馆，由20世纪初的宅邸改建而成，提供标准房、家庭房、自助式公寓、水疗套房等多种房型。所有房间配备微波炉、冰箱、烤面包机、茶咖设施、电视、免费WiFi。设施包括免费停车、花园、客用洗衣房。步行可达霍巴特CBD、萨拉曼卡区和德文特河。",
+                            "region": "霍巴特及南部",
+                            "town": "South Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "17-19 Cavell Street, West Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6231 1188"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住13:00-18:00（可预约晚到），退房10:00；前台8:00-18:00"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "汽车旅馆",
+                                "水疗套房",
+                                "家庭公寓"
                             ]
                         }
                     },
                     {
-                        "title": "Quest Savoy/Quest Savoy Aparthotel Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "title": "Quest Savoy Aparthotel Hobart",
+                        "img": [
+                            "../assets/img/hotels/QuestSavoyHobart/pic1.jpg",
+                            "../assets/img/hotels/QuestSavoyHobart/pic2.jpg"
+                        ],
+                        "enTitle": "Quest Savoy Aparthotel Hobart",
                         "tripData": {
-                            "route": "Quest Savoy/Quest Savoy Aparthotel Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "route": "Quest Savoy Aparthotel Hobart",
+                            "desc": "位于霍巴特Elizabeth Street市中心的公寓式酒店，提供单间（标准、高级、行政）、一卧和两卧公寓。部分公寓位于附楼（仅楼梯），主楼有电梯。所有公寓均配备厨房或小厨房、免费WiFi、空调、电视。设施包括免费客人洗衣房、收费停车场（附近）、折扣使用Savoy Day Spa。距离萨拉曼卡市场、水滨区域步行约8-10分钟。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "38 Elizabeth Street, Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6220 2300"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00，退房10:00；前台可安排晚到入住"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "公寓式酒店",
+                                "厨房设施",
+                                "市中心",
+                                "无障碍客房"
                             ]
                         }
                     },
                     {
                         "title": "Quest Trinity House",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/QuestTrinityHouse/pic1.jpg",
+                            "../assets/img/hotels/QuestTrinityHouse/pic2.jpg"
+                        ],
+                        "enTitle": "Quest Trinity House",
                         "tripData": {
                             "route": "Quest Trinity House",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特Glebe历史街区的公寓式酒店，占地1.2公顷园林，提供单间、一至四卧公寓及四卧联排别墅。所有公寓均配备厨房或小厨房、洗衣设施、独立起居区、免费WiFi、空调。设施包括免费停车、烧烤区、无障碍客房。步行可至霍巴特水滨、萨拉曼卡市场和皇家植物园。",
+                            "region": "霍巴特及南部",
+                            "town": "Glebe",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "149 Brooker Avenue, Glebe TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6236 9656"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住14:00起，退房10:00前"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "公寓式酒店",
+                                "历史建筑",
+                                "免费停车",
+                                "家庭友好"
                             ]
                         }
                     },
                     {
                         "title": "Riverfront Motel",
                         "img": "",
-                        "enTitle": "",
+                        "enTitle": "Riverfront Motel",
                         "tripData": {
                             "route": "Riverfront Motel",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于Rosetta德文特河畔的汽车旅馆，占地8英亩，提供多种住宿选择：经济型客房、河景房、家庭房、公寓、一卧/两卧乡村别墅、多卧别墅及大型住宅（River House, Coach House, Mansion）。设施包括餐厅（早餐/晚餐，周五至周日午餐）、免费停车、自行车租赁。距离MONA仅900米，距离霍巴特市中心约15分钟车程。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "11 Strathaven Drive, Rosetta TAS 7010"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "(03) 6272 6721"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "请直接联系酒店确认入住/退房时间"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "汽车旅馆",
+                                "河景",
+                                "家庭别墅",
+                                "免费停车",
+                                "近MONA"
                             ]
                         }
                     },
                     {
                         "title": "Rydges Hobart",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/RydgesHobart/pic1.jpg",
+                            "../assets/img/hotels/RydgesHobart/pic2.jpg"
+                        ],
+                        "enTitle": "Rydges Hobart",
                         "tripData": {
                             "route": "Rydges Hobart",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于北霍巴特Argyle Street的精品风格酒店，位于遗产名录建筑内，提供64间客房与套房。设施包括1898 Restaurant & Bar、游泳池、健身房、免费WiFi、停车场。部分房型为历史建筑改装（如Manor Suite、Trust Cottage Suite）。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "393 Argyle St, North Hobart TAS 7000"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "+61 3 6231 1588"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "入住/退房时间请直接联系酒店确认；前台周日-周四6:30-22:30，周五周六24小时"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "历史建筑",
+                                "精品酒店",
+                                "游泳池",
+                                "北霍巴特"
                             ]
                         }
                     },
                     {
                         "title": "Salamanca Galleria Apartments",
-                        "img": "",
-                        "enTitle": "",
+                        "img": [
+                            "../assets/img/hotels/SalamancaGalleriaApartments/pic1.webp"
+                        ],
+                        "enTitle": "Salamanca Galleria Apartments",
                         "tripData": {
                             "route": "Salamanca Galleria Apartments",
-                            "desc": "描述",
-                            "website": "",
+                            "desc": "位于霍巴特萨拉曼卡广场的公寓式住宿，提供自助式套房。位置优越，距离咖啡馆、餐厅、酒吧、画廊和商店仅几步之遥。提供自助入住设施，适合游客和商务旅客。",
+                            "region": "霍巴特及南部",
+                            "town": "Battery Point",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "title1",
-                                    "desc": "描述1"
+                                    "title": "地址",
+                                    "desc": "Level 5, Suite 19, 31-35 Salamanca Place, Hobart TAS 7004"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "title2",
-                                    "desc": "描述2"
+                                    "title": "电话",
+                                    "desc": "通过网站联系表单"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "title3",
-                                    "desc": "描述3"
+                                    "title": "入住/前台时间",
+                                    "desc": "自助入住；具体时间请直接联系酒店确认"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "自助式公寓",
+                                "萨拉曼卡",
+                                "水滨"
+                            ]
+                        }
+                    },
+                    {
+                        "title": "Nord - North Hobart Apartments",
+                        "img": [
+                            "../assets/img/hotels/NordNorthHobartApartments/pic1.webp"
+                        ],
+                        "enTitle": "Nord - North Hobart Apartments",
+                        "tripData": {
+                            "route": "Nord - North Hobart Apartments",
+                            "desc": "位于北霍巴特Elizabeth Street的公寓式住宿，地处北霍巴特餐饮和酒吧区中心。公寓在1楼（约12级台阶），无专属停车位，但附近有议会停车场（夜间免费）。步行至霍巴特CBD约15-20分钟。",
+                            "region": "霍巴特及南部",
+                            "town": "North Hobart",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "地址",
+                                    "desc": "Level 1, 364A Elizabeth St, North Hobart TAS 7000"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "电话",
+                                    "desc": "通过网站联系表单"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "入住/前台时间",
+                                    "desc": "自助入住；具体时间请直接联系酒店确认"
+                                }
+                            ],
+                            "tags": [
+                                "自助式公寓",
+                                "餐饮区",
+                                "北霍巴特"
                             ]
                         }
                     },

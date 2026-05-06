@@ -333,7 +333,7 @@ onMounted(() => {
 
 .search-title h1 {
   margin: 0;
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 700;
   color: #0f172a;
 }
@@ -341,7 +341,7 @@ onMounted(() => {
 .search-title p {
   margin: 8px 0 0;
   color: #475569;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .search-bar {
@@ -356,7 +356,7 @@ onMounted(() => {
 .loading-state,
 .empty-state {
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   color: #64748b;
   padding: 40px 0;
 }
@@ -382,7 +382,7 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -404,7 +404,7 @@ onMounted(() => {
 }
 
 .result-title {
-  font-size: 22px;
+  font-size: 20px;
   margin: 0;
   color: #0f172a;
 }
@@ -418,7 +418,7 @@ onMounted(() => {
   display: -webkit-box;
   margin: 0;
   color: #475569;
-  font-size: 15px;
+  font-size: 13px;
   -webkit-line-clamp: 1;
   line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -429,7 +429,7 @@ onMounted(() => {
 .result-snippet {
   margin: 0;
   color: #1f2937;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.6;
 }
 

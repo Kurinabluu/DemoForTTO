@@ -257,7 +257,7 @@ function onSearch() {
     <div class="search-fixed">
       <el-card class="search-card" shadow="hover">
         <div class="search-tags">
-          <a v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs18" :class="{
+          <a v-for="(tag, index) in tags" :key="tag" class="tag-pill pointer fs16" :class="{
             active: activeTag === tag,
             disabled: !data[index].available || data[index].available === false
           }"
@@ -284,7 +284,7 @@ function onSearch() {
               </el-icon>
             </template>
           </el-input>
-          <el-button type="primary" size="large" class="search-btn fs16" @click="onSearch">
+          <el-button type="primary" size="large" class="search-btn fs14" @click="onSearch">
             <el-icon>
               <Search />
             </el-icon>
@@ -333,9 +333,9 @@ function onSearch() {
         :deep(.el-input__wrapper) {
           border-radius: 8px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          height: 48px;
+          height: 46px;
           padding: 6px 14px;
-          font-size: 15px;
+          font-size: 13px;
         }
       }
 
@@ -343,7 +343,7 @@ function onSearch() {
         border-radius: 8px;
         padding: 0 24px;
         font-weight: 500;
-        height: 48px;
+        height: 46px;
       }
     }
 
@@ -360,7 +360,7 @@ function onSearch() {
         border-radius: 10px;
         transition: all 0.2s ease;
         // height: auto;
-        height: 75px;
+        height: 73px;
         padding: 8px 10px;
         align-items: center;
         justify-content: center;
@@ -488,7 +488,7 @@ function onSearch() {
         .tag-pill,
         .active,
         .disabled {
-          font-size: 13px;
+          font-size: 11px;
           padding: 6px 8px;
           display: flex;
           align-items: center;
@@ -508,8 +508,8 @@ function onSearch() {
         .tag-pill br,
         .active br,
         .disabled br {
-          height: 6px;
-          margin: 3px 0;
+          height: 4px;
+          margin: 2px 0;
         }
       }
     }

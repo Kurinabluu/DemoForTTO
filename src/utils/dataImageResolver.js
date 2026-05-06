@@ -1,6 +1,6 @@
 import defaultImg from '@/assets/img/default.png'
 
-const assetModules = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,JPG,JPEG,gif,webp,svg}', {
+const assetModules = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,JPG,JPEG,gif,webp,svg,avif,AVIF}', {
   eager: true,
   import: 'default'
 })

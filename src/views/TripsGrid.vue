@@ -1178,7 +1178,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 </div>
                 <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                     <div class="custom-pagination custom-pagination--fixed">
-                        <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                             {{
                                 mobileTotalPages }} 页</div>
                     </div>
@@ -1197,7 +1197,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div v-if="currentDayTripItems.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                         mobileTotalPages }} 页</div>
                 </div>
             </div>
@@ -1232,7 +1232,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="scenicFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1270,7 +1270,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="restaurantFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1300,7 +1300,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="wineFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1330,7 +1330,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="spiritFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1367,7 +1367,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="hotelFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1412,7 +1412,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
             <div v-if="activityFiltered.length > 0" class="pagination-section pagination-section--scenic">
                 <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
                         {{
                             mobileTotalPages }} 页</div>
                 </div>
@@ -1453,7 +1453,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && scenicFiltered.length > 0">
         <div class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                     mobileTotalPages }} 页</div>
             </div>
         </div>
@@ -1489,7 +1489,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <template v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displayRestaurants.length > 0">
         <div class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                     mobileTotalPages }} 页</div>
             </div>
         </div>
@@ -1516,7 +1516,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0">
         <div class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                     mobileTotalPages }} 页</div>
             </div>
         </div>
@@ -1542,7 +1542,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0">
         <div class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                     mobileTotalPages }} 页</div>
             </div>
         </div>
@@ -1576,7 +1576,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && hotelFiltered.length > 0"
         class="pagination-section pagination-section--scenic">
         <div class="custom-pagination custom-pagination--fixed">
-            <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+            <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                 mobileTotalPages }} 页</div>
         </div>
     </div>
@@ -1615,7 +1615,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
         <div v-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
             <div class="custom-pagination custom-pagination--fixed">
-                <div class="page-indicator fs16">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
                     mobileTotalPages }} 页</div>
             </div>
         </div>
@@ -1685,6 +1685,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     grid-column: 1 / -1;
     margin: 18px 0;
     text-align: center;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .region-title:first-child {
@@ -1695,7 +1697,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     grid-column: 1 / -1;
     margin: 0 0 8px 0;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     color: #57595f;
     font-weight: normal;
 }
@@ -1715,7 +1717,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .card-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 2px;
     color: #1f2937;
@@ -1724,7 +1726,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .card-sub {
-    font-size: 12px;
+    font-size: 10px;
     color: #6b7280;
     letter-spacing: 2px;
     -webkit-line-clamp: 2;
@@ -1749,14 +1751,14 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 .empty-tip {
     text-align: center;
     color: #6b7280;
-    font-size: 18px;
+    font-size: 16px;
     margin: 45px;
 }
 
 .loading-tip {
     text-align: center;
     color: #3b82f6;
-    font-size: 16px;
+    font-size: 14px;
     padding: 16px 0 8px;
 }
 
@@ -1839,7 +1841,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     line-height: 1.5;
 
     .page-num {
-        font-size: 20px;
+        font-size: 18px;
         color: #279486;
         line-height: 24px;
     }
@@ -1857,7 +1859,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .activities-title {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 8px;
@@ -1865,7 +1867,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .activities-subtitle {
-    font-size: 16px;
+    font-size: 14px;
     color: #6b7280;
     margin: 0;
 }
@@ -1892,7 +1894,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
 .activity-image {
     position: relative;
-    height: 300px;
+    height: 298px;
     overflow: hidden;
 }
 
@@ -1913,7 +1915,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     right: 12px;
     padding: 6px 12px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #fff;
     text-transform: uppercase;
@@ -1952,7 +1954,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 }
 
 .activity-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #111827;
     margin-bottom: 16px;
@@ -2062,11 +2064,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 
     .activities-title {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     .activities-subtitle {
-        font-size: 15px;
+        font-size: 13px;
     }
 
     .activities-grid {
@@ -2075,7 +2077,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 
     .activity-image {
-        height: 180px;
+        height: 178px;
     }
 
     .activity-content {
@@ -2083,20 +2085,20 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 
     .activity-title {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .info-label,
     .info-value {
-        font-size: 13px;
+        font-size: 11px;
     }
 
     .activity-description {
-        font-size: 13px;
+        font-size: 11px;
     }
 
     .weather-note {
-        font-size: 12px;
+        font-size: 10px;
     }
 }
 

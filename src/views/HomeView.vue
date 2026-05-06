@@ -621,7 +621,7 @@ onMounted(() => {
         .slide-img {
             display: block;
             width: 100%;
-            height: 800px;
+            height: 798px;
             //object-fit: cover;
             object-fit: contain;
             z-index: 100;
@@ -654,7 +654,7 @@ onMounted(() => {
             pointer-events: none;
 
             h1 {
-                font-size: 48px;
+                font-size: 46px;
                 font-weight: 600;
                 line-height: 1.35;
                 margin: 0;
@@ -687,7 +687,7 @@ onMounted(() => {
             width: 40px;
             height: 40px;
             // font-size:28px;
-            font-size: 40px;
+            font-size: 38px;
             font-weight: 900;
         }
 
@@ -711,7 +711,7 @@ onMounted(() => {
             align-self: flex-start;
             margin-left: 20px;
             margin-top: 0;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             letter-spacing: 0;
             /* 去除字距 */
@@ -752,6 +752,7 @@ onMounted(() => {
             transition: all .2s ease;
             white-space: nowrap;
             user-select: none;
+            font-size: 16px;
         }
 
         .free-subnav-tab.disabled {
@@ -796,7 +797,7 @@ onMounted(() => {
         .section-heading {
             margin: 10px 0 8px 4px;
             // font-size: 18px;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #111827;
         }
@@ -820,7 +821,7 @@ onMounted(() => {
 
             .carousel {
                 .slide-img {
-                    height: 600px;
+                    height: 598px;
                 }
 
                 :deep(.el-carousel__arrow) {
@@ -840,7 +841,7 @@ onMounted(() => {
                     padding: 0 20px;
 
                     h1 {
-                        font-size: 36px;
+                        font-size: 34px;
                         line-height: 1.3;
                         letter-spacing: 12px;
                     }
@@ -871,11 +872,11 @@ onMounted(() => {
                 }
 
                 .activities-title {
-                    font-size: 28px;
+                    font-size: 26px;
                 }
 
                 .activities-subtitle {
-                    font-size: 15px;
+                    font-size: 13px;
                 }
 
                 .activities-grid {
@@ -884,7 +885,7 @@ onMounted(() => {
                 }
 
                 .activity-image {
-                    height: 180px;
+                    height: 178px;
                 }
 
                 .activity-content {
@@ -892,20 +893,20 @@ onMounted(() => {
                 }
 
                 .activity-title {
-                    font-size: 16px;
+                    font-size: 14px;
                 }
 
                 .info-label,
                 .info-value {
-                    font-size: 13px;
+                    font-size: 11px;
                 }
 
                 .activity-description {
-                    font-size: 13px;
+                    font-size: 11px;
                 }
 
                 .weather-note {
-                    font-size: 12px;
+                    font-size: 10px;
                 }
             }
         }
