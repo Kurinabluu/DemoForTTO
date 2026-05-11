@@ -54,11 +54,21 @@
                     },
                     {
                         "title": "圣克莱尔湖国家公园",
-                        "img": "../assets/img/default.png",
+                        "img": "../assets/img/places/LakeStClairNationalPark.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-house-in-the-middle-of-a-field-surrounded-by-trees-z6j5UJ4IOMI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@stephenmabbs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Stephen Mabbs"
+                            }
+                        ],
                         "enTitle": "Cradle Mountain-Lake St Clair National Park",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
+                            "route": "4057 Cradle Mountain Rd, Cradle Mountain TAS 7310, Australia（摇篮山游客中心）",
                             "desc": "摇篮山-圣克莱尔湖国家公园是塔斯马尼亚荒野世界遗产区的核心，以高山荒野、冰川湖泊和知名徒步路线著称。",
+                            "region": "西北部",
+                            "town": "Cradle Mountain",
                             "features": [
                                 {
                                     "icon": "#39c5bb",
@@ -68,22 +78,21 @@
                                 {
                                     "icon": "#3b82f6",
                                     "title": "摇篮山倒影",
-                                    "desc": "无风时日，湖面能映出摇篮山的对称轮廓"
+                                    "desc": "无风天气，湖面可映出摇篮山及周边山峰的倒影"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "远古雨林步道",
-                                    "desc": "万年苔藓森林"
+                                    "title": "远古雨林",
+                                    "desc": "公园低海拔区域保留有湿润的桉树和雨林植被"
                                 }
                             ],
                             "tags": [
-                                "自需国家公园通行证",
+                                "需国家公园通行证",
                                 "推荐自驾",
                                 "冬季备防滑链",
                                 "部分区域无信号",
                                 "必备防水徒步鞋",
                                 "天气多变",
-                                "即时防护",
                                 "世界遗产"
                             ],
                             "source": [
@@ -97,26 +106,36 @@
                     },
                     {
                         "title": "费尔德山国家公园",
-                        "img": "",
+                        "img": "../assets/img/places/mtfield.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-large-waterfall-surrounded-by-lush-green-trees-obASuI659fw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@karenchew?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Karen Chew"
+                            }
+                        ],
                         "enTitle": "Mount Field National Park",
                         "tripData": {
-                            "route": "塔斯马尼亚州霍巴特西北",
+                            "route": "66 Lake Dobson Rd, National Park TAS 7140, Australia",
                             "desc": "费尔德山国家公园成立于1916年，是塔斯马尼亚最古老的国家公园，距霍巴特约1小时车程。景观从温带雨林过渡至高山湖泊，可观赏瀑布、古老桉树林及野生动物。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#39c5bb",
                                     "title": "罗素瀑布",
-                                    "desc": "标志性阶梯式瀑布"
+                                    "desc": "阶梯式瀑布，园内标志性景点"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "高山湿地",
-                                    "desc": "行走于云端木板步道，探秘珍稀高山植被与静谧湖泊"
+                                    "desc": "高山区域有木板步道，可观赏珍稀植被和湖泊"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "巨型桉树",
-                                    "desc": "穿梭于参天古树林，仰望古老树木"
+                                    "desc": "低海拔区域保留有古老高大的桉树林"
                                 }
                             ],
                             "tags": [
@@ -124,7 +143,6 @@
                                 "推荐自驾",
                                 "注意开放时间",
                                 "携带保暖衣物",
-                                "适合一日游行程",
                                 "部分景点无手机信号",
                                 "含游客中心"
                             ],
@@ -139,32 +157,42 @@
                     },
                     {
                         "title": "布鲁尼岛",
-                        "img": "",
+                        "img": "../assets/img/places/brunyisland.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/brown-wooden-pathway-over-the-valley-surrounded-by-blue-sea-during-daytime-LHBnDiKSppw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@travelling_tam?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Tamara Thurman"
+                            }
+                        ],
                         "enTitle": "Bruny Island",
                         "tripData": {
-                            "route": "塔斯马尼亚州东南沿海",
-                            "desc": "布鲁尼岛是需乘渡轮抵达的离岛，以连接南北岛的狭长“颈项”地峡、新鲜生蚝美食和观赏海豹、海豚的生态巡航为主要体验。",
+                            "route": "Bruny Island, Tasmania, Australia（登岛点：Kettering Ferry Terminal, 1041 Bruny Island Main Rd, Kettering TAS 7155）",
+                            "region": "霍巴特及南部",
+                            "town": "Bruny Island",
+                            "desc": "布鲁尼岛是塔斯马尼亚东南沿海的离岛，需乘渡轮抵达。以连接南北岛的狭长地峡“颈项”（The Neck）、新鲜生蚝、本地奶酪以及出海观赏海豹、海豚的生态巡航为主要体验。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "颈项观景台",
-                                    "desc": "登临狭长地峡制高点，俯瞰双海湾交汇的全景"
+                                    "desc": "登临地峡制高点，俯瞰双海湾交汇的全景"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "生蚝与美食",
-                                    "desc": "品尝闻名世界的南太平洋生蚝与本地特色奶酪"
+                                    "desc": "品尝南太平洋生蚝与本地特色奶酪"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "野生动物巡航",
-                                    "desc": "乘船邂逅海豚、海豹与迁徙中的南露脊鲸"
+                                    "desc": "乘船观赏海豚、海豹及迁徙中的南露脊鲸"
                                 }
                             ],
                             "tags": [
                                 "需轮渡上岛",
                                 "推荐自驾",
-                                "风大防风",
+                                "风大需防风",
                                 "部分景点收费",
                                 "巡航需提前预订",
                                 "注意防风防晒"
@@ -180,26 +208,36 @@
                     },
                     {
                         "title": "阿瑟港",
-                        "img": "",
+                        "img": "../assets/img/places/PortArthur.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-large-building-sitting-on-the-side-of-a-lake-6nKbYKJvYHw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@avignakaran?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Athithan Vignakaran"
+                            }
+                        ],
                         "enTitle": "Port Arthur",
                         "tripData": {
-                            "route": "塔斯马尼亚州塔斯曼半岛",
+                            "route": "Port Arthur, Tasmania, Australia",
                             "desc": "阿瑟港是塔斯曼半岛上一处19世纪的流放罪犯遗址，作为世界遗产地，以严酷的安保和独特的监狱制度闻名，现为重要的历史遗迹与博物馆。如今，游客仍可再次探索、进行导览，了解相关历史。",
+                            "region": "霍巴特及南部",
+                            "town": "Port Arthur",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "监狱遗址",
-                                    "desc": "探索澳大利亚保存最完好的流放囚犯遗迹"
+                                    "desc": "探索澳大利亚保存最完好的流放囚犯遗迹之一"
                                 },
                                 {
                                     "icon": "#3b82f6",
                                     "title": "幽灵之旅",
-                                    "desc": "体验获奖的夜间导览，聆听百年历史故事"
+                                    "desc": "夜间导览，讲述历史故事"
                                 },
                                 {
                                     "icon": "#f59e0b",
                                     "title": "博物馆与花园",
-                                    "desc": "在水岸花园中了解囚犯与殖民者的往昔"
+                                    "desc": "在水岸花园中了解囚犯与殖民者历史"
                                 }
                             ],
                             "tags": [
@@ -223,8 +261,10 @@
                         "img": "",
                         "enTitle": "Salamanca Market",
                         "tripData": {
-                            "route": "霍巴特滨水区核心位置",
-                            "desc": "萨拉曼卡市集是霍巴特每周六举行的著名街头市集，拥有超过350个摊位，是塔斯马尼亚州访问量最大的旅游景点。",
+                            "route": "Salamanca Place, Hobart TAS 7004, Australia",
+                            "desc": "萨拉曼卡市集是霍巴特每周六举行的著名街头市集，拥有超过350个摊位，展示塔斯马尼亚艺术品、手工艺品、农产品和食品，是塔斯马尼亚州访问量最大的旅游景点。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -243,11 +283,11 @@
                                 }
                             ],
                             "tags": [
-                                "周六市集必体验",
+                                "周六开放",
                                 "步行可达市中心",
                                 "停车位紧张",
-                                "画廊免费参观",
-                                "推荐预留半天",
+                                "部分画廊免费",
+                                "建议预留半天",
                                 "避开游轮停靠日"
                             ],
                             "source": [
@@ -260,43 +300,22 @@
                         }
                     },
                     {
-                        "title": "塔斯马尼亚荒原",
-                        "img": "",
-                        "enTitle": "Tasmanian Wilderness",
-                        "tripData": {
-                            "route": "塔斯马尼亚西部地区",
-                            "desc": "作为一片世界遗产荒野，塔斯马尼亚荒原覆盖了该州西部广阔区域，拥有追溯至十亿年前的古老地质。",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "高山荒野",
-                                    "desc": "辽阔的高原湿地与锯齿状山峰构成的原始地貌"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "袋獾观察",
-                                    "desc": "在自然栖息地寻觅珍稀塔斯马尼亚恶魔的踪迹"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "陆上步道",
-                                    "desc": "徒步穿越被列为世界遗产的古老雨林与冰川峡谷"
-                                }
-                            ],
-                            "tags": [
-                                "建议驾驶四驱车辆",
-                                "防寒防风装备",
-                                "自备补给物资"
-                            ]
-                        }
-                    },
-                    {
                         "title": "塔斯曼国家公园",
-                        "img": "",
+                        "img": "../assets/img/places/TasmanNationalPark.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/brown-and-green-rock-formation-beside-body-of-water-during-daytime-JRDqIYXtl_w?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@stephenmabbs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Stephen Mabbs"
+                            }
+                        ],
                         "enTitle": "Tasman National Park",
                         "tripData": {
-                            "route": "塔斯马尼亚东南部",
-                            "desc": "公园东海岸定义了壮观的海蚀地貌，其标志霍伊角是南半球最高的海边悬崖之一，高度近300米。",
+                            "route": "Tasman National Park, Arthur Highway, Port Arthur TAS 7182, Australia",
+                            "desc": "公园东海岸以壮观的海蚀地貌为特色，其标志性景点霍伊角是南半球最高的海边悬崖之一，高度近300米。",
+                            "region": "霍巴特及南部",
+                            "town": "Tasman Peninsula",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -320,17 +339,27 @@
                                 "海上活动受天气影响",
                                 "摄影爱好者天堂",
                                 "游船班次有限",
-                                "无遮蔽处注意防晒"
+                                "注意防晒"
                             ]
                         }
                     },
                     {
                         "title": "富兰克林戈登野河国家公园",
-                        "img": "",
+                        "img": "../assets/img/places/FranklinGordonWildRiversNationalPark.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-view-of-a-mountain-range-with-a-lake-in-the-middle-XsNcWs3bhZA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@stephenmabbs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Stephen Mabbs"
+                            }
+                        ],
                         "enTitle": "Franklin-Gordon Wild Rivers National Park",
                         "tripData": {
-                            "route": "塔斯马尼亚西部",
+                            "route": "Franklin-Gordon Wild Rivers National Park, Tasmania, Australia",
                             "desc": "富兰克林-戈登野河国家公园保存着塔斯马尼亚最原始的河流与温带雨林。",
+                            "region": "西海岸",
+                            "town": "Strahan",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -359,11 +388,21 @@
                     },
                     {
                         "title": "西南国家公园",
-                        "img": "",
+                        "img": "../assets/img/places/SouthwestNationalPark.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-body-of-water-with-a-rock-arch-in-the-middle-of-it-FNpL4vI5BC8?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@lutruwita_exposure?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "RE Walsh"
+                            }
+                        ],
                         "enTitle": "Southwest National Park",
                         "tripData": {
-                            "route": "塔斯马尼亚西南部",
+                            "route": "Southwest National Park, Strathgordon TAS 7139, Australia",
                             "desc": "西南国家公园以广阔的温带雨林、河流系统，以及纽扣草平原等多种地貌为特征。",
+                            "region": "西海岸",
+                            "town": "Strahan",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -393,11 +432,21 @@
                     },
                     {
                         "title": "斯特拉恩小镇",
-                        "img": "",
+                        "img": "../assets/img/places/Strahan.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/empty-bridge-along-body-of-water-ces8_Bo7bhQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@sydneylens?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Paul Carmona"
+                            }
+                        ],
                         "enTitle": "Strahan",
                         "tripData": {
-                            "route": "塔斯马尼亚西海岸",
+                            "route": "Strahan TAS 7468",
                             "desc": "斯特拉恩是塔斯马尼亚西海岸的一个港口小镇，毗邻塔斯马尼亚旷野世界遗产区。作为通往西南部荒野的主要门户，小镇的核心体验由戈登河荒野游轮、西海岸荒野铁路与悠久的历史海港共同构成①。",
+                            "region": "西海岸",
+                            "town": "Strahan",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -434,16 +483,26 @@
                     },
                     {
                         "title": "皇后镇",
-                        "img": "",
+                        "img": "../assets/img/places/Queenstown.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-car-driving-down-a-street-with-a-mountain-in-the-background-Xi8a2pGr9-w?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@joshfotho?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Josh Fotheringham"
+                            }
+                        ],
                         "enTitle": "Queenstown",
                         "tripData": {
-                            "route": "塔斯马尼亚西海岸山区",
-                            "desc": "皇后镇是通往西海岸的大门，拥有丰富然而艰辛的采矿历史。 它也靠近塔斯马尼亚的世界遗产荒野地区的边缘，被大湖所包围。该镇曾经是世界上最富有的矿业镇。",
+                            "route": "Queenstown, Tasmania, Australia",
+                            "desc": "皇后镇是通往西海岸的大门，拥有丰富然而艰辛的采矿历史。 它也靠近塔斯马尼亚的世界遗产荒野地区的边缘，被大湖所包围。该镇曾经是世界上最富有的矿业镇之一。",
+                            "region": "西海岸",
+                            "town": "Queenstown",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "采矿铁路遗产",
-                                    "desc": "体验连接斯特拉恩与皇后镇的西海岸荒野铁路，这是一条穿越采矿历史景观的旅游铁路"
+                                    "desc": "体验连接斯特拉恩与皇后镇的西海岸荒野铁路"
                                 },
                                 {
                                     "icon": "#3b82f6",
@@ -475,11 +534,23 @@
                     },
                     {
                         "title": "胡恩谷",
-                        "img": "",
+                        "img": "../assets/img/places/HuonValley.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Sleeping_Beauty_vista_in_the_Huon_Valley.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/photos/jacobharrisau/",
+                                "photographer": "jacobharrisau",
+                                "license": "CC BY-SA 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+                            }
+                        ],
                         "enTitle": "Huon Valley",
                         "tripData": {
-                            "route": "塔斯马尼亚南部",
+                            "route": "1/3 Wilmot Rd, Huonville TAS 7109, Australia（胡恩维尔游客中心）",
                             "desc": "胡恩河谷是塔斯马尼亚南部的一个乡村地区与河谷，以胡恩河下游流域为中心。该地区历史上以苹果种植闻名，现今经济亦包括樱桃种植、三文鱼养殖及旅游业。其行政与商业中心是位于霍巴特以南约38公里处的胡恩维尔。",
+                            "region": "霍巴特及南部",
+                            "town": "Huonville",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -517,7 +588,9 @@
                         "img": "",
                         "enTitle": "Ocean Beach",
                         "tripData": {
-                            "route": "塔斯马尼亚西海岸",
+                            "route": "Ocean Beach, Strahan TAS 7468, Australia",
+                            "region": "西海岸",
+                            "town": "Strahan",
                             "desc": "海洋海滩是位于塔斯马尼亚西海岸的一片绵长的海滩。",
                             "features": [
                                 {
@@ -551,11 +624,21 @@
                     },
                     {
                         "title": "摇篮山",
-                        "img": "",
+                        "img": "../assets/img/places/cradlemt.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/body-of-water-near-mountain-under-blue-sky-during-daytime-mBzUKh9fla8?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@timhart0421?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Tim Hart"
+                            }
+                        ],
                         "enTitle": "Cradle Mountain",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
+                            "route": "Cradle Mountain, Tasmania, Australia（游客中心地址：4057 Cradle Mountain Rd, Cradle Mountain TAS 7310）",
                             "desc": "探访塔斯马尼亚标志性的山峰，感受原始森林和高山湖泊的魅力。",
+                            "region": "西北部",
+                            "town": "Cradle Mountain",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -583,11 +666,21 @@
                     },
                     {
                         "title": "火焰湾",
-                        "img": "",
+                        "img": "../assets/img/places/BayOfFires.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/sea-under-white-clouds-during-daytime-JKb1vY1Al40?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@davidclode?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "David Clode"
+                            }
+                        ],
                         "enTitle": "Bay of Fires",
                         "tripData": {
-                            "route": "塔斯马尼亚州东北部圣海伦斯以北",
+                            "route": "Binalong Bay TAS 7216, Australia",
                             "desc": "火焰湾的海岸线特征是石英砂海滩与花岗岩群并存。海滩延伸约29公里，花岗岩表面则覆盖着橙红色地衣。",
+                            "region": "东海岸",
+                            "town": "St Helens",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -617,10 +710,18 @@
                     {
                         "title": "酒杯湾",
                         "img": "../assets/img/places/wineglassbay.jpg",
+                        "imgSource": [
+                            {
+                                "sourceName": "TasTrips",
+                                "photographer": "Anderson Chen"
+                            }
+                        ],
                         "enTitle": "Wineglass Bay",
                         "tripData": {
-                            "route": "塔斯马尼亚州东海岸",
+                            "route": "Wineglass Bay, Freycinet National Park, Coles Bay TAS 7215, Australia",
                             "desc": "塔斯马尼亚的酒杯湾，以酒杯造型的白色沙滩和蓝绿色海水闻名。",
+                            "region": "东海岸",
+                            "town": "Coles Bay",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -650,11 +751,21 @@
                     },
                     {
                         "title": "玛丽亚岛",
-                        "img": "",
+                        "img": "../assets/img/places/MariaIsland.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/man-in-black-long-sleeve-shirt-standing-on-brown-grass-field-near-blue-sea-during-daytime-ZHqQlacPlSo?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@fifernando?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Fidel Fernando"
+                            }
+                        ],
                         "enTitle": "Maria Island",
                         "tripData": {
-                            "route": "塔斯马尼亚州东海岸",
+                            "route": "Maria Island National Park, Tasmania, Australia（渡轮登岛点：Triabunna TAS 7190）",
                             "desc": "玛丽亚岛是塔斯马尼亚东海岸的一座国家公园岛屿。岛上多山，拥有彩绘悬崖与蕴含二叠纪化石的崖壁等地质景观①。其海岸线包括沙滩与悬崖，是袋熊、袋鼠及塔斯马尼亚袋獾（恶魔）保护种群的重要栖息地。玛丽亚岛是塔斯马尼亚东海岸的一座国家公园岛屿。岛上多山，拥有彩绘悬崖与蕴含二叠纪化石的崖壁等地质景观①。其海岸线包括沙滩与悬崖，是袋熊、袋鼠及塔斯马尼亚袋獾（恶魔）保护种群的重要栖息地。",
+                            "region": "东海岸",
+                            "town": "Triabunna",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -691,11 +802,23 @@
                     },
                     {
                         "title": "塔斯曼半岛",
-                        "img": "",
+                        "img": "../assets/img/places/TasmanPeninsula.JPG",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Tasman_Island_and_Tasman_Peninsula_from_Cape_Raoul.JPG",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Gderrin",
+                                "photographer": "Geoffrey Derrin",
+                                "license": "CC BY-SA 4.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+                            }
+                        ],
                         "enTitle": "Turrakana/Tasman Peninsula",
                         "tripData": {
-                            "route": "塔斯马尼亚州东南部",
+                            "route": "Tasman Peninsula, Tasmania, Australia（主要景点入口：Port Arthur TAS 7182）",
                             "desc": "该地区的官方名称为Turrakana / Tasman Peninsula。塔斯曼半岛拥有世界遗产地亚瑟港历史遗址，并以崎岖的海岸线与塔斯曼国家公园而闻名。",
+                            "region": "霍巴特及南部",
+                            "town": "Tasman Peninsula",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -724,38 +847,6 @@
                                     "desc": "Wikipedia,The Free Encyclopedia",
                                     "url": "https://en.wikipedia.org/w/index.php?title=Tasman_Peninsula&oldid=1303858446"
                                 }
-                            ]
-                        }
-                    },
-                    {
-                        "title": "布鲁尼岛",
-                        "img": "",
-                        "enTitle": "Bruny Island",
-                        "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
-                            "desc": "乘坐渡轮前往这个生态天堂，品尝当地美食并欣赏壮观的自然景观。",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "当地美食",
-                                    "desc": "著名的生蚝和奶酪"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "自然景观",
-                                    "desc": "颈峡和海角灯塔"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "野生动物",
-                                    "desc": "海鸟和小企鹅"
-                                }
-                            ],
-                            "tags": [
-                                "美食之旅",
-                                "生态天堂",
-                                "需要渡轮",
-                                "适合一日游"
                             ]
                         }
                     },

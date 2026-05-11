@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
+import InfoSourceDialog from './InfoSourceDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
@@ -51,6 +52,7 @@ const dialogVisible = computed({
 const contactDialogVisible = ref(false)
 const infoDialogVisible = ref(false)
 const bannerCarouselRef = ref(null)
+const activeBannerIndex = ref(0)
 
 const openContactDialog = () => {
     contactDialogVisible.value = true
@@ -58,6 +60,10 @@ const openContactDialog = () => {
 
 const openInfoDialog = () => {
     infoDialogVisible.value = true
+}
+
+const handleBannerChange = (currentIndex) => {
+    activeBannerIndex.value = Number(currentIndex) || 0
 }
 
 const getFreeInfoData = (title) => {
@@ -104,6 +110,30 @@ const routeInfo = computed(() => {
     return getFreeInfoData(props.title);
 })
 
+const scenicItemImageSource = computed(() => {
+    try {
+        if (!Array.isArray(dataJson)) return []
+        const freeInfoSection = dataJson.find(item => item?.tagName === '自助游/自驾游免费参考信息')
+        const scenicNav = freeInfoSection?.subNav?.find(subItem => subItem?.subNavName === '景点')
+        const scenicItem = scenicNav?.items?.find(item => item?.title === props.title)
+        return Array.isArray(scenicItem?.imgSource) ? scenicItem.imgSource : []
+    } catch (error) {
+        return []
+    }
+})
+
+const infoSourceRows = computed(() => {
+    if (Array.isArray(routeInfo.value?.source)) return routeInfo.value.source
+    if (Array.isArray(props.tripData?.source)) return props.tripData.source
+    return []
+})
+
+const sourceEntryName = computed(() => {
+    return String(infoSourceRows.value?.[0]?.title || '').trim() || '该条目'
+})
+
+const isScenicInfo = computed(() => props.tripType === '景点信息')
+
 const dialogImages = computed(() => {
     const imageGroups = [
         routeInfo.value?.images,
@@ -126,8 +156,41 @@ const dialogImages = computed(() => {
     return props.banner ? [resolveDataImage(props.banner)] : []
 })
 
+const normalizeImageSourceEntry = (entry) => {
+    if (!entry || typeof entry !== 'object') return null
+    const source = String(entry.source || '').trim()
+    const sourceName = String(entry.sourceName || entry.sourcename || '').trim()
+    const photographerLink = String(entry.photographerLink || '').trim()
+    const photographer = String(entry.photographer || '').trim()
+    const license = String(entry.license || '').trim()
+    const licenseLink = String(entry.licenseLink || '').trim()
+    if (!sourceName || !photographer) return null
+    return { source, sourceName, photographerLink, photographer, license, licenseLink }
+}
+
+const imageSourceMeta = computed(() => {
+    const raw = routeInfo.value?.imgSource ?? props.tripData?.imgSource ?? scenicItemImageSource.value
+    if (!Array.isArray(raw) || raw.length === 0) return []
+    return raw.map(normalizeImageSourceEntry).filter(Boolean)
+})
+
+const currentImageSourceMeta = computed(() => {
+    if (!imageSourceMeta.value.length) return null
+    return imageSourceMeta.value[activeBannerIndex.value] || imageSourceMeta.value[0] || null
+})
+
+const getImageAltText = (index) => {
+    const sourceMeta = imageSourceMeta.value[index] || imageSourceMeta.value[0]
+    if (sourceMeta?.photographer && sourceMeta?.sourceName) {
+        const licensePart = sourceMeta?.license ? ` · ${sourceMeta.license}` : ''
+        return `Photo by ${sourceMeta.photographer} on ${sourceMeta.sourceName}${licensePart}`
+    }
+    return props.title || 'banner'
+}
+
 watch(dialogVisible, (visible) => {
     if (!visible) return
+    activeBannerIndex.value = 0
     nextTick(() => {
         if (bannerCarouselRef.value?.setActiveItem) {
             bannerCarouselRef.value.setActiveItem(0)
@@ -154,28 +217,55 @@ watch(dialogVisible, (visible) => {
         <div class="dlg-section">
             <div class="dlg-banner w100" v-if="dialogImages.length">
                 <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
-                    arrow="hover" height="350px">
+                    arrow="hover" height="350px" @change="handleBannerChange">
                     <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
-                        <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
+                        <el-image :src="image" :alt="getImageAltText(index)" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
                             :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
                             :z-index="950" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
+            <p v-if="currentImageSourceMeta" :class="['img-source-note', { 'img-source-note--scenic': isScenicInfo }]">
+                ※ Photo by
+                <el-link v-if="currentImageSourceMeta.photographerLink" :href="currentImageSourceMeta.photographerLink"
+                    target="_blank" rel="noopener noreferrer" class="img-source-link">
+                    {{ currentImageSourceMeta.photographer }}
+                </el-link>
+                <span v-else class="img-source-highlight">{{ currentImageSourceMeta.photographer }}</span>
+                on
+                <el-link v-if="currentImageSourceMeta.source" :href="currentImageSourceMeta.source" target="_blank"
+                    rel="noopener noreferrer" class="img-source-link">
+                    {{ currentImageSourceMeta.sourceName }}
+                </el-link>
+                <span v-else class="img-source-highlight">{{ currentImageSourceMeta.sourceName }}</span>
+                <template v-if="currentImageSourceMeta.license">
+                    ·
+                    <el-link v-if="currentImageSourceMeta.licenseLink" :href="currentImageSourceMeta.licenseLink"
+                        target="_blank" rel="noopener noreferrer" class="img-source-link">
+                        {{ currentImageSourceMeta.license }}
+                    </el-link>
+                    <span v-else>{{ currentImageSourceMeta.license }}</span>
+                </template>
+            </p>
 
-            <div class="dlg-text">
-                <div class="section-title" v-if="routeInfo.route">{{ routeInfo.route }}</div>
+            <div :class="['dlg-text', { 'dlg-text--scenic': isScenicInfo }]">
+                <div class="section-title" v-if="!isScenicInfo && routeInfo.route">
+                    {{ routeInfo.route }}
+                </div>
                 <div class="section-desc">
                     {{ routeInfo.desc }}
                 </div>
-
                 <div class="feature-grid">
                     <div class="feature-card" v-for="(feature, index) in routeInfo.features" :key="index">
                         <div class="icon" :style="{ background: feature.icon }"></div>
                         <div class="f-title">{{ feature.title }}</div>
                         <div class="f-desc">{{ feature.desc }}</div>
                     </div>
+                </div>
+                <div class="location-row" v-if="isScenicInfo && routeInfo.route">
+                    <span class="location-label">地址：</span>
+                    <span class="location-value">{{ routeInfo.route }}</span>
                 </div>
                 <div class="tag-row">
                     <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
@@ -185,12 +275,12 @@ watch(dialogVisible, (visible) => {
 
         <template #footer>
             <div class="dlg-footer">
-                <div class="info-disclaimer" @click="routeInfo.source ? openInfoDialog() : null">
+                <div class="info-disclaimer" @click="infoSourceRows.length ? openInfoDialog() : null">
                     <el-icon class="info-icon">
                         <InfoFilled />
                     </el-icon>
-                    <template v-if="routeInfo.source">
-                        本页信息来源：{{ routeInfo.source[0].desc }}
+                    <template v-if="infoSourceRows.length">
+                        本页信息来源：{{ infoSourceRows[0].desc }}
                     </template>
                     <template v-else>
                         本页信息来源：TasTrips.Online原创
@@ -202,19 +292,8 @@ watch(dialogVisible, (visible) => {
     </el-dialog>
 
     <ContactDialog v-model:visible="contactDialogVisible" />
-
-    <el-dialog v-model="infoDialogVisible" :z-index="999" :append-to-body="true" title="信息参考来源" align-center width="80%"
-        class="source-dia">
-        <el-table :data="routeInfo.source" border>
-            <el-table-column prop="title" label="条目/文章标题" width="200" />
-            <el-table-column prop="desc" label="来源名称" width="200" />
-            <el-table-column prop="url" label="永久链接">
-                <template #default="scope">
-                    <el-link :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-dialog>
+    <InfoSourceDialog v-model:visible="infoDialogVisible" :source-data="infoSourceRows"
+        :entry-title="sourceEntryName" />
 </template>
 
 <style lang="scss" scoped>
@@ -291,6 +370,35 @@ watch(dialogVisible, (visible) => {
     }
 }
 
+.img-source-note {
+    margin: 8px 20px 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #6b7280;
+    word-break: break-word;
+    text-align: left;
+}
+
+.img-source-note--scenic {
+    text-align: right;
+}
+
+.img-source-link {
+    color: #33b1a3;
+    // font-weight: 600;
+    vertical-align: baseline;
+}
+
+.img-source-highlight {
+    display: inline-block;
+    color: #0f766e;
+    font-weight: 700;
+    background: rgba(51, 177, 163, 0.14);
+    border-radius: 4px;
+    padding: 0 4px;
+    margin: 0 1px;
+}
+
 .dlg-section {
     letter-spacing: normal;
     text-align: left;
@@ -302,18 +410,45 @@ watch(dialogVisible, (visible) => {
     }
 }
 
+.location-row {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f7faf9;
+    border: 1px solid #e5efec;
+    line-height: 1.7;
+}
+
+.location-label {
+    color: #111827;
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+.location-value {
+    color: #374151;
+    font-size: 14px;
+    word-break: break-word;
+}
+
 .section-title {
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 600;
+    color: #111827;
     margin-bottom: 12px;
-    color: #1f2937;
 }
 
 .section-desc {
     line-height: 1.8;
     color: #4b5563;
+    font-weight: 400;
     margin-bottom: 16px;
     font-size: 16px;
+}
+
+.dlg-text--scenic .section-desc {
+    color: #1f2937;
+    font-size: 20px;
 }
 
 .feature-grid {
@@ -410,6 +545,33 @@ watch(dialogVisible, (visible) => {
     .info-disclaimer {
         position: relative;
         bottom: 0;
+    }
+
+    .img-source-note {
+        margin: 8px 12px 0;
+        font-size: 11px;
+        line-height: 1.6;
+        text-align: left;
+    }
+
+    .img-source-note--scenic {
+        text-align: right;
+    }
+
+    .location-row {
+        margin-top: 8px;
+        padding: 8px 10px;
+        line-height: 1.6;
+    }
+
+    .location-label,
+    .location-value {
+        font-size: 12px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        margin-bottom: 12px;
     }
 }
 </style>

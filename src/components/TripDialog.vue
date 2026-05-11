@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
+import InfoSourceDialog from './InfoSourceDialog.vue'
 import dataJson from '@/data/data.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
@@ -110,6 +111,16 @@ const routeInfo = computed(() => {
         return props.tripData;
     }
     return getTripRouteInfo(props.title, props.tripType);
+})
+
+const infoSourceRows = computed(() => {
+    if (Array.isArray(routeInfo.value?.source)) return routeInfo.value.source
+    if (Array.isArray(props.tripData?.source)) return props.tripData.source
+    return []
+})
+
+const sourceEntryName = computed(() => {
+    return String(infoSourceRows.value?.[0]?.title || '').trim() || '该条目'
 })
 
 const dialogImages = computed(() => {
@@ -259,12 +270,12 @@ watch(dialogVisible, (visible) => {
 
         <template #footer>
             <div class="dlg-footer">
-                <div class="info-disclaimer" @click="routeInfo.source ? openInfoDialog() : null">
+                <div class="info-disclaimer" @click="infoSourceRows.length ? openInfoDialog() : null">
                     <el-icon class="info-icon">
                         <InfoFilled />
                     </el-icon>
-                    <template v-if="routeInfo.source">
-                        本页信息来源：{{ routeInfo.source[0].desc }}
+                    <template v-if="infoSourceRows.length">
+                        本页信息来源：{{ infoSourceRows[0].desc }}
                     </template>
                     <template v-else>
                         本页信息来源：TasTrips.Online原创
@@ -275,19 +286,7 @@ watch(dialogVisible, (visible) => {
     </el-dialog>
 
     <ContactDialog v-model:visible="contactDialogVisible" />
-
-    <el-dialog v-model="infoDialogVisible" :z-index="999" :append-to-body="true" title="信息参考来源" align-center width="80%"
-        class="source-dia">
-        <el-table :data="tripData.source" border>
-            <el-table-column prop="title" label="条目/文章标题" width="200" />
-            <el-table-column prop="desc" label="来源名称" width="200" />
-            <el-table-column prop="url" label="永久链接">
-                <template #default="scope">
-                    <el-link :href="scope.row.url" target="_blank">{{ scope.row.url }}</el-link>
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-dialog>
+    <InfoSourceDialog v-model:visible="infoDialogVisible" :source-data="infoSourceRows" :entry-title="sourceEntryName" />
 </template>
 
 <style lang="scss" scoped>

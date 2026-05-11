@@ -90,6 +90,10 @@ defineExpose({
                 <ul>
                     <li class="policy-paragraph">为提供准确信息，本站部分事实性描述参考或引用了受许可的第三方内容。对于依据 《知识共享 署名-相同方式共享 协议》（如CC BY-SA
                         4.0）授权的第三方内容（如维基百科），我们已在具体页面中遵循其署名要求</li>
+                    <li class="policy-paragraph">许可证名称与链接：知识共享 署名-相同方式共享 4.0 国际许可协议（CC BY-SA 4.0），
+                        <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
+                            rel="noopener noreferrer" class="license-link-theme">https://creativecommons.org/licenses/by-sa/4.0/</a>
+                    </li>
                 </ul>
                 <h3>对你的授权与限制</h3>
                 <ul>
@@ -207,6 +211,17 @@ defineExpose({
     white-space: pre-wrap;
 }
 
+.license-link-theme {
+    color: #33b1a3;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.license-link-theme:hover {
+    color: #279486;
+}
+
 .refund-table {
     margin: 10px 0 20px 0;
     width: 100%;
@@ -273,10 +288,6 @@ defineExpose({
 
 // 小屏幕手机适配 (小于480px)
 @media (max-width: 480px) {
-    .policy-text {
-        // height: 250px;
-    }
-
     .tips {
         padding: 8px;
     }
