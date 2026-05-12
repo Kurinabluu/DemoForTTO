@@ -5,11 +5,11 @@ import { Search } from '@element-plus/icons-vue';
 import { getFavorites, removeFavorite, toggleFavorite } from '@/utils/favoritesStore';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
-import dataJson from '@/data/data.json';
+import freeInfoData from '@/data/split/freeinfo.json';
 
 // 从原始数据中获取餐厅信息
 const getRestaurantData = (title) => {
-  const freeInfoSection = dataJson.find(item => item?.tagName === '自助游/自驾游免费参考信息');
+  const freeInfoSection = freeInfoData;
   if (freeInfoSection?.subNav && Array.isArray(freeInfoSection.subNav)) {
     const restaurantSection = freeInfoSection.subNav.find(sub => sub.subNavName === '餐厅');
     if (restaurantSection?.items && Array.isArray(restaurantSection.items)) {
@@ -29,7 +29,7 @@ const getCoverImageUrl = (item) => {
     if (hasCoverField) {
       const coverPath = String(restaurantData?.cover || '').trim();
       if (coverPath) {
-        const resolvedCover = resolveDataImage(coverPath, '');
+        const resolvedCover = resolveDataImage(coverPath, '', { variant: 'thumb' });
         if (resolvedCover) return resolvedCover;
       }
     }
@@ -40,7 +40,7 @@ const getCoverImageUrl = (item) => {
           // 餐厅使用第二张图片
           const secondImagePath = String(restaurantData.img[1] || '').trim();
           if (secondImagePath) {
-            const resolvedImage = resolveDataImage(secondImagePath, '');
+            const resolvedImage = resolveDataImage(secondImagePath, '', { variant: 'thumb' });
             if (resolvedImage) return resolvedImage;
           }
         }
@@ -48,12 +48,12 @@ const getCoverImageUrl = (item) => {
         for (const imagePath of restaurantData.img) {
           const normalizedPath = String(imagePath || '').trim();
           if (!normalizedPath) continue;
-          const resolvedImage = resolveDataImage(normalizedPath, '');
+          const resolvedImage = resolveDataImage(normalizedPath, '', { variant: 'thumb' });
           if (resolvedImage) return resolvedImage;
         }
       } else {
         // img 不是数组，直接使用
-        const resolvedImage = resolveDataImage(restaurantData.img, '');
+        const resolvedImage = resolveDataImage(restaurantData.img, '', { variant: 'thumb' });
         if (resolvedImage) return resolvedImage;
       }
     }
@@ -61,19 +61,19 @@ const getCoverImageUrl = (item) => {
 
   // 如果找不到原始数据，使用收藏数据中的图片
   if (item?.image) {
-    const resolvedImage = resolveDataImage(item.image, '');
+    const resolvedImage = resolveDataImage(item.image, '', { variant: 'thumb' });
     if (resolvedImage) return resolvedImage;
   }
   if (item?.banner) {
-    const resolvedImage = resolveDataImage(item.banner, '');
+    const resolvedImage = resolveDataImage(item.banner, '', { variant: 'thumb' });
     if (resolvedImage) return resolvedImage;
   }
   if (item?.img) {
     if (Array.isArray(item.img) && item.img.length > 0) {
-      const resolvedImage = resolveDataImage(item.img[0], '');
+      const resolvedImage = resolveDataImage(item.img[0], '', { variant: 'thumb' });
       if (resolvedImage) return resolvedImage;
     } else {
-      const resolvedImage = resolveDataImage(item.img, '');
+      const resolvedImage = resolveDataImage(item.img, '', { variant: 'thumb' });
       if (resolvedImage) return resolvedImage;
     }
   }
@@ -188,7 +188,8 @@ onUnmounted(() => {
     <!-- 收藏列表网格 -->
     <div class="favorites-grid">
       <div v-for="item in paginatedFavorites" :key="item.id" class="favorite-card" @click="openDialog(item)">
-        <img :src="getCoverImageUrl(item)" :alt="item.title" class="card-image" />
+        <img :src="getCoverImageUrl(item)" :alt="item.title" class="card-image" loading="lazy" decoding="async"
+          fetchpriority="low" />
         <div class="card-content">
           <h3 class="card-title">{{ item.title }}</h3>
           <p class="card-region">{{ item.region }}</p>

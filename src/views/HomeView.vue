@@ -6,7 +6,8 @@ import TripDialog from '@/components/TripDialog.vue'
 import PlaceListDialog from '@/components/PlaceListDialog.vue'
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
-import data from '@/data/data.json'
+import navData from '@/data/split/nav.json'
+import dayTripData from '@/data/split/daytrip.json'
 import { useNavStore } from '@/stores/nav'
 import { Search } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -60,13 +61,13 @@ const currentSubNavTab = ref('')
 
 // 从data.json中获取有子导航的对象
 const itemsWithSubNav = computed(() => {
-    return data.filter(item => item.hasSubNav === true)
+    return navData.filter(item => item.hasSubNav === true)
 })
 
 // 获取当前路由对应的数据对象
 const currentRouteData = computed(() => {
     const currentPath = route.path
-    return data.find(item => {
+    return navData.find(item => {
         if (item.path) {
             return currentPath.includes(item.path)
         }
@@ -262,7 +263,7 @@ function openPlaceList({ placeName, itemType }) {
     listItemType.value = itemType
 
     // 从data.json中获取数据
-    const placeData = data.find(item => item.tagName === '一日游/多日游')
+    const placeData = dayTripData
     if (placeData && placeData.subNav) {
         const subNav = placeData.subNav.find(sub => sub.subNavName === itemType)
         if (subNav && subNav.items) {
@@ -487,15 +488,17 @@ onMounted(() => {
 
                 // 等待滚动完成后添加蓝色边框效果
                 setTimeout(() => {
-                    // 添加蓝色边框样式
-                    targetElement.style.border = '2px solid #409eff'
-                    targetElement.style.transition = 'all 0.3s ease'
+                    // 使用浅主题色高亮，仅改变边框颜色，避免触发尺寸抖动
+                    targetElement.style.borderColor = '#33b1a3'
+                    targetElement.style.boxShadow = '0 0 0 2px rgba(51, 177, 163, 0.22)'
+                    targetElement.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease'
 
                     // 1秒后移除边框
                     setTimeout(() => {
-                        // 边框淡出效果
-                        targetElement.style.transition = 'all 0.5s ease'
-                        targetElement.style.border = 'none'
+                        // 高亮淡出：恢复透明边框，不移除边框宽度
+                        targetElement.style.transition = 'border-color 0.5s ease, box-shadow 0.5s ease'
+                        targetElement.style.borderColor = 'transparent'
+                        targetElement.style.boxShadow = 'none'
 
                         // 等待边框消失后再打开弹窗
                         setTimeout(() => {

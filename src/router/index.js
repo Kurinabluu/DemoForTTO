@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useNavStore } from '@/stores/nav'
-import data from '@/data/data.json'
 
 const DEFAULT_FREEINFO_SUBNAV = '景点'
 

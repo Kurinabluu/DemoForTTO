@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { useNavStore } from '@/stores/nav'
 import { RouterLink, useRouter } from 'vue-router'
-import data from '@/data/data.json'
+import data from '@/data/split/nav.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 import { searchAllContent, persistSearchSession, getStoredSearchSession } from '@/utils/searchService'
 
@@ -238,11 +238,11 @@ watch(() => router.currentRoute.value.path, () => {
 })
 
 // 搜索按钮点击事件
-function onSearch() {
+async function onSearch() {
   const keyword = (searchKeyword.value || '').trim()
   if (!keyword) return
 
-  const payload = searchAllContent(keyword)
+  const payload = await searchAllContent(keyword)
   persistSearchSession({ ...payload, currentPage: 1 })
 
   router.push({

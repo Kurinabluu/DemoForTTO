@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
-import dataJson from '@/data/data.json'
+import freeInfoData from '@/data/split/freeinfo.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
@@ -68,18 +68,16 @@ const handleBannerChange = (currentIndex) => {
 
 const getFreeInfoData = (title) => {
     try {
-        if (!title || !dataJson || !Array.isArray(dataJson)) {
+        if (!title || !freeInfoData) {
             return getDefaultFreeInfo(title)
         }
 
-        const freeInfoSection = dataJson.find(item => item?.tagName === '免费参考信息')
-        if (freeInfoSection?.subNav && Array.isArray(freeInfoSection.subNav)) {
-            for (const subNav of freeInfoSection.subNav) {
-                if (subNav?.items && Array.isArray(subNav.items)) {
-                    const infoItem = subNav.items.find(item => item?.title === title)
-                    if (infoItem?.tripData) {
-                        return infoItem.tripData
-                    }
+        if (freeInfoData?.subNav && Array.isArray(freeInfoData.subNav)) {
+            for (const subNav of freeInfoData.subNav) {
+                if (!subNav?.items || !Array.isArray(subNav.items)) continue
+                const infoItem = subNav.items.find(item => item?.title === title)
+                if (infoItem?.tripData) {
+                    return infoItem.tripData
                 }
             }
         }
@@ -112,9 +110,7 @@ const routeInfo = computed(() => {
 
 const scenicItemImageSource = computed(() => {
     try {
-        if (!Array.isArray(dataJson)) return []
-        const freeInfoSection = dataJson.find(item => item?.tagName === '自助游/自驾游免费参考信息')
-        const scenicNav = freeInfoSection?.subNav?.find(subItem => subItem?.subNavName === '景点')
+        const scenicNav = freeInfoData?.subNav?.find(subItem => subItem?.subNavName === '景点')
         const scenicItem = scenicNav?.items?.find(item => item?.title === props.title)
         return Array.isArray(scenicItem?.imgSource) ? scenicItem.imgSource : []
     } catch (error) {

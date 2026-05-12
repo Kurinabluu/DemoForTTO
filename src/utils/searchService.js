@@ -1,4 +1,4 @@
-import dataSource from '@/data/data.json'
+import { getDataJson, getSearchIndexData } from '@/utils/dataRepository'
 
 const SEARCH_STORAGE_KEY = 'tto_last_search_payload'
 const MAX_SNIPPET_LENGTH = 220
@@ -91,6 +91,8 @@ const nextId = () => {
 }
 
 const searchIndex = []
+let hasBuiltSearchIndex = false
+let buildSearchIndexPromise = null
 
 const pushResult = ({
   title,
@@ -166,97 +168,144 @@ const processItemsArray = (items, context = {}) => {
   })
 }
 
-dataSource.forEach((section) => {
-  // 检查section的isShow属性和available属性，如果存在且为false，则跳过
-  if ((section.hasOwnProperty('isShow') && !section.isShow) || section.available === false) return
+const buildSearchIndex = (dataSource = []) => {
+  searchIndex.length = 0
+  idCounter = 0
 
-  const basePath = buildBasePath(section.path)
-  // 只索引板块自身的文字，不把所有子项的内容都算进来，
-  // 避免搜索“inn”等关键词时，把下面所有景点/酒店的词都算到这一层上
-  const sectionText = [
-    section.tagName,
-    summaryFromItem(section),
-    section.heroDesc,
-    section.description
-  ]
-    .filter(Boolean)
-    .map((v) => cleanText(String(v)))
-    .join(' ')
+  dataSource.forEach((section) => {
+    // 检查section的isShow属性和available属性，如果存在且为false，则跳过
+    if ((section.hasOwnProperty('isShow') && !section.isShow) || section.available === false) return
 
-  pushResult({
-    title: section.tagName,
-    summary: summaryFromItem(section),
-    sectionTag: section.tagName,
-    targetUrl: basePath,
-    source: sectionText,
-    kind: 'section'
-  })
+    const basePath = buildBasePath(section.path)
+    // 只索引板块自身的文字，不把所有子项的内容都算进来，
+    // 避免搜索“inn”等关键词时，把下面所有景点/酒店的词都算到这一层上
+    const sectionText = [
+      section.tagName,
+      summaryFromItem(section),
+      section.heroDesc,
+      section.description
+    ]
+      .filter(Boolean)
+      .map((v) => cleanText(String(v)))
+      .join(' ')
 
-  if (Array.isArray(section.subNav)) {
-    section.subNav.forEach((subNav) => {
-      // 检查subNav的isShow属性，如果存在且为false，则跳过
-      if (subNav.hasOwnProperty('isShow') && !subNav.isShow) return
-
-      const queryKey = section.tagName === '一日游/多日游' ? 'dayTripTab' : 'subNavName'
-      const queryParams = { [queryKey]: subNav.subNavName }
-
-      pushResult({
-        title: `${section.tagName} - ${subNav.subNavName}`,
-        summary: summaryFromItem(subNav),
-        sectionTag: section.tagName,
-        subNavName: subNav.subNavName,
-        targetUrl: buildTargetUrl(basePath, queryParams),
-        // 这里同样只索引子导航自身的简介，不包含 items 里的每个景点/酒店，
-        // 否则会出现“景点外面包一层”的结果一起命中
-        source: {
-          subNavName: subNav.subNavName,
-          desc: subNav.desc,
-          summary: summaryFromItem(subNav)
-        },
-        kind: 'subNav'
-      })
-
-      if (Array.isArray(subNav.items)) {
-        processItemsArray(subNav.items, {
-          sectionTag: section.tagName,
-          subNavName: subNav.subNavName,
-          basePath,
-          groupName: subNav.subNavName,
-          queryParams
-        })
-      }
-    })
-  }
-
-  if (Array.isArray(section.tripConfig)) {
-    processItemsArray(section.tripConfig, {
-      sectionTag: section.tagName,
-      basePath
-    })
-  }
-
-  if (section.serviceConfig) {
-    const config = section.serviceConfig
     pushResult({
-      title: `${section.tagName} - 介绍`,
-      summary: config.heroDesc || config.contactIntro || summaryFromItem(config),
+      title: section.tagName,
+      summary: summaryFromItem(section),
       sectionTag: section.tagName,
       targetUrl: basePath,
-      source: config,
-      kind: 'service'
+      source: sectionText,
+      kind: 'section'
     })
 
-    processItemsArray(config.packages, {
-      sectionTag: section.tagName,
-      basePath
-    })
+    if (Array.isArray(section.subNav)) {
+      section.subNav.forEach((subNav) => {
+        // 检查subNav的isShow属性，如果存在且为false，则跳过
+        if (subNav.hasOwnProperty('isShow') && !subNav.isShow) return
 
-    processItemsArray(config.advantages, {
-      sectionTag: section.tagName,
-      basePath
-    })
+        const queryKey = section.tagName === '一日游/多日游' ? 'dayTripTab' : 'subNavName'
+        const queryParams = { [queryKey]: subNav.subNavName }
+
+        pushResult({
+          title: `${section.tagName} - ${subNav.subNavName}`,
+          summary: summaryFromItem(subNav),
+          sectionTag: section.tagName,
+          subNavName: subNav.subNavName,
+          targetUrl: buildTargetUrl(basePath, queryParams),
+          // 这里同样只索引子导航自身的简介，不包含 items 里的每个景点/酒店，
+          // 否则会出现“景点外面包一层”的结果一起命中
+          source: {
+            subNavName: subNav.subNavName,
+            desc: subNav.desc,
+            summary: summaryFromItem(subNav)
+          },
+          kind: 'subNav'
+        })
+
+        if (Array.isArray(subNav.items)) {
+          processItemsArray(subNav.items, {
+            sectionTag: section.tagName,
+            subNavName: subNav.subNavName,
+            basePath,
+            groupName: subNav.subNavName,
+            queryParams
+          })
+        }
+      })
+    }
+
+    if (Array.isArray(section.tripConfig)) {
+      processItemsArray(section.tripConfig, {
+        sectionTag: section.tagName,
+        basePath
+      })
+    }
+
+    if (section.serviceConfig) {
+      const config = section.serviceConfig
+      pushResult({
+        title: `${section.tagName} - 介绍`,
+        summary: config.heroDesc || config.contactIntro || summaryFromItem(config),
+        sectionTag: section.tagName,
+        targetUrl: basePath,
+        source: config,
+        kind: 'service'
+      })
+
+      processItemsArray(config.packages, {
+        sectionTag: section.tagName,
+        basePath
+      })
+
+      processItemsArray(config.advantages, {
+        sectionTag: section.tagName,
+        basePath
+      })
+    }
+  })
+}
+
+const ensureSearchIndex = async () => {
+  if (hasBuiltSearchIndex) return
+
+  if (!buildSearchIndexPromise) {
+    buildSearchIndexPromise = getSearchIndexData()
+      .then((rows) => {
+        if (Array.isArray(rows) && rows.length > 0) {
+          searchIndex.length = 0
+          rows.forEach((row) => {
+            if (!row || typeof row !== 'object') return
+            const rawText = typeof row.rawText === 'string' ? row.rawText : collectStrings(row).join(' ')
+            searchIndex.push({
+              id: row.id || nextId(),
+              title: row.title || '',
+              summary: row.summary || '',
+              sectionTag: row.sectionTag || '',
+              subNavName: row.subNavName || '',
+              groupName: row.groupName || '',
+              targetUrl: row.targetUrl || '',
+              rawText,
+              searchText: (row.searchText || rawText || '').toLowerCase(),
+              kind: row.kind || 'item'
+            })
+          })
+          hasBuiltSearchIndex = true
+          return
+        }
+
+        return getDataJson().then((dataSource) => {
+          buildSearchIndex(dataSource)
+          hasBuiltSearchIndex = true
+        })
+      })
+      .catch(() => {
+        buildSearchIndex([])
+        hasBuiltSearchIndex = true
+      })
   }
-})
+
+  await buildSearchIndexPromise
+}
 
 const getSnippet = (text, keyword) => {
   if (!text) return ''
@@ -356,7 +405,8 @@ const isSimilarTitle = (title1, title2) => {
   return false;
 }
 
-export const searchAllContent = (rawKeyword) => {
+export const searchAllContent = async (rawKeyword) => {
+  await ensureSearchIndex()
   const keyword = cleanText(rawKeyword || '')
   if (!keyword) {
     return {

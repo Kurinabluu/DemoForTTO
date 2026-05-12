@@ -3,7 +3,8 @@ import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import dataJson from '@/data/data.json'
+import freeInfoData from '@/data/split/freeinfo.json'
+import dayTripData from '@/data/split/daytrip.json'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 
@@ -101,6 +102,26 @@ const currentPage = ref(1)
 const isLoading = ref(false)
 const hasMore = ref(true)
 const windowWidth = ref(window.innerWidth)
+const INITIAL_RENDER_COUNT = 24
+const RENDER_STEP_COUNT = 24
+const FIRST_SCREEN_PRIORITY_COUNT = 8
+const renderLimit = ref(INITIAL_RENDER_COUNT)
+const loadMoreTriggerRef = ref(null)
+let loadMoreObserver = null
+let mobileScrollTicking = false
+const resolvedImagePathCache = new Map()
+const scenicCardImageCache = new WeakMap()
+const restaurantCardImageCache = new WeakMap()
+const hotelCardImageCache = new WeakMap()
+const normalizedAreaInfoCache = new WeakMap()
+
+function getImageLoading(index) {
+    return index < FIRST_SCREEN_PRIORITY_COUNT ? 'eager' : 'lazy'
+}
+
+function getImageFetchPriority(index) {
+    return index < FIRST_SCREEN_PRIORITY_COUNT ? 'high' : 'low'
+}
 
 // 移动端网格 ref（当前可见的网格只有一个）
 const gridRef = ref(null)
@@ -176,9 +197,50 @@ function updateMobileScrollPage() {
     mobileScrollPage.value = Math.min(totalPages, Math.max(1, page))
 }
 
+function scheduleUpdateMobileScrollPage() {
+    if (mobileScrollTicking) return
+    mobileScrollTicking = true
+    requestAnimationFrame(() => {
+        updateMobileScrollPage()
+        mobileScrollTicking = false
+    })
+}
+
+function resetRenderLimit() {
+    renderLimit.value = INITIAL_RENDER_COUNT
+}
+
+function increaseRenderLimit() {
+    const totalItems = getTotalItems()
+    if (renderLimit.value >= totalItems) return
+    renderLimit.value = Math.min(totalItems, renderLimit.value + RENDER_STEP_COUNT)
+}
+
+function initLoadMoreObserver() {
+    if (typeof window === 'undefined') return
+    if (!('IntersectionObserver' in window)) return
+    if (!loadMoreTriggerRef.value) return
+
+    if (loadMoreObserver) {
+        loadMoreObserver.disconnect()
+    }
+
+    loadMoreObserver = new IntersectionObserver((entries) => {
+        if (!entries.some(entry => entry.isIntersecting)) return
+        increaseRenderLimit()
+        checkHasMore()
+    }, {
+        root: null,
+        rootMargin: '600px 0px 600px 0px',
+        threshold: 0
+    })
+
+    loadMoreObserver.observe(loadMoreTriggerRef.value)
+}
+
 onMounted(() => {
     window.addEventListener('resize', handleResize)
-    window.addEventListener('scroll', updateMobileScrollPage, { passive: true })
+    window.addEventListener('scroll', scheduleUpdateMobileScrollPage, { passive: true })
     checkHasMore()
 
     // 如果检测到需要自动加载所有数据，立即加载（仅非搜索场景）
@@ -193,12 +255,19 @@ onMounted(() => {
         locateTargetPageForDialogItem()
     }
 
-    nextTick(updateMobileScrollPage)
+    nextTick(() => {
+        updateMobileScrollPage()
+        initLoadMoreObserver()
+    })
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
-    window.removeEventListener('scroll', updateMobileScrollPage)
+    window.removeEventListener('scroll', scheduleUpdateMobileScrollPage)
+    if (loadMoreObserver) {
+        loadMoreObserver.disconnect()
+        loadMoreObserver = null
+    }
 })
 
 // 检测是否需要自动加载所有数据（兼容老的“高亮跳转”逻辑）
@@ -262,29 +331,16 @@ function locateTargetPageForDialogItem() {
     if (index === -1) return
 
     const pageSize = itemsPerPage.value || 1
-
-    // 计算目标结果所在的页数
-    const targetPage = Math.floor(index / pageSize) + 1
-
-    // 如果是移动端（平板/手机），使用累积显示模式
-    // 设置 currentPage 为目标页，这样会显示从第1页到目标页的所有数据
-    if (isMobile.value) {
-        currentPage.value = targetPage
-        // 检查是否还有更多数据（目标页之后是否还有数据）
-        const totalItems = list.length
-        hasMore.value = targetPage * pageSize < totalItems
-    } else {
-        // PC端：传统分页，只显示目标页
-        currentPage.value = targetPage
-        const totalItems = list.length
-        hasMore.value = targetPage * pageSize < totalItems
-    }
+    const targetVisibleCount = Math.max(INITIAL_RENDER_COUNT, (Math.floor(index / pageSize) + 1) * pageSize)
+    renderLimit.value = Math.min(list.length, targetVisibleCount)
+    hasMore.value = renderLimit.value < list.length
 }
 
 // 监听props变化，重置分页
 watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
+    resetRenderLimit()
     hasMore.value = true
     checkHasMore()
 
@@ -313,6 +369,7 @@ watch(
 watch(() => [selectedRegion.value, selectedTown.value, selectedDistance.value], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
+    resetRenderLimit()
     hasMore.value = true
     checkHasMore()
     nextTick(updateMobileScrollPage)
@@ -322,6 +379,10 @@ watch(() => selectedRegion.value, () => {
     if (selectedTown.value && !townOptions.value.includes(selectedTown.value)) {
         selectedTown.value = ''
     }
+})
+
+watch(() => loadMoreTriggerRef.value, () => {
+    nextTick(initLoadMoreObserver)
 })
 
 // 处理页码变化
@@ -337,14 +398,14 @@ const handlePageChange = (page) => {
 // 处理加载更多
 const handleLoadMore = () => {
     if (isLoading.value || !hasMore.value) return
-    currentPage.value++
+    increaseRenderLimit()
     checkHasMore()
 }
 
 // 检查是否还有更多数据
 function checkHasMore() {
     const totalItems = getTotalItems()
-    hasMore.value = currentPage.value * itemsPerPage.value < totalItems
+    hasMore.value = renderLimit.value < totalItems
 }
 
 // 获取当前应该显示的数据总数
@@ -379,12 +440,9 @@ function loadAllItems() {
     const totalItems = getTotalItems()
     if (totalItems <= 0) return
 
-    // 计算需要加载的页数
-    const totalPages = Math.ceil(totalItems / itemsPerPage.value)
-
-    if (currentPage.value < totalPages) {
+    if (renderLimit.value < totalItems) {
         isLoading.value = true
-        currentPage.value = totalPages
+        renderLimit.value = totalItems
         hasMore.value = false
 
         // 使用 setTimeout 模拟加载过程，确保 DOM 更新
@@ -401,16 +459,14 @@ function getPaginatedItems(items) {
         return items
     }
 
-    // 所有设备：一次性展示全部数据
-    return items
+    const visibleCount = Math.max(renderLimit.value, itemsPerPage.value)
+    return Array.isArray(items) ? items.slice(0, visibleCount) : []
 }
 
 // 从data.json获取数据
 const getDayTripData = () => {
     try {
-        if (!dataJson) return []
-        const dayTripSection = dataJson.find(item => item.tagName === '一日游/多日游')
-        return dayTripSection?.subNav || []
+        return dayTripData?.subNav || []
     } catch (error) {
         return []
     }
@@ -418,22 +474,38 @@ const getDayTripData = () => {
 
 const dayTripNavs = getDayTripData()
 
-const datas = dataJson.find(data => data.tagName == "自助游/自驾游免费参考信息")
-const places = datas.subNav.find(subItem => subItem.subNavName == "景点")
-const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅")
-const wineWineries = datas.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄")
-const spiritWineries = datas.subNav.find(subItem => subItem.subNavName == "洋酒酒庄")
-const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿")
+const datas = freeInfoData || { subNav: [] }
+const places = datas.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] }
+const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅") || { items: [] }
+const wineWineries = datas.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄") || { items: [] }
+const spiritWineries = datas.subNav.find(subItem => subItem.subNavName == "洋酒酒庄") || { items: [] }
+const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿") || { items: [] }
 
-const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动")
+const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动") || { items: [] }
 
 function getActivityImage(imgPath) {
-    return getImageUrl(imgPath)
+    return getThumbImageUrl(imgPath)
 }
 
 // 处理图片路径
 function getImageUrl(imgPath) {
-    return resolveDataImage(imgPath)
+    const cacheKey = String(imgPath || '')
+    if (resolvedImagePathCache.has(cacheKey)) {
+        return resolvedImagePathCache.get(cacheKey)
+    }
+    const resolved = resolveDataImage(imgPath)
+    resolvedImagePathCache.set(cacheKey, resolved)
+    return resolved
+}
+
+function getThumbImageUrl(imgPath, fallback = '') {
+    const cacheKey = `thumb::${String(imgPath || '')}::${String(fallback || '')}`
+    if (resolvedImagePathCache.has(cacheKey)) {
+        return resolvedImagePathCache.get(cacheKey)
+    }
+    const resolved = resolveDataImage(imgPath, fallback, { variant: 'thumb' })
+    resolvedImagePathCache.set(cacheKey, resolved)
+    return resolved
 }
 
 function normalizeImageList(images) {
@@ -442,98 +514,128 @@ function normalizeImageList(images) {
 }
 
 function getRestaurantGridImageUrl(item) {
+    if (item && restaurantCardImageCache.has(item)) {
+        return restaurantCardImageCache.get(item)
+    }
+
+    let resolvedUrl = ''
     // 检查 cover
     const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
     if (hasCoverField) {
         const coverPath = String(item?.cover || '').trim()
         if (coverPath) {
-            const resolvedCover = resolveDataImage(coverPath, '')
-            if (resolvedCover) return resolvedCover
+            const resolvedCover = getThumbImageUrl(coverPath, '')
+            if (resolvedCover) resolvedUrl = resolvedCover
         }
     }
     // cover 为空，检查 img
-    if (item?.img) {
+    if (!resolvedUrl && item?.img) {
         if (Array.isArray(item.img)) {
             if (item.img.length >= 2) {
                 // 餐厅使用第二张图片
                 const secondImagePath = String(item.img[1] || '').trim()
                 if (secondImagePath) {
-                    const resolvedImage = resolveDataImage(secondImagePath, '')
-                    if (resolvedImage) return resolvedImage
+                    const resolvedImage = getThumbImageUrl(secondImagePath, '')
+                    if (resolvedImage) resolvedUrl = resolvedImage
                 }
             }
             // 如果没有第二张或解析失败，使用第一张
             for (const imagePath of item.img) {
+                if (resolvedUrl) break
                 const normalizedPath = String(imagePath || '').trim()
                 if (!normalizedPath) continue
-                const resolvedImage = resolveDataImage(normalizedPath, '')
-                if (resolvedImage) return resolvedImage
+                const resolvedImage = getThumbImageUrl(normalizedPath, '')
+                if (resolvedImage) resolvedUrl = resolvedImage
             }
         } else {
             // img 不是数组，直接使用
-            const resolvedImage = getImageUrl(item.img)
-            if (resolvedImage) return resolvedImage
+            const resolvedImage = getThumbImageUrl(item.img, '')
+            if (resolvedImage) resolvedUrl = resolvedImage
         }
     }
-    return getImageUrl('')
+    const finalUrl = resolvedUrl || getImageUrl('')
+    if (item && typeof item === 'object') {
+        restaurantCardImageCache.set(item, finalUrl)
+    }
+    return finalUrl
 }
 
 function getScenicGridImageUrl(item) {
+    if (item && scenicCardImageCache.has(item)) {
+        return scenicCardImageCache.get(item)
+    }
+
+    let resolvedUrl = ''
     // 检查 cover
     const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
     if (hasCoverField) {
         const coverPath = String(item?.cover || '').trim()
         if (coverPath) {
-            const resolvedCover = resolveDataImage(coverPath, '')
-            if (resolvedCover) return resolvedCover
+            const resolvedCover = getThumbImageUrl(coverPath, '')
+            if (resolvedCover) resolvedUrl = resolvedCover
         }
     }
     // cover 为空，检查 img
-    if (item?.img) {
+    if (!resolvedUrl && item?.img) {
         if (Array.isArray(item.img)) {
             // 景点使用第一张图片
             for (const imagePath of item.img) {
+                if (resolvedUrl) break
                 const normalizedPath = String(imagePath || '').trim()
                 if (!normalizedPath) continue
-                const resolvedImage = resolveDataImage(normalizedPath, '')
-                if (resolvedImage) return resolvedImage
+                const resolvedImage = getThumbImageUrl(normalizedPath, '')
+                if (resolvedImage) resolvedUrl = resolvedImage
             }
         } else {
             // img 不是数组，直接使用
-            const resolvedImage = getImageUrl(item.img)
-            if (resolvedImage) return resolvedImage
+            const resolvedImage = getThumbImageUrl(item.img, '')
+            if (resolvedImage) resolvedUrl = resolvedImage
         }
     }
-    return getImageUrl('')
+    const finalUrl = resolvedUrl || getImageUrl('')
+    if (item && typeof item === 'object') {
+        scenicCardImageCache.set(item, finalUrl)
+    }
+    return finalUrl
 }
 
 function getHotelGridImageUrl(item) {
+    if (item && hotelCardImageCache.has(item)) {
+        return hotelCardImageCache.get(item)
+    }
+
+    let resolvedUrl = ''
     // 检查 cover
     const hasCoverField = item && Object.prototype.hasOwnProperty.call(item, 'cover')
     if (hasCoverField) {
         const coverPath = String(item?.cover || '').trim()
         if (coverPath) {
-            const resolvedCover = resolveDataImage(coverPath, '')
-            if (resolvedCover) return resolvedCover
+            const resolvedCover = getThumbImageUrl(coverPath, '')
+            if (resolvedCover) resolvedUrl = resolvedCover
         }
     }
     // cover 为空，检查 img
-    if (item?.img) {
+    if (!resolvedUrl && item?.img) {
         if (Array.isArray(item.img)) {
             // 住宿使用第一张图片
             for (const imagePath of item.img) {
+                if (resolvedUrl) break
                 const normalizedPath = String(imagePath || '').trim()
                 if (!normalizedPath) continue
-                const resolvedImage = resolveDataImage(normalizedPath, '')
-                if (resolvedImage) return resolvedImage
+                const resolvedImage = getThumbImageUrl(normalizedPath, '')
+                if (resolvedImage) resolvedUrl = resolvedImage
             }
         } else {
             // img 不是数组，直接使用
-            const resolvedImage = getImageUrl(item.img)
-            if (resolvedImage) return resolvedImage
+            const resolvedImage = getThumbImageUrl(item.img, '')
+            if (resolvedImage) resolvedUrl = resolvedImage
         }
     }
-    return getImageUrl('')
+    const finalUrl = resolvedUrl || getImageUrl('')
+    if (item && typeof item === 'object') {
+        hotelCardImageCache.set(item, finalUrl)
+    }
+    return finalUrl
 }
 
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
@@ -567,6 +669,10 @@ watch(() => shouldShowAreaFilters.value, (enabled) => {
     }
 })
 function normalizeAreaInfo(item) {
+    if (item && typeof item === 'object' && normalizedAreaInfoCache.has(item)) {
+        return normalizedAreaInfoCache.get(item)
+    }
+
     const regionRaw = String(item?.region || item?.tripData?.region || '').trim()
     const townRaw = String(item?.town || item?.tripData?.town || '').trim()
     const lowerTown = townRaw.toLowerCase()
@@ -582,10 +688,14 @@ function normalizeAreaInfo(item) {
         normalizedRegion = UNCATEGORIZED_REGION
     }
 
-    return {
+    const normalized = {
         region: normalizedRegion,
         town: townRaw || UNCATEGORIZED_TOWN
     }
+    if (item && typeof item === 'object') {
+        normalizedAreaInfoCache.set(item, normalized)
+    }
+    return normalized
 }
 
 function filterByRegionAndTown(items) {
@@ -891,6 +1001,7 @@ const scenicFiltered = computed(() => {
     if (!kw) return baseItems
     return baseItems.filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         (item.town && matchesKeyword(item.town, kw)) ||
         (item.region && matchesKeyword(item.region, kw))
     )
@@ -903,6 +1014,7 @@ const restaurantFiltered = computed(() => {
     if (!kw) return baseItems
     return baseItems.filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         (item.place && matchesKeyword(item.place, kw)) ||
         (item.enPlace && matchesKeyword(item.enPlace, kw)) ||
         (item.town && matchesKeyword(item.town, kw)) ||
@@ -921,6 +1033,7 @@ const wineFiltered = computed(() => {
     if (!kw) return wineWineries?.items || []
     return (wineWineries?.items || []).filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         (item.place && matchesKeyword(item.place, kw)) ||
         (item.enPlace && matchesKeyword(item.enPlace, kw))
     )
@@ -937,6 +1050,7 @@ const spiritFiltered = computed(() => {
     if (!kw) return spiritWineries?.items || []
     return (spiritWineries?.items || []).filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         (item.place && matchesKeyword(item.place, kw)) ||
         (item.enPlace && matchesKeyword(item.enPlace, kw))
     )
@@ -953,6 +1067,7 @@ const hotelFiltered = computed(() => {
     if (!kw) return baseItems
     return baseItems.filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         matchesKeyword(item.place, kw) ||
         matchesKeyword(item.enPlace, kw) ||
         (item.town && matchesKeyword(item.town, kw)) ||
@@ -1105,6 +1220,7 @@ const dayTripFiltered = computed(() => {
     if (!kw) return currentDayTripItems.value
     return currentDayTripItems.value.filter(item =>
         matchesKeyword(item.title, kw) ||
+        (item.enTitle && matchesKeyword(item.enTitle, kw)) ||
         (item.sub && matchesKeyword(item.sub, kw))
     )
 })
@@ -1159,7 +1275,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div ref="gridRef" class="coming-grid">
                     <div v-for="(item, i) in getPaginatedItems(dayTripFiltered)" :key="`day-trip-${dayTripTab}-${i}`"
                         class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1190,7 +1307,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)" :key="`day-trip-${dayTripTab}-${i}`"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100" :loading="getImageLoading(i)"
+                        decoding="async" :fetchpriority="getImageFetchPriority(i)">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
                     <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
                 </div>
@@ -1217,7 +1335,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1255,7 +1374,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1286,7 +1406,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i" class="coming-card"
                     @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100" :loading="getImageLoading(i)"
+                        decoding="async" :fetchpriority="getImageFetchPriority(i)">
                     <div class="card-title" :title="item.title">
                         <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                             :key="idx">
@@ -1316,7 +1437,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div ref="gridRef" class="coming-grid">
                 <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
                     class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100" :loading="getImageLoading(i)"
+                        decoding="async" :fetchpriority="getImageFetchPriority(i)">
                     <div class="card-title" :title="item.title">
                         <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                             :key="idx">
@@ -1352,7 +1474,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
                             <span v-for="(seg, idx) in getHighlightSegments(item.title, s || localSearchKeyword.value)"
                                 :key="idx">
@@ -1388,7 +1511,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
                     :class="['activity-card', item.cardClass]">
                     <div class="activity-image">
-                        <img :src="getActivityImage(item.img)" alt="特别活动" class="activity-img">
+                        <img :src="getActivityImage(item.img)" alt="特别活动" class="activity-img"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div :class="['activity-badge', item.badgeClass]">{{ item.badge }}</div>
                     </div>
                     <div class="activity-content">
@@ -1438,7 +1562,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
@@ -1473,7 +1598,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
@@ -1501,7 +1627,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <template v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i">
                 <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
                 <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100" :loading="getImageLoading(i)"
+                        decoding="async" :fetchpriority="getImageFetchPriority(i)">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
@@ -1528,7 +1655,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <template v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i">
                 <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
                 <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                    <img :src="getImageUrl(item.img)" :alt="item.title" class="w100">
+                    <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100" :loading="getImageLoading(i)"
+                        decoding="async" :fetchpriority="getImageFetchPriority(i)">
                     <div class="card-title" :title="item.title">{{ item.title }}</div>
                     <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                 </div>
@@ -1561,7 +1689,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         — {{ getTownDisplayName(item) }} —
                     </h2>
                     <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="item.title">
-                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100">
+                        <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
+                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                     </div>
@@ -1591,7 +1720,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
                 :class="['activity-card', activity.cardClass]">
                 <div class="activity-image">
-                    <img :src="getActivityImage(activity.img)" alt="特别活动" class="activity-img">
+                    <img :src="getActivityImage(activity.img)" alt="特别活动" class="activity-img"
+                        :loading="getImageLoading(index)" decoding="async"
+                        :fetchpriority="getImageFetchPriority(index)">
                     <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
                 </div>
                 <div class="activity-content">
@@ -1626,6 +1757,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
 
 
+    <div v-if="hasMore" ref="loadMoreTriggerRef" aria-hidden="true"></div>
     <!-- </div> -->
 </template>
 

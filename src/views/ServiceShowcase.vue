@@ -4,7 +4,7 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { ElIcon } from 'element-plus'
 import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
 import ContactDialog from '@/components/ContactDialog.vue'
-import dataJson from '@/data/data.json'
+import servicesData from '@/data/split/services.json'
 // 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
 // 导入所有需要的图片，使用@别名
 import car1FrontRight from '@/assets/img/carService/car1_front_right.jpg';
@@ -44,7 +44,7 @@ import hiaceLeftFront from '@/assets/img/carService/hiace_left_front.jpg';
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 
 // 从data.json中获取专属定制服务的数据
-const privateCustomService = dataJson.find(item => item.tagName === '专属定制')
+const privateCustomService = servicesData.find(item => item.tagName === '专属定制')
 const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
 
 // 接收配置（保持向后兼容）
@@ -79,8 +79,8 @@ let currentServiceName = ref('')
 // 从data.json获取isTrip为false的服务数据
 const getServiceData = () => {
     try {
-        if (!dataJson) return null
-        const services = dataJson.filter(item => item.isTrip === false)
+        if (!servicesData) return null
+        const services = servicesData.filter(item => item.isTrip === false)
         return services || []
     } catch (error) {
         return []
@@ -231,7 +231,7 @@ const initShowcaseData = () => {
 
     showcaseItems.value = dataToUse.map(item => ({
         ...item,
-        imageUrl: getImageUrl(item.image)
+        imageUrl: resolveDataImage(item.image, defaultCarType, { variant: 'thumb' })
     }))
 }
 
@@ -634,7 +634,8 @@ watch(() => props.serviceName, (newServiceName) => {
                     <div v-for="item in showcaseItems" :key="item.id" class="showcase-item">
                         <div class="showcase-card">
                             <div class="showcase-image">
-                                <img :src="item.imageUrl" :alt="item.title" class="showcase-img">
+                                <img :src="item.imageUrl" :alt="item.title" class="showcase-img" loading="lazy"
+                                    decoding="async" fetchpriority="low">
                                 <div class="showcase-tag">{{ item.tag }}</div>
                             </div>
                             <div class="showcase-content">

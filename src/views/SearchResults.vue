@@ -136,7 +136,7 @@ const applyStoredSession = (stored) => {
   currentPage.value = stored.currentPage || 1
 }
 
-const performSearch = ({ resetPage = true } = {}) => {
+const performSearch = async ({ resetPage = true } = {}) => {
   const query = (keyword.value || '').trim()
 
   if (!query) {
@@ -152,7 +152,7 @@ const performSearch = ({ resetPage = true } = {}) => {
 
   isLoading.value = true
   try {
-    const payload = searchAllContent(query)
+    const payload = await searchAllContent(query)
     results.value = payload.results
     if (resetPage) {
       currentPage.value = 1
@@ -221,7 +221,7 @@ watch(
     if (newKeyword === oldKeyword) return
     keyword.value = newKeyword ? String(newKeyword) : ''
     searchInput.value = keyword.value
-    performSearch({ resetPage: false })
+    void performSearch({ resetPage: false })
   }
 )
 
@@ -235,7 +235,7 @@ watch(
 
 onMounted(() => {
   if (keyword.value) {
-    performSearch({ resetPage: false })
+    void performSearch({ resetPage: false })
   } else {
     const stored = getStoredSearchSession()
     if (stored) {

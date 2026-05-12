@@ -1,0 +1,148 @@
+[
+  {
+    "tagName": "自助游/自驾游免费参考信息",
+    "path": "trips/freeinfo",
+    "available": true,
+    "hasSubNav": true,
+    "isTrip": true,
+    "subNav": [
+      {
+        "subNavName": "景点",
+        "isShow": true
+      },
+      {
+        "subNavName": "餐厅",
+        "isShow": true
+      },
+      {
+        "subNavName": "葡萄酒酒庄",
+        "isShow": false
+      },
+      {
+        "subNavName": "洋酒酒庄",
+        "isShow": false
+      },
+      {
+        "subNavName": "住宿",
+        "isShow": true
+      },
+      {
+        "subNavName": "特别活动",
+        "isShow": true
+      },
+      {
+        "subNavName": "徒步线路",
+        "isShow": true
+      },
+      {
+        "subNavName": "塔州露营地",
+        "isShow": true
+      }
+    ]
+  },
+  {
+    "tagName": "一日游/多日游",
+    "path": "trips/routes",
+    "available": true,
+    "hasSubNav": true,
+    "isTrip": true,
+    "subNav": [
+      {
+        "subNavName": "1日行程"
+      },
+      {
+        "subNavName": "2日行程"
+      },
+      {
+        "subNavName": "3日行程"
+      },
+      {
+        "subNavName": "4日行程"
+      },
+      {
+        "subNavName": "5日行程"
+      },
+      {
+        "subNavName": "6日行程"
+      },
+      {
+        "subNavName": "7日行程"
+      },
+      {
+        "subNavName": "8日行程"
+      },
+      {
+        "subNavName": "9日行程"
+      },
+      {
+        "subNavName": "10日行程"
+      },
+      {
+        "subNavName": "11日行程"
+      },
+      {
+        "subNavName": "12日行程"
+      },
+      {
+        "subNavName": "13日行程"
+      },
+      {
+        "subNavName": "14日行程"
+      },
+      {
+        "subNavName": "15日行程"
+      },
+      {
+        "subNavName": "16日行程"
+      }
+    ]
+  },
+  {
+    "tagName": "热门项目",
+    "path": "service/ticket",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  },
+  {
+    "tagName": "商务接送",
+    "path": "service/pickup",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  },
+  {
+    "tagName": "包车服务",
+    "path": "service/car",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  },
+  {
+    "tagName": "专属定制",
+    "path": "service/custom",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  },
+  {
+    "tagName": "地接地陪",
+    "path": "service/guide",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  },
+  {
+    "tagName": "行程管家",
+    "path": "service/steward",
+    "available": true,
+    "hasSubNav": false,
+    "isTrip": false,
+    "subNav": []
+  }
+]

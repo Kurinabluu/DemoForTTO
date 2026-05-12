@@ -11,7 +11,7 @@ const props = defineProps({
 
 // 处理图片URL的函数
 const getImageUrl = (imagePath) => {
-    return resolveDataImage(imagePath, '')
+    return resolveDataImage(imagePath, '', { variant: 'thumb' })
 }
 
 const emits = defineEmits(['update:modelValue', 'select'])
@@ -73,7 +73,8 @@ const visibleItems = computed(() => props.items.slice(0, visibleLimit.value))
                 <div class="modal-body">
                     <div class="grid">
                         <div class="grid-item" v-for="(it, idx) in visibleItems" :key="idx" @click="onSelect(it)">
-                            <img :src="getImageUrl(it.img)" alt="thumb" class="thumb" />
+                            <img :src="getImageUrl(it.img)" alt="thumb" class="thumb" loading="lazy" decoding="async"
+                                fetchpriority="low" />
                             <div class="name">{{ it.title }}</div>
                             <div class="en-name">{{ it.enTitle }}</div>
                         </div>

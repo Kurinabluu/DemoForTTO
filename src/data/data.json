@@ -852,11 +852,23 @@
                     },
                     {
                         "title": "霍巴特海滨",
-                        "img": "",
+                        "img": "../assets/img/places/HobartWaterfront.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Hobart_waterfront_near_Salamanca_Place.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Lautreca11",
+                                "photographer": "Lautreca11",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            }
+                        ],
                         "enTitle": "Hobart Waterfront",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
+                            "route": "Hobart Waterfront, Hobart TAS 7000, Australia（Salamanca Place附近）",
                             "desc": "沿着霍巴特美丽的海滨漫步，探索历史建筑、艺术画廊和美食餐厅。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -884,11 +896,21 @@
                     },
                     {
                         "title": "朗塞斯顿峡谷",
-                        "img": "",
+                        "img": "../assets/img/places/LauncestonGorge.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Launceston_Cataract_Gorge_005.JPG",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Mattinbgn",
+                                "photographer": "Mattinbgn",
+                                "license": "CC BY 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+                            }
+                        ],
                         "enTitle": "Launceston Gorge",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
-                            "desc": "在塔斯马尼亚第二大城市附近，探索这个令人惊叹的自然峡谷。",
+                            "route": "Cataract Gorge, Launceston TAS 7250, Australia",
+                            "desc": "朗塞斯顿峡谷（Cataract Gorge）位于朗塞斯顿市中心附近，是南澳塔斯马尼亚的自然景观，设有步行道、吊桥和游泳池。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -916,11 +938,23 @@
                     },
                     {
                         "title": "圣海伦斯",
-                        "img": "",
+                        "img": "../assets/img/places/StHelens.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Tasmania_St_helens_boats.JPG",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "",
+                                "photographer": "Rosemary Abetz-Rouse (Goldberry)",
+                                "license": "CC BY-SA 4.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+                            }
+                        ],
                         "enTitle": "St Helens",
                         "tripData": {
-                            "route": "塔斯马尼亚州东北部",
+                            "route": "St Helens, Tasmania, Australia",
                             "desc": "圣海伦斯是塔斯马尼亚东北海岸最大的城镇，以“游戏钓鱼之都”和生蚝闻名，是一个以旅游、渔业和木材为基础经济的海滨度假地。",
+                            "region": "东海岸",
+                            "town": "St Helens",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -955,11 +989,21 @@
                     },
                     {
                         "title": "比切诺",
-                        "img": "",
+                        "img": "../assets/img/places/Bicheno.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-couple-of-boats-floating-on-top-of-a-body-of-water-AsNwnDJJc3o?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@stevenvandeursen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Steven van Deursen"
+                            }
+                        ],
                         "enTitle": "Bicheno",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
-                            "desc": "探访这个以小企鹅和海洋生物闻名的海滨小镇，体验独特的海洋生态。",
+                            "route": "Bicheno, Tasmania, Australia",
+                            "desc": "比切诺是塔斯马尼亚东海岸的海滨小镇，以小企鹅观赏和海洋生物闻名。",
+                            "region": "东海岸",
+                            "town": "Bicheno",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -987,11 +1031,21 @@
                     },
                     {
                         "title": "里士满古桥",
-                        "img": "",
+                        "img": "../assets/img/places/RichmondBridge.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-bridge-over-a-river-with-a-sky-background-gU1p6q1h5uw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@marcelosanchez?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Gino Marcelo Hernandez Sanchez"
+                            }
+                        ],
                         "enTitle": "Richmond Bridge",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部中央高地",
-                            "desc": "探访澳大利亚最古老的石桥和周围保存完好的历史小镇。",
+                            "route": "Richmond Bridge, Richmond TAS 7025, Australia",
+                            "desc": "里士满古桥是澳大利亚最古老的石桥，建于1823年，位于历史小镇里士满。",
+                            "region": "霍巴特及南部",
+                            "town": "Richmond",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1019,11 +1073,21 @@
                     },
                     {
                         "title": "塔马谷",
-                        "img": "",
+                        "img": "../assets/img/places/TamarValley.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-large-body-of-water-sitting-next-to-a-lush-green-field-aE_fIIDbN-A?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@brooksieg?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Geoff Brooks"
+                            }
+                        ],
                         "enTitle": "Tamar Valley",
                         "tripData": {
-                            "route": "塔斯马尼亚州北部",
-                            "desc": "塔玛谷是一个由平行断层构成的地质下沉带（地堑）。流经此地的塔玛河实为河口，名为kanamaluka，是澳大利亚最长的河口。该河谷是塔斯马尼亚最大的葡萄酒产区。",
+                            "route": "Tamar Valley, Tasmania, Australia（起点：Launceston TAS 7250）",
+                            "desc": "塔玛谷是一个由平行断层构成的地质下沉带（地堑）。流经此地的塔玛河实为河口，名为kanamaluka，是澳大利亚最长的河口。该河谷是塔斯马尼亚最大的葡萄酒产区。图上为塔玛河（Tamar River）。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Tamar Valley",
                             "features": [
                                 {
                                     "icon": "#22c55e",

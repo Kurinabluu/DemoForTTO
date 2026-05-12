@@ -2,7 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
-import dataJson from '@/data/data.json'
+import dayTripData from '@/data/split/daytrip.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
@@ -63,21 +63,12 @@ const openInfoDialog = () => {
 
 const getTripRouteInfo = (title, tripType) => {
     try {
-        if (!title || !dataJson || !Array.isArray(dataJson)) {
+        if (!title || !dayTripData?.subNav) {
             return getDefaultTripInfo(title)
         }
 
-        if (tripType === '多日游') {
-            const multiDaySection = dataJson.find(item => item?.tagName === '多日游（固定行程）')
-            const tripItem = multiDaySection?.tripConfig?.find(item => item?.title === title)
-            if (tripItem?.tripData) {
-                return tripItem.tripData
-            }
-        }
-
-        const dayTripSection = dataJson.find(item => item?.tagName === '一日游（固定行程）')
-        if (dayTripSection?.subNav && Array.isArray(dayTripSection.subNav)) {
-            for (const subNav of dayTripSection.subNav) {
+        if (Array.isArray(dayTripData.subNav)) {
+            for (const subNav of dayTripData.subNav) {
                 if (subNav?.items && Array.isArray(subNav.items)) {
                     const tripItem = subNav.items.find(item => item?.title === title)
                     if (tripItem?.tripData) {
