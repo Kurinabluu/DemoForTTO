@@ -1122,11 +1122,34 @@
         },
         {
           "title": "菲欣纳国家公园",
-          "img": "",
+          "img": [
+            "../assets/img/places/FreycinetNationalPark.jpg",
+            "../assets/img/places/FreycinetNationalParkVisitorCenter.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Freycinet_National_Park_-_Flickr_-_brewbooks_(4).jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/people/brewbooks/",
+              "photographer": "brewbooks",
+              "license": "CC BY-SA 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Freycinet_National_Park_Visitor_Centre.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Mx._Granger",
+              "photographer": "Mx. Granger",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            }
+          ],
           "enTitle": "Freycinet National Park",
           "tripData": {
-            "route": "塔斯马尼亚州东海岸",
+            "route": "Freycinet National Park, Coles Bay TAS 7215, Australia",
             "desc": "菲欣纳国家公园建于1916年，与费尔德山国家公园同为塔斯马尼亚最古老的国家公园。公园以粉红色花岗岩山脉、僻静海湾（如酒杯湾）及多样的温带森林与海岸地貌为特色。",
+            "region": "东海岸",
+            "town": "Coles Bay",
             "features": [
               {
                 "icon": "#22c55e",
