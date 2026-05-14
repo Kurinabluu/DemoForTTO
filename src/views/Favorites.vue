@@ -7,73 +7,98 @@ import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
 import freeInfoData from '@/data/split/freeinfo.json';
 
-// 从原始数据中获取餐厅信息
-const getRestaurantData = (title) => {
-  const freeInfoSection = freeInfoData;
-  if (freeInfoSection?.subNav && Array.isArray(freeInfoSection.subNav)) {
-    const restaurantSection = freeInfoSection.subNav.find(sub => sub.subNavName === '餐厅');
-    if (restaurantSection?.items && Array.isArray(restaurantSection.items)) {
-      return restaurantSection.items.find(item => item.title === title);
+const getThumbImageUrl = (imgPath) => {
+  return resolveDataImage(imgPath, '', { variant: 'thumb' });
+};
+
+const findFreeInfoSourceItem = (title) => {
+  const normalizedTitle = String(title || '').trim();
+  if (!normalizedTitle) return null;
+  const subNavList = freeInfoData?.subNav;
+  if (!Array.isArray(subNavList)) return null;
+
+  for (const subNav of subNavList) {
+    if (!Array.isArray(subNav?.items)) continue;
+    const matchedItem = subNav.items.find((entry) => String(entry?.title || '').trim() === normalizedTitle);
+    if (matchedItem) {
+      return { subNavName: String(subNav?.subNavName || '').trim(), sourceItem: matchedItem };
     }
   }
   return null;
 };
 
-// 获取封面图片（餐厅特殊逻辑）
-const getCoverImageUrl = (item) => {
-  // 首先尝试从原始餐厅数据中获取（保持与信息网格一致的逻辑）
-  const restaurantData = getRestaurantData(item.title);
-  if (restaurantData) {
-    // 检查 cover 字段
-    const hasCoverField = Object.prototype.hasOwnProperty.call(restaurantData, 'cover');
-    if (hasCoverField) {
-      const coverPath = String(restaurantData?.cover || '').trim();
-      if (coverPath) {
-        const resolvedCover = resolveDataImage(coverPath, '', { variant: 'thumb' });
-        if (resolvedCover) return resolvedCover;
-      }
-    }
-    // cover 为空，检查 img（餐厅优先使用第二张）
-    if (restaurantData?.img) {
-      if (Array.isArray(restaurantData.img)) {
-        if (restaurantData.img.length >= 2) {
-          // 餐厅使用第二张图片
-          const secondImagePath = String(restaurantData.img[1] || '').trim();
-          if (secondImagePath) {
-            const resolvedImage = resolveDataImage(secondImagePath, '', { variant: 'thumb' });
-            if (resolvedImage) return resolvedImage;
-          }
-        }
-        // 如果没有第二张或解析失败，使用第一张
-        for (const imagePath of restaurantData.img) {
-          const normalizedPath = String(imagePath || '').trim();
-          if (!normalizedPath) continue;
-          const resolvedImage = resolveDataImage(normalizedPath, '', { variant: 'thumb' });
-          if (resolvedImage) return resolvedImage;
-        }
-      } else {
-        // img 不是数组，直接使用
-        const resolvedImage = resolveDataImage(restaurantData.img, '', { variant: 'thumb' });
-        if (resolvedImage) return resolvedImage;
-      }
+// 和 TripsGrid 保持一致：餐厅优先第二张，景点/住宿优先第一张，其它按顺序取图
+const getFreeInfoGridImageUrl = (sourceItem, subNavName = '') => {
+  if (!sourceItem || typeof sourceItem !== 'object') return '';
+
+  const hasCoverField = Object.prototype.hasOwnProperty.call(sourceItem, 'cover');
+  if (hasCoverField) {
+    const coverPath = String(sourceItem?.cover || '').trim();
+    if (coverPath) {
+      const resolvedCover = getThumbImageUrl(coverPath);
+      if (resolvedCover) return resolvedCover;
     }
   }
 
-  // 如果找不到原始数据，使用收藏数据中的图片
+  const rawImg = sourceItem?.img;
+  if (!rawImg) return '';
+
+  if (Array.isArray(rawImg)) {
+    if (subNavName === '餐厅' && rawImg.length >= 2) {
+      const secondImagePath = String(rawImg[1] || '').trim();
+      if (secondImagePath) {
+        const resolvedSecond = getThumbImageUrl(secondImagePath);
+        if (resolvedSecond) return resolvedSecond;
+      }
+    }
+    for (const imagePath of rawImg) {
+      const normalizedPath = String(imagePath || '').trim();
+      if (!normalizedPath) continue;
+      const resolvedImage = getThumbImageUrl(normalizedPath);
+      if (resolvedImage) return resolvedImage;
+    }
+    return '';
+  }
+
+  return getThumbImageUrl(rawImg);
+};
+
+const getCoverImageUrl = (item) => {
+  const matched = findFreeInfoSourceItem(item?.title);
+  if (matched?.sourceItem) {
+    const resolvedByGridRule = getFreeInfoGridImageUrl(matched.sourceItem, matched.subNavName);
+    if (resolvedByGridRule) return resolvedByGridRule;
+  }
+
+  // 找不到原始条目时，退回收藏记录中的图字段
+  const tripDataImageGroups = [
+    item?.tripData?.cover ? [item.tripData.cover] : [],
+    item?.tripData?.images,
+    item?.tripData?.banners,
+    item?.tripData?.bannerList,
+    item?.tripData?.imgs,
+    item?.tripData?.img
+  ];
+  const tripDataImage = tripDataImageGroups
+    .flatMap((group) => Array.isArray(group) ? group : [])
+    .map((path) => getThumbImageUrl(path))
+    .find(Boolean);
+  if (tripDataImage) return tripDataImage;
+
   if (item?.image) {
-    const resolvedImage = resolveDataImage(item.image, '', { variant: 'thumb' });
+    const resolvedImage = getThumbImageUrl(item.image);
     if (resolvedImage) return resolvedImage;
   }
   if (item?.banner) {
-    const resolvedImage = resolveDataImage(item.banner, '', { variant: 'thumb' });
+    const resolvedImage = getThumbImageUrl(item.banner);
     if (resolvedImage) return resolvedImage;
   }
   if (item?.img) {
     if (Array.isArray(item.img) && item.img.length > 0) {
-      const resolvedImage = resolveDataImage(item.img[0], '', { variant: 'thumb' });
+      const resolvedImage = getThumbImageUrl(item.img[0]);
       if (resolvedImage) return resolvedImage;
     } else {
-      const resolvedImage = resolveDataImage(item.img, '', { variant: 'thumb' });
+      const resolvedImage = getThumbImageUrl(item.img);
       if (resolvedImage) return resolvedImage;
     }
   }
@@ -216,7 +241,7 @@ onUnmounted(() => {
     </div>
 
     <!-- 详情弹窗 -->
-    <FreeInfoDialog v-model:visible="dialogVisible" :title="currentItem?.title || ''"
+    <FreeInfoDialog v-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
       :en-title="currentItem?.enTitle || ''" :banner="currentItem?.image || ''" :trip-data="currentItem?.tripData || {}"
       :item-id="currentItem?.id || null" :item-type="currentItem?.type || 'scenic'" @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />

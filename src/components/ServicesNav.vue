@@ -34,11 +34,15 @@ const navStore = useNavStore()
 const router = useRouter()
 
 const isSearchPath = (path) => typeof path === 'string' && path.includes('/search')
+const isFavoritesPath = (path) => typeof path === 'string' && path.includes('/favorites')
 const isSearchRoute = computed(() => isSearchPath(router.currentRoute.value.path))
 
 // 当前激活的标签（组件内部独立实现）
 const activeTag = computed(() => {
   if (isSearchRoute.value) {
+    return ''
+  }
+  if (isFavoritesPath(router.currentRoute.value.path)) {
     return ''
   }
   // 优先使用组件内部的激活标签状态
@@ -161,11 +165,15 @@ function syncTagWithRoute(forceUseStorage = false) {
 // 组件挂载时初始化
 onMounted(() => {
   const currentPath = router.currentRoute.value.path
-  if (isSearchPath(currentPath)) {
+  if (isSearchPath(currentPath) || isFavoritesPath(currentPath)) {
     localActiveTag.value = ''
     searchInput.value = ''
-    const storedSearch = getStoredSearchSession()
-    searchKeyword.value = storedSearch?.query || ''
+    if (isSearchPath(currentPath)) {
+      const storedSearch = getStoredSearchSession()
+      searchKeyword.value = storedSearch?.query || ''
+    } else {
+      searchKeyword.value = ''
+    }
     return
   }
   searchKeyword.value = ''
@@ -191,11 +199,15 @@ onMounted(() => {
 watch(() => router.currentRoute.value.path, () => {
   // 根据路由路径找到对应的标签
   const currentPath = router.currentRoute.value.path
-  if (isSearchPath(currentPath)) {
+  if (isSearchPath(currentPath) || isFavoritesPath(currentPath)) {
     localActiveTag.value = ''
     searchInput.value = ''
-    const storedSearch = getStoredSearchSession()
-    searchKeyword.value = storedSearch?.query || ''
+    if (isSearchPath(currentPath)) {
+      const storedSearch = getStoredSearchSession()
+      searchKeyword.value = storedSearch?.query || ''
+    } else {
+      searchKeyword.value = ''
+    }
     return
   }
   searchKeyword.value = ''

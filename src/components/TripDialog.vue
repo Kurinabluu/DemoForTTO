@@ -31,8 +31,9 @@ const handleToggleFavorite = () => {
         type: props.itemType,
         title: props.title,
         enTitle: props.enTitle,
-        image: resolveDataImage(props.banner),
-        banner: resolveDataImage(props.banner),
+        // 收藏存原始路径，列表页再统一走 resolveDataImage 的 thumb 优化链路
+        image: props.banner,
+        banner: props.banner,
         region: props.tripData?.region || '',
         town: props.tripData?.town || '',
         tripData: props.tripData

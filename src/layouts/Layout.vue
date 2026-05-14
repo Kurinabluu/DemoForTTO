@@ -9,6 +9,7 @@ import RefundPolicy from '@/components/RefundPolicy.vue';
 import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
+import { resolveDataImage } from '@/utils/dataImageResolver';
 
 const navStore = useNavStore();
 const router = useRouter();
@@ -89,8 +90,11 @@ function openContactDialog() {
 function closeContactDialog() {
     isContactDialogVisible.value = false
 }
-const footerModules = import.meta.glob('@/assets/img/*footer*.jpg', { eager: true });
-const footerSlides = Object.values(footerModules).map((mod) => (typeof mod === 'string' ? mod : mod.default));
+const headerLogo = resolveDataImage('@/assets/img/header_logo.png', '', { variant: 'thumb' }) || resolveDataImage('@/assets/img/header_logo.png')
+const footerImageNames = ['bgfooter1.jpg', 'bgfooter2.jpg', 'footer1.jpg', 'footer2.jpg', 'footer3.jpg', 'footer4.jpg']
+const footerSlides = footerImageNames
+    .map((name) => resolveDataImage(`@/assets/img/${name}`, '', { variant: 'thumb' }) || resolveDataImage(`@/assets/img/${name}`))
+    .filter(Boolean)
 
 // 首次访问免责声明弹窗
 const showDisclaimerModal = ref(false)
@@ -177,7 +181,7 @@ onMounted(() => {
             <span class="logo fowe7 no-select pointer">
                 <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
                 <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">
-                    <img src="@/assets/img/header_logo.png" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
+                    <img :src="headerLogo" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
                                  const span=document.createElement('span'); 
                                  span.innerText='TasTrips.Online'; 
                                  span.style.display='inline-block'; 
@@ -306,7 +310,7 @@ onMounted(() => {
                         <!-- <div class="logo-circle">
                 <span class="logo-text">LINGBA</span>
               </div> -->
-                        <div class="company-name"><img src="@/assets/img/header_logo.png" alt="TasTrips.Online"
+                        <div class="company-name"><img :src="headerLogo" alt="TasTrips.Online"
                                 class="logo-img logo-desktop" /></div>
                     </div>
                     <div class="about-text">

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
@@ -7,8 +8,13 @@ import freeInfoData from '@/data/split/freeinfo.json'
 import dayTripData from '@/data/split/daytrip.json'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
+import { useLoadingStore } from '@/stores/loadingStore'
+import { withRandomLoading } from '@/utils/loadingUtils'
 
 const route = useRoute()
+const loadingStore = useLoadingStore()
+const { fullscreenLoading } = storeToRefs(loadingStore)
+const loadingState = computed(() => fullscreenLoading.value)
 
 const props = defineProps({
     activeTag: { type: String, required: true },
@@ -78,8 +84,8 @@ const executeSearch = async () => {
 
     isSearching.value = true
 
-    // 模拟1.5秒搜索延迟
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // 使用全局 loading store，避免分散的全屏 loading 状态
+    await withRandomLoading(undefined, { min: 1200, max: 1500 })
 
     searchQuery.value = keyword
     isSearching.value = false
@@ -246,7 +252,7 @@ onMounted(() => {
     // 如果检测到需要自动加载所有数据，立即加载（仅非搜索场景）
     if (shouldLoadAll.value) {
         setTimeout(() => {
-            loadAllItems()
+            void loadAllItems()
         }, 100)
     }
 
@@ -346,7 +352,7 @@ watch(() => [props.activeTag, props.subTab, props.s, props.dayTripTab], () => {
 
     // 如果需要自动加载所有数据，立即加载
     if (shouldLoadAll.value) {
-        loadAllItems()
+        void loadAllItems()
     }
 
     // 如果是通过 dialogItemId 打开，props 变更后重新定位页码
@@ -434,7 +440,7 @@ function getTotalItems() {
 }
 
 // 自动加载所有数据（用于新窗口打开时的高亮功能）
-function loadAllItems() {
+async function loadAllItems() {
     if (isLoading.value) return
 
     const totalItems = getTotalItems()
@@ -444,11 +450,8 @@ function loadAllItems() {
         isLoading.value = true
         renderLimit.value = totalItems
         hasMore.value = false
-
-        // 使用 setTimeout 模拟加载过程，确保 DOM 更新
-        setTimeout(() => {
-            isLoading.value = false
-        }, 300)
+        await withRandomLoading(undefined, { min: 220, max: 360 })
+        isLoading.value = false
     }
 }
 
@@ -1264,7 +1267,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     </div>
 
     <!-- 全屏加载 -->
-    <div v-loading.fullscreen="isSearching || isLoading" element-loading-spinner-color="#279486"
+    <div v-loading.fullscreen="loadingState" element-loading-spinner-color="#279486"
         element-loading-background="rgba(255, 255, 255, 0.8)"></div>
 
     <!-- 主内容区 -->

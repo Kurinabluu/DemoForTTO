@@ -1,9 +1,12 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { ArrowUp, ArrowDown, Switch } from '@element-plus/icons-vue'
 import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
+import { useLoadingStore } from '@/stores/loadingStore'
+import { withRandomLoading } from '@/utils/loadingUtils'
 
 // 电梯导航相关
 const showElevator = ref(false)
@@ -11,6 +14,9 @@ const isAtBottom = ref(false)
 const isLeftPosition = ref(false) // 控制电梯导航位置，false为右侧，true为左侧
 
 const router = useRouter()
+const loadingStore = useLoadingStore()
+const { fullscreenLoading } = storeToRefs(loadingStore)
+const loadingState = computed(() => fullscreenLoading.value)
 
 // 滚动处理函数
 const handleScroll = () => {
@@ -51,7 +57,9 @@ const togglePosition = () => {
 }
 
 const goToFavorites = () => {
-  router.push('/DemoForTTO/favorites')
+  void withRandomLoading(undefined, { min: 160, max: 300 })
+  const href = router.resolve({ name: 'Favorites' }).href
+  window.open(href, '_blank', 'noopener,noreferrer')
 }
 
 const showTipsModal = ref(false)
@@ -138,6 +146,8 @@ onUnmounted(() => {
   <!-- <div class="common-layout"> -->
   <!-- <Layout /> -->
   <RouterView />
+  <div v-loading.fullscreen="loadingState" element-loading-text="正在打开收藏夹..."
+    element-loading-spinner-color="#33b1a3" element-loading-background="rgba(255, 255, 255, 0.8)"></div>
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"

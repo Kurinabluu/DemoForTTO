@@ -1,10 +1,6 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, defineAsyncComponent } from 'vue'
 import { ElMessage } from 'element-plus'
-import FreeInfoDialog from '@/components/FreeInfoDialog.vue'
-import TripDialog from '@/components/TripDialog.vue'
-import PlaceListDialog from '@/components/PlaceListDialog.vue'
-import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import ServicesNav from '@/components/ServicesNav.vue'
 import navData from '@/data/split/nav.json'
 import dayTripData from '@/data/split/daytrip.json'
@@ -12,6 +8,10 @@ import { useNavStore } from '@/stores/nav'
 import { Search } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { MAX_FAVORITES } from '@/utils/favoritesStore'
+
+const FreeInfoDialog = defineAsyncComponent(() => import('@/components/FreeInfoDialog.vue'))
+const TripDialog = defineAsyncComponent(() => import('@/components/TripDialog.vue'))
+const PlaceListDialog = defineAsyncComponent(() => import('@/components/PlaceListDialog.vue'))
 
 const navStore = useNavStore()
 const route = useRoute()
@@ -562,13 +562,13 @@ onMounted(() => {
         </div>
 
         <!-- 弹窗组件 -->
-        <FreeInfoDialog v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
+        <FreeInfoDialog v-if="isFreeInfoDialogVisible" v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
             :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
             :item-type="dialogItemType" />
-        <TripDialog v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
+        <TripDialog v-if="isTripDialogVisible" v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
             :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
             :item-type="dialogItemType" />
-        <PlaceListDialog v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
+        <PlaceListDialog v-if="isPlaceListVisible" v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
             :items="listItems" @select="onSelectPlaceItem" />
     </el-main>
 </template>
