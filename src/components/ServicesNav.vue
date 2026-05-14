@@ -6,6 +6,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import data from '@/data/split/nav.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 import { searchAllContent, persistSearchSession, getStoredSearchSession } from '@/utils/searchService'
+import { withRandomLoading } from '@/utils/loadingUtils'
 
 const comingSoonDialogRef = ref(null);
 
@@ -23,6 +24,7 @@ const tags = data.map(item => item.tagName)
 const searchInput = ref('')
 // 实际搜索关键词
 const searchKeyword = ref('')
+const isSearching = ref(false)
 
 const localActiveTag = ref('')
 
@@ -252,15 +254,23 @@ watch(() => router.currentRoute.value.path, () => {
 // 搜索按钮点击事件
 async function onSearch() {
   const keyword = (searchKeyword.value || '').trim()
-  if (!keyword) return
+  if (!keyword || isSearching.value) return
 
-  const payload = await searchAllContent(keyword)
-  persistSearchSession({ ...payload, currentPage: 1 })
+  isSearching.value = true
+  try {
+    let payload = null
+    await withRandomLoading(async () => {
+      payload = await searchAllContent(keyword)
+      persistSearchSession({ ...payload, currentPage: 1 })
 
-  router.push({
-    path: '/DemoForTTO/search',
-    query: { s: payload.query }
-  })
+      await router.push({
+        path: '/DemoForTTO/search',
+        query: { s: payload.query }
+      })
+    }, { min: 180, max: 480, text: '正在搜索...' })
+  } finally {
+    isSearching.value = false
+  }
 }
 </script>
 
@@ -296,7 +306,8 @@ async function onSearch() {
               </el-icon>
             </template>
           </el-input>
-          <el-button type="primary" size="large" class="search-btn fs14" @click="onSearch">
+          <el-button type="primary" size="large" class="search-btn fs14" :loading="isSearching"
+            :disabled="isSearching" @click="onSearch">
             <el-icon>
               <Search />
             </el-icon>

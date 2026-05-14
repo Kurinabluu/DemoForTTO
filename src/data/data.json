@@ -896,8 +896,17 @@
                     },
                     {
                         "title": "朗塞斯顿峡谷",
-                        "img": "../assets/img/places/LauncestonGorge.jpg",
+                        "img": [
+                            "../assets/img/places/Launceston/1.jpg",
+                            "../assets/img/places/LauncestonGorge.jpg"
+                        ],
                         "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-tall-bridge-over-a-river-next-to-a-forest-WVrQnOB4ESU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@avignakaran?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Athithan Vignakaran"
+                            },
                             {
                                 "source": "https://commons.wikimedia.org/wiki/File:Launceston_Cataract_Gorge_005.JPG",
                                 "sourceName": "Wikimedia Commons",
@@ -911,6 +920,8 @@
                         "tripData": {
                             "route": "Cataract Gorge, Launceston TAS 7250, Australia",
                             "desc": "朗塞斯顿峡谷（Cataract Gorge）位于朗塞斯顿市中心附近，是南澳塔斯马尼亚的自然景观，设有步行道、吊桥和游泳池。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -988,49 +999,7 @@
                         }
                     },
                     {
-                        "title": "比切诺",
-                        "img": "../assets/img/places/Bicheno.jpg",
-                        "imgSource": [
-                            {
-                                "source": "https://unsplash.com/photos/a-couple-of-boats-floating-on-top-of-a-body-of-water-AsNwnDJJc3o?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
-                                "sourceName": "Unsplash",
-                                "photographerLink": "https://unsplash.com/@stevenvandeursen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
-                                "photographer": "Steven van Deursen"
-                            }
-                        ],
-                        "enTitle": "Bicheno",
-                        "tripData": {
-                            "route": "Bicheno, Tasmania, Australia",
-                            "desc": "比切诺是塔斯马尼亚东海岸的海滨小镇，以小企鹅观赏和海洋生物闻名。",
-                            "region": "东海岸",
-                            "town": "Bicheno",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "企鹅归巢",
-                                    "desc": "每晚的企鹅观赏活动"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "海洋生物",
-                                    "desc": "海豚和鲸鱼观赏"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "历史渔村",
-                                    "desc": "传统的渔船和码头"
-                                }
-                            ],
-                            "tags": [
-                                "企鹅小镇",
-                                "海洋生态",
-                                "适合家庭",
-                                "观鲸胜地"
-                            ]
-                        }
-                    },
-                    {
-                        "title": "里士满古桥",
+                        "title": "里奇蒙古桥",
                         "img": "../assets/img/places/RichmondBridge.jpg",
                         "imgSource": [
                             {
@@ -1043,7 +1012,7 @@
                         "enTitle": "Richmond Bridge",
                         "tripData": {
                             "route": "Richmond Bridge, Richmond TAS 7025, Australia",
-                            "desc": "里士满古桥是澳大利亚最古老的石桥，建于1823年，位于历史小镇里士满。",
+                            "desc": "里奇蒙古桥是澳大利亚最古老的石桥，建于1823年，位于历史小镇里奇蒙。",
                             "region": "霍巴特及南部",
                             "town": "Richmond",
                             "features": [
@@ -1184,11 +1153,32 @@
                     },
                     {
                         "title": "比切诺镇",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Bicheno/1.jpg",
+                            "../assets/img/places/Bicheno/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-couple-of-boats-floating-on-top-of-a-body-of-water-AsNwnDJJc3o?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@stevenvandeursen?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Steven van Deursen"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:View_from_Whalers_Lookout_Bicheno_201907025-004.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+                                "photographer": "Gary Houston",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            }
+                        ],
                         "enTitle": "Bicheno",
                         "tripData": {
-                            "route": "塔斯马尼亚州东海岸",
+                            "route": "Bicheno, Tasmania, Australia（主要观景点：Whalers Lookout）",
                             "desc": "作为塔州东海岸的传统渔港，比切诺现已发展成为以优美海滩和丰富水上活动闻名的热门度假小镇。游客可在此体验独特的海岸景观、观察小企鹅归巢，并品尝新鲜海产。",
+                            "region": "东海岸",
+                            "town": "Bicheno",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1223,16 +1213,35 @@
                     },
                     {
                         "title": "惠灵顿山",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/MountWellington/1.jpg",
+                            "../assets/img/places/MountWellington/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/brown-concrete-house-near-rocky-hill-under-blue-and-white-skies-CXLTA4-TKxM?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@divineproductionsfilms?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Donovan Simpkin"
+                            },
+                            {
+                                "source": "https://unsplash.com/photos/a-building-on-top-of-a-mountain-with-a-view-of-a-city-below-Cf5h4Zwcyf0?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@karenchew?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Karen Chew"
+                            }
+                        ],
                         "enTitle": "Mount Wellington",
                         "tripData": {
-                            "route": "塔斯马尼亚州东南部",
+                            "route": "Mount Wellington, Hobart TAS 7054, Australia",
                             "desc": "惠灵顿山山顶设有潘纳克尔观景台，可俯瞰霍巴特全景、德元河入海口及南极远景，冬季可观赏雪景。该山是俯瞰霍巴特的主要地点之一，游客可选择沿1937年建成的登山步道徒步，或经机动车道驾车直达山顶。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
                                     "title": "潘纳克尔观景台",
-                                    "desc": "可俯瞰霍巴特城市全景、德元河入海口及南极远景，冬季可观赏雪景"
+                                    "desc": "可俯瞰霍巴特城市全景、德文特河及南极远景，冬季可观赏雪景"
                                 },
                                 {
                                     "icon": "#3b82f6",
@@ -1242,7 +1251,7 @@
                                 {
                                     "icon": "#f59e0b",
                                     "title": "卡斯科特酿酒厂",
-                                    "desc": "位于山脚下，是澳大利亚持续运营的最古老酿酒厂之一（建于1832年）"
+                                    "desc": "山脚下的澳大利亚最古老持续运营酿酒厂（1832年建）"
                                 }
                             ],
                             "tags": [
@@ -1263,11 +1272,34 @@
                     },
                     {
                         "title": "新旧艺术博物馆",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/MONA/1.jpg",
+                            "../assets/img/places/MONA/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Sydney_Nolan%27s_Snake_at_MONA,_Hobart,_Tasmania.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/jlascar/",
+                                "photographer": "Jorge Láscar",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:MONA_1.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Barrylb",
+                                "photographer": "Barrylb",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            }
+                        ],
                         "enTitle": "MONA",
                         "tripData": {
-                            "route": "塔斯马尼亚霍巴特",
+                            "route": "655 Main Rd, Berriedale TAS 7011, Australia",
                             "desc": "新旧艺术博物馆包含古典文物、现代艺术品，美食等；展览采用无说明标签的创新形式，观众通过语音导览系统获取作品介绍、艺术家访谈等内容。博物馆每年举办音乐艺术节与公共艺术展览。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1303,11 +1335,34 @@
                     },
                     {
                         "title": "里奇蒙",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Richmond/1.jpg",
+                            "../assets/img/places/Richmond/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Richmond-Tasmania-Australia02.JPG",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Poco_a_poco",
+                                "photographer": "Diego Delso",
+                                "license": "CC BY-SA 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:RICHMOND_OLD_COURTHOUSE_-_RICHMOND,_TASMANIA.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "",
+                                "photographer": "JERRYE & ROY KLOTZ MD",
+                                "license": "CC BY-SA 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+                            }
+                        ],
                         "enTitle": "Richmond",
                         "tripData": {
-                            "route": "塔斯马尼亚东南部",
+                            "route": "Richmond, Tasmania, Australia（图上景点处为Richmond Bridge）",
                             "desc": "里奇蒙位于霍巴特东北约25公里处，是塔斯马尼亚保存最完好的殖民时期古镇之一。小镇拥有众多由囚犯建造的乔治亚风格砂岩建筑，其中最著名的是建于1823-1825年的里奇蒙桥，它是澳大利亚仍在使用的最古老的石桥。",
+                            "region": "霍巴特及南部",
+                            "town": "Richmond",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1344,11 +1399,34 @@
                     },
                     {
                         "title": "新诺福尔",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/NewNorfolk/1.jpg",
+                            "../assets/img/places/NewNorfolk/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:St_Mathews_New_Norfolk_(22644880572).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/eguidetravel/",
+                                "photographer": "eGuide Travel",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:New_Norfolk_Antiques_(22632574626).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/eguidetravel/",
+                                "photographer": "eGuide Travel",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            }
+                        ],
                         "enTitle": "New Norfolk",
                         "tripData": {
-                            "route": "塔斯马尼亚东南部",
+                            "route": "New Norfolk, Tasmania, Australia",
                             "desc": "新诺福克是位于德文特河畔的历史小镇，距霍巴特西北约32公里。它由诺福克岛移民于1807年建立，是塔斯马尼亚第四古老的欧洲定居点。小镇以历史建筑、河畔风光及作为德文特河谷门户而闻名。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1385,11 +1463,41 @@
                     },
                     {
                         "title": "斯坦利",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Stanley/1.jpg",
+                            "../assets/img/places/Stanley/2.jpg",
+                            "../assets/img/places/Stanley/3.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/two-stone-pillars-in-a-grassy-field-with-a-hill-in-the-background-fExCO45XYg4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@lutruwita_exposure?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "RE Walsh"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Highfield,_Stanley,_Tasmania_(31351168474).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/136315829@N03",
+                                "photographer": "Steven Penton",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Park_-_Stanley,_Tasmania_(26183878166).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/mikecogh/",
+                                "photographer": "Michael Coghlan",
+                                "license": "CC BY-SA 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+                            }
+                        ],
                         "enTitle": "Stanley",
                         "tripData": {
-                            "route": "塔斯马尼亚西北海岸",
-                            "desc": "斯坦利是塔斯马尼亚西北海岸的历史小镇，紧邻座古老的火山栓“The Nut”。小镇至今仍保留着完好的19世纪建筑。",
+                            "route": "Stanley, Tasmania, Australia（主要地标：The Nut）",
+                            "desc": "斯坦利是塔斯马尼亚西北海岸的历史小镇，紧邻座古老的火山栓“The Nut”(图1)。小镇至今仍保留着完好的19世纪建筑。",
+                            "region": "西北部",
+                            "town": "Stanley",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1398,7 +1506,7 @@
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "海菲尔德历史遗址",
+                                    "title": "海菲尔德历史遗址(图2)",
                                     "desc": "1835年建立的范迪门地公司总代理故居"
                                 },
                                 {
@@ -1424,11 +1532,37 @@
                     },
                     {
                         "title": "朗塞斯顿",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Launceston/2.jpg",
+                            "../assets/img/places/Launceston/3.jpg",
+                            "../assets/img/places/Launceston/4.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-couple-of-people-walking-down-a-walkway-next-to-a-body-of-water-Ed0fYRgAnOA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@nicosmit99?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Nico Smit"
+                            },
+                            {
+                                "source": "https://unsplash.com/photos/brown-and-white-concrete-building-under-blue-sky-during-daytime-j_W0GpDGvR8?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@_zacferguson_?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Zachary Ferguson"
+                            },
+                            {
+                                "source": "https://unsplash.com/photos/a-garden-with-a-fountain-surrounded-by-trees-7cg6WxXWTaQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@beniahc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Beniah Colbourn"
+                            }
+                        ],
                         "enTitle": "Launceston",
                         "tripData": {
-                            "route": "塔斯马尼亚北部",
+                            "route": "Launceston, Tasmania, Australia",
                             "desc": "朗塞斯顿位于塔斯马尼亚北部，是澳大利亚历史最悠久的城市之一。城市坐落在北埃斯克河与南埃斯克河交汇形成塔玛河的河口，拥有许多历史建筑。它是塔斯马尼亚第二大城市，在2022年被评为“澳大利亚年度城镇”。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1464,11 +1598,34 @@
                     },
                     {
                         "title": "彩绘崖",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/ThePaintedCliff/1.jpg",
+                            "../assets/img/places/ThePaintedCliff/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Painted_Cliffs.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:JJ_Harrison",
+                                "photographer": "JJ Harrison",
+                                "license": "CC BY-SA 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Painted_Cliffs_(51354210921).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/people/45470293@N08",
+                                "photographer": "Christopher Harriot",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            }
+                        ],
                         "enTitle": "The Painted Cliff",
                         "tripData": {
-                            "route": "塔斯马尼亚东海岸外的玛丽亚岛国家公园内",
+                            "route": "Maria Island National Park, Tasmania, Australia（需从Triabunna乘渡轮上岛）",
                             "desc": "彩绘崖是玛丽亚岛东海岸一处由砂岩构成的海蚀崖。",
+                            "region": "东海岸",
+                            "town": "Triabunna",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1504,10 +1661,20 @@
                     },
                     {
                         "title": "女王领地",
-                        "img": "",
+                        "img": "../assets/img/places/QueensDomain.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Queens_Domain_TAS_7000,_Australia_-_panoramio_(3).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://web.archive.org/web/20161101185634/http://www.panoramio.com/user/4978784",
+                                "photographer": "Ché Lydia Xyang",
+                                "license": "CC BY-SA 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+                            }
+                        ],
                         "enTitle": "The Queens Domain",
                         "tripData": {
-                            "route": "塔斯马尼亚东南部",
+                            "route": "Queens Domain, Hobart TAS 7000, Australia",
                             "desc": "女王领地是霍巴特市中心东北部一片广阔的公共绿地。这片成立于1860年的区域集自然、历史与休闲于一体，包含政府大厦、皇家植物园等主要地标。",
                             "features": [
                                 {
@@ -1592,7 +1759,7 @@
                         "enTitle": "Hobart Zoo and Aquarium/旧Zoodoo Zoo",
                         "tripData": {
                             "route": "塔斯马尼亚东南部",
-                            "desc": "霍巴特动物园与水族馆（原名Zoodoo野生动物园）是位于里士满的一个私营动物园，于1999年开放。其动物收藏从最初的本地救援物种，逐步扩展至包括非洲狮、斑马、骆驼等多种外来动物，并于2025年增设了水族馆。该动物园提供动物互动与喂食体验。",
+                            "desc": "霍巴特动物园与水族馆（原名Zoodoo野生动物园）是位于里奇蒙的一个私营动物园，于1999年开放。其动物收藏从最初的本地救援物种，逐步扩展至包括非洲狮、斑马、骆驼等多种外来动物，并于2025年增设了水族馆。该动物园提供动物互动与喂食体验。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -5151,7 +5318,7 @@
                         "enTitle": "Coal River Valley",
                         "tripData": {
                             "route": "塔斯马尼亚南部",
-                            "desc": "该地方这是一个位于塔斯马尼亚南部的Coal River Valley（煤河谷），是一个以葡萄种植与葡萄酒酿造为主的富饶农业区，并以其核心历史小镇Richmond（里士满）及澳大利亚最古老的石桥（Coal River）而闻名。谷地距离Hobart（霍巴特）仅约30分钟车程。",
+                            "desc": "该地方这是一个位于塔斯马尼亚南部的Coal River Valley（煤河谷），是一个以葡萄种植与葡萄酒酿造为主的富饶农业区，并以其核心历史小镇Richmond（里奇蒙）及澳大利亚最古老的石桥（Coal River）而闻名。谷地距离Hobart（霍巴特）仅约30分钟车程。",
                             "features": [
                                 {
                                     "icon": "#22c55e",

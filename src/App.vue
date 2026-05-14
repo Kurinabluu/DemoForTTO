@@ -15,7 +15,7 @@ const isLeftPosition = ref(false) // 控制电梯导航位置，false为右侧�
 
 const router = useRouter()
 const loadingStore = useLoadingStore()
-const { fullscreenLoading } = storeToRefs(loadingStore)
+const { fullscreenLoading, loadingText } = storeToRefs(loadingStore)
 const loadingState = computed(() => fullscreenLoading.value)
 
 // 滚动处理函数
@@ -57,7 +57,7 @@ const togglePosition = () => {
 }
 
 const goToFavorites = () => {
-  void withRandomLoading(undefined, { min: 160, max: 300 })
+  void withRandomLoading(undefined, { min: 160, max: 300, text: '正在打开收藏夹...' })
   const href = router.resolve({ name: 'Favorites' }).href
   window.open(href, '_blank', 'noopener,noreferrer')
 }
@@ -146,7 +146,7 @@ onUnmounted(() => {
   <!-- <div class="common-layout"> -->
   <!-- <Layout /> -->
   <RouterView />
-  <div v-loading.fullscreen="loadingState" element-loading-text="正在打开收藏夹..."
+  <div v-loading.fullscreen="loadingState" :element-loading-text="loadingText"
     element-loading-spinner-color="#33b1a3" element-loading-background="rgba(255, 255, 255, 0.8)"></div>
 
   <!-- 温馨提示声明弹窗 -->

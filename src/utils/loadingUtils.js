@@ -13,17 +13,21 @@ const getRandomDelay = (min = 80, max = 300) => {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, Math.max(0, ms)))
 
+const waitRandomDelay = async (min = 80, max = 300) => {
+  const delayMs = getRandomDelay(min, max)
+  await sleep(delayMs)
+}
+
 const withRandomLoading = async (task, options = {}) => {
-  const { min = 80, max = 300 } = options
+  const { min = 80, max = 300, text = '加载中...' } = options
   const loadingStore = useLoadingStore()
-  loadingStore.startLoading()
+  loadingStore.startLoading(text)
   try {
-    const delayMs = getRandomDelay(min, max)
     const taskPromise = typeof task === 'function' ? Promise.resolve(task()) : Promise.resolve()
-    await Promise.all([taskPromise, sleep(delayMs)])
+    await Promise.all([taskPromise, waitRandomDelay(min, max)])
   } finally {
     loadingStore.stopLoading()
   }
 }
 
-export { withRandomLoading }
+export { withRandomLoading, waitRandomDelay, getRandomDelay }
