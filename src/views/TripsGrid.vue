@@ -641,6 +641,50 @@ function getHotelGridImageUrl(item) {
     return finalUrl
 }
 
+function getDayTripGridImageUrl(item) {
+    if (!item || typeof item !== 'object') {
+        return getImageUrl('')
+    }
+
+    let resolvedUrl = ''
+    const hasCoverField = Object.prototype.hasOwnProperty.call(item, 'cover')
+    if (hasCoverField) {
+        const coverPath = String(item?.cover || '').trim()
+        if (coverPath) {
+            const resolvedCover = getThumbImageUrl(coverPath, '')
+            if (resolvedCover) resolvedUrl = resolvedCover
+        }
+    }
+
+    if (!resolvedUrl) {
+        const candidateGroups = [
+            item?.img,
+            item?.images,
+            item?.banners,
+            item?.bannerList,
+            item?.tripData?.cover ? [item.tripData.cover] : [],
+            item?.tripData?.img,
+            item?.tripData?.images,
+            item?.tripData?.banners,
+            item?.tripData?.bannerList
+        ]
+        const candidatePaths = candidateGroups
+            .flatMap(group => Array.isArray(group) ? group : [group])
+            .map(path => String(path || '').trim())
+            .filter(Boolean)
+
+        for (const imagePath of candidatePaths) {
+            const resolvedImage = getThumbImageUrl(imagePath, '')
+            if (resolvedImage) {
+                resolvedUrl = resolvedImage
+                break
+            }
+        }
+    }
+
+    return resolvedUrl || getImageUrl('')
+}
+
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
 const currentFreeInfoSection = computed(() => {
     try {
@@ -1281,7 +1325,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         <div v-for="(item, i) in getPaginatedItems(dayTripFiltered)"
                             :key="`day-trip-${dayTripTab}-${i}`" class="coming-card" @click="onOpenTour(item)"
                             :data-tour-title="item.title">
-                            <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                            <img :src="getDayTripGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">
@@ -1318,7 +1362,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     <div v-for="(item, i) in getPaginatedItems(currentDayTripItems)"
                         :key="`day-trip-${dayTripTab}-${i}`" class="coming-card" @click="onOpenTour(item)"
                         :data-tour-title="item.title">
-                        <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
+                        <img :src="getDayTripGridImageUrl(item)" :alt="item.title" class="w100"
                             :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">{{ item.title }}</div>
                         <div class="card-sub" :title="item.sub">{{ item.sub }}</div>
@@ -1794,6 +1838,22 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     margin: 20px auto 0;
     max-width: 600px;
 
+    .search-input {
+        width: 100%;
+    }
+
+    &--with-filter {
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: minmax(280px, 1fr) 240px 240px 240px;
+        gap: 12px;
+        align-items: center;
+
+        .area-select {
+            width: 100%;
+        }
+    }
+
     :deep(.el-input-group__append) {
         background-color: #33b1A3;
         border-color: #33b1A3;
@@ -1812,406 +1872,385 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     }
 }
 
-.search-input {
-    width: 100%;
-}
-
-.search-container--with-filter {
-    max-width: 1200px;
-    display: grid;
-    grid-template-columns: minmax(280px, 1fr) 240px 240px 240px;
-    gap: 12px;
-    align-items: center;
-}
-
 .grid-content-loading {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+    
+    .coming-grid {
+        width: 90%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        padding: 28px 0 40px;
 
-.area-select {
-    width: 100%;
-}
-
-.coming-grid {
-    width: 90%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 28px 0 40px;
-
-    img {
-        height: 240px;
-    }
-}
-
-.region-title {
-    grid-column: 1 / -1;
-    margin: 18px 0;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.region-title:first-child {
-    margin-top: 0;
-}
-
-.town-title {
-    grid-column: 1 / -1;
-    margin: 0 0 8px 0;
-    text-align: center;
-    font-size: 18px;
-    color: #57595f;
-    font-weight: normal;
-}
-
-.coming-card {
-    display: flex;
-    border-radius: 12px;
-    flex-direction: column;
-    justify-content: center;
-    cursor: pointer;
-    gap: 5px;
-    border: 2px solid transparent;
-
-    img {
-        object-fit: cover;
-    }
-}
-
-.card-title {
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: #1f2937;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-}
-
-.card-sub {
-    font-size: 10px;
-    color: #6b7280;
-    letter-spacing: 2px;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    line-height: 1.5;
-    min-height: calc(1.5em * 2);
-}
-
-.card-title,
-.card-sub {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.search-highlight {
-    color: #33b1a3;
-    font-weight: 700;
-}
-
-.empty-tip {
-    text-align: center;
-    color: #6b7280;
-    font-size: 16px;
-    margin: 45px;
-}
-
-.loading-tip {
-    text-align: center;
-    color: #3b82f6;
-    font-size: 14px;
-    padding: 16px 0 8px;
-}
-
-.pagination-section {
-    display: flex;
-    text-align: center;
-    padding-bottom: 40px;
-    justify-content: center;
-    align-items: center;
-}
-
-:deep(.el-pagination) {
-    .el-pager li {
-        &.is-active {
-            background-color: #279486;
-            color: white;
+        img {
+            height: 240px;
         }
 
-        &:hover {
-            color: #279486;
+        .region-title {
+            grid-column: 1 / -1;
+            margin: 18px 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        .town-title {
+            grid-column: 1 / -1;
+            margin: 0 0 8px 0;
+            text-align: center;
+            font-size: 18px;
+            color: #57595f;
+            font-weight: normal;
+        }
+
+        .coming-card {
+            display: flex;
+            border-radius: 12px;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+            gap: 5px;
+            border: 2px solid transparent;
+
+            img {
+                object-fit: cover;
+            }
         }
     }
 
-    .btn-prev,
-    .btn-next {
-        &:hover {
-            color: #279486;
-        }
-    }
-}
-
-.custom-pagination {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-/* 手机/平板端景点网格：页码固定在页面下方 */
-// @media (max-width: 1024px) {
-.custom-pagination--fixed {
-    position: fixed;
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-// }
-
-.load-more-btn {
-    padding: 14px 48px;
-    background-color: #279486;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
-
-    &:hover {
-        background-color: #1e7a6e;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(39, 148, 134, 0.3);
+    .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #1f2937;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
     }
 
-    &:active {
-        transform: translateY(0);
+    .card-sub {
+        font-size: 10px;
+        color: #6b7280;
+        letter-spacing: 2px;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        line-height: 1.5;
+        min-height: calc(1.5em * 2);
     }
-}
 
-.page-indicator {
-    color: #6b7280;
-    letter-spacing: 1px;
-    line-height: 1.5;
-
-    .page-num {
-        font-size: 18px;
-        color: #279486;
-        line-height: 24px;
+    .card-title,
+    .card-sub {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-}
 
-/* 特别活动样式 */
-.special-activities-section {
-    width: 90%;
-    padding: 20px 0;
-}
+    .search-highlight {
+        color: #33b1a3;
+        font-weight: 700;
+    }
 
-.activities-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
+    .empty-tip {
+        text-align: center;
+        color: #6b7280;
+        font-size: 16px;
+        margin: 45px;
+    }
 
-.activities-title {
-    font-size: 30px;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 8px;
-    letter-spacing: 2px;
-}
+    .loading-tip {
+        text-align: center;
+        color: #3b82f6;
+        font-size: 14px;
+        padding: 16px 0 8px;
+    }
 
-.activities-subtitle {
-    font-size: 14px;
-    color: #6b7280;
-    margin: 0;
-}
-
-.activities-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-bottom: 30px;
-}
-
-.activity-card {
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.activity-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.activity-image {
-    position: relative;
-    height: 298px;
-    overflow: hidden;
-}
-
-.activity-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.activity-card:hover .activity-img {
-    transform: scale(1.05);
-}
-
-.activity-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 600;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.aurora-badge {
-    background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
-}
-
-.event-badge {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.season-badge {
-    background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
-}
-
-.night-badge {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.activity-content {
-    padding: 20px;
-
-    .tags {
+    .pagination-section {
         display: flex;
-        column-gap: 10px;
+        text-align: center;
+        padding-bottom: 40px;
+        justify-content: center;
+        align-items: center;
 
-        .tags>div {
-            width: 100px;
-            height: 30px;
-            line-height: 30px;
+        .custom-pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .custom-pagination--fixed {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-indicator {
+            color: #6b7280;
+            letter-spacing: 1px;
+            line-height: 1.5;
+
+            .page-num {
+                font-size: 18px;
+                color: #279486;
+                line-height: 24px;
+            }
         }
     }
-}
 
-.activity-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 16px;
-    letter-spacing: 1px;
-}
+    :deep(.el-pagination) {
+        .el-pager li {
+            &.is-active {
+                background-color: #279486;
+                color: white;
+            }
 
-.activity-info {
-    margin-bottom: 16px;
-}
+            &:hover {
+                color: #279486;
+            }
+        }
 
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    padding: 4px 0;
-}
+        .btn-prev,
+        .btn-next {
+            &:hover {
+                color: #279486;
+            }
+        }
+    }
 
-.info-label {
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 500;
-}
+    .load-more-btn {
+        padding: 14px 48px;
+        background-color: #279486;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
 
-.info-value {
-    font-size: 14px;
-    color: #111827;
-    font-weight: 600;
-}
+        &:hover {
+            background-color: #1e7a6e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 148, 134, 0.3);
+        }
 
-.info-value.high {
-    color: #059669;
-    font-weight: 700;
-}
+        &:active {
+            transform: translateY(0);
+        }
+    }
 
-.info-value.excellent {
-    color: #dc2626;
-    font-weight: 700;
-}
+    .special-activities-section {
+        width: 90%;
+        padding: 20px 0;
 
-.activity-description {
-    font-size: 14px;
-    color: #4b5563;
-    line-height: 1.6;
-    background: #f9fafb;
-    padding: 12px;
-    border-radius: 8px;
-    border-left: 4px solid #33b1a3;
-}
+        .activities-header {
+            text-align: center;
+            margin-bottom: 30px;
 
-.weather-note {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #059669;
-    background: #ecfdf5;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border-left: 4px solid #10b981;
-}
+            .activities-title {
+                font-size: 30px;
+                font-weight: 700;
+                color: #111827;
+                margin-bottom: 8px;
+                letter-spacing: 2px;
+            }
 
-.weather-icon {
-    font-size: 16px;
-}
+            .activities-subtitle {
+                font-size: 14px;
+                color: #6b7280;
+                margin: 0;
+            }
+        }
 
-.activities-footer {
-    text-align: center;
-    padding: 20px;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-}
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
 
-.update-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    color: #6b7280;
-}
+            .activity-card {
+                background: #fff;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-.update-icon {
-    font-size: 16px;
-}
+                &:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 
-.contact-info {
-    font-size: 14px;
-    color: #4b5563;
+                    .activity-img {
+                        transform: scale(1.05);
+                    }
+                }
+
+                .activity-image {
+                    position: relative;
+                    height: 298px;
+                    overflow: hidden;
+
+                    .activity-img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .activity-badge {
+                        position: absolute;
+                        top: 12px;
+                        right: 12px;
+                        padding: 6px 12px;
+                        border-radius: 20px;
+                        font-size: 10px;
+                        font-weight: 600;
+                        color: #fff;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                }
+
+                .activity-content {
+                    padding: 20px;
+
+                    .activity-title {
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #111827;
+                        margin-bottom: 16px;
+                        letter-spacing: 1px;
+                    }
+
+                    .activity-info {
+                        margin-bottom: 16px;
+
+                        .info-item {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 8px;
+                            padding: 4px 0;
+
+                            .info-label {
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                            }
+
+                            .info-value {
+                                font-size: 14px;
+                                color: #111827;
+                                font-weight: 600;
+
+                                &.high {
+                                    color: #059669;
+                                    font-weight: 700;
+                                }
+
+                                &.excellent {
+                                    color: #dc2626;
+                                    font-weight: 700;
+                                }
+                            }
+                        }
+                    }
+
+                    .tags {
+                        display: flex;
+                        column-gap: 10px;
+
+                        >div {
+                            width: 100px;
+                            height: 30px;
+                            line-height: 30px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .aurora-badge {
+            background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
+        }
+
+        .event-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .season-badge {
+            background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
+        }
+
+        .night-badge {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .activity-description {
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.6;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #33b1a3;
+        }
+
+        .weather-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #059669;
+            background: #ecfdf5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .weather-icon {
+            font-size: 16px;
+        }
+
+        .activities-footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+
+            .update-info {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 12px;
+                font-size: 14px;
+                color: #6b7280;
+
+                .update-icon {
+                    font-size: 16px;
+                }
+            }
+
+            .contact-info {
+                font-size: 14px;
+                color: #4b5563;
+            }
+        }
+    }
 }
 
 /* 平板适配 */
@@ -2220,51 +2259,59 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         grid-template-columns: minmax(220px, 1fr) 1fr 1fr;
     }
 
-    .coming-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
+    .grid-content-loading {
+        .coming-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
 
-    .special-activities-section {
-        width: 95%;
-        padding: 15px 0;
-    }
+        .special-activities-section {
+            width: 95%;
+            padding: 15px 0;
 
-    .activities-title {
-        font-size: 26px;
-    }
+            .activities-header {
+                .activities-title {
+                    font-size: 26px;
+                }
 
-    .activities-subtitle {
-        font-size: 13px;
-    }
+                .activities-subtitle {
+                    font-size: 13px;
+                }
+            }
 
-    .activities-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
+            .activities-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
 
-    .activity-image {
-        height: 178px;
-    }
+                .activity-card {
+                    .activity-image {
+                        height: 178px;
+                    }
 
-    .activity-content {
-        padding: 16px;
-    }
+                    .activity-content {
+                        padding: 16px;
 
-    .activity-title {
-        font-size: 14px;
-    }
+                        .activity-title {
+                            font-size: 14px;
+                        }
 
-    .info-label,
-    .info-value {
-        font-size: 11px;
-    }
+                        .activity-info .info-item {
+                            .info-label,
+                            .info-value {
+                                font-size: 11px;
+                            }
+                        }
+                    }
+                }
+            }
 
-    .activity-description {
-        font-size: 11px;
-    }
+            .activity-description {
+                font-size: 11px;
+            }
 
-    .weather-note {
-        font-size: 10px;
+            .weather-note {
+                font-size: 10px;
+            }
+        }
     }
 }
 
@@ -2274,98 +2321,102 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         grid-template-columns: 1fr;
     }
 
-    .coming-grid {
-        grid-template-columns: repeat(1, 1fr);
-        gap: 20px;
+    .grid-content-loading {
+        .coming-grid {
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
 
-        .coming-card {
-            gap: 10px;
+            .coming-card {
+                gap: 10px;
+            }
         }
-    }
 
-    .special-activities-section {
-        width: 95%;
-        padding: 10px 0;
-    }
+        .special-activities-section {
+            width: 95%;
+            padding: 10px 0;
 
-    .activities-header {
-        margin-bottom: 20px;
-    }
+            .activities-header {
+                margin-bottom: 20px;
 
-    .activities-title {
-        font-size: 24px;
-        letter-spacing: 1px;
-    }
+                .activities-title {
+                    font-size: 24px;
+                    letter-spacing: 1px;
+                }
 
-    .activities-subtitle {
-        font-size: 14px;
-    }
+                .activities-subtitle {
+                    font-size: 14px;
+                }
+            }
 
-    .activities-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        margin-bottom: 20px;
-    }
+            .activities-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 20px;
 
-    .activity-image {
-        height: 160px;
-    }
+                .activity-card {
+                    .activity-image {
+                        height: 160px;
 
-    .activity-badge {
-        top: 8px;
-        right: 8px;
-        padding: 4px 8px;
-        font-size: 10px;
-    }
+                        .activity-badge {
+                            top: 8px;
+                            right: 8px;
+                            padding: 4px 8px;
+                            font-size: 10px;
+                        }
+                    }
 
-    .activity-content {
-        padding: 12px;
-    }
+                    .activity-content {
+                        padding: 12px;
 
-    .activity-title {
-        font-size: 15px;
-        margin-bottom: 12px;
-    }
+                        .activity-title {
+                            font-size: 15px;
+                            margin-bottom: 12px;
+                        }
 
-    .activity-info {
-        margin-bottom: 12px;
-    }
+                        .activity-info {
+                            margin-bottom: 12px;
 
-    .info-item {
-        margin-bottom: 6px;
-        padding: 2px 0;
-    }
+                            .info-item {
+                                margin-bottom: 6px;
+                                padding: 2px 0;
 
-    .info-label,
-    .info-value {
-        font-size: 12px;
-    }
+                                .info-label,
+                                .info-value {
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-    .activity-description {
-        font-size: 12px;
-        padding: 10px;
-    }
+            .activity-description {
+                font-size: 12px;
+                padding: 10px;
+            }
 
-    .weather-note {
-        font-size: 11px;
-        padding: 8px 10px;
-    }
+            .weather-note {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
 
-    .weather-icon {
-        font-size: 14px;
-    }
+            .weather-icon {
+                font-size: 14px;
+            }
 
-    .activities-footer {
-        padding: 15px;
-    }
+            .activities-footer {
+                padding: 15px;
 
-    .update-info {
-        font-size: 12px;
-        margin-bottom: 8px;
-    }
+                .update-info {
+                    font-size: 12px;
+                    margin-bottom: 8px;
+                }
 
-    .contact-info {
-        font-size: 12px;
+                .contact-info {
+                    font-size: 12px;
+                }
+            }
+        }
     }
 }
 
@@ -2375,168 +2426,182 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         grid-template-columns: 1fr 1fr 1fr;
     }
 
-    .coming-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+    .grid-content-loading {
+        .coming-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
 
-        .coming-card {
-            gap: 8px;
+            .coming-card {
+                gap: 8px;
+            }
+
+            img {
+                height: 180px;
+            }
         }
 
-        img {
-            height: 180px;
+        .special-activities-section {
+            width: 95%;
+            padding: 10px 0;
+
+            .activities-header {
+                margin-bottom: 15px;
+
+                .activities-title {
+                    font-size: 20px;
+                    letter-spacing: 1px;
+                }
+
+                .activities-subtitle {
+                    font-size: 13px;
+                }
+            }
+
+            .activities-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                margin-bottom: 20px;
+
+                .activity-card {
+                    .activity-image {
+                        height: 140px;
+
+                        .activity-badge {
+                            top: 8px;
+                            right: 8px;
+                            padding: 4px 8px;
+                            font-size: 10px;
+                        }
+                    }
+
+                    .activity-content {
+                        padding: 12px;
+
+                        .activity-title {
+                            font-size: 14px;
+                            margin-bottom: 10px;
+                        }
+
+                        .activity-info {
+                            margin-bottom: 10px;
+
+                            .info-item {
+                                margin-bottom: 4px;
+                                padding: 2px 0;
+
+                                .info-label,
+                                .info-value {
+                                    font-size: 11px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .activity-description {
+                font-size: 11px;
+                padding: 8px;
+            }
+
+            .weather-note {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+
+            .weather-icon {
+                font-size: 14px;
+            }
+
+            .activities-footer {
+                padding: 15px;
+
+                .update-info {
+                    font-size: 12px;
+                    margin-bottom: 8px;
+                }
+
+                .contact-info {
+                    font-size: 12px;
+                }
+            }
         }
-    }
-
-    .special-activities-section {
-        width: 95%;
-        padding: 10px 0;
-    }
-
-    .activities-header {
-        margin-bottom: 15px;
-    }
-
-    .activities-title {
-        font-size: 20px;
-        letter-spacing: 1px;
-    }
-
-    .activities-subtitle {
-        font-size: 13px;
-    }
-
-    .activities-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-bottom: 20px;
-    }
-
-    .activity-image {
-        height: 140px;
-    }
-
-    .activity-badge {
-        top: 8px;
-        right: 8px;
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-
-    .activity-content {
-        padding: 12px;
-    }
-
-    .activity-title {
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-
-    .activity-info {
-        margin-bottom: 10px;
-    }
-
-    .info-item {
-        margin-bottom: 4px;
-        padding: 2px 0;
-    }
-
-    .info-label,
-    .info-value {
-        font-size: 11px;
-    }
-
-    .activity-description {
-        font-size: 11px;
-        padding: 8px;
-    }
-
-    .weather-note {
-        font-size: 11px;
-        padding: 8px 10px;
-    }
-
-    .weather-icon {
-        font-size: 14px;
-    }
-
-    .activities-footer {
-        padding: 15px;
-    }
-
-    .update-info {
-        font-size: 12px;
-        margin-bottom: 8px;
-    }
-
-    .contact-info {
-        font-size: 12px;
     }
 }
 
 /* 超小屏幕 */
 @media (max-width: 375px) {
-    .activities-title {
-        font-size: 20px;
-    }
+    .grid-content-loading {
+        .special-activities-section {
+            .activities-header {
+                .activities-title {
+                    font-size: 20px;
+                }
 
-    .activities-subtitle {
-        font-size: 13px;
-    }
+                .activities-subtitle {
+                    font-size: 13px;
+                }
+            }
 
-    .activities-grid {
-        gap: 12px;
-    }
+            .activities-grid {
+                gap: 12px;
 
-    .activity-image {
-        height: 140px;
-    }
+                .activity-card {
+                    .activity-image {
+                        height: 140px;
 
-    .activity-badge {
-        top: 6px;
-        right: 6px;
-        padding: 3px 6px;
-        font-size: 9px;
-    }
+                        .activity-badge {
+                            top: 6px;
+                            right: 6px;
+                            padding: 3px 6px;
+                            font-size: 9px;
+                        }
+                    }
 
-    .activity-content {
-        padding: 10px;
-    }
+                    .activity-content {
+                        padding: 10px;
 
-    .activity-title {
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
+                        .activity-title {
+                            font-size: 14px;
+                            margin-bottom: 10px;
+                        }
 
-    .info-item {
-        margin-bottom: 4px;
-    }
+                        .activity-info {
+                            .info-item {
+                                margin-bottom: 4px;
 
-    .info-label,
-    .info-value {
-        font-size: 11px;
-    }
+                                .info-label,
+                                .info-value {
+                                    font-size: 11px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-    .activity-description {
-        font-size: 11px;
-        padding: 8px;
-    }
+            .activity-description {
+                font-size: 11px;
+                padding: 8px;
+            }
 
-    .weather-note {
-        font-size: 10px;
-        padding: 6px 8px;
-    }
+            .weather-note {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
 
-    .activities-footer {
-        padding: 12px;
-    }
+            .activities-footer {
+                padding: 12px;
 
-    .update-info {
-        font-size: 11px;
-    }
+                .update-info {
+                    font-size: 11px;
+                }
 
-    .contact-info {
-        font-size: 11px;
+                .contact-info {
+                    font-size: 11px;
+                }
+            }
+        }
     }
 }
 </style>

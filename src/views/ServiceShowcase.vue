@@ -38,6 +38,7 @@ import car2BackRight from '@/assets/img/carService/car2_back_right.jpg';
 import car2Back from '@/assets/img/carService/car2_back.jpg';
 import hiaceFront from '@/assets/img/carService/hiace_front.jpg';
 import hiaceLeftFront from '@/assets/img/carService/hiace_left_front.jpg';
+import { Z_INDEX } from '@/constants/zIndex'
 
 
 
@@ -505,7 +506,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                     :initial-index="index" show-close show-toolbar show-index :preview-teleported="true"
-                                    :z-index="850">
+                                    :z-index="Z_INDEX.dialog.imagePreview">
                                     <template #toolbar="{ actions, prev, next }">
                                         <ElIcon @click="prev">
                                             <Back />
@@ -696,7 +697,7 @@ watch(() => props.serviceName, (newServiceName) => {
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
                                     :initial-index="index" fit="cover" show-close show-toolbar show-index
-                                    :preview-teleported="true" :z-index="850">
+                                    :preview-teleported="true" :z-index="Z_INDEX.dialog.imagePreview">
                                     <template #toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }">
                                         <ElIcon @click="prev">
                                             <Back />

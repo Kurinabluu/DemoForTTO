@@ -184,14 +184,11 @@ onMounted(() => {
                     <img :src="headerLogo" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
                                  const span=document.createElement('span'); 
                                  span.innerText='TasTrips.Online'; 
+                                 span.className='logo-fallback-text';
                                  span.style.display='inline-block'; 
                                  span.style.height='100%'; 
                                  span.style.color='#101010'; 
                                  span.style.fontWeight='700';
-                                 // 根据屏幕宽度设置响应式样式
-                                 const isMobile = window.innerWidth <= 768;
-                                 span.style.lineHeight=isMobile ? '32px' : '48px'; 
-                                 span.style.fontSize=isMobile ? '18px' : '20px'; 
                                  this.parentNode.appendChild(span);" />
                 </RouterLink>
             </span>
@@ -311,7 +308,8 @@ onMounted(() => {
                 <span class="logo-text">LINGBA</span>
               </div> -->
                         <div class="company-name"><img :src="headerLogo" alt="TasTrips.Online"
-                                class="logo-img logo-desktop" /></div>
+                                class="logo-img logo-desktop" />
+                        </div>
                     </div>
                     <div class="about-text">
                         旅游是一种社会行为，古已有之。
@@ -474,32 +472,22 @@ onMounted(() => {
     z-index: 300 !important;
 }
 
-// 修复语言dropdown的黑框问题
-.el-header .ul-css li.dropdown .el-dropdown-link {
-    outline: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-// 修复focus时的黑框
-.el-header .ul-css li.dropdown .el-dropdown-link:focus,
-.el-header .ul-css li.dropdown .el-dropdown-link:active,
-.el-header .ul-css li.dropdown .el-dropdown-link:focus-visible {
-    outline: none !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-// 修复语言dropdown的高度对齐问题 - 保持与其他li一致的line-height布局
-.el-header .ul-css li.dropdown .el-dropdown {
-    display: inline-block;
-    height: 100%;
-}
-
-.el-header .ul-css li.dropdown .el-dropdown-link {
+/* 与 auswine-demo 一致：用语言栏 class 统一处理触发器与焦点，避免半截 li.dropdown 路径与 height:100% 下拉根节点带来的对齐差异 */
+.el-header .language-dropdown .el-dropdown-link {
     display: inline-block;
     line-height: 70px;
     vertical-align: middle;
+    outline: none;
+    border: 0;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    font-weight: 400;
+}
+
+.el-header .language-dropdown .el-dropdown-link:focus,
+.el-header .language-dropdown .el-dropdown-link:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
 </style>
 <style lang="scss" scoped>
@@ -540,8 +528,13 @@ onMounted(() => {
             // font-size: 24px;
 
             .logo-img {
-                width: 198px;
+                width: 200px;
                 vertical-align: middle;
+            }
+
+            :deep(.logo-fallback-text) {
+                line-height: 48px;
+                font-size: 20px;
             }
         }
 
@@ -875,8 +868,12 @@ onMounted(() => {
             padding: 8px 0 12px 8px;
 
             .logo {
-                font-size: 20px;
                 text-align: left;
+
+                :deep(.logo-fallback-text) {
+                    line-height: 40px;
+                    font-size: 19px;
+                }
             }
 
             .btns {
@@ -901,6 +898,19 @@ onMounted(() => {
                         height: 40px;
                         margin-left: 0;
                         padding: 0 6px;
+                    }
+
+                    li.dropdown {
+                        .el-dropdown-link {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            height: 100%;
+                            line-height: 1;
+                            font-size: 16px;
+                            font-weight: 400;
+                            white-space: nowrap;
+                        }
                     }
                 }
 
@@ -951,8 +961,12 @@ onMounted(() => {
             position: relative;
 
             .logo {
-                font-size: 18px;
                 text-align: left;
+
+                :deep(.logo-fallback-text) {
+                    line-height: 32px;
+                    font-size: 18px;
+                }
             }
 
             .btns {
@@ -1037,7 +1051,10 @@ onMounted(() => {
             padding: 6px 8px;
 
             .logo {
-                font-size: 16px;
+                :deep(.logo-fallback-text) {
+                    line-height: 32px;
+                    font-size: 16px;
+                }
             }
 
             .btns {
@@ -1049,6 +1066,24 @@ onMounted(() => {
                     li {
                         height: 36px;
                         padding: 0 4px;
+                    }
+
+                    li.dropdown {
+                        .el-dropdown-link {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            height: 100%;
+                            line-height: 1;
+                            font-size: 16px;
+                            font-weight: 400;
+                        }
+                    }
+
+                    /* 最后一项「联系我们」单独换行时占满一行，避免在窄屏下看起来偏左 */
+                    li:last-child {
+                        flex-basis: 100%;
+                        justify-content: center;
                     }
                 }
             }
@@ -1204,7 +1239,10 @@ onMounted(() => {
             padding: 4px 6px;
 
             .logo {
-                font-size: 14px;
+                :deep(.logo-fallback-text) {
+                    line-height: 28px;
+                    font-size: 14px;
+                }
             }
 
             .btns {
@@ -1217,6 +1255,19 @@ onMounted(() => {
                         height: 32px;
                         padding: 0 2px;
                         font-size: 11px;
+                    }
+
+                    li.dropdown {
+                        .el-dropdown-link {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
+                            height: 100%;
+                            line-height: 1;
+                            font-size: 11px;
+                            font-weight: 400;
+                            white-space: nowrap;
+                        }
                     }
                 }
             }
@@ -1390,4 +1441,5 @@ onMounted(() => {
 //         .el-dialog__body {
 //             height: 80%;
 //         }
-//     }</style>
+//     }
+</style>

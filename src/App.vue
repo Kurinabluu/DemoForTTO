@@ -7,6 +7,7 @@ import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
 import { useLoadingStore } from '@/stores/loadingStore'
 import { withRandomLoading } from '@/utils/loadingUtils'
+import { Z_INDEX } from '@/constants/zIndex'
 
 // 电梯导航相关
 const showElevator = ref(false)
@@ -151,7 +152,7 @@ onUnmounted(() => {
 
   <!-- 温馨提示声明弹窗 -->
   <el-dialog v-model="showTipsModal" append-to-body align-center width="520px" :close-on-click-modal="false"
-    :show-close="false" :z-index="999">
+    :show-close="false" :z-index="Z_INDEX.dialog.overlay">
     <template #header>
       <div style="font-weight:700; letter-spacing:2px; color:#101010;">温馨提示</div>
     </template>
@@ -191,7 +192,7 @@ onUnmounted(() => {
   </div>
 
   <!-- 敬请期待对话框 -->
-  <el-dialog v-model="isDialogVisible" append-to-body align-center width="420px">
+  <el-dialog v-model="isDialogVisible" append-to-body align-center width="420px" :z-index="Z_INDEX.dialog.base">
     <div style="text-align: center; font-size: 18px; padding: 8px 0;">敬请期待</div>
     <template #footer>
       <el-button type="primary" @click="isDialogVisible = false">我知道了</el-button>

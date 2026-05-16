@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
     visible: { type: Boolean, default: false }
@@ -38,7 +39,7 @@ const fullscreen = computed(() => isMobile.value)
 
 <template>
     <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
-        :z-index="800" :fullscreen="fullscreen">
+        :z-index="Z_INDEX.dialog.high" :append-to-body="true" :lock-scroll="true" :fullscreen="fullscreen">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>
@@ -63,7 +64,7 @@ const fullscreen = computed(() => isMobile.value)
                 </div>
             </div>
         </div>
-        <template #footer style="text-align: right;">
+        <template #footer>
             <el-button type="primary" @click="dialogVisible = false">确定</el-button>
         </template>
     </el-dialog>

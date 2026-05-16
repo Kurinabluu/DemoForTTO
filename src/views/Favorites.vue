@@ -5,10 +5,15 @@ import { Search } from '@element-plus/icons-vue';
 import { getFavorites, removeFavorite, toggleFavorite } from '@/utils/favoritesStore';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
+import TripDialog from '@/components/TripDialog.vue';
 import freeInfoData from '@/data/split/freeinfo.json';
 
 const getThumbImageUrl = (imgPath) => {
   return resolveDataImage(imgPath, '', { variant: 'thumb' });
+};
+
+const getOriginalImageUrl = (imgPath) => {
+  return resolveDataImage(imgPath, '');
 };
 
 const findFreeInfoSourceItem = (title) => {
@@ -80,7 +85,11 @@ const getCoverImageUrl = (item) => {
     item?.tripData?.img
   ];
   const tripDataImage = tripDataImageGroups
-    .flatMap((group) => Array.isArray(group) ? group : [])
+    .flatMap((group) => {
+      if (Array.isArray(group)) return group;
+      if (group) return [group];
+      return [];
+    })
     .map((path) => getThumbImageUrl(path))
     .find(Boolean);
   if (tripDataImage) return tripDataImage;
@@ -103,6 +112,59 @@ const getCoverImageUrl = (item) => {
     }
   }
   // 返回默认图片
+  return resolveDataImage('');
+};
+
+const extractCandidateImagePaths = (groups = []) => {
+  return groups
+    .flatMap((group) => {
+      if (Array.isArray(group)) return group;
+      if (group) return [group];
+      return [];
+    })
+    .map((path) => String(path || '').trim())
+    .filter(Boolean);
+};
+
+const getOriginalDialogImageUrl = (item) => {
+  const matched = findFreeInfoSourceItem(item?.title);
+  if (matched?.sourceItem) {
+    const sourceImagePaths = extractCandidateImagePaths([
+      matched.sourceItem?.cover ? [matched.sourceItem.cover] : [],
+      matched.sourceItem?.img,
+      matched.sourceItem?.images,
+      matched.sourceItem?.banners,
+      matched.sourceItem?.bannerList
+    ]);
+    for (const imagePath of sourceImagePaths) {
+      const resolved = getOriginalImageUrl(imagePath);
+      if (resolved) return resolved;
+    }
+  }
+
+  const tripDataImagePaths = extractCandidateImagePaths([
+    item?.tripData?.cover ? [item.tripData.cover] : [],
+    item?.tripData?.images,
+    item?.tripData?.banners,
+    item?.tripData?.bannerList,
+    item?.tripData?.imgs,
+    item?.tripData?.img
+  ]);
+  for (const imagePath of tripDataImagePaths) {
+    const resolved = getOriginalImageUrl(imagePath);
+    if (resolved) return resolved;
+  }
+
+  const fallbackPaths = extractCandidateImagePaths([
+    item?.image,
+    item?.banner,
+    item?.img
+  ]);
+  for (const imagePath of fallbackPaths) {
+    const resolved = getOriginalImageUrl(imagePath);
+    if (resolved) return resolved;
+  }
+
   return resolveDataImage('');
 };
 
@@ -137,6 +199,16 @@ const currentFavorites = computed(() => {
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
   return data;
+});
+
+const isDayTripFavorite = (item) => {
+  const type = String(item?.type || '').trim();
+  return type.includes('日游') || type.includes('行程') || type === 'trip';
+};
+
+const currentDialogBanner = computed(() => {
+  if (!currentItem.value) return '';
+  return getOriginalDialogImageUrl(currentItem.value);
 });
 // 总页数
 const totalPages = computed(() => {
@@ -241,8 +313,13 @@ onUnmounted(() => {
     </div>
 
     <!-- 详情弹窗 -->
-    <FreeInfoDialog v-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
-      :en-title="currentItem?.enTitle || ''" :banner="currentItem?.image || ''" :trip-data="currentItem?.tripData || {}"
+    <TripDialog v-if="dialogVisible && isDayTripFavorite(currentItem)" v-model:visible="dialogVisible"
+      :title="currentItem?.title || ''" :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner"
+      :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.type || '一日游'"
+      :item-id="currentItem?.id || null" :item-type="currentItem?.type || '一日游'" @update:visible="closeDialog"
+      @favorite-change="handleFavoriteChange" />
+    <FreeInfoDialog v-else-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
+      :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner" :trip-data="currentItem?.tripData || {}"
       :item-id="currentItem?.id || null" :item-type="currentItem?.type || 'scenic'" @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
   </div>

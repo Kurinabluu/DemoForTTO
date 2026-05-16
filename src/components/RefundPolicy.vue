@@ -1,5 +1,6 @@
 <script setup>
 import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue'
+import { Z_INDEX } from '@/constants/zIndex'
 
 const showRefundPolicyDialog = ref(false)
 const isMobile = ref(window.innerWidth <= 768)
@@ -24,7 +25,7 @@ defineExpose({
 <template>
     <!-- <div> -->
     <el-dialog v-model="showRefundPolicyDialog" title="TTO退款政策" width="800" max-width="500px" :fullscreen="isMobile"
-        align-center center :z-index=700>
+        align-center center :z-index="Z_INDEX.dialog.base">
         <div class="policy-text">
             <div class="policy-section">
                 <h2>第一章 总则</h2>
@@ -270,10 +271,6 @@ defineExpose({
 
 // 小屏幕手机适配 (小于480px)
 @media (max-width: 480px) {
-    .policy-text {
-        // height: 250px;
-    }
-
     .tips {
         padding: 8px;
     }

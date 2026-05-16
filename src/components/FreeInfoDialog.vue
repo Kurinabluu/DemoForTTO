@@ -6,6 +6,7 @@ import freeInfoData from '@/data/split/freeinfo.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
+import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -142,7 +143,11 @@ const dialogImages = computed(() => {
     ]
 
     const multiImages = imageGroups
-        .flatMap(group => Array.isArray(group) ? group : [])
+        .flatMap(group => {
+            if (Array.isArray(group)) return group
+            if (group) return [group]
+            return []
+        })
         .map(image => resolveDataImage(image, ''))
         .filter(Boolean)
 
@@ -198,16 +203,18 @@ watch(dialogVisible, (visible) => {
 
 <template>
     <el-dialog v-model="dialogVisible" :show-close="false" width="980px" class="free-info-dialog" align-center
-        :z-index="900" :append-to-body="true" :lock-scroll="true">
+        :z-index="Z_INDEX.dialog.base" :append-to-body="true" :lock-scroll="true">
         <template #header="{ close }">
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
                     <span class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></span>
+                </div>
+                <div class="dlg-header-right">
                     <span class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
                     </span>
+                    <el-icon class="dlg-close" @click="close"><el-icon-close /></el-icon>
                 </div>
-                <el-icon class="el-dialog__close" @click="close"><el-icon-close /></el-icon>
             </div>
         </template>
 
@@ -219,7 +226,7 @@ watch(dialogVisible, (visible) => {
                         <el-image :src="image" :alt="getImageAltText(index)" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
                             :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
-                            :z-index="950" />
+                            :z-index="Z_INDEX.dialog.imagePreview" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -314,13 +321,23 @@ watch(dialogVisible, (visible) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     width: 100%;
 }
 
 .dlg-title-wrap {
     display: flex;
     align-items: center;
-    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    padding-right: 6px;
+}
+
+.dlg-header-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .dlg-title {
@@ -332,7 +349,15 @@ watch(dialogVisible, (visible) => {
 
 .favorite-btn {
     cursor: pointer;
-    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 27px;
+    line-height: 1;
+    border-radius: 999px;
+    flex-shrink: 0;
     color: #ccc;
     transition: all 0.3s ease;
 
@@ -345,8 +370,14 @@ watch(dialogVisible, (visible) => {
     }
 }
 
-.el-dialog__close {
-    font-size: 20px;
+.dlg-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+    flex-shrink: 0;
     color: #909399;
     cursor: pointer;
     transition: color 0.3s;
@@ -535,6 +566,35 @@ watch(dialogVisible, (visible) => {
 }
 
 @media (max-width: 768px) {
+    .dlg-header {
+        gap: 8px;
+    }
+
+    .dlg-title-wrap {
+        padding-right: 4px;
+    }
+
+    .dlg-header-right {
+        gap: 6px;
+    }
+
+    .dlg-title {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .favorite-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 28px;
+    }
+
+    .dlg-close {
+        width: 36px;
+        height: 36px;
+        font-size: 23px;
+    }
+
     .feature-grid {
         grid-template-columns: repeat(1, 1fr);
     }

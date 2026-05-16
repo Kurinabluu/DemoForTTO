@@ -6,7 +6,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import data from '@/data/split/nav.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 import { searchAllContent, persistSearchSession, getStoredSearchSession } from '@/utils/searchService'
-import { withRandomLoading } from '@/utils/loadingUtils'
+import { withLoading } from '@/utils/loadingUtils'
 
 const comingSoonDialogRef = ref(null);
 
@@ -259,7 +259,7 @@ async function onSearch() {
   isSearching.value = true
   try {
     let payload = null
-    await withRandomLoading(async () => {
+    await withLoading(async () => {
       payload = await searchAllContent(keyword)
       persistSearchSession({ ...payload, currentPage: 1 })
 
@@ -267,7 +267,7 @@ async function onSearch() {
         path: '/DemoForTTO/search',
         query: { s: payload.query }
       })
-    }, { min: 180, max: 480, text: '正在搜索...' })
+    }, { text: '正在搜索...' })
   } finally {
     isSearching.value = false
   }
@@ -306,8 +306,8 @@ async function onSearch() {
               </el-icon>
             </template>
           </el-input>
-          <el-button type="primary" size="large" class="search-btn fs14" :loading="isSearching"
-            :disabled="isSearching" @click="onSearch">
+          <el-button type="primary" size="large" class="search-btn fs14" :loading="isSearching" :disabled="isSearching"
+            @click="onSearch">
             <el-icon>
               <Search />
             </el-icon>
@@ -570,9 +570,10 @@ async function onSearch() {
         }
 
         .search-tags {
+          width: 100%;
+          // gap: 6px 0px;
           gap: 6px;
           grid-template-columns: repeat(2, 1fr);
-          width: 100%;
 
           .tag-pill {
             font-size: 16px;
@@ -680,34 +681,40 @@ async function onSearch() {
         }
 
         .search-tags {
-          grid-template-columns: repeat(2, 1fr);
-        }
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 3px;
 
-        .tag-pill,
-        .active,
-        .disabled {
-          padding: 3px 6px;
-          font-size: 12px;
-          line-height: 1.4;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          white-space: pre-line;
-        }
+          .tag-pill,
+          .active,
+          .disabled {
+            padding: 3px 4px;
+            font-size: 11px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-line;
+          }
 
-        .tag-pill .tag-content,
-        .active .tag-content,
-        .disabled .tag-content {
-          display: inline;
-          text-align: center;
-          width: 100%;
-        }
+          .tag-pill {
+            width: 130px;
+            min-width: 0;
+          }
 
-        .tag-pill br,
-        .active br,
-        .disabled br {
-          height: 4px;
-          margin: 2px 0;
+          .tag-pill .tag-content,
+          .active .tag-content,
+          .disabled .tag-content {
+            display: inline;
+            text-align: center;
+            width: 100%;
+          }
+
+          .tag-pill br,
+          .active br,
+          .disabled br {
+            height: 4px;
+            margin: 2px 0;
+          }
         }
       }
     }

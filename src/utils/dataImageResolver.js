@@ -16,14 +16,6 @@ const assetModules = {
   ...optimizedAssetModules
 }
 
-const lowerFileNameAssetMap = Object.entries(assetModules).reduce((acc, [key, value]) => {
-  const fileName = key.split('/').pop()?.toLowerCase()
-  if (fileName && !acc[fileName]) {
-    acc[fileName] = value
-  }
-  return acc
-}, {})
-
 const normalizeAssetPath = (inputPath) => {
   const raw = String(inputPath || '').trim()
   if (!raw) return ''
@@ -44,12 +36,8 @@ const resolveAssetModule = (inputPath) => {
   const normalized = normalizeAssetPath(inputPath)
   if (!normalized) return ''
 
-  const directMatch = assetModules[normalized]
-  if (directMatch) return directMatch
-
-  const fileName = normalized.split('/').pop()?.toLowerCase()
-  if (!fileName) return ''
-  return lowerFileNameAssetMap[fileName] || ''
+  // 仅按完整路径匹配；不按文件名兜底，避免 places/A/1.jpg 与 places/B/1.jpg 串图
+  return assetModules[normalized] || ''
 }
 
 const getOptimizedAssetPath = (normalizedAssetPath, variant = 'thumb') => {

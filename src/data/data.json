@@ -1676,6 +1676,8 @@
                         "tripData": {
                             "route": "Queens Domain, Hobart TAS 7000, Australia",
                             "desc": "女王领地是霍巴特市中心东北部一片广阔的公共绿地。这片成立于1860年的区域集自然、历史与休闲于一体，包含政府大厦、皇家植物园等主要地标。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1713,11 +1715,34 @@
                     },
                     {
                         "title": "皇家植物园",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/RoyalTasmanianBotanicalGardens/1.jpg",
+                            "../assets/img/places/RoyalTasmanianBotanicalGardens/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:The_Conservatory,_Royal_Tasmanian_Botanical_Gardens_06.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Dhx1",
+                                "photographer": "Dhx1",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:The_Conservatory,_Royal_Tasmanian_Botanical_Gardens_01.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Dhx1",
+                                "photographer": "Dhx1",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            }
+                        ],
                         "enTitle": "Royal Tasmanian Botanical Gardens",
                         "tripData": {
-                            "route": "塔斯马尼亚霍巴特",
+                            "route": "Queens Domain, Hobart TAS 7000, Australia",
                             "desc": "塔斯马尼亚皇家植物园位于霍巴特的女王领地内，建于1818年，是澳大利亚第二古老的植物园，占地面积约14公顷。园内拥有大量历史悠久的重要树木、丰富的植物收藏，以及世界上唯一的亚南极植物屋。",
+                            "region": "霍巴特及南部",
+                            "town": "Hobart",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1758,8 +1783,10 @@
                         "img": "",
                         "enTitle": "Hobart Zoo and Aquarium/旧Zoodoo Zoo",
                         "tripData": {
-                            "route": "塔斯马尼亚东南部",
+                            "route": "620 Middle Tea Tree Rd, Richmond TAS 7025, Australia",
                             "desc": "霍巴特动物园与水族馆（原名Zoodoo野生动物园）是位于里奇蒙的一个私营动物园，于1999年开放。其动物收藏从最初的本地救援物种，逐步扩展至包括非洲狮、斑马、骆驼等多种外来动物，并于2025年增设了水族馆。该动物园提供动物互动与喂食体验。",
+                            "region": "霍巴特及南部",
+                            "town": "Richmond",
                             "features": [
                                 {
                                     "icon": "#22c55e",
@@ -1793,11 +1820,30 @@
                     },
                     {
                         "title": "布莱德斯托薰衣草农场",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/BridestoweLavenderEstate/1.jpg",
+                            "../assets/img/places/BridestoweLavenderEstate/2.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-field-full-of-purple-flowers-with-a-mountain-in-the-background-vZOZm67bsGY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@kshithijchandrashekar?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Kshithij Chandrashekar"
+                            },
+                            {
+                                "source": "https://unsplash.com/photos/a-field-of-lavender-flowers-with-mountains-in-the-background-K3MBP_5j3Gw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@kshithijchandrashekar?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "Kshithij Chandrashekar"
+                            }
+                        ],
                         "enTitle": "Bridestowe Lavender Estate",
                         "tripData": {
-                            "route": "塔斯马尼亚东北部",
+                            "route": "296 Gillespies Rd, Nabowla TAS 7260, Australia",
                             "desc": "布莱德斯托薰衣草庄园是位于塔斯马尼亚纳伯拉的一个薰衣草农场。它成立于1922年，被认为是世界上最大的狭叶薰衣草商业种植园。",
+                            "region": "朗塞斯顿及北部",
+                            "town": "Launceston",
                             "features": [
                                 {
                                     "icon": "#22c55e",

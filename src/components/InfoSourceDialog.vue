@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
     visible: { type: Boolean, default: false },
@@ -16,7 +17,7 @@ const dialogVisible = computed({
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" :z-index="999" :append-to-body="true" align-center width="80%" class="source-dia">
+    <el-dialog v-model="dialogVisible" :z-index="Z_INDEX.dialog.overlay" :append-to-body="true" align-center width="80%" class="source-dia">
         <template #header>
             <div class="source-dialog-header">
                 <span class="source-dialog-title">信息参考来源</span>

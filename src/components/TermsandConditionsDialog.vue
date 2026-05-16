@@ -1,5 +1,6 @@
 <script setup>
 import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue'
+import { Z_INDEX } from '@/constants/zIndex'
 
 const showTemrsDialog = ref(false)
 const isMobile = ref(window.innerWidth <= 768)
@@ -24,7 +25,7 @@ defineExpose({
 <template>
     <!-- <div> -->
     <el-dialog v-model="showTemrsDialog" title="TTO服务条款与条件" width="800" max-width="500px" :fullscreen="isMobile"
-        align-center center :z-index=700>
+        align-center center :z-index="Z_INDEX.dialog.base">
         <div class="policy-text">
             <div class="policy-section">
                 <h2>一、接受条款</h2>
