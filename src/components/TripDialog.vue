@@ -153,8 +153,8 @@ watch(dialogVisible, (visible) => {
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" :show-close="false" width="980px" class="trip-dialog" align-center :z-index="Z_INDEX.dialog.base"
-        :append-to-body="true" :lock-scroll="true">
+    <el-dialog v-model="dialogVisible" :show-close="false" width="980px" class="trip-dialog" align-center
+        :z-index="Z_INDEX.dialog.base" :append-to-body="true" :lock-scroll="true">
         <template #header="{ close }">
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
@@ -173,7 +173,7 @@ watch(dialogVisible, (visible) => {
         <div class="dlg-section">
             <div class="dlg-banner" v-if="dialogImages.length">
                 <el-carousel ref="bannerCarouselRef" :interval="0" indicator-position="inside" arrow="hover"
-                    height="350px">
+                    height="400px">
                     <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
                         <el-image :src="image" alt="banner" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
@@ -376,7 +376,7 @@ watch(dialogVisible, (visible) => {
         overflow-y: auto;
 
         .dlg-banner {
-            height: 350px;
+            height: 420px;
 
             .carousel-image {
                 width: 100%;

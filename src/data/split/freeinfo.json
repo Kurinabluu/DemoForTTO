@@ -856,7 +856,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:Hobart_waterfront_near_Salamanca_Place.jpg",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "https://commons.wikimedia.org/wiki/User:Lautreca11",
+              "photographerLink": "",
               "photographer": "Lautreca11",
               "license": "CC0",
               "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
@@ -894,10 +894,10 @@
           }
         },
         {
-          "title": "朗塞斯顿峡谷",
+          "title": "卡塔赖特峡谷",
           "img": [
-            "../assets/img/places/Launceston/1.jpg",
-            "../assets/img/places/LauncestonGorge.jpg"
+            "../assets/img/places/CataractGorge/1.jpg",
+            "../assets/img/places/CataractGorge/2.jpg"
           ],
           "imgSource": [
             {
@@ -918,31 +918,38 @@
           "enTitle": "Launceston Gorge",
           "tripData": {
             "route": "Cataract Gorge, Launceston TAS 7250, Australia",
-            "desc": "朗塞斯顿峡谷（Cataract Gorge）位于朗塞斯顿市中心附近，是南澳塔斯马尼亚的自然景观，设有步行道、吊桥和游泳池。",
+            "desc": "卡塔赖特峡谷（Cataract Gorge）是朗塞斯顿市内的一个天然峡谷景区，位于南埃斯克河下游，以世界最长单跨缆车和维多利亚式悬崖花园为特色。",
             "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "峡谷徒步",
-                "desc": "多条风景如画的步道"
+                "title": "世界最长单跨缆车",
+                "desc": "可乘坐缆车跨越峡谷，其中最长单跨距离达308米"
               },
               {
                 "icon": "#3b82f6",
-                "title": "吊桥体验",
-                "desc": "横跨峡谷的铁索桥"
+                "title": "悬崖花园的维多利亚式景观",
+                "desc": "峡谷北岸的“悬崖花园”是拥有蕨类植物、异域植物和孔雀的景观花园"
               },
               {
                 "icon": "#f59e0b",
-                "title": "自然泳池",
-                "desc": "夏季游泳胜地"
+                "title": "鸭滩历史水力发电站",
+                "desc": "峡谷上游有一座建于19世纪90年代的历史水力发电站，现为解说中心"
               }
             ],
             "tags": [
-              "城市周边",
-              "适合徒步",
-              "家庭友好",
-              "全年开放"
+              "最长缆车",
+              "游泳设施",
+              "历史建筑",
+              "花园景观"
+            ],
+            "source": [
+              {
+                "title": "Cataract Gorge",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Cataract_Gorge&oldid=1324103881"
+              }
             ]
           }
         },
@@ -1099,7 +1106,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:Freycinet_National_Park_-_Flickr_-_brewbooks_(4).jpg",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "https://www.flickr.com/people/brewbooks/",
+              "photographerLink": "https://www.flickr.com/people/93452909@N00",
               "photographer": "brewbooks",
               "license": "CC BY-SA 2.0",
               "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
@@ -1342,7 +1349,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:Richmond-Tasmania-Australia02.JPG",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "https://commons.wikimedia.org/wiki/User:Poco_a_poco",
+              "photographerLink": "https://www.wikidata.org/wiki/Q28147777",
               "photographer": "Diego Delso",
               "license": "CC BY-SA 3.0",
               "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
@@ -1350,7 +1357,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:RICHMOND_OLD_COURTHOUSE_-_RICHMOND,_TASMANIA.jpg",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:KLOTZ",
               "photographer": "JERRYE & ROY KLOTZ MD",
               "license": "CC BY-SA 3.0",
               "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
@@ -1485,7 +1492,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:Park_-_Stanley,_Tasmania_(26183878166).jpg",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "https://www.flickr.com/people/mikecogh/",
+              "photographerLink": "https://www.flickr.com/people/89165847@N00",
               "photographer": "Michael Coghlan",
               "license": "CC BY-SA 2.0",
               "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
@@ -1665,7 +1672,7 @@
             {
               "source": "https://commons.wikimedia.org/wiki/File:Queens_Domain_TAS_7000,_Australia_-_panoramio_(3).jpg",
               "sourceName": "Wikimedia Commons",
-              "photographerLink": "https://web.archive.org/web/20161101185634/http://www.panoramio.com/user/4978784",
+              "photographerLink": "https://web.archive.org/web/20161101185637/http://www.panoramio.com/user/4978784?with_photo_id=126488142",
               "photographer": "Ché Lydia Xyang",
               "license": "CC BY-SA 3.0",
               "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
@@ -1876,16 +1883,24 @@
         },
         {
           "title": "巴特里角",
-          "img": "",
+          "img": "../assets/img/places/BatteryPoint.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/white-and-grey-boats-on-sand-in-front-of-body-of-water-CjWTOcdnvK4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@jyoung?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Jonathon Young"
+            }
+          ],
           "enTitle": "Battery Point",
           "tripData": {
-            "route": "塔斯马尼亚东南部",
-            "desc": "巴特里角是澳大利亚塔斯马尼亚州霍巴特市的一个郊区，紧邻霍巴特中央商务区南部。该区以1818年设立于此的沿海防御炮台而得名，如今被认为是城市中更负盛名的郊区之一，拥有许多大型奢华住宅，并毗邻萨拉曼卡水滨区和桑迪湾。",
+            "route": "Battery Point, Hobart TAS 7004, Australia",
+            "desc": "巴特里角是霍巴特的一个郊区，紧邻中央商务区南部。该区以1818年设立于此的沿海防御炮台而得名，被认为是城市中更负盛名的郊区之一，拥有许多大型奢华住宅，并毗邻萨拉曼卡水滨区和桑迪湾。",
             "features": [
               {
                 "icon": "#22c55e",
                 "title": "历史渊源",
-                "desc": "其名称源于1818年在此建立的沿海防御炮台遗址，该遗址后来发展为今天的王子公园"
+                "desc": "名称源于1818年在此建立的沿海防御炮台遗址，该遗址后来发展为今天的王子公园"
               },
               {
                 "icon": "#3b82f6",
@@ -1914,11 +1929,34 @@
         },
         {
           "title": "宪法码头",
-          "img": "",
+          "img": [
+            "../assets/img/places/ConstitutionDock/1.jpg",
+            "../assets/img/places/ConstitutionDock/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Lascar_Constitution_Dock_(Hobart)_(4551798599).jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/people/8721758@N06/",
+              "photographer": "Jorge Láscar",
+              "license": "CC BY 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Scenes_from_the_2013_Quick_%26_Dirty.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Sarah Brabazon",
+              "license": "CC BY 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+            }
+          ],
           "enTitle": "Constitution Dock",
           "tripData": {
-            "route": "塔斯马尼亚霍巴特市中心的苏利文湾",
+            "route": "Constitution Dock, Hobart TAS 7000, Australia",
             "desc": "宪法码头是霍巴特港内、德文特河畔的一个海港区码头。它毗邻维多利亚码头、萨拉曼卡广场和巴特里角，构成沙利文湾滨水区的一部分。该码头以作为每年悉尼至霍巴特帆船赛的集结地和庆祝场所而闻名。",
+            "region": "霍巴特及南部",
+            "town": "Hobart",
             "features": [
               {
                 "icon": "#22c55e",
@@ -1954,10 +1992,20 @@
         },
         {
           "title": "桑迪湾",
-          "img": "",
+          "img": "../assets/img/places/SandyBay.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Sandy_Bay_Road_near_Lords_Beach,_Tasmania_01.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Chuq",
+              "photographer": "Chuq",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          ],
           "enTitle": "Sandy Bay",
           "tripData": {
-            "route": "塔斯马尼亚东南部",
+            "route": "Sandy Bay, Hobart TAS 7005, Australia",
             "desc": "桑迪湾是紧邻霍巴特市中心南部的滨水郊区。它以德文特河畔的沙滩、富裕的社区、澳大利亚第一家合法赌场（Wrest Point）以及塔斯马尼亚大学主校区所在地而闻名。",
             "features": [
               {
@@ -1994,11 +2042,52 @@
         },
         {
           "title": "道格拉斯-阿普斯利国家公园",
-          "img": "",
+          "img": [
+            "../assets/img/places/DouglasApsleyNationalPark/1.jpg",
+            "../assets/img/places/DouglasApsleyNationalPark/2.jpg",
+            "../assets/img/places/DouglasApsleyNationalPark/3.jpg",
+            "../assets/img/places/DouglasApsleyNationalPark/4.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Douglas-Apsley_National_Park.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/people/7281432@N05/",
+              "photographer": "VirtualWolf",
+              "license": "CC BY-SA 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Apsley_Waterhole.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Guido Rudolph",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Apsley_Douglas_National_Park.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Linda Muldoon",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Douglas-Apsley_National_Park.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Bill",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          ],
           "enTitle": "Douglas-Apsley National Park",
           "tripData": {
-            "route": "塔斯马尼亚东北部",
+            "route": "Douglas-Apsley National Park, Tasmania, Australia（主要入口近Bicheno）",
             "desc": "道格拉斯-阿普斯利国家公园位于塔斯马尼亚东海岸，是一个成立于1989年的较新国家公园。它保护着东海岸干燥森林的集水区，以深峡谷、野花和温和的内陆气候为特色，并提供从短途步行到三日徒步的徒步活动。",
+            "region": "东海岸",
+            "town": "Bicheno",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2032,11 +2121,21 @@
         },
         {
           "title": "哈茨山脉",
-          "img": "",
+          "img": "../assets/img/places/HartzMountains.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/overlooking-mountains-on-a-cloudy-day-mOUsni6WdCo?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@mattpalmer?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Matt Palmer"
+            }
+          ],
           "enTitle": "Hartz Mountains",
           "tripData": {
-            "route": "塔斯马尼亚西南部",
+            "route": "Hartz Mountains National Park, Geeveston TAS 7116, Australia",
             "desc": "哈茨山是位于塔斯马尼亚西南部的双峰山，属于哈茨山国家公园，距霍巴特约55公里。该地区以恶劣多变的西南部天气著称，其主峰海拔1254米，在晴好天气可俯瞰西南部和北部的壮丽景色。",
+            "region": "霍巴特及南部",
+            "town": "Geeveston",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2071,11 +2170,23 @@
         },
         {
           "title": "蚝湾/帕塔利纳",
-          "img": "",
+          "img": "../assets/img/places/OysterCove.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Oyster_Cove_Marina,_Kettering.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Timox14 (supplied by reviewmarineproducts.com)",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          ],
           "enTitle": "Oyster Cove/Putalina",
           "tripData": {
-            "route": "塔斯马尼亚东南部",
+            "route": "Oyster Cove, Kettering TAS 7155, Australia",
             "desc": "蚝湾（又名帕塔利纳）是塔斯马尼亚东南部一个半乡村地区，因历史上曾作为殖民时期关押土著塔斯马尼亚人的场所，其部分区域被列为土著保护区。",
+            "region": "霍巴特及南部",
+            "town": "Kingston",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2110,11 +2221,52 @@
         },
         {
           "title": "大牡蛎湾",
-          "img": "",
+          "img": [
+            "../assets/img/places/GreatOysterBay/1.jpg",
+            "../assets/img/places/GreatOysterBay/2.jpg",
+            "../assets/img/places/GreatOysterBay/3.jpg",
+            "../assets/img/places/GreatOysterBay/4.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Coles_Bay_Conservation_Area_TAS.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Shuttles12000",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Freycinet_Coles_Bay_Richtung_Great_Oyster_Bay.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Jörn Brauns",
+              "license": "Public Domain",
+              "licenseLink": "https://creativecommons.org/publicdomain/mark/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:OysterBay.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Aaroncrick",
+              "photographer": "Aaroncrick",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Blick_ueber_Great_Oyster_Bay_zur_Freycinet_Peninsula.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Jörn Brauns",
+              "license": "Public Domain",
+              "licenseLink": "https://creativecommons.org/publicdomain/mark/1.0/"
+            }
+          ],
           "enTitle": "Great Oyster Bay",
           "tripData": {
-            "route": "塔斯马尼亚东海岸",
+            "route": "Great Oyster Bay, Coles Bay TAS 7215, Australia",
             "desc": "大牡蛎湾是塔斯马尼亚东海岸一个宽阔且受庇护的海湾，塔斯曼公路沿其西岸而行，可观赏菲欣纳国家公园内哈泽兹山等花岗岩峰峦的景色。",
+            "region": "东海岸",
+            "town": "Coles Bay",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2152,8 +2304,10 @@
           "img": "",
           "enTitle": "Moulting Lagoon",
           "tripData": {
-            "route": "塔斯马尼亚东海岸",
+            "route": "Moulting Lagoon, Coles Bay TAS 7215, Australia",
             "desc": "莫尔廷泻湖是塔斯马尼亚东海岸一片重要的复合湿地系统，由河流汇入形成，是国际公认的拉姆萨尔湿地和重要鸟类保护区，尤以聚集大量黑天鹅而闻名。",
+            "region": "东海岸",
+            "town": "Coles Bay",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2188,11 +2342,23 @@
         },
         {
           "title": "罗斯镇",
-          "img": "",
+          "img": "../assets/img/places/Ross/2.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Ross-tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Synyan",
+              "photographer": "Synyan",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Ross",
           "tripData": {
-            "route": "塔斯马尼亚中部",
+            "route": "Ross, Tasmania, Australia",
             "desc": "罗斯是塔斯马尼亚中部的一个历史村庄，被列入国家遗产名录，以其古老的石桥、原始的砂岩建筑和囚犯历史而闻名。",
+            "region": "中部地区",
+            "town": "Ross",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2227,11 +2393,21 @@
         },
         {
           "title": "罗斯桥",
-          "img": "",
+          "img": "../assets/img/places/Ross/1.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/a-stone-bridge-over-a-river-P0QQwJPCBFs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@rondellh?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Rondell Herriot"
+            }
+          ],
           "enTitle": "Ross Bridge",
           "tripData": {
-            "route": "塔斯马尼亚中部",
+            "route": "Ross Bridge, Ross TAS 7209, Australia",
             "desc": "罗斯桥是一座于1836年7月竣工的砂岩历史桥梁，由囚犯劳工建造，是澳大利亚第三古老且仍在使用的桥梁。",
+            "region": "中部地区",
+            "town": "Ross",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2266,11 +2442,32 @@
         },
         {
           "title": "国王岛/金岛",
-          "img": "",
+          "img": [
+            "../assets/img/places/KingIsland/1.jpg",
+            "../assets/img/places/KingIsland/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Currie_Harbour-King_Island-Australia.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://en.wikipedia.org/wiki/User:Karl_Barnfather",
+              "photographer": "Karl Barnfather",
+              "license": "Public Domain",
+              "licenseLink": "https://creativecommons.org/publicdomain/mark/1.0/"
+            },
+            {
+              "source": "https://unsplash.com/photos/green-grass-field-near-body-of-water-during-daytime-MpUtdi9O5Jo?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@timhart0421?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Tim Hart"
+            }
+          ],
           "enTitle": "King Island",
           "tripData": {
-            "route": "塔斯马尼亚西北部",
+            "route": "King Island, Tasmania, Australia（主要城镇：Currie）",
             "desc": "金岛是巴斯海峡中属于塔斯马尼亚的第二大岛，以农业和旅游业为主要经济，以其历史沉船、自然生态和特色物产而闻名。",
+            "region": "金岛",
+            "town": "Currie",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2304,11 +2501,21 @@
         },
         {
           "title": "弗林德斯岛",
-          "img": "",
+          "img": "../assets/img/places/FlindersIsland.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/rugged-coastline-with-ocean-waves-crashing-on-shore-xSwsVgGH42o?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@thelightnight?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Terry Zhong"
+            }
+          ],
           "enTitle": "Flinders Island",
           "tripData": {
-            "route": "塔斯马尼亚东北部",
+            "route": "Flinders Island, Tasmania, Australia（主要城镇：Whitemark）",
             "desc": "塔斯马尼亚弗诺群岛中最大的岛屿，拥有崎岖的山脉、沿海沙丘与泻湖，以及独特的历史。",
+            "region": "东海岸",
+            "town": "Flinders Island",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2342,11 +2549,52 @@
         },
         {
           "title": "企鹅镇",
-          "img": "",
+          "img": [
+            "../assets/img/places/Penguin/1.jpg",
+            "../assets/img/places/Penguin/2.jpg",
+            "../assets/img/places/Penguin/3.jpg",
+            "../assets/img/places/Penguin/4.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Penguin_BigPenguin.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Stuart Edwards",
+              "license": "Public Domain",
+              "licenseLink": "https://creativecommons.org/publicdomain/mark/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Big-Penguin-20070420-035.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+              "photographer": "Gary Houston",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Penguin_Bins.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Ollie Pye",
+              "license": "CC BY 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Penguin_Heritage_Cemetery_Lookout.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Ollie Pye",
+              "license": "CC BY 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/4.0/"
+            }
+          ],
           "enTitle": "Penguin",
           "tripData": {
-            "route": "塔斯马尼亚北部",
+            "route": "Penguin, Tasmania, Australia",
             "desc": "一座以沿海小企鹅栖息地命名的北部海岸小镇，镇中心设有标志性的“大企鹅”雕塑，街道也装饰着企鹅主题的公共设施。",
+            "region": "西北部",
+            "town": "Penguin",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2383,11 +2631,43 @@
         },
         {
           "title": "谢菲尔德",
-          "img": "",
+          "img": [
+            "../assets/img/places/Sheffield/1.jpg",
+            "../assets/img/places/Sheffield/2.jpg",
+            "../assets/img/places/Sheffield/3.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Sheffield_TAS.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://de.wikipedia.org/wiki/Benutzer:Rennboot",
+              "photographer": "Rennboot",
+              "license": "CC BY-SA 3.0 DE",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/de/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Highlander-Sheffield-20070422-004.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+              "photographer": "Gary Houston",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Sheffield-20070422-003.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+              "photographer": "Gary Houston",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            }
+          ],
           "enTitle": "Sheffield",
           "tripData": {
-            "route": "塔斯马尼亚西北部",
+            "route": "Sheffield, Tasmania, Australia",
             "desc": "一座以“壁画小镇”闻名的内陆小镇，以遍布全镇、描绘当地历史与风光的壁画作为核心旅游特色，背靠罗兰山。",
+            "region": "西北部",
+            "town": "Sheffield",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2422,11 +2702,43 @@
         },
         {
           "title": "德文特河",
-          "img": "",
+          "img": [
+            "../assets/img/places/RiverDerwent/1.jpg",
+            "../assets/img/places/RiverDerwent/2.jpg",
+            "../assets/img/places/RiverDerwent/3.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Bridgewater_Causeway.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Noodle_snacks",
+              "photographer": "Noodle snacks (JJ Harrison)",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_7436_Hobart_and_the_Derwent_River_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Nick Pitsas, CSIRO",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_2566_Hobart_and_the_Derwent_River_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Nick Pitsas, CSIRO",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "River Derwent",
           "tripData": {
-            "route": "塔斯马尼亚东南部",
+            "route": "River Derwent, Hobart TAS 7000, Australia",
             "desc": "一条发源于中央高地的河流，下游形成宽阔的河口，流经霍巴特市区，最终注入风暴湾。它是霍巴特港口的重要组成部分。",
+            "region": "霍巴特及南部",
+            "town": "Hobart",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2461,11 +2773,34 @@
         },
         {
           "title": "利亚温尼",
-          "img": "",
+          "img": [
+            "../assets/img/places/Liawenee/1.jpg",
+            "../assets/img/places/Liawenee/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Liawenee_canal_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Peripitus",
+              "photographer": "Peripitus",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Building_next_to_Liawenee_Canal.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Peripitus",
+              "photographer": "Peripitus",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Liawenee",
           "tripData": {
-            "route": "塔斯马尼亚中部",
+            "route": "Liawenee, Tasmania, Australia（中部高地，靠近Great Lake）",
             "desc": "一个位于中部高地的小型定居点，最初为水电项目而建，以其异常寒冷的气候和附近大湖的鳟鱼垂钓活动而闻名。",
+            "region": "中部地区",
+            "town": "Miena",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2499,51 +2834,53 @@
           }
         },
         {
-          "title": "卡塔赖特峡谷",
-          "img": "",
-          "enTitle": "Cataract Gorge",
-          "tripData": {
-            "route": "塔斯马尼亚北部",
-            "desc": "朗塞斯顿市内的一个天然峡谷景区，位于南埃斯克河下游，以世界最长单跨缆车和维多利亚式悬崖花园为特色。",
-            "features": [
-              {
-                "icon": "#22c55e",
-                "title": "世界最长单跨缆车",
-                "desc": "可乘坐缆车跨越峡谷，其中最长单跨距离达308米"
-              },
-              {
-                "icon": "#3b82f6",
-                "title": "悬崖花园的维多利亚式景观",
-                "desc": "峡谷北岸的“悬崖花园”是拥有蕨类植物、异域植物和孔雀的景观花园"
-              },
-              {
-                "icon": "#f59e0b",
-                "title": "鸭滩历史水力发电站",
-                "desc": "峡谷上游有一座建于19世纪90年代的历史水力发电站，现为解说中心"
-              }
-            ],
-            "tags": [
-              "最长缆车",
-              "游泳设施",
-              "历史建筑",
-              "花园景观"
-            ],
-            "source": [
-              {
-                "title": "“Cataract Gorge”",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "https://en.wikipedia.org/w/index.php?title=Cataract_Gorge&oldid=1324103881"
-              }
-            ]
-          }
-        },
-        {
           "title": "麦夸里岛",
-          "img": "",
-          "enTitle": "Macquarie",
+          "img": [
+            "../assets/img/places/MacquarieIsland/1.jpg",
+            "../assets/img/places/MacquarieIsland/2.jpg",
+            "../assets/img/places/MacquarieIsland/3.jpg",
+            "../assets/img/places/MacquarieIsland/4.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:MacquarieIslandBeach.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Hullwarren",
+              "photographer": "Hullwarren",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:MacquarieIslandIsthmus.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Hullwarren",
+              "photographer": "Hullwarren",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Macquarie_station,_Macquarie_Island.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Krudller",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:MacquarieIslandGreenGORGE.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Hullwarren",
+              "photographer": "Hullwarren",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          ],
+          "enTitle": "Macquarie Island",
           "tripData": {
-            "route": "塔斯马尼亚的位于南太平洋的亚南极岛屿",
+            "route": "Macquarie Island, Subantarctic, Australia",
             "desc": "一个位于海洋板块边界上的亚南极岛屿，于1997年被列为世界遗产。岛上无永久居民，但有研究站。",
+            "region": "西海岸",
+            "town": "Strahan",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2580,11 +2917,34 @@
         },
         {
           "title": "德洛兰恩",
-          "img": "",
+          "img": [
+            "../assets/img/places/Deloraine/1.jpg",
+            "../assets/img/places/Deloraine/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Meander-Deloraine-20070422-037.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+              "photographer": "Gary Houston",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:German_Trench_Mortar,_Deloraine_20190726-007.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+              "photographer": "Gary Houston",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            }
+          ],
           "enTitle": "Deloraine",
           "tripData": {
-            "route": "塔斯马尼亚北部",
+            "route": "Deloraine, Tasmania, Australia",
             "desc": "一座位于米安德河畔的农业小镇，也是通往摇篮山等自然景区的门户，并以每年举办的大型手工艺博览会闻名。",
+            "region": "朗塞斯顿及北部",
+            "town": "Deloraine",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2619,11 +2979,34 @@
         },
         {
           "title": "迪尔岛",
-          "img": "",
+          "img": [
+            "../assets/img/places/DealIsland/1.jpg",
+            "../assets/img/places/DealIsland/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Deal_Island,_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "RibbaSky",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Deal_Island_Lighthouse_Views_-_panoramio.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://web.archive.org/web/20161013095502/http://www.panoramio.com/user/2717002?with_photo_id=18069624",
+              "photographer": "Terrafirma123",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Deal Island",
           "tripData": {
-            "route": "塔斯马尼亚东北部",
+            "route": "Deal Island, Kent Group, Tasmania, Australia（属于肯特群岛国家公园）",
             "desc": "一个完全位于肯特群岛国家公园内的花岗岩岛屿，岛上建有一座历史灯塔，并拥有机场跑道、码头和博物馆等设施。",
+            "region": "东海岸",
+            "town": "Flinders Island",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2661,16 +3044,28 @@
         },
         {
           "title": "中央高地",
-          "img": "",
+          "img": "../assets/img/places/CentralHighlands.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Penstock_Lagoon_Tasmania_Central_Highlands_13.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Mike_Cline",
+              "photographer": "Mike Cline",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            }
+          ],
           "enTitle": "Central Highlands",
           "tripData": {
-            "route": "塔斯马尼亚中部",
+            "route": "Central Highlands, Tasmania, Australia",
             "desc": "塔斯马尼亚被称为“湖泊之乡”的地理区域，其地理与行政边界基本重合，区内包含多个国家公园、保护区与众多湖泊。",
+            "region": "中部地区",
+            "town": "Miena",
             "features": [
               {
                 "icon": "#22c55e",
                 "title": "鳟鱼飞钓体验",
-                "desc": "该地区以拥有世界上最佳的飞钓地点而闻名，曾举办世界飞钓锦标赛，大湖、阿瑟斯湖等是热门钓点"
+                "desc": "该地区以拥有世界上最佳的飞钓地点而闻名，曾举办世界飞钓锦标赛，大湖、阿瑟斯湖等热门钓点"
               },
               {
                 "icon": "#3b82f6",
@@ -2701,11 +3096,34 @@
         },
         {
           "title": "本洛蒙德",
-          "img": "",
+          "img": [
+            "../assets/img/places/BenLomond/1.jpg",
+            "../assets/img/places/BenLomond/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Ben_Lomond_Lookout_at_Sunset.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Joshua Tagicakibau",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Ben_Lomond_snow_fields.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Peripitus",
+              "photographer": "Peripitus",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          ],
           "enTitle": "Ben Lomond",
           "tripData": {
-            "route": "塔斯马尼亚东北部",
+            "route": "Ben Lomond National Park, Tasmania, Australia",
             "desc": "一座位于本洛蒙德国家公园内的高山，其高原海拔超过1200米，拥有塔斯马尼亚主要的阿尔卑斯滑雪场，可通过名为“雅各布天梯”的公路或步行道抵达。",
+            "region": "朗塞斯顿及北部",
+            "town": "Launceston",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2742,11 +3160,21 @@
         },
         {
           "title": "摩尔溪",
-          "img": "",
+          "img": "../assets/img/places/MoleCreek.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/green-grass-field-near-green-trees-and-mountain-during-daytime-iH1z8fCtaDw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@mattpalmer?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Matt Palmer"
+            }
+          ],
           "enTitle": "Mole Creek",
           "tripData": {
-            "route": "塔斯马尼亚中北部",
+            "route": "ole Creek, Tasmania, Australia",
             "desc": "一座以蜂蜜生产闻名的城镇，其蜂蜜产量约占塔斯马尼亚的35%。城镇周边是莫尔溪喀斯特国家公园的所在地。",
+            "region": "西北部",
+            "town": "Mole Creek",
             "features": [
               {
                 "icon": "#22c55e",
@@ -2780,11 +3208,23 @@
         },
         {
           "title": "摩尔溪喀斯特国家公园",
-          "img": "",
+          "img": "../assets/img/places/MoleCreekKarstNationalPark.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Marakoopa_Cave-Tasmania-Australia08.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.wikidata.org/wiki/Q28147777",
+              "photographer": "Diego Delso",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          ],
           "enTitle": "Mole Creek Karst National Park",
           "tripData": {
-            "route": "塔斯马尼亚北部",
+            "route": "Mole Creek Karst National Park, Mole Creek TAS 7304, Australia",
             "desc": "塔斯马尼亚唯一一个为保护喀斯特地貌而建立的国家公园，包含300多个已知洞穴和落水洞，其中两个已被开发为展示洞穴。公园属于塔斯马尼亚荒野世界遗产地的一部分。",
+            "region": "西北部",
+            "town": "Mole Creek",
             "features": [
               {
                 "icon": "#22c55e",
@@ -3135,11 +3575,39 @@
         },
         {
           "title": "麦夸里港",
-          "img": "",
+          "img": [
+            "../assets/img/places/MacquarieHarbour/1.jpg",
+            "../assets/img/places/MacquarieHarbour/2.jpg",
+            "../assets/img/places/MacquarieHarbour/3.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Macquarie_Harbour,_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "BennyG3255",
+              "license": "CC BY-SA 4.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/4.0/"
+            },
+            {
+              "source": "https://unsplash.com/photos/a-large-body-of-water-surrounded-by-a-lush-green-hillside-wsVZKw2WkOY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@kshithijchandrashekar?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Kshithij Chandrashekar"
+            },
+            {
+              "source": "https://unsplash.com/photos/a-lighthouse-on-a-small-island-in-the-middle-of-the-ocean-750YLBaUHL4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@brooksieg?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Geoff Brooks"
+            }
+          ],
           "enTitle": "Macquarie Harbour",
           "tripData": {
-            "route": "塔斯马尼亚西部",
+            "route": "Macquarie Harbour, Strahan TAS 7468, Australia",
             "desc": "麦夸里港是一个面积约315平方公里的浅水峡湾，平均深度15米。历史上曾作为监狱所在地，如今是西海岸旅游的主要出发点。",
+            "region": "西海岸",
+            "town": "Strahan",
             "features": [
               {
                 "icon": "#22c55e",

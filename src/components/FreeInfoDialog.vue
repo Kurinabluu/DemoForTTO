@@ -176,6 +176,12 @@ const imageSourceMeta = computed(() => {
     return raw.map(normalizeImageSourceEntry).filter(Boolean)
 })
 
+/** 判断是否为本站 TasTrips 图源（仅此类在无拍摄者外链时使用品牌高亮） */
+const isTasTripsBrandSource = (sourceName) => {
+    const n = String(sourceName || '').trim().toLowerCase().replace(/\s+/g, '')
+    return n === 'tastrips' || n === 'tastrips.online'
+}
+
 const currentImageSourceMeta = computed(() => {
     if (!imageSourceMeta.value.length) return null
     return imageSourceMeta.value[activeBannerIndex.value] || imageSourceMeta.value[0] || null
@@ -221,7 +227,7 @@ watch(dialogVisible, (visible) => {
         <div class="dlg-section">
             <div class="dlg-banner w100" v-if="dialogImages.length">
                 <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
-                    arrow="hover" height="350px" @change="handleBannerChange">
+                    arrow="hover" height="400px" @change="handleBannerChange">
                     <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
                         <el-image :src="image" :alt="getImageAltText(index)" class="carousel-image pointer" fit="cover"
                             :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
@@ -236,13 +242,18 @@ watch(dialogVisible, (visible) => {
                     target="_blank" rel="noopener noreferrer" class="img-source-link">
                     {{ currentImageSourceMeta.photographer }}
                 </el-link>
-                <span v-else class="img-source-highlight">{{ currentImageSourceMeta.photographer }}</span>
+                <span v-else-if="isTasTripsBrandSource(currentImageSourceMeta.sourceName)" class="img-source-highlight">
+                    {{ currentImageSourceMeta.photographer }}</span>
+                <span v-else class="img-source-photographer-no-link" title="暂未提供可用的个人主页外链">{{
+                    currentImageSourceMeta.photographer }}</span>
                 on
                 <el-link v-if="currentImageSourceMeta.source" :href="currentImageSourceMeta.source" target="_blank"
                     rel="noopener noreferrer" class="img-source-link">
                     {{ currentImageSourceMeta.sourceName }}
                 </el-link>
-                <span v-else class="img-source-highlight">{{ currentImageSourceMeta.sourceName }}</span>
+                <span v-else-if="isTasTripsBrandSource(currentImageSourceMeta.sourceName)" class="img-source-highlight">
+                    {{ currentImageSourceMeta.sourceName }}</span>
+                <span v-else class="img-source-plain">{{ currentImageSourceMeta.sourceName }}</span>
                 <template v-if="currentImageSourceMeta.license">
                     ·
                     <el-link v-if="currentImageSourceMeta.licenseLink" :href="currentImageSourceMeta.licenseLink"
@@ -388,7 +399,7 @@ watch(dialogVisible, (visible) => {
 }
 
 .dlg-banner {
-    height: 350px;
+    height: 420px;
 
     .carousel-image {
         width: 100%;
@@ -425,6 +436,20 @@ watch(dialogVisible, (visible) => {
     border-radius: 4px;
     padding: 0 4px;
     margin: 0 1px;
+}
+
+/* 无来源页链接时与注记同色，不过分抢眼 */
+.img-source-plain {
+    color: inherit;
+    font-weight: 500;
+}
+
+/* 第三方来源无拍摄者外链：与普通说明区分开，示意悬停可查说明（非标签高亮） */
+.img-source-photographer-no-link {
+    color: #4b5563;
+    font-weight: 600;
+    border-bottom: 1px dashed #9ca3af;
+    cursor: help;
 }
 
 .dlg-section {
