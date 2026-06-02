@@ -349,42 +349,44 @@ const buildEffectiveQueryTokens = (keyword) => {
   return filtered
 }
 
-const textMatchesKeyword = (text, keyword) => {
+const splitSearchWords = (normText) =>
+  String(normText || '')
+    .split(/[^a-z0-9\u4e00-\u9fff]+/i)
+    .filter(Boolean)
+
+const tokenMatchesWord = (kwTok, words, textNorm) => {
+  if (!isAsciiToken(kwTok)) return textNorm.includes(kwTok)
+  return words.some((word) => {
+    if (word === kwTok) return true
+    if (word === kwTok + 's') return true
+    if (word + 's' === kwTok) return true
+    if (word.startsWith(kwTok)) return true
+    return false
+  })
+}
+
+const evaluateSearchTextMatch = (text, keyword) => {
   const kwRaw = (keyword || '').trim()
   if (!kwRaw) return true
 
   const kwNorm = normalizeForSearch(kwRaw)
   const textNorm = normalizeForSearch(text)
-
-  // 如果包含非 ASCII 字符（中文等），退化为简单包含匹配，避免拆词出错
-  if (/[^\x00-\x7f]/.test(kwNorm) || /[^\x00-\x7f]/.test(textNorm)) {
-    return textNorm.includes(kwNorm)
-  }
+  if (!textNorm) return false
 
   const kwTokens = buildEffectiveQueryTokens(kwNorm)
   if (!kwTokens.length) return false
 
-  const textTokens = tokenizeForSearch(textNorm)
-  if (!textTokens.length) return false
+  const compactText = textNorm.replace(/\s+/g, '')
+  const compactQuery = kwNorm.replace(/\s+/g, '')
+  if (compactQuery.length >= 2 && compactText.includes(compactQuery)) return true
+  if (textNorm.includes(kwNorm)) return true
 
-  const allTokensHit = kwTokens.every((kwTok) =>
-    textTokens.some((tt) => {
-      if (tt === kwTok) return true
-      if (tt === kwTok + 's') return true
-      if (tt + 's' === kwTok) return true
-      return false
-    })
-  )
-
-  if (allTokensHit) return true
-
-  // 多词查询允许部分命中（至少2词，且命中率>=60%）
-  const tokenHits = kwTokens.filter((kwTok) =>
-    textTokens.some((tt) => tt === kwTok || tt === kwTok + 's' || tt + 's' === kwTok)
-  ).length
-  const tokenHitRatio = kwTokens.length > 0 ? tokenHits / kwTokens.length : 0
-  return kwTokens.length > 1 && tokenHits >= 2 && tokenHitRatio >= 0.6
+  const words = splitSearchWords(textNorm)
+  const allTokensHit = kwTokens.every((kwTok) => tokenMatchesWord(kwTok, words, textNorm))
+  return allTokensHit
 }
+
+const textMatchesKeyword = (text, keyword) => evaluateSearchTextMatch(text, keyword)
 
 // 计算字符串相似度（简单实现，检查标题相似度）
 const isSimilarTitle = (title1, title2) => {

@@ -3208,7 +3208,7 @@
         },
         {
           "title": "摩尔溪喀斯特国家公园",
-          "img": "../assets/img/places/MoleCreekKarstNationalPark.jpg",
+          "img": "../assets/img/places/MoleCreekKarstNationalPark.JPG",
           "imgSource": [
             {
               "source": "https://commons.wikimedia.org/wiki/File:Marakoopa_Cave-Tasmania-Australia08.JPG",
@@ -3259,11 +3259,21 @@
         },
         {
           "title": "塔胡恩空中走道",
-          "img": "",
+          "img": "../assets/img/places/TahuneAirWalk.jpg",
+          "imgSource": [
+            {
+              "source": "https://unsplash.com/photos/gray-metal-bridge-over-river-VlX2ZDgmq1c?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "sourceName": "Unsplash",
+              "photographerLink": "https://unsplash.com/@nicosmit99?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+              "photographer": "Nico Smit"
+            }
+          ],
           "enTitle": "Tahune AirWalk",
           "tripData": {
-            "route": "塔斯马尼亚南部",
+            "route": "Tahune AirWalk, Arve Rd, Geeveston TAS 7116, Australia",
             "desc": "一个钢结构的树冠层步道，部分位置悬于树顶之上高达50米，全长620米。步道俯瞰侯恩河与皮克顿河的交汇处。",
+            "region": "霍巴特及南部",
+            "town": "Huonville",
             "features": [
               {
                 "icon": "#22c55e",
