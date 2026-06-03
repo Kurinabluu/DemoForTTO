@@ -1,5 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import {
+  buildTourDialogQueryParams,
+  shouldAttachTourDialogLocate
+} from '../src/utils/searchItemKey.js'
 
 const projectRoot = process.cwd()
 const dataFilePath = path.join(projectRoot, 'src', 'data', 'data.json')
@@ -125,11 +129,9 @@ function createSearchIndexRows(dataSource = []) {
       if (!item || typeof item !== 'object' || (item.hasOwnProperty('isShow') && !item.isShow)) return
       const baseTitle = item.title || item.place || item.name || item.route || item.subNavName
       const summary = summaryFromItem(item)
-      const itemParams = {
-        ...context.queryParams,
-        dialogItemId: item.title ? encodeURIComponent(item.title) : undefined,
-        dialogType: 'tour'
-      }
+      const itemParams = shouldAttachTourDialogLocate(context.sectionTag)
+        ? buildTourDialogQueryParams(item, context.queryParams || {})
+        : { ...(context.queryParams || {}) }
       pushResult({
         title: baseTitle,
         summary,
@@ -145,13 +147,16 @@ function createSearchIndexRows(dataSource = []) {
         item.list.forEach((listItem) => {
           if (listItem?.hasOwnProperty('isShow') && !listItem.isShow) return
           const listTitle = listItem.title || listItem.name || listItem.place
+          const listParams = shouldAttachTourDialogLocate(context.sectionTag)
+            ? buildTourDialogQueryParams(listItem, context.queryParams || {})
+            : { ...(context.queryParams || {}) }
           pushResult({
             title: listTitle,
             summary: summaryFromItem(listItem),
             sectionTag: context.sectionTag,
             subNavName: context.subNavName,
             groupName: item.place || context.groupName,
-            targetUrl: buildTargetUrl(context.basePath, context.queryParams || {}),
+            targetUrl: buildTargetUrl(context.basePath, listParams),
             source: listItem,
             kind: 'item'
           })

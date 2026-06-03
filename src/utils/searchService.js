@@ -1,4 +1,9 @@
 import { getDataJson, getSearchIndexData } from '@/utils/dataRepository'
+import { textMatchesKeyword } from '@/utils/searchMatchUtils'
+import {
+  buildTourDialogQueryParams,
+  shouldAttachTourDialogLocate
+} from '@/utils/searchItemKey'
 
 const SEARCH_STORAGE_KEY = 'tto_last_search_payload'
 const MAX_SNIPPET_LENGTH = 220
@@ -130,11 +135,9 @@ const processItemsArray = (items, context = {}) => {
     const summary = summaryFromItem(item)
 
     // 构建包含元素标识和弹窗类型的URL参数
-    const itemParams = {
-      ...context.queryParams || {},
-      dialogItemId: item.title ? encodeURIComponent(item.title) : undefined,
-      dialogType: 'tour' // 默认弹窗类型
-    }
+    const itemParams = shouldAttachTourDialogLocate(context.sectionTag)
+      ? buildTourDialogQueryParams(item, context.queryParams || {})
+      : { ...(context.queryParams || {}) }
 
     pushResult({
       title: baseTitle,
@@ -153,13 +156,16 @@ const processItemsArray = (items, context = {}) => {
         if (listItem.hasOwnProperty('isShow') && !listItem.isShow) return
 
         const listTitle = listItem.title || listItem.name || listItem.place
+        const listParams = shouldAttachTourDialogLocate(context.sectionTag)
+          ? buildTourDialogQueryParams(listItem, context.queryParams || {})
+          : { ...(context.queryParams || {}) }
         pushResult({
           title: listTitle,
           summary: summaryFromItem(listItem),
           sectionTag: context.sectionTag,
           subNavName: context.subNavName,
           groupName: item.place || context.groupName,
-          targetUrl: buildTargetUrl(context.basePath, context.queryParams || {}),
+          targetUrl: buildTargetUrl(context.basePath, listParams),
           source: listItem,
           kind: 'item'
         })
@@ -320,91 +326,6 @@ const getSnippet = (text, keyword) => {
   const prefix = start > 0 ? '...' : ''
   const suffix = end < text.length ? '...' : ''
   return `${prefix}${text.slice(start, end)}${suffix}`
-}
-
-// ---- 全站搜索：英文单词级模糊匹配（支持 wonders / wonder 等） ----
-const normalizeForSearch = (str) => (str || '').toLowerCase()
-
-const isAsciiToken = (token) => /^[a-z0-9]+$/i.test(token)
-
-const tokenizeForSearch = (str) =>
-  normalizeForSearch(str)
-    .split(/[\s,./\\\-+()'"“”‘’!?;:]+/)
-    .filter(Boolean)
-
-const buildEffectiveQueryTokens = (keyword) => {
-  const rawTokens = tokenizeForSearch(keyword)
-  const compactQuery = normalizeForSearch(keyword).replace(/\s+/g, '')
-
-  // 英文/数字词至少 2 个字符，避免 "r i c h..." 把单字母当关键词
-  const filtered = rawTokens.filter((token) => {
-    if (isAsciiToken(token)) return token.length >= 2
-    return token.length >= 1
-  })
-
-  // 兜底：如果被过滤后为空，则按整体词匹配
-  if (!filtered.length && compactQuery.length >= 2) {
-    return [compactQuery]
-  }
-  return filtered
-}
-
-const splitSearchWords = (normText) =>
-  String(normText || '')
-    .split(/[^a-z0-9\u4e00-\u9fff]+/i)
-    .filter(Boolean)
-
-const tokenMatchesWord = (kwTok, words, textNorm) => {
-  if (!isAsciiToken(kwTok)) return textNorm.includes(kwTok)
-  return words.some((word) => {
-    if (word === kwTok) return true
-    if (word === kwTok + 's') return true
-    if (word + 's' === kwTok) return true
-    if (word.startsWith(kwTok)) return true
-    return false
-  })
-}
-
-const evaluateSearchTextMatch = (text, keyword) => {
-  const kwRaw = (keyword || '').trim()
-  if (!kwRaw) return true
-
-  const kwNorm = normalizeForSearch(kwRaw)
-  const textNorm = normalizeForSearch(text)
-  if (!textNorm) return false
-
-  const kwTokens = buildEffectiveQueryTokens(kwNorm)
-  if (!kwTokens.length) return false
-
-  const compactText = textNorm.replace(/\s+/g, '')
-  const compactQuery = kwNorm.replace(/\s+/g, '')
-  if (compactQuery.length >= 2 && compactText.includes(compactQuery)) return true
-  if (textNorm.includes(kwNorm)) return true
-
-  const words = splitSearchWords(textNorm)
-  const allTokensHit = kwTokens.every((kwTok) => tokenMatchesWord(kwTok, words, textNorm))
-  return allTokensHit
-}
-
-const textMatchesKeyword = (text, keyword) => evaluateSearchTextMatch(text, keyword)
-
-// 计算字符串相似度（简单实现，检查标题相似度）
-const isSimilarTitle = (title1, title2) => {
-  // 如果标题完全相同，直接认为相似
-  if (title1 === title2) return true;
-
-  // 如果一个标题是另一个标题的前缀（比如"专属定制" 和 "专属定制 - 介绍"）
-  const shortTitle = title1.length < title2.length ? title1 : title2;
-  const longTitle = title1.length < title2.length ? title2 : title1;
-
-  // 检查短标题是否是长标题的开头，并且长标题只是添加了一些描述性文字
-  if (longTitle.startsWith(shortTitle) &&
-    (longTitle.length - shortTitle.length) <= 20 && // 长度差异不大
-    (longTitle.includes('-') || longTitle.includes('：'))) {
-    return true;
-  }
-
-  return false;
 }
 
 export const searchAllContent = async (rawKeyword) => {

@@ -203,10 +203,10 @@ const openResult = (result) => {
   const currentUrl = new URL(window.location.href)
   const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`
 
-  // 确保新窗口URL包含搜索参数"s"（用于在目标页面显示搜索结果）
+  // 带上全站搜索词：目标页搜索框预填；有 dialogItemId 时仅定位条目，不缩小列表
   const targetUrl = new URL(fullPath, baseUrl)
   if (route.query.s) {
-    targetUrl.searchParams.set('s', route.query.s)
+    targetUrl.searchParams.set('s', String(route.query.s))
   }
 
   const fullUrl = targetUrl.href

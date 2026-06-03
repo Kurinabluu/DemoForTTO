@@ -206,6 +206,78 @@ const isDialogVisible = ref(false)
 const subSearch = ref('')
 const committedKeyword = ref('')
 
+function syncSearchFromRoute() {
+    const q = route.query.s
+    if (q == null || !String(q).trim()) return
+    // 从全站搜索结果打开：s 仅用于 TripsGrid 搜索框展示，不在此做全页过滤
+    if (route.query.dialogItemId) {
+        committedKeyword.value = ''
+        return
+    }
+    committedKeyword.value = String(q).trim()
+}
+
+function decodeDialogItemId(raw) {
+    if (raw == null || raw === '') return ''
+    try {
+        return decodeURIComponent(String(raw))
+    } catch {
+        return String(raw)
+    }
+}
+
+function findTourCardByDialogKey(dialogKey) {
+    if (!dialogKey || typeof document === 'undefined') return null
+    if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') {
+        const el = document.querySelector(`[data-tour-title="${CSS.escape(dialogKey)}"]`)
+        if (el) return el
+    }
+    const cards = document.querySelectorAll('[data-tour-title]')
+    for (const node of cards) {
+        if (node.getAttribute('data-tour-title') === dialogKey) return node
+    }
+    return null
+}
+
+function runTourDialogLocate() {
+    const dialogItemId = route.query.dialogItemId
+    const dialogType = route.query.dialogType
+    if (!dialogItemId || dialogType !== 'tour') return
+
+    const decodedId = decodeDialogItemId(dialogItemId)
+    if (!decodedId) return
+
+    let attempts = 0
+    const maxAttempts = 50
+    const checkInterval = 100
+
+    const findAndHighlightElement = () => {
+        attempts++
+        const targetElement = findTourCardByDialogKey(decodedId)
+
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            setTimeout(() => {
+                targetElement.style.borderColor = '#33b1a3'
+                targetElement.style.boxShadow = '0 0 0 2px rgba(51, 177, 163, 0.22)'
+                targetElement.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease'
+                setTimeout(() => {
+                    targetElement.style.transition = 'border-color 0.5s ease, box-shadow 0.5s ease'
+                    targetElement.style.borderColor = 'transparent'
+                    targetElement.style.boxShadow = 'none'
+                    setTimeout(() => {
+                        targetElement.click()
+                    }, 500)
+                }, 1000)
+            }, 500)
+        } else if (attempts < maxAttempts) {
+            setTimeout(findAndHighlightElement, checkInterval)
+        }
+    }
+
+    setTimeout(findAndHighlightElement, 500)
+}
+
 
 // function onClickSubTab(tab) {
 //     subTab.value = tab
@@ -389,21 +461,39 @@ function onTouchEnd() {
     }
 }
 
-// 初始化当前子导航
+// 初始化当前子导航（URL query 优先于本地缓存）
 function initializeSubNav() {
-    if (currentRouteData.value && currentRouteData.value.hasSubNav && currentRouteData.value.subNav && currentRouteData.value.subNav.length > 0) {
-        const savedSubNav = navStore.selectedSubNav
-        const defaultSubNav = currentRouteData.value.subNav[0].subNavName
+    if (!currentRouteData.value?.hasSubNav || !currentRouteData.value.subNav?.length) return
 
-        // 检查保存的子导航是否在当前对象的子导航列表中
-        const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === savedSubNav)
+    const subNavList = currentRouteData.value.subNav
 
-        if (isValidSubNav) {
-            currentSubNavTab.value = savedSubNav
-        } else {
-            currentSubNavTab.value = defaultSubNav
-            navStore.saveSelectedSubNav(defaultSubNav)
+    if (route.query.subNavName) {
+        const fromQuery = String(route.query.subNavName)
+        if (subNavList.some(sub => sub.subNavName === fromQuery)) {
+            currentSubNavTab.value = fromQuery
+            navStore.saveSelectedSubNav(fromQuery)
+            return
         }
+    }
+
+    if (route.query.dayTripTab) {
+        const fromQuery = String(route.query.dayTripTab)
+        if (subNavList.some(sub => sub.subNavName === fromQuery)) {
+            currentSubNavTab.value = fromQuery
+            navStore.saveSelectedSubNav(fromQuery)
+            return
+        }
+    }
+
+    const savedSubNav = navStore.selectedSubNav
+    const defaultSubNav = subNavList[0].subNavName
+    const isValidSubNav = subNavList.some(sub => sub.subNavName === savedSubNav)
+
+    if (isValidSubNav) {
+        currentSubNavTab.value = savedSubNav
+    } else {
+        currentSubNavTab.value = defaultSubNav
+        navStore.saveSelectedSubNav(defaultSubNav)
     }
 }
 
@@ -418,9 +508,14 @@ watch(() => route.query, (newQuery) => {
             if (isValidSubNav) {
                 currentSubNavTab.value = newQuery.subNavName;
                 navStore.saveSelectedSubNav(newQuery.subNavName);
-                // 清空搜索
                 subSearch.value = '';
-                committedKeyword.value = '';
+                if (newQuery.dialogItemId) {
+                    committedKeyword.value = '';
+                } else if (newQuery.s != null && String(newQuery.s).trim()) {
+                    committedKeyword.value = String(newQuery.s).trim();
+                } else {
+                    committedKeyword.value = '';
+                }
                 return;
             }
         }
@@ -434,9 +529,14 @@ watch(() => route.query, (newQuery) => {
             if (isValidSubNav) {
                 currentSubNavTab.value = newQuery.dayTripTab;
                 navStore.saveSelectedSubNav(newQuery.dayTripTab);
-                // 清空搜索
                 subSearch.value = '';
-                committedKeyword.value = '';
+                if (newQuery.dialogItemId) {
+                    committedKeyword.value = '';
+                } else if (newQuery.s != null && String(newQuery.s).trim()) {
+                    committedKeyword.value = String(newQuery.s).trim();
+                } else {
+                    committedKeyword.value = '';
+                }
                 return;
             }
         }
@@ -458,6 +558,22 @@ watch(() => route.query, (newQuery) => {
         }
     }
 }, { immediate: true });
+
+watch(
+    () => route.query.s,
+    () => {
+        syncSearchFromRoute()
+    },
+    { immediate: true }
+)
+
+watch(
+    () => [route.query.dialogItemId, route.query.dialogType, route.path],
+    () => {
+        runTourDialogLocate()
+    }
+)
+
 // 组件挂载时执行
 onMounted(() => {
     selectSlides()
@@ -466,55 +582,8 @@ onMounted(() => {
         window.addEventListener('favoriteMessage', handleFavoriteMessage)
     }
     initializeSubNav()
-
-    // 解析URL参数，定位元素并打开弹窗
-    const dialogItemId = route.query.dialogItemId
-    const dialogType = route.query.dialogType
-
-    if (dialogItemId && dialogType === 'tour') {
-        const decodedId = decodeURIComponent(dialogItemId)
-        let attempts = 0
-        const maxAttempts = 30 // 最多尝试30次（约3秒）
-        const checkInterval = 100 // 每100ms检查一次
-
-        // 使用轮询机制等待元素出现（因为可能有"加载更多"功能需要时间）
-        const findAndHighlightElement = () => {
-            attempts++
-            const targetElement = document.querySelector(`[data-tour-title="${decodedId}"]`)
-
-            if (targetElement) {
-                // 找到元素后，滚动到元素位置
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-
-                // 等待滚动完成后添加蓝色边框效果
-                setTimeout(() => {
-                    // 使用浅主题色高亮，仅改变边框颜色，避免触发尺寸抖动
-                    targetElement.style.borderColor = '#33b1a3'
-                    targetElement.style.boxShadow = '0 0 0 2px rgba(51, 177, 163, 0.22)'
-                    targetElement.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease'
-
-                    // 1秒后移除边框
-                    setTimeout(() => {
-                        // 高亮淡出：恢复透明边框，不移除边框宽度
-                        targetElement.style.transition = 'border-color 0.5s ease, box-shadow 0.5s ease'
-                        targetElement.style.borderColor = 'transparent'
-                        targetElement.style.boxShadow = 'none'
-
-                        // 等待边框消失后再打开弹窗
-                        setTimeout(() => {
-                            targetElement.click()
-                        }, 500) // 等待边框消失动画完成
-                    }, 1000) // 边框显示1秒
-                }, 500) // 等待滚动动画完成
-            } else if (attempts < maxAttempts) {
-                // 如果还没找到且未超过最大尝试次数，继续等待
-                setTimeout(findAndHighlightElement, checkInterval)
-            }
-        }
-
-        // 开始查找（延迟一点时间，确保组件已挂载）
-        setTimeout(findAndHighlightElement, 500)
-    }
+    syncSearchFromRoute()
+    runTourDialogLocate()
 })
 </script>
 
