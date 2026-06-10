@@ -9,7 +9,11 @@ import RefundPolicy from '@/components/RefundPolicy.vue';
 import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
+import LoginDialog from '@/components/LoginDialog.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
+import { isApiEnabled, submitInquiry } from '@/utils/ttoApi';
+import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
+import { ElMessage } from 'element-plus';
 
 const navStore = useNavStore();
 const router = useRouter();
@@ -19,6 +23,15 @@ const refundPolicyRef = ref(null);
 const privacyPolicyRef = ref(null);
 const termsandConditionsDialogRef = ref(null);
 const aboutUsDialogRef = ref(null);
+const loginDialogVisible = ref(false);
+
+const headerUserLabel = computed(() => {
+    if (isLoggedIn.value) {
+        const name = getAuthUsername()
+        return name ? `你好，${name}` : '我的账号'
+    }
+    return '用户注册/登录'
+})
 
 // 计算属性：根据当前路由和子导航状态确定哪个导航项应该有clicked类
 const activeNavItem = computed(() => {
@@ -36,6 +49,10 @@ const activeNavItem = computed(() => {
     }
     return ''; // 默认没有活动项
 });
+
+function openLoginDialog() {
+    loginDialogVisible.value = true
+}
 
 function onNavClick(event, navName = '') {
     // 获取点击的文本内容
@@ -60,8 +77,6 @@ function onNavClick(event, navName = '') {
     //     // 路由跳转由模板中的RouterLink处理，这里只需要保存状态
     // }
     // // 其他导航项：弹出敬请期待对话框
-    // else 
-    // if (textContent === '行业新闻' || textContent === '特别推荐' || textContent === '用户注册') {
     // if (comingSoonDialogRef.value) {
     comingSoonDialogRef.value.showComingDialog = true;
     // }
@@ -84,11 +99,71 @@ function closeJoinUsDialog() {
 
 // 联系我们弹窗
 const isContactDialogVisible = ref(false)
+const inquirySubmitting = ref(false)
+const pendingInquirySuccessMessage = ref(false)
+const inquiryFormRef = ref(null)
+const inquiryForm = ref({
+    contactName: '',
+    phone: '',
+    email: '',
+    content: '',
+})
+const inquiryRules = {
+    contactName: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+    phone: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+    content: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+}
+const canSubmitInquiry = computed(() => {
+    const form = inquiryForm.value
+    return Boolean(form.contactName.trim() && form.phone.trim() && form.content.trim())
+})
+const INQUIRY_SUCCESS_MESSAGE = '咨询已提交，我们会尽快联系你'
+
 function openContactDialog() {
+    pendingInquirySuccessMessage.value = false
     isContactDialogVisible.value = true
 }
-function closeContactDialog() {
-    isContactDialogVisible.value = false
+
+function handleContactDialogClosed() {
+    inquiryFormRef.value?.clearValidate()
+    inquirySubmitting.value = false
+    if (!pendingInquirySuccessMessage.value) return
+    pendingInquirySuccessMessage.value = false
+    ElMessage.success({
+        message: INQUIRY_SUCCESS_MESSAGE,
+        grouping: true,
+    })
+}
+
+async function submitContactInquiry() {
+    if (inquirySubmitting.value || !inquiryFormRef.value || !canSubmitInquiry.value) return
+
+    const valid = await inquiryFormRef.value.validate().catch(() => false)
+    if (!valid) return
+
+    const form = inquiryForm.value
+    inquirySubmitting.value = true
+    pendingInquirySuccessMessage.value = false
+
+    try {
+        if (isApiEnabled()) {
+            await submitInquiry({
+                contactName: form.contactName.trim(),
+                phone: form.phone.trim(),
+                email: form.email.trim(),
+                inquiryType: 'contact',
+                sourceSection: 'layout-contact',
+                content: form.content.trim(),
+            }, getAuthToken())
+        }
+
+        inquiryForm.value = { contactName: '', phone: '', email: '', content: '' }
+        pendingInquirySuccessMessage.value = true
+        isContactDialogVisible.value = false
+    } catch (error) {
+        inquirySubmitting.value = false
+        ElMessage.error(error?.message || '提交失败，请稍后重试')
+    }
 }
 const headerLogo = resolveDataImage('@/assets/img/header_logo.png', '', { variant: 'thumb' }) || resolveDataImage('@/assets/img/header_logo.png')
 const footerImageNames = ['bgfooter1.jpg', 'bgfooter2.jpg', 'footer1.jpg', 'footer2.jpg', 'footer3.jpg', 'footer4.jpg']
@@ -222,12 +297,12 @@ onMounted(() => {
                     </li> -->
                     <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
                     <li class="pointer" @click="onNavClick($event)">付款与退款</li>
-                    <li class="pointer" @click="onNavClick($event)">用户注册/登录</li>
                     <li class="pointer" @click="onNavClick($event)">成为会员</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
                     <li class="pointer" @click="openJoinUsDialog()">加入我们</li>
                     <li class="pointer" @click="openContactDialog()">联系我们</li>
+                    <li class="pointer header-user-login-wrap" :class="{ 'is-logged-in': isLoggedIn }" @click="openLoginDialog">{{ headerUserLabel }}</li>
                 </ul>
                 <!-- <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i> -->
             </span>
@@ -237,6 +312,7 @@ onMounted(() => {
         <RouterView />
         <ComingSoonDialog ref="comingSoonDialogRef" />
         <AboutUsDialog ref="aboutUsDialogRef" />
+        <LoginDialog v-model:visible="loginDialogVisible" />
 
         <!-- 加入我们弹窗 -->
         <el-dialog v-model="isJoinUsDialogVisible" append-to-body align-center width="520px" class="join-us-dialog"
@@ -259,7 +335,7 @@ onMounted(() => {
 
         <!-- 联系我们弹窗 -->
         <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
-            @close="closeContactDialog">
+            @closed="handleContactDialogClosed">
             <template #header>
                 <div style="font-weight:700; letter-spacing:2px; color:#33b1a3;">联系我们</div>
             </template>
@@ -290,11 +366,46 @@ onMounted(() => {
                         <span>地址：1/18 WENDOVER PLACE NEW TOWN, TAS 7008, Australia</span>
                     </div>
                 </div>
+                <el-form
+                    id="contact-inquiry-form"
+                    ref="inquiryFormRef"
+                    :model="inquiryForm"
+                    :rules="inquiryRules"
+                    label-position="top"
+                    class="contact-inquiry-form"
+                    @submit.prevent="submitContactInquiry"
+                >
+                    <div class="form-title">留言咨询</div>
+                    <el-form-item label="联系人" prop="contactName">
+                        <el-input v-model="inquiryForm.contactName" placeholder="请输入联系人" />
+                    </el-form-item>
+                    <el-form-item label="电话" prop="phone">
+                        <el-input v-model="inquiryForm.phone" placeholder="请输入电话" />
+                    </el-form-item>
+                    <el-form-item label="邮箱">
+                        <el-input v-model="inquiryForm.email" placeholder="邮箱（选填）" />
+                    </el-form-item>
+                    <el-form-item label="咨询内容" prop="content">
+                        <el-input
+                            v-model="inquiryForm.content"
+                            type="textarea"
+                            :rows="3"
+                            placeholder="请描述您的咨询内容"
+                        />
+                    </el-form-item>
+                </el-form>
             </div>
             <template #footer>
                 <div style="display:flex; justify-content:flex-end; gap:8px;">
-                    <!-- <el-button @click="closeContactDialog">关闭</el-button> -->
-                    <el-button type="primary" @click="closeContactDialog">确定</el-button>
+                    <el-button
+                        type="primary"
+                        native-type="submit"
+                        form="contact-inquiry-form"
+                        :loading="inquirySubmitting"
+                        :disabled="!canSubmitInquiry"
+                    >
+                        提交咨询
+                    </el-button>
                 </div>
             </template>
         </el-dialog>
@@ -498,8 +609,9 @@ onMounted(() => {
 
 // 使用hover样式替代点击切换类名
 .ul-css li {
-    transition: all 0.3s ease;
+    transition: color 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
+    border-bottom: 1px transparent solid;
 }
 
 .ul-css li:not(.dropdown):hover {
@@ -554,6 +666,13 @@ onMounted(() => {
                     height: 55px;
                     margin-left: 30px;
                 }
+
+                // li.header-user-wrap,
+                // li.header-user-login-wrap {
+                //     float: right;
+                //     margin-left: 0;
+                //     white-space: nowrap;
+                // }
             }
 
             i {
@@ -854,6 +973,33 @@ onMounted(() => {
 
         }
     }
+
+    .contact-inquiry-form {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #f0f0f0;
+
+        .form-title {
+            font-weight: 600;
+            color: #33b1a3;
+            margin-bottom: 4px;
+        }
+
+        :deep(.el-form-item) {
+            margin-bottom: 14px;
+        }
+
+        :deep(.el-form-item__label) {
+            color: #555;
+            font-weight: 500;
+            padding-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        :deep(.el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before) {
+            color: #e06c6c;
+        }
+    }
 }
 
 /* 响应式适配：平板（768px-1024px） */
@@ -912,6 +1058,7 @@ onMounted(() => {
                             white-space: nowrap;
                         }
                     }
+
                 }
 
                 i {
@@ -992,6 +1139,28 @@ onMounted(() => {
                         margin-left: 0;
                         padding: 0 6px;
                     }
+
+                    li.header-user-wrap,
+                    li.header-user-login-wrap {
+                        position: absolute;
+                        top: 8px;
+                        right: 8px;
+                        z-index: 2;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        width: auto;
+                        height: 40px;
+                        margin-left: 0;
+                        padding: 0;
+                        white-space: nowrap;
+                        float: none;
+                    }
+
+                    li.header-user-login-wrap.is-logged-in {
+                        color: #279486;
+                        font-weight: 600;
+                    }
                 }
 
                 i {
@@ -1068,6 +1237,23 @@ onMounted(() => {
                         padding: 0 4px;
                     }
 
+                    li.header-user-wrap,
+                    li.header-user-login-wrap {
+                        position: absolute;
+                        top: 6px;
+                        right: 8px;
+                        z-index: 2;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        width: auto;
+                        height: 36px;
+                        margin-left: 0;
+                        padding: 0;
+                        white-space: nowrap;
+                        float: none;
+                    }
+
                     li.dropdown {
                         .el-dropdown-link {
                             display: inline-flex;
@@ -1078,12 +1264,6 @@ onMounted(() => {
                             font-size: 16px;
                             font-weight: 400;
                         }
-                    }
-
-                    /* 最后一项「联系我们」单独换行时占满一行，避免在窄屏下看起来偏左 */
-                    li:last-child {
-                        flex-basis: 100%;
-                        justify-content: center;
                     }
                 }
             }
@@ -1254,6 +1434,24 @@ onMounted(() => {
                     li {
                         height: 32px;
                         padding: 0 2px;
+                        font-size: 11px;
+                    }
+
+                    li.header-user-wrap,
+                    li.header-user-login-wrap {
+                        position: absolute;
+                        top: 4px;
+                        right: 6px;
+                        z-index: 2;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        width: auto;
+                        height: 32px;
+                        margin-left: 0;
+                        padding: 0;
+                        white-space: nowrap;
+                        float: none;
                         font-size: 11px;
                     }
 

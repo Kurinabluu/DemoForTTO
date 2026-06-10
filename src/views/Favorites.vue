@@ -1,81 +1,37 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onActivated } from 'vue';
 import { ElPagination, ElInput, ElButton } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import { getFavorites, removeFavorite, toggleFavorite } from '@/utils/favoritesStore';
+import { favorites, removeFavoriteAsync, refreshRemoteFavorites } from '@/utils/favoritesStore';
+import { notifyFavoriteResult } from '@/utils/favoriteMessages';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
 import TripDialog from '@/components/TripDialog.vue';
-import freeInfoData from '@/data/split/freeinfo.json';
+import {
+  buildFreeInfoDialogPayload,
+  findFreeInfoSourceItem,
+  getFreeInfoGridImagePath,
+  resolveOriginalImages,
+  getFreeInfoDialogImagePaths,
+} from '@/utils/freeInfoImageUtils';
+import { loadCatalogItemDetail } from '@/utils/contentRepository';
+import { isApiEnabled } from '@/utils/ttoApi';
 
 const getThumbImageUrl = (imgPath) => {
   return resolveDataImage(imgPath, '', { variant: 'thumb' });
 };
 
-const getOriginalImageUrl = (imgPath) => {
-  return resolveDataImage(imgPath, '');
-};
-
-const findFreeInfoSourceItem = (title) => {
-  const normalizedTitle = String(title || '').trim();
-  if (!normalizedTitle) return null;
-  const subNavList = freeInfoData?.subNav;
-  if (!Array.isArray(subNavList)) return null;
-
-  for (const subNav of subNavList) {
-    if (!Array.isArray(subNav?.items)) continue;
-    const matchedItem = subNav.items.find((entry) => String(entry?.title || '').trim() === normalizedTitle);
-    if (matchedItem) {
-      return { subNavName: String(subNav?.subNavName || '').trim(), sourceItem: matchedItem };
-    }
-  }
-  return null;
-};
-
-// 和 TripsGrid 保持一致：餐厅优先第二张，景点/住宿优先第一张，其它按顺序取图
-const getFreeInfoGridImageUrl = (sourceItem, subNavName = '') => {
-  if (!sourceItem || typeof sourceItem !== 'object') return '';
-
-  const hasCoverField = Object.prototype.hasOwnProperty.call(sourceItem, 'cover');
-  if (hasCoverField) {
-    const coverPath = String(sourceItem?.cover || '').trim();
-    if (coverPath) {
-      const resolvedCover = getThumbImageUrl(coverPath);
-      if (resolvedCover) return resolvedCover;
-    }
-  }
-
-  const rawImg = sourceItem?.img;
-  if (!rawImg) return '';
-
-  if (Array.isArray(rawImg)) {
-    if (subNavName === '餐厅' && rawImg.length >= 2) {
-      const secondImagePath = String(rawImg[1] || '').trim();
-      if (secondImagePath) {
-        const resolvedSecond = getThumbImageUrl(secondImagePath);
-        if (resolvedSecond) return resolvedSecond;
-      }
-    }
-    for (const imagePath of rawImg) {
-      const normalizedPath = String(imagePath || '').trim();
-      if (!normalizedPath) continue;
-      const resolvedImage = getThumbImageUrl(normalizedPath);
-      if (resolvedImage) return resolvedImage;
-    }
-    return '';
-  }
-
-  return getThumbImageUrl(rawImg);
-};
-
 const getCoverImageUrl = (item) => {
   const matched = findFreeInfoSourceItem(item?.title);
+  const subNavName = matched?.subNavName || item?.subNavName || item?.tripData?.displaySubNav || '';
   if (matched?.sourceItem) {
-    const resolvedByGridRule = getFreeInfoGridImageUrl(matched.sourceItem, matched.subNavName);
-    if (resolvedByGridRule) return resolvedByGridRule;
+    const gridPath = getFreeInfoGridImagePath(matched.sourceItem, subNavName);
+    if (gridPath) {
+      const resolved = getThumbImageUrl(gridPath);
+      if (resolved) return resolved;
+    }
   }
 
-  // 找不到原始条目时，退回收藏记录中的图字段
   const tripDataImageGroups = [
     item?.tripData?.cover ? [item.tripData.cover] : [],
     item?.tripData?.images,
@@ -111,58 +67,30 @@ const getCoverImageUrl = (item) => {
       if (resolvedImage) return resolvedImage;
     }
   }
-  // 返回默认图片
   return resolveDataImage('');
-};
-
-const extractCandidateImagePaths = (groups = []) => {
-  return groups
-    .flatMap((group) => {
-      if (Array.isArray(group)) return group;
-      if (group) return [group];
-      return [];
-    })
-    .map((path) => String(path || '').trim())
-    .filter(Boolean);
 };
 
 const getOriginalDialogImageUrl = (item) => {
   const matched = findFreeInfoSourceItem(item?.title);
-  if (matched?.sourceItem) {
-    const sourceImagePaths = extractCandidateImagePaths([
-      matched.sourceItem?.cover ? [matched.sourceItem.cover] : [],
-      matched.sourceItem?.img,
-      matched.sourceItem?.images,
-      matched.sourceItem?.banners,
-      matched.sourceItem?.bannerList
-    ]);
-    for (const imagePath of sourceImagePaths) {
-      const resolved = getOriginalImageUrl(imagePath);
-      if (resolved) return resolved;
-    }
-  }
+  const subNavName = matched?.subNavName || item?.subNavName || item?.tripData?.displaySubNav || '';
+  const imagePaths = getFreeInfoDialogImagePaths(
+    matched?.sourceItem,
+    subNavName,
+    item?.tripData || {},
+  );
+  const resolved = resolveOriginalImages(imagePaths);
+  if (resolved.length) return resolved[0];
 
-  const tripDataImagePaths = extractCandidateImagePaths([
-    item?.tripData?.cover ? [item.tripData.cover] : [],
-    item?.tripData?.images,
-    item?.tripData?.banners,
-    item?.tripData?.bannerList,
-    item?.tripData?.imgs,
-    item?.tripData?.img
-  ]);
-  for (const imagePath of tripDataImagePaths) {
-    const resolved = getOriginalImageUrl(imagePath);
-    if (resolved) return resolved;
-  }
-
-  const fallbackPaths = extractCandidateImagePaths([
+  const fallbackPaths = [
+    item?.tripData?.cover,
     item?.image,
     item?.banner,
-    item?.img
-  ]);
+    item?.img,
+  ].flatMap((group) => (Array.isArray(group) ? group : group ? [group] : []));
+
   for (const imagePath of fallbackPaths) {
-    const resolved = getOriginalImageUrl(imagePath);
-    if (resolved) return resolved;
+    const resolvedImage = resolveDataImage(imagePath, '');
+    if (resolvedImage) return resolvedImage;
   }
 
   return resolveDataImage('');
@@ -188,22 +116,21 @@ const itemsPerPage = computed(() => {
     return 12;
   }
 });
-// 当前收藏数据
+// 当前收藏数据（响应式，登录后远程同步会更新）
 const currentFavorites = computed(() => {
-  const userFavorites = getFavorites();
-  let data = userFavorites;
+  let data = favorites.value;
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.toLowerCase();
     data = data.filter(item => item.title.toLowerCase().includes(keyword) ||
-      item.region.toLowerCase().includes(keyword) ||
+      (item.region || '').toLowerCase().includes(keyword) ||
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
   return data;
 });
 
 const isDayTripFavorite = (item) => {
-  const type = String(item?.type || '').trim();
-  return type.includes('日游') || type.includes('行程') || type === 'trip';
+  const type = String(item?.itemType || item?.type || '').trim();
+  return type === '一日游' || type === '多日游' || type.includes('日游') || type.includes('行程') || type === 'trip';
 };
 
 const currentDialogBanner = computed(() => {
@@ -240,9 +167,26 @@ const clearSearch = () => {
   currentPage.value = 1;
 };
 // 打开弹窗
-const openDialog = (item) => {
-  currentItem.value = item;
-  dialogVisible.value = true;
+const openDialog = async (item) => {
+  let enriched = item
+  if (isApiEnabled() && item?.id != null) {
+    const detail = await loadCatalogItemDetail(item.id)
+    if (detail) {
+      enriched = {
+        ...item,
+        ...detail,
+        title: detail.title || item.title,
+        enTitle: detail.enTitle ?? item.enTitle,
+        itemType: item.itemType || item.type || detail.itemType || detail.tripType,
+        tripData: {
+          ...(item.tripData && typeof item.tripData === 'object' ? item.tripData : {}),
+          ...(detail.tripData && typeof detail.tripData === 'object' ? detail.tripData : {}),
+        },
+      }
+    }
+  }
+  currentItem.value = buildFreeInfoDialogPayload(enriched)
+  dialogVisible.value = true
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -250,16 +194,35 @@ const closeDialog = () => {
   currentItem.value = null;
 };
 // 取消收藏
-const handleRemoveFavorite = (item, event) => {
+const handleRemoveFavorite = async (item, event) => {
   event.stopPropagation();
-  removeFavorite(item.id, item.type, item.title);
+  await removeFavoriteAsync(item.id, item.itemType || item.type, item.title, item.favoriteId);
+  notifyFavoriteResult('removed');
+  if (currentPage.value > totalPages.value) {
+    currentPage.value = Math.max(1, totalPages.value);
+  }
 };
-// 监听收藏变化
-const handleFavoriteChange = () => {
-  // 收藏状态变化后的处理
+// 监听收藏变化（弹窗内取消收藏时关闭弹窗）
+const handleFavoriteChange = (result) => {
+  if (result === 'removed') {
+    closeDialog();
+    if (currentPage.value > totalPages.value) {
+      currentPage.value = Math.max(1, totalPages.value);
+    }
+  }
 };
-onMounted(() => {
+
+async function syncFavorites() {
+  await refreshRemoteFavorites(true);
+}
+
+onMounted(async () => {
   window.addEventListener('resize', handleResize);
+  await syncFavorites();
+});
+
+onActivated(async () => {
+  await syncFavorites();
 });
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
@@ -284,7 +247,7 @@ onUnmounted(() => {
 
     <!-- 收藏列表网格 -->
     <div class="favorites-grid">
-      <div v-for="item in paginatedFavorites" :key="item.id" class="favorite-card" @click="openDialog(item)">
+      <div v-for="item in paginatedFavorites" :key="item.favoriteId || item.uniqueKey || item.id" class="favorite-card" @click="openDialog(item)">
         <img :src="getCoverImageUrl(item)" :alt="item.title" class="card-image" loading="lazy" decoding="async"
           fetchpriority="low" />
         <div class="card-content">
@@ -315,12 +278,14 @@ onUnmounted(() => {
     <!-- 详情弹窗 -->
     <TripDialog v-if="dialogVisible && isDayTripFavorite(currentItem)" v-model:visible="dialogVisible"
       :title="currentItem?.title || ''" :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner"
-      :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.type || '一日游'"
-      :item-id="currentItem?.id || null" :item-type="currentItem?.type || '一日游'" @update:visible="closeDialog"
+      :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.itemType || currentItem?.type || '一日游'"
+      :item-id="currentItem?.id || null" :item-type="currentItem?.itemType || currentItem?.type || '一日游'"
+      @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
     <FreeInfoDialog v-else-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
       :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner" :trip-data="currentItem?.tripData || {}"
-      :item-id="currentItem?.id || null" :item-type="currentItem?.type || 'scenic'" @update:visible="closeDialog"
+      :item-id="currentItem?.id || null" :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
+      @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
   </div>
 </template>

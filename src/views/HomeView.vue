@@ -385,8 +385,8 @@ function openTourDialog(item) {
     dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
     dialogTripData.value = item?.tripData || {}
     dialogTripType.value = item?.tripType || '一日游'
-    dialogItemId.value = item?.tripData?.id ?? item?.id ?? null
-    dialogItemType.value = item?.tripType || 'scenic'
+    dialogItemId.value = item?.id ?? item?.tripData?.id ?? null
+    dialogItemType.value = item?.itemType || item?.tripType || 'scenic'
 
     if (dialogTripType.value === '一日游' || dialogTripType.value === '多日游') {
         isTripDialogVisible.value = true

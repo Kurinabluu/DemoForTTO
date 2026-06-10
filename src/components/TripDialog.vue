@@ -6,6 +6,7 @@ import dayTripData from '@/data/split/daytrip.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
+import { notifyFavoriteResult } from '@/utils/favoriteMessages'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -21,28 +22,28 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible', 'favorite-change'])
 
+const currentItemType = computed(() => props.itemType || props.tripType || 'scenic')
+
 // 收藏相关
 const isFavorite = computed(() => {
-    return checkFavorite(props.itemId, props.itemType, props.title)
+    return checkFavorite(props.itemId, currentItemType.value, props.title)
 })
 
-const handleToggleFavorite = () => {
+const handleToggleFavorite = async () => {
     const item = {
         id: props.itemId,
-        type: props.itemType,
+        type: currentItemType.value,
+        itemType: currentItemType.value,
         title: props.title,
         enTitle: props.enTitle,
-        // 收藏存原始路径，列表页再统一走 resolveDataImage 的 thumb 优化链路
         image: props.banner,
         banner: props.banner,
         region: props.tripData?.region || '',
         town: props.tripData?.town || '',
         tripData: props.tripData
     }
-    const result = toggleFavorite(item)
-    if (result === 'limit' || result === 'exists') {
-        window.dispatchEvent(new CustomEvent('favoriteMessage', { detail: { type: result } }))
-    }
+    const result = await toggleFavorite(item)
+    notifyFavoriteResult(result)
     emit('favorite-change', result)
 }
 

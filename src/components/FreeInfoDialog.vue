@@ -6,6 +6,12 @@ import freeInfoData from '@/data/split/freeinfo.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
+import { notifyFavoriteResult } from '@/utils/favoriteMessages'
+import {
+    findFreeInfoSourceItem,
+    getFreeInfoDialogImagePaths,
+    resolveOriginalImages,
+} from '@/utils/freeInfoImageUtils'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -21,28 +27,28 @@ const props = defineProps({
 
 const emit = defineEmits(['update:visible', 'favorite-change'])
 
+const resolvedItemType = computed(() => props.itemType || props.tripType || 'scenic')
+
 // 收藏相关
 const isFavorite = computed(() => {
-    return checkFavorite(props.itemId, props.itemType, props.title)
+    return checkFavorite(props.itemId, resolvedItemType.value, props.title)
 })
 
-const handleToggleFavorite = () => {
+const handleToggleFavorite = async () => {
     const item = {
         id: props.itemId,
-        type: props.itemType,
+        type: resolvedItemType.value,
+        itemType: resolvedItemType.value,
         title: props.title,
         enTitle: props.enTitle,
-        // 收藏存原始路径，列表页再统一走 resolveDataImage 的 thumb 优化链路
         image: props.banner,
         banner: props.banner,
         region: props.tripData?.region || '',
         town: props.tripData?.town || '',
         tripData: props.tripData
     }
-    const result = toggleFavorite(item)
-    if (result === 'limit' || result === 'exists') {
-        window.dispatchEvent(new CustomEvent('favoriteMessage', { detail: { type: result } }))
-    }
+    const result = await toggleFavorite(item)
+    notifyFavoriteResult(result)
     emit('favorite-change', result)
 }
 
@@ -110,14 +116,11 @@ const routeInfo = computed(() => {
     return getFreeInfoData(props.title);
 })
 
+const freeInfoSourceMeta = computed(() => findFreeInfoSourceItem(props.title))
+
 const scenicItemImageSource = computed(() => {
-    try {
-        const scenicNav = freeInfoData?.subNav?.find(subItem => subItem?.subNavName === '景点')
-        const scenicItem = scenicNav?.items?.find(item => item?.title === props.title)
-        return Array.isArray(scenicItem?.imgSource) ? scenicItem.imgSource : []
-    } catch (error) {
-        return []
-    }
+    const imgSource = freeInfoSourceMeta.value?.sourceItem?.imgSource
+    return Array.isArray(imgSource) ? imgSource : []
 })
 
 const infoSourceRows = computed(() => {
@@ -130,17 +133,30 @@ const sourceEntryName = computed(() => {
     return String(infoSourceRows.value?.[0]?.title || '').trim() || '该条目'
 })
 
-const isScenicInfo = computed(() => props.tripType === '景点信息')
+const isScenicInfo = computed(() => resolvedItemType.value === '景点信息')
+const isRestaurantInfo = computed(() => resolvedItemType.value === '餐厅信息')
 
 const dialogImages = computed(() => {
-    const imageGroups = [
-        routeInfo.value?.images,
-        routeInfo.value?.banners,
-        routeInfo.value?.bannerList,
-        routeInfo.value?.imgs,
-        routeInfo.value?.img,
-        routeInfo.value?.cover ? [routeInfo.value.cover] : []
-    ]
+    const sourceMeta = freeInfoSourceMeta.value
+    const sourcePaths = getFreeInfoDialogImagePaths(
+        sourceMeta?.sourceItem,
+        sourceMeta?.subNavName || routeInfo.value?.displaySubNav || '',
+        routeInfo.value,
+    )
+    if (sourcePaths.length) {
+        return resolveOriginalImages(sourcePaths)
+    }
+
+    const imageGroups = isRestaurantInfo.value
+        ? [routeInfo.value?.img]
+        : [
+            routeInfo.value?.images,
+            routeInfo.value?.banners,
+            routeInfo.value?.bannerList,
+            routeInfo.value?.imgs,
+            routeInfo.value?.img,
+            routeInfo.value?.cover ? [routeInfo.value.cover] : [],
+        ]
 
     const multiImages = imageGroups
         .flatMap(group => {
