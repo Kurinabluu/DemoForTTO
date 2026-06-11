@@ -563,9 +563,12 @@ watch(dialogVisible, (visible) => {
 .mini-tag {
     background: #f3f4f6;
     border-radius: 999px;
-    padding: 6px 10px;
+    padding: 6px 12px;
     font-size: 12px;
+    line-height: 1.5;
     color: #374151;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .dlg-footer {

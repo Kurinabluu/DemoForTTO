@@ -62,6 +62,60 @@ function flattenImageGroup(group) {
   return []
 }
 
+const SPECIAL_SECTION_FALLBACK_IMAGES = [
+  new URL('@/assets/img/footer1.jpg', import.meta.url).href,
+  new URL('@/assets/img/footer2.jpg', import.meta.url).href,
+  new URL('@/assets/img/footer3.jpg', import.meta.url).href,
+  new URL('@/assets/img/footer4.jpg', import.meta.url).href,
+]
+
+export function resolveSpecialContentFallbackImage(sourceItem, subNavName = '', title = '') {
+  const normalizedTitle = String(title || sourceItem?.title || '').trim()
+  const subNavList = freeInfoData?.subNav
+  if (!Array.isArray(subNavList) || !subNavList.length) {
+    return SPECIAL_SECTION_FALLBACK_IMAGES[0]
+  }
+
+  const subNav = subNavList.find((entry) => String(entry?.subNavName || '').trim() === String(subNavName || '').trim())
+  const items = Array.isArray(subNav?.items) ? subNav.items : []
+  const index = items.findIndex((entry) => String(entry?.title || '').trim() === normalizedTitle)
+  const safeIndex = index >= 0 ? index : 0
+  return SPECIAL_SECTION_FALLBACK_IMAGES[safeIndex % SPECIAL_SECTION_FALLBACK_IMAGES.length]
+}
+
+function buildSpecialContentTripData(sourceItem = {}) {
+  const features = Array.isArray(sourceItem?.info)
+    ? sourceItem.info
+        .filter(Boolean)
+        .map((infoItem) => ({
+          icon: '#33b1a3',
+          title: String(infoItem?.label || '').trim(),
+          desc: String(infoItem?.value || '').trim(),
+        }))
+        .filter((row) => row.title || row.desc)
+    : []
+
+  const tagItems = Array.isArray(sourceItem?.tagItems) ? sourceItem.tagItems : []
+  const tagsFromItems = tagItems
+    .map((tagItem) => String(tagItem?.text || '').trim())
+    .filter(Boolean)
+  const tagsFromArray = Array.isArray(sourceItem?.tags)
+    ? sourceItem.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
+    : []
+  const tags = tagsFromItems.length ? tagsFromItems : tagsFromArray
+
+  const sub = String(sourceItem?.sub || '').trim()
+  const location = String(sourceItem?.location || '').trim()
+  const badge = String(sourceItem?.badge || '').trim()
+
+  return {
+    route: sub || location || String(sourceItem?.title || '').trim(),
+    desc: [location, badge].filter(Boolean).join(' · '),
+    features,
+    tags,
+  }
+}
+
 /** 列表卡片缩略图：餐厅优先 cover，否则 img 第二张；景点/住宿等走 img 顺序 */
 export function getFreeInfoGridImagePath(sourceItem, subNavName = '') {
   if (!sourceItem || typeof sourceItem !== 'object') return ''
@@ -124,6 +178,18 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
     matched?.subNavName ||
     ''
   const sourceItem = matched?.sourceItem
+  const sourceTripData =
+    sourceItem &&
+    (Array.isArray(sourceItem?.info) ||
+      Array.isArray(sourceItem?.tagItems) ||
+      Array.isArray(sourceItem?.tags) ||
+      sourceItem?.badge ||
+      sourceItem?.location ||
+      sourceItem?.sub)
+      ? buildSpecialContentTripData(sourceItem)
+      : sourceItem?.tripData && typeof sourceItem.tripData === 'object'
+        ? sourceItem.tripData
+        : {}
   const itemType =
     favoriteItem?.itemType ||
     favoriteItem?.tripType ||
@@ -135,6 +201,11 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
     favoriteItem?.cover ||
     favoriteItem?.img != null ||
     (favoriteItem?.tripData?.img != null && (!matched?.sourceItem || isApiEnabled()))
+
+  const specialFallbackImage =
+    sourceItem && !hasRemoteMedia
+      ? resolveSpecialContentFallbackImage(sourceItem, subNavName, favoriteItem?.title)
+      : ''
 
   if (hasRemoteMedia && favoriteItem?.tripData && Object.keys(favoriteItem.tripData).length) {
     const imagePaths = getFreeInfoDialogImagePaths(
@@ -159,8 +230,11 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
       type: itemType,
       itemType,
       tripType: itemType,
-      tripData,
-      banner: resolvedImages[0] || favoriteItem.banner || favoriteItem.image || '',
+      tripData: {
+        ...sourceTripData,
+        ...tripData,
+      },
+      banner: resolvedImages[0] || specialFallbackImage || favoriteItem.banner || favoriteItem.image || '',
     }
   }
 
@@ -172,7 +246,7 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
   const resolvedImages = resolveOriginalImages(imagePaths)
 
   const tripData = {
-    ...(sourceItem?.tripData && typeof sourceItem.tripData === 'object' ? sourceItem.tripData : {}),
+    ...sourceTripData,
     ...(favoriteItem?.tripData && typeof favoriteItem.tripData === 'object' ? favoriteItem.tripData : {}),
     img: sourceItem?.img ?? favoriteItem?.img ?? favoriteItem?.tripData?.img,
     imgSource: sourceItem?.imgSource ?? favoriteItem?.tripData?.imgSource,
@@ -190,6 +264,7 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
   const banner =
     resolvedImages[0] ||
     (gridPath ? resolveDataImage(gridPath, '') : '') ||
+    specialFallbackImage ||
     favoriteItem?.banner ||
     favoriteItem?.image ||
     ''

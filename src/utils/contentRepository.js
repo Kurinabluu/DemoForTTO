@@ -84,6 +84,7 @@ export function mapApiDetailToItem(dto) {
   return {
     ...extra,
     id: dto.id ?? extra.id,
+    itemKey: dto.itemKey ?? extra.itemKey,
     title: dto.title || extra.title || '',
     enTitle: dto.enTitle ?? extra.enTitle ?? '',
     cover: dto.cover ?? extra.cover,
@@ -114,6 +115,7 @@ function mapApiItem(row) {
   return {
     ...extra,
     id: row?.id ?? extra.id,
+    itemKey: row?.itemKey ?? extra.itemKey,
     title: row?.title || extra.title || '',
     enTitle: row?.enTitle ?? extra.enTitle ?? '',
     cover: row?.cover ?? extra.cover,
@@ -122,6 +124,114 @@ function mapApiItem(row) {
     itemType,
     tripData,
   }
+}
+
+function slugifySubNavPath(value) {
+  const raw = String(value || '').trim()
+  if (!raw) return 'item'
+
+  const ascii = raw
+    .normalize('NFKD')
+    .replace(/\p{M}+/gu, '')
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  if (ascii) {
+    return ascii.substring(0, Math.min(96, ascii.length))
+  }
+
+  const fallback = raw.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff-]+/g, '')
+  return fallback || 'item'
+}
+
+function buildFallbackItemKey(subNavKey, fallbackItem) {
+  const title = String(fallbackItem?.title || '').trim()
+  const enTitle = String(fallbackItem?.enTitle || '').trim()
+  const keyPart = slugifySubNavPath(title || enTitle)
+  return keyPart ? `${subNavKey}:${keyPart}` : ''
+}
+
+/** isGrid=false 卡片字段（info/tagItems 等）存于本地 JSON；API 列表仅含 title/id，需保留本地展示数据 */
+function mergeSpecialSectionItems(apiRows, fallbackItems, subNavKey) {
+  if (!Array.isArray(fallbackItems) || !fallbackItems.length) {
+    return Array.isArray(apiRows) ? apiRows.map(mapApiItem).filter(Boolean) : []
+  }
+  if (!Array.isArray(apiRows) || !apiRows.length) {
+    return fallbackItems
+  }
+
+  const apiByTitle = new Map()
+  const apiByItemKey = new Map()
+  for (const row of apiRows) {
+    const mapped = mapApiItem(row)
+    if (mapped?.title) apiByTitle.set(mapped.title, mapped)
+    const itemKey = mapped?.itemKey ?? row?.itemKey
+    if (itemKey) apiByItemKey.set(itemKey, mapped)
+  }
+
+  return fallbackItems.map((fallbackItem) => {
+    const fallbackItemKey = buildFallbackItemKey(subNavKey, fallbackItem)
+    const apiItem =
+      (fallbackItemKey ? apiByItemKey.get(fallbackItemKey) : null) ||
+      apiByItemKey.get(fallbackItem?.itemKey) ||
+      apiByItemKey.get(buildFallbackItemKey(subNavKey, { title: fallbackItem?.enTitle })) ||
+      apiByTitle.get(fallbackItem?.title)
+    if (!apiItem?.id) return fallbackItem
+    return {
+      ...fallbackItem,
+      ...apiItem,
+      tripData: {
+        ...(fallbackItem?.tripData || {}),
+        ...(apiItem?.tripData || {}),
+      },
+      img: apiItem.img ?? fallbackItem?.img,
+      cover: apiItem.cover ?? fallbackItem?.cover,
+      id: apiItem.id ?? fallbackItem?.id,
+    }
+  })
+}
+
+/** 免费信息网格：API 负责 id / 标题等基础字段，本地 JSON 负责更完整的卡片字段 */
+function mergeGridSectionItems(apiRows, fallbackItems, subNavKey) {
+  if (!Array.isArray(fallbackItems) || !fallbackItems.length) {
+    return Array.isArray(apiRows) ? apiRows.map(mapApiItem).filter(Boolean) : []
+  }
+  if (!Array.isArray(apiRows) || !apiRows.length) {
+    return fallbackItems
+  }
+
+  const apiByTitle = new Map()
+  const apiByItemKey = new Map()
+  for (const row of apiRows) {
+    const mapped = mapApiItem(row)
+    if (mapped?.title) apiByTitle.set(mapped.title, mapped)
+    const itemKey = mapped?.itemKey ?? row?.itemKey
+    if (itemKey) apiByItemKey.set(itemKey, mapped)
+  }
+
+  return fallbackItems.map((fallbackItem) => {
+    const fallbackItemKey = buildFallbackItemKey(subNavKey, fallbackItem)
+    const apiItem =
+      (fallbackItemKey ? apiByItemKey.get(fallbackItemKey) : null) ||
+      apiByItemKey.get(fallbackItem?.itemKey) ||
+      apiByItemKey.get(buildFallbackItemKey(subNavKey, { title: fallbackItem?.enTitle })) ||
+      apiByTitle.get(fallbackItem?.title)
+    if (!apiItem) return fallbackItem
+
+    return {
+      ...fallbackItem,
+      ...apiItem,
+      tripData: {
+        ...(fallbackItem?.tripData || {}),
+        ...(apiItem?.tripData || {}),
+      },
+      img: apiItem.img ?? fallbackItem?.img,
+      cover: apiItem.cover ?? fallbackItem?.cover,
+      id: apiItem.id ?? fallbackItem?.id,
+    }
+  })
 }
 
 export async function loadCatalogItemDetail(itemId) {
@@ -139,10 +249,19 @@ export async function loadItemDetailById(itemId) {
   return loadCatalogItemDetail(itemId)
 }
 
-async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems) {
+async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallbackSubNav) {
   const subNavKey = buildSubNavKey(sectionPath, subNavMeta.subNavName)
+  const useLocalCardData = fallbackSubNav?.isGrid === false
+  const useApiGridData = sectionPath === 'trips/freeinfo' && fallbackSubNav?.isGrid === true
+
   try {
     const rows = await fetchItemsBySubNavKey(subNavKey)
+    if (useLocalCardData && Array.isArray(fallbackItems) && fallbackItems.length) {
+      return mergeSpecialSectionItems(rows, fallbackItems, subNavKey)
+    }
+    if (useApiGridData && Array.isArray(fallbackItems) && fallbackItems.length) {
+      return mergeGridSectionItems(rows, fallbackItems, subNavKey)
+    }
     const items = Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
     if (items.length) return items
   } catch (error) {
@@ -161,7 +280,7 @@ export async function loadItemsBySubNav(sectionPath, subNavName) {
   }
 
   const subNavMeta = { subNavName }
-  return fetchSubNavItems(sectionPath, subNavMeta, fallbackItems)
+  return fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallbackSubNav)
 }
 
 async function loadSectionBundle(sectionPath, fallback) {
@@ -185,7 +304,8 @@ async function loadSectionBundle(sectionPath, fallback) {
       const items = await fetchSubNavItems(
         sectionPath,
         subNavMeta,
-        fallbackSubNav?.items
+        fallbackSubNav?.items,
+        fallbackSubNav
       )
       return {
         ...(fallbackSubNav || {}),
@@ -212,6 +332,10 @@ export async function loadFreeInfoData() {
   return freeInfoPromise
 }
 
+export async function loadFreeInfoDataFresh() {
+  return loadSectionBundle('trips/freeinfo', freeInfoFallback)
+}
+
 export async function loadDayTripData() {
   if (!dayTripPromise) {
     dayTripPromise = loadSectionBundle('trips/routes', dayTripFallback).then((bundle) => {
@@ -219,4 +343,9 @@ export async function loadDayTripData() {
     })
   }
   return dayTripPromise
+}
+
+export async function loadDayTripDataFresh() {
+  const bundle = await loadSectionBundle('trips/routes', dayTripFallback)
+  return Array.isArray(bundle?.subNav) ? bundle.subNav : []
 }

@@ -1,4 +1,5 @@
 const DEFAULT_BASE = '/api'
+let tokenRefreshHandler = null
 
 function apiBaseUrl() {
   return (import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE).replace(/\/$/, '')
@@ -47,7 +48,15 @@ async function requestJson(path, { params, method = 'GET', body, token } = {}) {
     headers: buildHeaders(token, body !== undefined),
     body: body === undefined ? undefined : JSON.stringify(body),
   })
+  const refreshedToken = response.headers.get('X-Auth-Token')
+  if (refreshedToken && typeof tokenRefreshHandler === 'function') {
+    tokenRefreshHandler(refreshedToken)
+  }
   return parseResponse(response)
+}
+
+export function registerTokenRefreshHandler(handler) {
+  tokenRefreshHandler = typeof handler === 'function' ? handler : null
 }
 
 export function isApiEnabled() {
@@ -64,6 +73,10 @@ export async function fetchItemDetail(itemId) {
 
 export async function pingApi() {
   return requestJson('/common/ping')
+}
+
+export async function fetchAuthSession(token) {
+  return requestJson('/auth/session', { token })
 }
 
 export async function login(username, password) {

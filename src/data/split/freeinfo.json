@@ -35501,7 +35501,7 @@
       "isShow": true,
       "isGrid": false,
       "activitiesTitle": "塔斯马尼亚特别活动",
-      "activitiesSubtitle": "实时特色活动与极光天气信息111",
+      "activitiesSubtitle": "实时特色活动与极光天气信息",
       "items": [
         {
           "title": "极光观测最佳时机",
@@ -35621,6 +35621,48 @@
               "text": "摄影指导"
             }
           ]
+        },
+        {
+          "title": "南半球星空观测",
+          "sub": "天文观测体验",
+          "location": "威灵顿山",
+          "tags": [
+            "无云天气",
+            "能见度极佳",
+            "南十字星象"
+          ],
+          "badge": "夜间活动",
+          "cardClass": "stargazing-card",
+          "badgeClass": "night-badge",
+          "info": [
+            {
+              "label": "观测条件",
+              "value": "极佳",
+              "valueClass": "excellent"
+            },
+            {
+              "label": "最佳时间",
+              "value": "20:30-23:00"
+            },
+            {
+              "label": "推荐地点",
+              "value": "威灵顿山"
+            }
+          ],
+          "tagItems": [
+            {
+              "icon": "✨",
+              "text": "无云天气"
+            },
+            {
+              "icon": "✨",
+              "text": "能见度极佳"
+            },
+            {
+              "icon": "✨",
+              "text": "南十字星象"
+            }
+          ]
         }
       ]
     },
@@ -35629,1139 +35671,1071 @@
       "isShow": true,
       "isGrid": false,
       "activitiesTitle": "徒步线路",
-      "activitiesSubtitle": "实时特色活动与极光天气信息222",
+      "activitiesSubtitle": "探索塔斯马尼亚精选徒步路线",
       "items": [
         {
-          "title": "极光观测最佳时机",
-          "sub": "南半球极光观测体验",
-          "location": "摇篮山国家公园",
-          "tags": [
-            "天气晴朗",
-            "极光",
-            "观测条件极佳"
-          ],
-          "badge": "极光预报",
-          "cardClass": "aurora-card",
-          "badgeClass": "aurora-badge",
-          "info": [
-            {
-              "label": "今晚概率",
-              "value": "85%",
-              "valueClass": "high"
-            },
-            {
-              "label": "最佳时间",
-              "value": "22:00-02:00"
-            },
-            {
-              "label": "推荐地点",
-              "value": "摇篮山国家公园"
-            }
-          ],
-          "tagItems": [
-            {
-              "icon": "🌌",
-              "text": "天气晴朗"
-            },
-            {
-              "icon": "🌌",
-              "text": "极光"
-            },
-            {
-              "icon": "🌌",
-              "text": "观测条件极佳"
-            }
-          ]
-        },
-        {
           "title": "Ben Lomond Summit Link Track",
-          "sub": "待修改",
-          "location": "待修改",
+          "sub": "Ben Lomond National Park 高山步道",
+          "location": "Ben Lomond National Park, Tasmania",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "1 km",
+            "30 分钟",
+            "Grade 2"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "距离",
+              "value": "1 km"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "耗时",
+              "value": "约 30 分钟"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "难度",
+              "value": "Grade 2"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "1 km"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "⏱️",
+              "text": "30 分钟"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "⛰️",
+              "text": "Grade 2"
             }
           ]
         },
         {
           "title": "Bridport Walking Track",
-          "sub": "待修改",
-          "location": "待修改",
+          "sub": "海岸、森林与河流的 11 公里环线",
+          "location": "Bridport, Tasmania",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "11 km",
+            "海岸步道",
+            "森林与河流"
           ],
-          "badge": "待修改",
+          "badge": "步道信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "总长度",
+              "value": "11 km"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "构成",
+              "value": "History-Foreshore / River-Forest / Wildflower Reserve"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "特点",
+              "value": "近村庄、适合慢行"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🌊",
+              "text": "11 km"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "多地貌"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "🚶",
+              "text": "适合慢行"
             }
           ]
         },
         {
           "title": "Carr-Villa to Alpine Village Track",
-          "sub": "待修改",
-          "location": "待修改",
+          "sub": "Ben Lomond National Park 中高山徒步",
+          "location": "Carr Villa, Ben Lomond Road, Tasmania",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "5 km",
+            "2-3 小时",
+            "Grade 3"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "距离",
+              "value": "5 km"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "耗时",
+              "value": "2-3 小时单程"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "难度",
+              "value": "Grade 3"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🏔️",
+              "text": "5 km"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🕒",
+              "text": "2-3 小时"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "⛰️",
+              "text": "Grade 3"
             }
           ]
         },
         {
           "title": "Castle Rock Walk",
-          "sub": "待修改",
-          "location": "待修改",
+          "sub": "Castle Rock Walk",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Castle Rock Walk"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Fern Glade Walks",
-          "sub": "待修改",
-          "location": "待修改",
+          "sub": "Fern Glade Walks",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Fern Glade Walks"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸与悬崖景观徒步",
-          "sub": "The Dock to Climbers Camp / Stackys Bight Walk(船坞湾徒步线)",
-          "location": "待修改",
+          "sub": "海岸与悬崖景观徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸与悬崖景观徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸地质探索徒步",
-          "sub": "Killiecrankie to Stackys Bight Walk",
-          "location": "Killiecrankie Geosite",
+          "sub": "海岸地质探索徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸地质探索徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸与森林徒步",
-          "sub": "Allports Beach to Castle Rock Walk (奥尔波特斯海滩至城堡岩徒步)",
-          "location": "Allports Beach",
+          "sub": "海岸与森林徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸与森林徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "花岗岩海岸与地质探索徒步",
-          "sub": "West End Boat Ramp to Egg Beach Coastal Walk(西端船坡道至蛋石海滩海岸徒步）",
-          "location": "West End Boat Ramp",
+          "sub": "花岗岩海岸与地质探索徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "花岗岩海岸与地质探索徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸地质探索徒步",
-          "sub": "Blue Rocks Walk(蓝岩徒步)",
-          "location": "待补充",
+          "sub": "海岸地质探索徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸地质探索徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸地质与地貌徒步",
-          "sub": "Long Point Walk(长角徒步)",
-          "location": "待补充",
+          "sub": "海岸地质与地貌徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸地质与地貌徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "高强度登山徒步/全景路线",
-          "sub": "Strzelecki Peaks Summit Walk(斯特泽勒奇峰登顶徒步)",
-          "location": "待补充",
+          "sub": "高强度登山徒步/全景路线",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "高强度登山徒步/全景路线"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "海岸地质对比徒步",
-          "sub": "Trousers Point to Fotheringate Bay Walk（特劳瑟斯角至福瑟林盖特湾徒步）",
-          "location": "待补充",
+          "sub": "海岸地质对比徒步",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "海岸地质对比徒步"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Hadspen River Walk",
           "sub": "Hadspen River Walk",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Hadspen River Walk"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Higgs Track",
           "sub": "Higgs Track",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Higgs Track"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Historic Houses of Carrick Walk",
           "sub": "Historic Houses of Carrick Walk",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Historic Houses of Carrick Walk"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "kanamaluka Trail",
           "sub": "kanamaluka Trail",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "kanamaluka Trail"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Kooparoona Niara Cultural Trail",
           "sub": "Kooparoona Niara Cultural Trail",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Kooparoona Niara Cultural Trail"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Strzelecki Peaks Great Short Walk",
           "sub": "Strzelecki Peaks Great Short Walk",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Strzelecki Peaks Great Short Walk"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Wild Wood Nature Trail",
           "sub": "Wild Wood Nature Trail",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Wild Wood Nature Trail"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Warners Track",
           "sub": "Warners Track",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Warners Track"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Wild Wood Nature Trail",
           "sub": "Wild Wood Nature Trail",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Wild Wood Nature Trail"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Mount Anne Circuit",
           "sub": "Mount Anne Circuit",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Mount Anne Circuit"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Mount Vandyke",
           "sub": "Mount Vandyke",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Mount Vandyke"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Pine Lake",
           "sub": "Pine Lake",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Pine Lake"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         },
         {
           "title": "Spray Tunnel",
           "sub": "Spray Tunnel",
-          "location": "待补充",
+          "location": "塔斯马尼亚",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "徒步",
+            "自然风景",
+            "塔斯马尼亚"
           ],
-          "badge": "待修改",
+          "badge": "徒步信息",
           "cardClass": "aurora-card",
           "badgeClass": "aurora-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "待修改",
-              "valueClass": "high"
+              "label": "路线",
+              "value": "Spray Tunnel"
             },
             {
-              "label": "最佳时间",
-              "value": "待修改"
+              "label": "区域",
+              "value": "塔斯马尼亚"
             },
             {
-              "label": "推荐地点",
-              "value": "待修改"
+              "label": "提示",
+              "value": "出发前请查询最新路况与天气"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🥾",
+              "text": "徒步"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌿",
+              "text": "自然风景"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "塔斯马尼亚"
             }
           ]
         }
@@ -36775,86 +36749,43 @@
       "activitiesSubtitle": "实时特色活动与极光天气信息",
       "items": [
         {
-          "title": "极光观测最佳时机",
-          "sub": "南半球极光观测体验",
-          "location": "摇篮山国家公园",
-          "tags": [
-            "天气晴朗",
-            "极光",
-            "观测条件极佳"
-          ],
-          "badge": "极光预报",
-          "cardClass": "aurora-card",
-          "badgeClass": "aurora-badge",
-          "info": [
-            {
-              "label": "今晚概率",
-              "value": "85%",
-              "valueClass": "high"
-            },
-            {
-              "label": "最佳时间",
-              "value": "22:00-02:00"
-            },
-            {
-              "label": "推荐地点",
-              "value": "摇篮山国家公园"
-            }
-          ],
-          "tagItems": [
-            {
-              "icon": "🌌",
-              "text": "天气晴朗"
-            },
-            {
-              "icon": "🌌",
-              "text": "极光"
-            },
-            {
-              "icon": "🌌",
-              "text": "观测条件极佳"
-            }
-          ]
-        },
-        {
           "title": "Lake Parangana",
-          "sub": "Lake Parangana",
-          "location": "位置",
+          "sub": "Central Highlands 湖景露营地",
+          "location": "Lake Parangana, Central Highlands, Tasmania",
           "tags": [
-            "tag1",
-            "tag2",
-            "tag3"
+            "湖景",
+            "露营",
+            "Central Highlands"
           ],
-          "badge": "极光预报",
-          "cardClass": "aurora-card",
-          "badgeClass": "aurora-badge",
+          "badge": "露营信息",
+          "cardClass": "camping-card",
+          "badgeClass": "camping-badge",
           "info": [
             {
-              "label": "今晚概率",
-              "value": "85%",
-              "valueClass": "high"
+              "label": "类型",
+              "value": "湖景露营地"
             },
             {
-              "label": "最佳时间",
-              "value": "22:00-02:00"
+              "label": "区域",
+              "value": "Central Highlands"
             },
             {
-              "label": "推荐地点",
-              "value": "摇篮山国家公园"
+              "label": "提示",
+              "value": "请提前确认开放状态与预订要求"
             }
           ],
           "tagItems": [
             {
-              "icon": "🌌",
-              "text": "天气晴朗"
+              "icon": "🏕️",
+              "text": "湖景露营"
             },
             {
-              "icon": "🌌",
-              "text": "极光"
+              "icon": "🌊",
+              "text": "Central Highlands"
             },
             {
-              "icon": "🌌",
-              "text": "观测条件极佳"
+              "icon": "📍",
+              "text": "Lake Parangana"
             }
           ]
         },

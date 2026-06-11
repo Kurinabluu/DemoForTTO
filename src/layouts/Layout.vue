@@ -11,7 +11,7 @@ import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
-import { isApiEnabled, submitInquiry } from '@/utils/ttoApi';
+import { fetchAuthSession, isApiEnabled, submitInquiry } from '@/utils/ttoApi';
 import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
 import { ElMessage } from 'element-plus';
 
@@ -240,8 +240,18 @@ function showAboutUsDialog() {
     }
 }
 
+async function touchAuthSession() {
+    if (!isApiEnabled() || !isLoggedIn.value) return
+    try {
+        await fetchAuthSession(getAuthToken())
+    } catch {
+        // 会话过期时不阻塞页面
+    }
+}
+
 // 组件挂载时检查是否首次访问
 onMounted(() => {
+    void touchAuthSession()
     // 检查是否是首次访问
     if (navStore.isFirstVisit()) {
         // 首次访问，显示免责声明

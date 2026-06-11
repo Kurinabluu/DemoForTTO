@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { isApiEnabled, login as apiLogin } from '@/utils/ttoApi'
+import { isApiEnabled, login as apiLogin, registerTokenRefreshHandler } from '@/utils/ttoApi'
 
 const STORAGE_KEY = 'tto_auth_token'
 const USERNAME_KEY = 'tto_auth_username'
@@ -23,6 +23,11 @@ function writeStorage(key, value) {
   } catch {
     // ignore
   }
+}
+
+function updateTokenOnly(nextToken) {
+  token.value = nextToken || ''
+  writeStorage(STORAGE_KEY, token.value)
 }
 
 const token = ref(readStorage(STORAGE_KEY))
@@ -59,6 +64,11 @@ export function setAuthSession(session) {
   writeStorage(USERNAME_KEY, username.value)
   writeStorage(USER_ID_KEY, userId.value)
 }
+
+registerTokenRefreshHandler((nextToken) => {
+  if (!nextToken) return
+  updateTokenOnly(nextToken)
+})
 
 export function clearAuthSession() {
   setAuthSession(null)

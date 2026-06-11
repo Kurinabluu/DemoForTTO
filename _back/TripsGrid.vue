@@ -1,12 +1,10 @@
 <script setup>
-import { computed, ref, shallowRef, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import freeInfoData from '@/data/split/freeinfo.json'
 import dayTripData from '@/data/split/daytrip.json'
-import { loadFreeInfoData, loadDayTripData, loadCatalogItemDetail } from '@/utils/contentRepository'
-import { isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 import { waitRandomDelay } from '@/utils/loadingUtils'
@@ -270,17 +268,6 @@ function initLoadMoreObserver() {
 }
 
 onMounted(() => {
-    void loadFreeInfoData().then((loaded) => {
-        if (loaded?.subNav?.length) {
-            datas.value = loaded
-        }
-    })
-    void loadDayTripData().then((loaded) => {
-        if (Array.isArray(loaded) && loaded.length) {
-            dayTripNavs.value = loaded
-        }
-    })
-
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', scheduleUpdateMobileScrollPage, { passive: true })
     syncLocalSearchFromRoute()
@@ -516,27 +503,28 @@ function getPaginatedItems(items) {
     return Array.isArray(items) ? items.slice(0, visibleCount) : []
 }
 
-// 从 contentRepository / JSON 获取数据
-const datas = shallowRef(freeInfoData || { subNav: [] })
-const dayTripNavs = shallowRef(dayTripData?.subNav || [])
+// 从data.json获取数据
+const getDayTripData = () => {
+    try {
+        return dayTripData?.subNav || []
+    } catch (error) {
+        return []
+    }
+}
 
-const places = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] })
-const restaurants = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "餐厅") || { items: [] })
-const wineWineries = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄") || { items: [] })
-const spiritWineries = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "洋酒酒庄") || { items: [] })
-const hotels = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "住宿") || { items: [] })
-const activityItems = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "特别活动") || { items: [] })
+const dayTripNavs = getDayTripData()
 
-const SPECIAL_SECTION_FALLBACK_IMAGES = [
-    new URL('@/assets/img/footer1.jpg', import.meta.url).href,
-    new URL('@/assets/img/footer2.jpg', import.meta.url).href,
-    new URL('@/assets/img/footer3.jpg', import.meta.url).href,
-    new URL('@/assets/img/footer4.jpg', import.meta.url).href,
-]
+const datas = freeInfoData || { subNav: [] }
+const places = datas.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] }
+const restaurants = datas.subNav.find(subItem => subItem.subNavName == "餐厅") || { items: [] }
+const wineWineries = datas.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄") || { items: [] }
+const spiritWineries = datas.subNav.find(subItem => subItem.subNavName == "洋酒酒庄") || { items: [] }
+const hotels = datas.subNav.find(subItem => subItem.subNavName == "住宿") || { items: [] }
 
-function getActivityImage(imgPath, index = 0) {
-    const fallback = SPECIAL_SECTION_FALLBACK_IMAGES[index % SPECIAL_SECTION_FALLBACK_IMAGES.length]
-    return getThumbImageUrl(imgPath, fallback)
+const activityItems = datas.subNav.find(subItem => subItem.subNavName == "特别活动") || { items: [] }
+
+function getActivityImage(imgPath) {
+    return getThumbImageUrl(imgPath)
 }
 
 // 处理图片路径
@@ -737,8 +725,8 @@ function getDayTripGridImageUrl(item) {
 // 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
 const currentFreeInfoSection = computed(() => {
     try {
-        if (!datas.value?.subNav || !props.subTab) return null
-        return datas.value.subNav.find(subItem => subItem.subNavName === props.subTab) || null
+        if (!datas?.subNav || !props.subTab) return null
+        return datas.subNav.find(subItem => subItem.subNavName === props.subTab) || null
     } catch (e) {
         return null
     }
@@ -810,11 +798,11 @@ const regionOptions = computed(() => {
     const defaultOptions = regionTownGroups.map(group => group.region)
     const regionSet = new Set(defaultOptions)
     const currentItems = props.subTab === '景点'
-        ? places.value?.items || []
+        ? places?.items || []
         : props.subTab === '餐厅'
-            ? restaurants.value?.items || []
+            ? restaurants?.items || []
             : props.subTab === '住宿'
-                ? hotels.value?.items || []
+                ? hotels?.items || []
                 : []
 
     currentItems.forEach(item => {
@@ -834,11 +822,11 @@ const townOptions = computed(() => {
     const baseTowns = grouped ? [...grouped.towns] : []
     const townSet = new Set(baseTowns)
     const currentItems = props.subTab === '景点'
-        ? places.value?.items || []
+        ? places?.items || []
         : props.subTab === '餐厅'
-            ? restaurants.value?.items || []
+            ? restaurants?.items || []
             : props.subTab === '住宿'
-                ? hotels.value?.items || []
+                ? hotels?.items || []
                 : []
 
     currentItems.forEach(item => {
@@ -1093,7 +1081,7 @@ function getHighlightSegments(text, kw) {
 
 const scenicFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByRegionAndTown(places.value?.items || [])
+    const baseItems = filterByRegionAndTown(places?.items || [])
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
@@ -1101,43 +1089,43 @@ const scenicFiltered = computed(() => {
 // 直接处理餐厅数据，与其他数据结构保持一致
 const restaurantFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByRegionAndTown(restaurants.value?.items || [])
+    const baseItems = filterByRegionAndTown(restaurants?.items || [])
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 // 用于显示的餐厅列表（直接使用原始数据，与景点保持一致）
 const displayRestaurants = computed(() => {
-    return filterByRegionAndTown(restaurants.value?.items || [])
+    return filterByRegionAndTown(restaurants?.items || [])
 })
 
 // 葡萄酒酒庄数据过滤
 const wineFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    if (!kw) return wineWineries.value?.items || []
-    return (wineWineries.value?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
+    if (!kw) return wineWineries?.items || []
+    return (wineWineries?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 // 用于显示的葡萄酒酒庄列表
 const displayWineWineries = computed(() => {
-    return wineWineries.value?.items || []
+    return wineWineries?.items || []
 })
 
 // 洋酒酒庄数据过滤
 const spiritFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    if (!kw) return spiritWineries.value?.items || []
-    return (spiritWineries.value?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
+    if (!kw) return spiritWineries?.items || []
+    return (spiritWineries?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 // 用于显示的洋酒酒庄列表
 const displaySpiritWineries = computed(() => {
-    return spiritWineries.value?.items || []
+    return spiritWineries?.items || []
 })
 
 const hotelFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByRegionAndTown(hotels.value?.items || [])
+    const baseItems = filterByRegionAndTown(hotels?.items || [])
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
@@ -1150,63 +1138,13 @@ const activityFiltered = computed(() => {
 })
 
 // 对外事件
-function buildSpecialContentTripData(item) {
-    const features = Array.isArray(item?.info)
-        ? item.info
-            .filter(Boolean)
-            .map((infoItem) => ({
-                icon: '#33b1a3',
-                title: String(infoItem?.label || '').trim(),
-                desc: String(infoItem?.value || '').trim(),
-            }))
-            .filter((row) => row.title || row.desc)
-        : []
-
-    const tagItems = Array.isArray(item?.tagItems) ? item.tagItems : []
-    const tagsFromItems = tagItems
-        .map((tagItem) => String(tagItem?.text || '').trim())
-        .filter(Boolean)
-    const tagsFromArray = Array.isArray(item?.tags)
-        ? item.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
-        : []
-    const tags = tagsFromItems.length ? tagsFromItems : tagsFromArray
-
-    const sub = String(item?.sub || '').trim()
-    const location = String(item?.location || '').trim()
-    const badge = String(item?.badge || '').trim()
-
-    return {
-        route: sub || location || String(item?.title || '').trim(),
-        desc: [location, badge].filter(Boolean).join(' · '),
-        features,
-        tags,
-    }
-}
-
-function findMatchingTourItem(items, item) {
-    if (!Array.isArray(items) || !item) return null
-    const dialogKey = getTourItemDialogKey(item)
-    if (!dialogKey) return null
-    return items.find((candidate) => tourItemMatchesDialogKey(candidate, dialogKey)) || null
-}
-
-function resolveSpecialBannerImage(item) {
-    const imgPath = String(item?.img || '').trim()
-    if (imgPath) {
-        return getThumbImageUrl(imgPath, SPECIAL_SECTION_FALLBACK_IMAGES[0])
-    }
-    const items = currentSpecialItems.value || []
-    const index = items.findIndex((row) => row?.title === item?.title)
-    const safeIndex = index >= 0 ? index : 0
-    return SPECIAL_SECTION_FALLBACK_IMAGES[safeIndex % SPECIAL_SECTION_FALLBACK_IMAGES.length]
-}
-
-function buildTourDialogPayload(item) {
+function onOpenTour(item) {
+    // 声明变量存储处理后的数据
     let tripData = item.tripData;
     let bannerImage = item.img;
     let tripType = '一日游';
-    const isSpecialContentSection = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
 
+    // 根据不同的activeTag和subTab确定tripType
     if (props.activeTag === '自助游/自驾游免费参考信息') {
         if (props.subTab === '景点') {
             tripType = '景点信息';
@@ -1218,58 +1156,61 @@ function buildTourDialogPayload(item) {
             tripType = '洋酒酒庄信息';
         } else if (props.subTab === '住宿') {
             tripType = '住宿信息';
-        } else if (isSpecialContentSection) {
-            tripType = `${props.subTab}信息`;
-            tripData = buildSpecialContentTripData(item);
-            bannerImage = resolveSpecialBannerImage(item);
         }
     }
 
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点' && places.value?.items) {
-        const placeItem = findMatchingTourItem(places.value.items, item);
+    // 如果是景点数据，从places中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点' && places && places.items) {
+        const placeItem = places.items.find(place => place.title === item.title);
         if (placeItem) {
             tripData = placeItem.tripData;
             bannerImage = placeItem.img;
         }
     }
 
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '餐厅' && restaurants.value?.items) {
-        const restaurantItem = findMatchingTourItem(restaurants.value.items, item);
+    // 如果是餐厅数据，从restaurants中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '餐厅' && restaurants && restaurants.items) {
+        const restaurantItem = restaurants.items.find(restaurant => restaurant.title === item.title);
         if (restaurantItem) {
             tripData = restaurantItem.tripData;
             bannerImage = restaurantItem.img;
         }
     }
 
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '葡萄酒酒庄' && wineWineries.value?.items) {
-        const wineryItem = findMatchingTourItem(wineWineries.value.items, item);
+    // 如果是葡萄酒酒庄数据，从wineWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '葡萄酒酒庄' && wineWineries && wineWineries.items) {
+        const wineryItem = wineWineries.items.find(winery => winery.title === item.title);
         if (wineryItem) {
             tripData = wineryItem.tripData;
             bannerImage = wineryItem.img;
         }
     }
 
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '洋酒酒庄' && spiritWineries.value?.items) {
-        const wineryItem = findMatchingTourItem(spiritWineries.value.items, item);
+    // 如果是洋酒酒庄数据，从spiritWineries中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '洋酒酒庄' && spiritWineries && spiritWineries.items) {
+        const wineryItem = spiritWineries.items.find(winery => winery.title === item.title);
         if (wineryItem) {
             tripData = wineryItem.tripData;
             bannerImage = wineryItem.img;
         }
     }
 
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '住宿' && hotels.value?.items) {
-        const hotelItem = findMatchingTourItem(hotels.value.items, item);
+    // 如果是住宿数据，从hotels中查找完整信息
+    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '住宿' && hotels && hotels.items) {
+        const hotelItem = hotels.items.find(hotel => hotel.title === item.title);
         if (hotelItem) {
             tripData = hotelItem.tripData;
             bannerImage = hotelItem.img;
         }
     }
 
+    // 如果是一日游/多日游，item本身应该已经包含tripData
     if (props.activeTag === '一日游/多日游') {
         tripData = item.tripData;
         bannerImage = item.img || bannerImage;
     }
 
+    // 如果没有找到tripData，使用默认数据
     if (!tripData) {
         tripData = {
             route: `${item.title || '未知行程'}探索之旅`,
@@ -1299,29 +1240,14 @@ function buildTourDialogPayload(item) {
         normalizedTripData.images = resolvedBannerImages
     }
 
-    const itemType = item?.itemType || item?.tripType || tripType
-
-    return {
+    emit('openTourDialog', {
         ...item,
         title: item.title,
         enTitle: item.enTitle,
         banner: resolvedBanner,
-        tripType,
-        itemType,
+        tripType: tripType,
         tripData: normalizedTripData
-    }
-}
-
-async function onOpenTour(item) {
-    let sourceItem = item
-    const isSpecialContentItem = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
-    if (isApiEnabled() && item?.id != null && !isSpecialContentItem) {
-        const enriched = await loadCatalogItemDetail(item.id)
-        if (enriched) {
-            sourceItem = { ...item, ...enriched }
-        }
-    }
-    emit('openTourDialog', buildTourDialogPayload(sourceItem))
+    })
 }
 function onOpenPlace(groupName, itemType) {
     emit('openPlaceList', { placeName: groupName, itemType })
@@ -1329,7 +1255,7 @@ function onOpenPlace(groupName, itemType) {
 
 // 从data.json获取一日游数据
 const getDayTripItems = (tabName) => {
-    const navItem = dayTripNavs.value.find(nav => nav.subNavName === tabName)
+    const navItem = dayTripNavs.find(nav => nav.subNavName === tabName)
     return navItem?.items || []
 }
 
@@ -1646,9 +1572,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
                 <div ref="gridRef" class="activities-grid">
                     <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
-                        :class="['activity-card', item.cardClass, 'pointer']" @click="onOpenTour(item)">
+                        :class="['activity-card', item.cardClass]">
                         <div class="activity-image">
-                            <img :src="getActivityImage(item.img, i)" alt="特别活动" class="activity-img"
+                            <img :src="getActivityImage(item.img)" alt="特别活动" class="activity-img"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div :class="['activity-badge', item.badgeClass]">{{ item.badge }}</div>
@@ -1862,9 +1788,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div ref="gridRef" class="activities-grid">
                 <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
-                    :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)">
+                    :class="['activity-card', activity.cardClass]">
                     <div class="activity-image">
-                        <img :src="getActivityImage(activity.img, index)" alt="特别活动" class="activity-img"
+                        <img :src="getActivityImage(activity.img)" alt="特别活动" class="activity-img"
                             :loading="getImageLoading(index)" decoding="async"
                             :fetchpriority="getImageFetchPriority(index)">
                         <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
@@ -2242,18 +2168,13 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     }
 
                     .tags {
-                        display: grid;
-                        grid-template-columns: repeat(3, minmax(0, 1fr));
-                        gap: 10px;
-                        align-items: stretch;
+                        display: flex;
+                        column-gap: 10px;
 
-                        .weather-note,
-                        .activity-description {
-                            min-width: 0;
-                            height: auto;
-                            line-height: 1.5;
-                            word-break: break-word;
-                            white-space: normal;
+                        >div {
+                            width: 100px;
+                            height: 30px;
+                            line-height: 30px;
                         }
                     }
                 }
@@ -2261,7 +2182,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         }
 
         .aurora-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
         }
 
         .event-badge {
@@ -2269,15 +2190,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         }
 
         .season-badge {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #33b1a3 0%, #279486 100%);
         }
 
         .night-badge {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .camping-badge {
-            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
         }
 
         .activity-description {
@@ -2467,10 +2384,6 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                                     font-size: 12px;
                                 }
                             }
-                        }
-
-                        .tags {
-                            grid-template-columns: 1fr;
                         }
                     }
                 }

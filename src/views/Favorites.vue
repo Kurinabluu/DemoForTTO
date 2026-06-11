@@ -13,6 +13,7 @@ import {
   getFreeInfoGridImagePath,
   resolveOriginalImages,
   getFreeInfoDialogImagePaths,
+  resolveSpecialContentFallbackImage,
 } from '@/utils/freeInfoImageUtils';
 import { loadCatalogItemDetail } from '@/utils/contentRepository';
 import { isApiEnabled } from '@/utils/ttoApi';
@@ -29,6 +30,11 @@ const getCoverImageUrl = (item) => {
     if (gridPath) {
       const resolved = getThumbImageUrl(gridPath);
       if (resolved) return resolved;
+    }
+    const specialFallback = resolveSpecialContentFallbackImage(matched.sourceItem, subNavName, item?.title);
+    if (specialFallback) {
+      const resolvedFallback = getThumbImageUrl(specialFallback);
+      if (resolvedFallback) return resolvedFallback;
     }
   }
 
@@ -83,6 +89,7 @@ const getOriginalDialogImageUrl = (item) => {
 
   const fallbackPaths = [
     item?.tripData?.cover,
+    item?.banner,
     item?.image,
     item?.banner,
     item?.img,
@@ -125,7 +132,12 @@ const currentFavorites = computed(() => {
       (item.region || '').toLowerCase().includes(keyword) ||
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
-  return data;
+  return data.map((item) => {
+    if (findFreeInfoSourceItem(item?.title)) {
+      return buildFreeInfoDialogPayload(item);
+    }
+    return item;
+  });
 });
 
 const isDayTripFavorite = (item) => {
@@ -252,7 +264,7 @@ onUnmounted(() => {
           fetchpriority="low" />
         <div class="card-content">
           <h3 class="card-title">{{ item.title }}</h3>
-          <p class="card-region">{{ item.region }}</p>
+          <p class="card-region">{{ item.region || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}</p>
           <div class="card-actions">
             <span class="remove-btn" @click="handleRemoveFavorite(item, $event)">
               ★ 点击取消收藏
