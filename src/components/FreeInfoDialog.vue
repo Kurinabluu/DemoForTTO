@@ -1,6 +1,5 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
-import ContactDialog from './ContactDialog.vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
 import freeInfoData from '@/data/split/freeinfo.json'
 import { InfoFilled } from '@element-plus/icons-vue'
@@ -22,6 +21,7 @@ const props = defineProps({
     tripType: { type: String, default: '' },
     tripData: { type: Object, default: () => ({}) },
     itemId: { type: [Number, String], default: null },
+    itemKey: { type: String, default: '' },
     itemType: { type: String, default: 'scenic' }
 })
 
@@ -29,9 +29,8 @@ const emit = defineEmits(['update:visible', 'favorite-change'])
 
 const resolvedItemType = computed(() => props.itemType || props.tripType || 'scenic')
 
-// 收藏相关
 const isFavorite = computed(() => {
-    return checkFavorite(props.itemId, resolvedItemType.value, props.title)
+    return checkFavorite(props.itemId, resolvedItemType.value, props.title, props.itemKey)
 })
 
 const handleToggleFavorite = async () => {
@@ -41,6 +40,8 @@ const handleToggleFavorite = async () => {
         itemType: resolvedItemType.value,
         title: props.title,
         enTitle: props.enTitle,
+        itemKey: props.itemKey,
+        subNavName: props.tripData?.displaySubNav || props.tripData?.subNavName || props.itemType || '',
         image: props.banner,
         banner: props.banner,
         region: props.tripData?.region || '',
@@ -57,14 +58,9 @@ const dialogVisible = computed({
     set: (v) => emit('update:visible', v)
 })
 
-const contactDialogVisible = ref(false)
 const infoDialogVisible = ref(false)
 const bannerCarouselRef = ref(null)
 const activeBannerIndex = ref(0)
-
-const openContactDialog = () => {
-    contactDialogVisible.value = true
-}
 
 const openInfoDialog = () => {
     infoDialogVisible.value = true
@@ -232,9 +228,9 @@ watch(dialogVisible, (visible) => {
                     <span class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></span>
                 </div>
                 <div class="dlg-header-right">
-                    <span class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    <el-button text class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
-                    </span>
+                    </el-button>
                     <el-icon class="dlg-close" @click="close"><el-icon-close /></el-icon>
                 </div>
             </div>
@@ -317,12 +313,9 @@ watch(dialogVisible, (visible) => {
                         本页信息来源：TasTrips.Online原创
                     </template>
                 </div>
-                <!-- <el-button type="primary" size="large" @click="openContactDialog">立刻咨询</el-button> -->
             </div>
         </template>
     </el-dialog>
-
-    <ContactDialog v-model:visible="contactDialogVisible" />
     <InfoSourceDialog v-model:visible="infoDialogVisible" :source-data="infoSourceRows"
         :entry-title="sourceEntryName" />
 </template>

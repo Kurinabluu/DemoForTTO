@@ -4,12 +4,11 @@ import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import freeInfoData from '@/data/split/freeinfo.json'
-import dayTripData from '@/data/split/daytrip.json'
-import { loadFreeInfoData, loadDayTripData, loadCatalogItemDetail } from '@/utils/contentRepository'
+import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail } from '@/utils/contentRepository'
 import { isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
-import { waitRandomDelay } from '@/utils/loadingUtils'
+import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 
@@ -24,14 +23,14 @@ const props = defineProps({
 
 // 实际参与列表过滤的关键词（本页回车搜索 / 父级 committedKeyword）
 const searchKw = computed(() => {
+    // 带 dialogItemId 时优先做精确定位，不再让搜索词干扰定位列表
+    if (route.query.dialogItemId) return ''
+
     const localExecuted = searchQuery.value.trim()
     if (localExecuted) return localExecuted
 
     const fromProps = (props.s || '').trim()
     if (fromProps) return fromProps
-
-    // 从全站搜索结果打开（带 dialogItemId）：不按 URL 的 s 过滤，避免整页只剩少量命中项
-    if (route.query.dialogItemId) return ''
 
     const q = route.query.s
     return q ? String(q).trim() : ''
@@ -40,6 +39,7 @@ const searchKw = computed(() => {
 const highlightKw = computed(() => searchKw.value || localSearchKeyword.value.trim())
 
 function syncLocalSearchFromRoute() {
+    if (route.query.dialogItemId) return
     const q = route.query.s
     const hint = q ? String(q).trim() : ''
     if (!hint) return
@@ -270,16 +270,18 @@ function initLoadMoreObserver() {
 }
 
 onMounted(() => {
-    void loadFreeInfoData().then((loaded) => {
+    void withLoading(async () => {
+        const [loaded, dayTrips] = await Promise.all([
+            loadFreeInfoData(),
+            loadDayTripDataFresh(),
+        ])
         if (loaded?.subNav?.length) {
             datas.value = loaded
         }
-    })
-    void loadDayTripData().then((loaded) => {
-        if (Array.isArray(loaded) && loaded.length) {
-            dayTripNavs.value = loaded
+        if (Array.isArray(dayTrips) && dayTrips.length) {
+            dayTripNavs.value = dayTrips
         }
-    })
+    }, { text: '正在加载内容...' })
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', scheduleUpdateMobileScrollPage, { passive: true })
@@ -518,7 +520,7 @@ function getPaginatedItems(items) {
 
 // 从 contentRepository / JSON 获取数据
 const datas = shallowRef(freeInfoData || { subNav: [] })
-const dayTripNavs = shallowRef(dayTripData?.subNav || [])
+const dayTripNavs = shallowRef([])
 
 const places = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] })
 const restaurants = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "餐厅") || { items: [] })
@@ -1316,7 +1318,10 @@ async function onOpenTour(item) {
     let sourceItem = item
     const isSpecialContentItem = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
     if (isApiEnabled() && item?.id != null && !isSpecialContentItem) {
-        const enriched = await loadCatalogItemDetail(item.id)
+        const enriched = await withLoading(
+            () => loadCatalogItemDetail(item.id),
+            { text: '正在打开详情...' }
+        )
         if (enriched) {
             sourceItem = { ...item, ...enriched }
         }
@@ -1646,7 +1651,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
                 <div ref="gridRef" class="activities-grid">
                     <div v-for="(item, i) in getPaginatedItems(activityFiltered)" :key="'ac-filtered-' + i"
-                        :class="['activity-card', item.cardClass, 'pointer']" @click="onOpenTour(item)">
+                        :class="['activity-card', item.cardClass, 'pointer']" @click="onOpenTour(item)"
+                        :data-tour-title="getTourItemDialogKey(item)">
                         <div class="activity-image">
                             <img :src="getActivityImage(item.img, i)" alt="特别活动" class="activity-img"
                                 :loading="getImageLoading(i)" decoding="async"
@@ -1862,7 +1868,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </div>
             <div ref="gridRef" class="activities-grid">
                 <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
-                    :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)">
+                    :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)"
+                    :data-tour-title="getTourItemDialogKey(activity)">
                     <div class="activity-image">
                         <img :src="getActivityImage(activity.img, index)" alt="特别活动" class="activity-img"
                             :loading="getImageLoading(index)" decoding="async"

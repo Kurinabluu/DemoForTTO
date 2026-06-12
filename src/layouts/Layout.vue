@@ -11,6 +11,7 @@ import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue'
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
+import { buildInquirySourceSection } from '@/utils/inquirySource';
 import { fetchAuthSession, isApiEnabled, submitInquiry } from '@/utils/ttoApi';
 import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
 import { ElMessage } from 'element-plus';
@@ -118,6 +119,7 @@ const canSubmitInquiry = computed(() => {
     return Boolean(form.contactName.trim() && form.phone.trim() && form.content.trim())
 })
 const INQUIRY_SUCCESS_MESSAGE = '咨询已提交，我们会尽快联系你'
+const INQUIRY_SOURCE_SECTION = buildInquirySourceSection('site-layout', 'header-contact-form')
 
 function openContactDialog() {
     pendingInquirySuccessMessage.value = false
@@ -152,7 +154,7 @@ async function submitContactInquiry() {
                 phone: form.phone.trim(),
                 email: form.email.trim(),
                 inquiryType: 'contact',
-                sourceSection: 'layout-contact',
+                sourceSection: INQUIRY_SOURCE_SECTION,
                 content: form.content.trim(),
             }, getAuthToken())
         }

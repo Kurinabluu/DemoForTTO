@@ -86,9 +86,16 @@ export async function login(username, password) {
   })
 }
 
-export async function fetchFavorites(token) {
-  const data = await requestJson('/tto/favorites', { token })
-  return data?.list || []
+export async function fetchFavorites(token, { pageNum = 1, pageSize = 12, keyword = '', source = '' } = {}) {
+  return requestJson('/tto/favorites', {
+    token,
+    params: {
+      pageNum,
+      pageSize,
+      keyword,
+      source,
+    },
+  })
 }
 
 export async function addFavoriteRemote(token, payload) {
@@ -111,5 +118,15 @@ export async function submitInquiry(payload, token) {
     method: 'POST',
     body: payload,
     token: token || undefined,
+  })
+}
+
+export async function searchContentRemote(keyword, { pageNum = 1, pageSize = 10 } = {}) {
+  return requestJson('/tto/search', {
+    params: {
+      q: keyword,
+      pageNum,
+      pageSize,
+    },
   })
 }

@@ -120,13 +120,11 @@ if (!root?.subNav) {
 for (const section of root.subNav) {
   if (section.subNavName === '徒步线路') {
     section.items = section.items
-      .filter((item) => item.title !== '极光观测最佳时机')
       .map((item) => (isPlaceholderItem(item) ? applyHikingItem(item) : item))
   }
 
   if (section.subNavName === '塔州露营地') {
     section.items = section.items
-      .filter((item) => item.title !== '极光观测最佳时机')
       .map((item) => {
         if (item.title === 'Lake Parangana' && isPlaceholderItem(item)) {
           return { ...item, ...lakeParanganaCamp }

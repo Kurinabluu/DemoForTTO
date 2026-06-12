@@ -8,6 +8,7 @@ import {
   getStoredSearchSession,
   SEARCH_PAGE_SIZE
 } from '@/utils/searchService'
+import { withLoading } from '@/utils/loadingUtils'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,16 +17,14 @@ const searchInput = ref(route.query.s ? String(route.query.s) : '')
 const keyword = ref(searchInput.value)
 const results = ref([])
 const currentPage = ref(Number(route.query.page) || 1)
+const totalResults = ref(0)
 const isLoading = ref(false)
+const hydratedFromStore = ref(false)
 
-const totalResults = computed(() => results.value.length)
 const hasResults = computed(() => totalResults.value > 0)
 const pageSize = SEARCH_PAGE_SIZE
 
-const pagedResults = computed(() => {
-  const start = (currentPage.value - 1) * pageSize
-  return results.value.slice(start, start + pageSize)
-})
+const pagedResults = computed(() => results.value)
 
 // 搜索关键字归一化与高亮分段（用于 result-title）
 const normalizeForSearch = (str) => (str || '').toLowerCase()
@@ -134,9 +133,10 @@ const applyStoredSession = (stored) => {
   searchInput.value = stored.query || ''
   results.value = stored.results || []
   currentPage.value = stored.currentPage || 1
+  totalResults.value = Number(stored.totalResults || stored.total || stored.results?.length || 0)
 }
 
-const performSearch = async ({ resetPage = true } = {}) => {
+const performSearch = async ({ page = currentPage.value } = {}) => {
   const query = (keyword.value || '').trim()
 
   if (!query) {
@@ -146,24 +146,47 @@ const performSearch = async ({ resetPage = true } = {}) => {
     } else {
       results.value = []
       currentPage.value = 1
+      totalResults.value = 0
     }
     return
   }
 
   isLoading.value = true
   try {
-    const payload = await searchAllContent(query)
+    const payload = await withLoading(
+      () => searchAllContent(query, page, pageSize),
+      { text: '正在搜索，请稍候...' }
+    )
     results.value = payload.results
-    if (resetPage) {
-      currentPage.value = 1
-    } else {
-      const routePage = Number(route.query.page) || 1
-      currentPage.value = routePage
-    }
-    persistSearchSession({ ...payload, currentPage: currentPage.value })
+    currentPage.value = payload.pageNum || page || 1
+    totalResults.value = Number(payload.total || 0)
+    persistSearchSession({
+      query: payload.query,
+      results: payload.results,
+      totalResults: payload.total,
+      currentPage: currentPage.value,
+      pageSize: payload.pageSize,
+    })
   } finally {
     isLoading.value = false
   }
+}
+
+const hydrateFromStoreIfPossible = () => {
+  const stored = getStoredSearchSession()
+  if (!stored) return false
+
+  const routeKeyword = (keyword.value || '').trim()
+  const storedKeyword = (stored.query || '').trim()
+  const routePage = Number(route.query.page) || 1
+  const storedPage = Number(stored.currentPage || 1)
+
+  if (routeKeyword && storedKeyword && routeKeyword === storedKeyword && routePage === storedPage) {
+    applyStoredSession(stored)
+    return true
+  }
+
+  return false
 }
 
 const handleSubmit = () => {
@@ -175,7 +198,6 @@ const handlePageChange = (page) => {
   if (page === currentPage.value) return
   currentPage.value = page
   updateRoute({ queryKeyword: keyword.value, page })
-  persistSearchSession({ query: keyword.value, results: results.value, currentPage: page })
 }
 
 const openResult = (result) => {
@@ -221,7 +243,8 @@ watch(
     if (newKeyword === oldKeyword) return
     keyword.value = newKeyword ? String(newKeyword) : ''
     searchInput.value = keyword.value
-    void performSearch({ resetPage: false })
+    hydratedFromStore.value = false
+    void performSearch({ page: Number(route.query.page) || 1 })
   }
 )
 
@@ -230,12 +253,20 @@ watch(
   (newPage) => {
     const normalized = Number(newPage) || 1
     currentPage.value = normalized
+    hydratedFromStore.value = false
+    if (keyword.value) {
+      void performSearch({ page: normalized })
+    }
   }
 )
 
 onMounted(() => {
+  if (hydrateFromStoreIfPossible()) {
+    hydratedFromStore.value = true
+    return
+  }
   if (keyword.value) {
-    void performSearch({ resetPage: false })
+    void performSearch({ page: currentPage.value })
   } else {
     const stored = getStoredSearchSession()
     if (stored) {

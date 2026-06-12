@@ -168,6 +168,7 @@ const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).hr
 const dialogTripData = ref({})
 const dialogTripType = ref('一日游')
 const dialogItemId = ref(null)
+const dialogItemKey = ref('')
 const dialogItemType = ref('scenic')
 
 const isPlaceListVisible = ref(false)
@@ -386,6 +387,7 @@ function openTourDialog(item) {
     dialogTripData.value = item?.tripData || {}
     dialogTripType.value = item?.tripType || '一日游'
     dialogItemId.value = item?.id ?? item?.tripData?.id ?? null
+    dialogItemKey.value = item?.itemKey || item?.tripData?.itemKey || ''
     dialogItemType.value = item?.itemType || item?.tripType || 'scenic'
 
     if (dialogTripType.value === '一日游' || dialogTripType.value === '多日游') {
@@ -632,10 +634,10 @@ onMounted(() => {
 
         <!-- 弹窗组件 -->
         <FreeInfoDialog v-if="isFreeInfoDialogVisible" v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId" :item-key="dialogItemKey"
             :item-type="dialogItemType" />
         <TripDialog v-if="isTripDialogVisible" v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId"
+            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId" :item-key="dialogItemKey"
             :item-type="dialogItemType" />
         <PlaceListDialog v-if="isPlaceListVisible" v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
             :items="listItems" @select="onSelectPlaceItem" />

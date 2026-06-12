@@ -162,23 +162,25 @@ function mergeSpecialSectionItems(apiRows, fallbackItems, subNavKey) {
     return fallbackItems
   }
 
-  const apiByTitle = new Map()
-  const apiByItemKey = new Map()
-  for (const row of apiRows) {
-    const mapped = mapApiItem(row)
-    if (mapped?.title) apiByTitle.set(mapped.title, mapped)
-    const itemKey = mapped?.itemKey ?? row?.itemKey
-    if (itemKey) apiByItemKey.set(itemKey, mapped)
+  const fallbackByTitle = new Map()
+  const fallbackByItemKey = new Map()
+  for (const item of fallbackItems) {
+    if (item?.title) fallbackByTitle.set(item.title, item)
+    const itemKey = buildFallbackItemKey(subNavKey, item)
+    if (itemKey) fallbackByItemKey.set(itemKey, item)
+    if (item?.itemKey) fallbackByItemKey.set(item.itemKey, item)
+    const enKey = buildFallbackItemKey(subNavKey, { title: item?.enTitle })
+    if (enKey) fallbackByItemKey.set(enKey, item)
   }
 
-  return fallbackItems.map((fallbackItem) => {
-    const fallbackItemKey = buildFallbackItemKey(subNavKey, fallbackItem)
-    const apiItem =
-      (fallbackItemKey ? apiByItemKey.get(fallbackItemKey) : null) ||
-      apiByItemKey.get(fallbackItem?.itemKey) ||
-      apiByItemKey.get(buildFallbackItemKey(subNavKey, { title: fallbackItem?.enTitle })) ||
-      apiByTitle.get(fallbackItem?.title)
-    if (!apiItem?.id) return fallbackItem
+  return apiRows.map((row) => {
+    const apiItem = mapApiItem(row)
+    if (!apiItem) return null
+    const fallbackItem =
+      fallbackByItemKey.get(apiItem.itemKey) ||
+      fallbackByItemKey.get(buildFallbackItemKey(subNavKey, { title: apiItem?.enTitle })) ||
+      fallbackByTitle.get(apiItem.title)
+    if (!fallbackItem) return apiItem
     return {
       ...fallbackItem,
       ...apiItem,
@@ -186,11 +188,10 @@ function mergeSpecialSectionItems(apiRows, fallbackItems, subNavKey) {
         ...(fallbackItem?.tripData || {}),
         ...(apiItem?.tripData || {}),
       },
-      img: apiItem.img ?? fallbackItem?.img,
-      cover: apiItem.cover ?? fallbackItem?.cover,
-      id: apiItem.id ?? fallbackItem?.id,
+      img: apiItem.img ?? fallbackItem.img,
+      cover: apiItem.cover ?? fallbackItem.cover,
     }
-  })
+  }).filter(Boolean)
 }
 
 /** 免费信息网格：API 负责 id / 标题等基础字段，本地 JSON 负责更完整的卡片字段 */
@@ -202,23 +203,25 @@ function mergeGridSectionItems(apiRows, fallbackItems, subNavKey) {
     return fallbackItems
   }
 
-  const apiByTitle = new Map()
-  const apiByItemKey = new Map()
-  for (const row of apiRows) {
-    const mapped = mapApiItem(row)
-    if (mapped?.title) apiByTitle.set(mapped.title, mapped)
-    const itemKey = mapped?.itemKey ?? row?.itemKey
-    if (itemKey) apiByItemKey.set(itemKey, mapped)
+  const fallbackByTitle = new Map()
+  const fallbackByItemKey = new Map()
+  for (const item of fallbackItems) {
+    if (item?.title) fallbackByTitle.set(item.title, item)
+    const itemKey = buildFallbackItemKey(subNavKey, item)
+    if (itemKey) fallbackByItemKey.set(itemKey, item)
+    if (item?.itemKey) fallbackByItemKey.set(item.itemKey, item)
+    const enKey = buildFallbackItemKey(subNavKey, { title: item?.enTitle })
+    if (enKey) fallbackByItemKey.set(enKey, item)
   }
 
-  return fallbackItems.map((fallbackItem) => {
-    const fallbackItemKey = buildFallbackItemKey(subNavKey, fallbackItem)
-    const apiItem =
-      (fallbackItemKey ? apiByItemKey.get(fallbackItemKey) : null) ||
-      apiByItemKey.get(fallbackItem?.itemKey) ||
-      apiByItemKey.get(buildFallbackItemKey(subNavKey, { title: fallbackItem?.enTitle })) ||
-      apiByTitle.get(fallbackItem?.title)
-    if (!apiItem) return fallbackItem
+  return apiRows.map((row) => {
+    const apiItem = mapApiItem(row)
+    if (!apiItem) return null
+    const fallbackItem =
+      fallbackByItemKey.get(apiItem.itemKey) ||
+      fallbackByItemKey.get(buildFallbackItemKey(subNavKey, { title: apiItem?.enTitle })) ||
+      fallbackByTitle.get(apiItem.title)
+    if (!fallbackItem) return apiItem
 
     return {
       ...fallbackItem,
@@ -227,11 +230,10 @@ function mergeGridSectionItems(apiRows, fallbackItems, subNavKey) {
         ...(fallbackItem?.tripData || {}),
         ...(apiItem?.tripData || {}),
       },
-      img: apiItem.img ?? fallbackItem?.img,
-      cover: apiItem.cover ?? fallbackItem?.cover,
-      id: apiItem.id ?? fallbackItem?.id,
+      img: apiItem.img ?? fallbackItem.img,
+      cover: apiItem.cover ?? fallbackItem.cover,
     }
-  })
+  }).filter(Boolean)
 }
 
 export async function loadCatalogItemDetail(itemId) {
@@ -253,6 +255,7 @@ async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallback
   const subNavKey = buildSubNavKey(sectionPath, subNavMeta.subNavName)
   const useLocalCardData = fallbackSubNav?.isGrid === false
   const useApiGridData = sectionPath === 'trips/freeinfo' && fallbackSubNav?.isGrid === true
+  const useApiOnlyDayTripData = sectionPath === 'trips/routes' && isApiEnabled()
 
   try {
     const rows = await fetchItemsBySubNavKey(subNavKey)
@@ -261,6 +264,9 @@ async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallback
     }
     if (useApiGridData && Array.isArray(fallbackItems) && fallbackItems.length) {
       return mergeGridSectionItems(rows, fallbackItems, subNavKey)
+    }
+    if (useApiOnlyDayTripData) {
+      return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
     }
     const items = Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
     if (items.length) return items
@@ -301,10 +307,11 @@ async function loadSectionBundle(sectionPath, fallback) {
       const fallbackSubNav = fallback?.subNav?.find(
         (item) => item.subNavName === subNavMeta.subNavName
       )
+      const fallbackItems = sectionPath === 'trips/routes' ? [] : fallbackSubNav?.items
       const items = await fetchSubNavItems(
         sectionPath,
         subNavMeta,
-        fallbackSubNav?.items,
+        fallbackItems,
         fallbackSubNav
       )
       return {

@@ -51,6 +51,7 @@ function normalizeId(value) {
 }
 
 function getUniqueKey(item) {
+  if (item?.itemKey != null && item.itemKey !== '') return String(item.itemKey)
   if (item?.uniqueKey != null && item.uniqueKey !== '') return String(item.uniqueKey)
   const id = normalizeId(item?.id)
   if (id) return id
@@ -70,6 +71,7 @@ function mapRemoteFavorite(row) {
   return {
     favoriteId: row?.favoriteId,
     id: row?.id ?? row?.itemId,
+    itemKey: row?.itemKey || '',
     type: itemType,
     itemType,
     title: row?.title || '',
@@ -84,6 +86,7 @@ function mapRemoteFavorite(row) {
     tripData,
     subNavName: row?.subNavName || tripData.displaySubNav || '',
     tripType: itemType,
+    itemKey: row?.itemKey || '',
     uniqueKey: row?.uniqueKey || String(row?.id ?? row?.itemId ?? ''),
   }
 }
@@ -93,7 +96,7 @@ export function switchToLocalFavorites() {
   favorites.value = loadLocalFavorites()
 }
 
-export async function refreshRemoteFavorites(force = false) {
+export async function refreshRemoteFavorites(force = false, pageSize = 50) {
   if (!shouldUseRemoteFavorites()) {
     switchToLocalFavorites()
     return favorites.value
@@ -103,8 +106,28 @@ export async function refreshRemoteFavorites(force = false) {
   }
 
   try {
-    const rows = await fetchFavorites(getAuthToken())
-    favorites.value = rows.map(mapRemoteFavorite)
+    const safePageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
+      ? Math.floor(Number(pageSize))
+      : 50
+    const token = getAuthToken()
+    const merged = []
+    let pageNum = 1
+    let total = 0
+
+    while (true) {
+      const data = await fetchFavorites(token, { pageNum, pageSize: safePageSize })
+      const rows = Array.isArray(data?.list) ? data.list : []
+      if (!total) {
+        total = Number(data?.total || rows.length || 0)
+      }
+      merged.push(...rows.map(mapRemoteFavorite))
+      if (merged.length >= total || rows.length < safePageSize) {
+        break
+      }
+      pageNum += 1
+    }
+
+    favorites.value = merged
     remoteLoaded = true
   } catch (error) {
     console.warn('[favoritesStore] 远程收藏加载失败:', error)
@@ -130,6 +153,7 @@ export async function migrateLocalFavoritesToRemote() {
         itemId: Number(item.id),
         itemType: item.itemType || item.type || 'scenic',
         title: item.title || '',
+        itemKey: item.itemKey || '',
       })
     } catch (error) {
       console.warn('[favoritesStore] 迁移收藏失败:', item?.id, error)
@@ -153,8 +177,8 @@ const addFavorite = (item) => {
   return 'success'
 }
 
-const removeFavorite = (id, type, title, favoriteId) => {
-  const uniqueKey = favoriteId ? null : normalizeId(id) || `${type}_${title}`
+const removeFavorite = (id, type, title, favoriteId, itemKey) => {
+  const uniqueKey = favoriteId ? null : normalizeId(itemKey) || normalizeId(id) || `${type}_${title}`
   const index = favorites.value.findIndex((fav) => {
     if (favoriteId != null && fav.favoriteId != null) {
       return fav.favoriteId === favoriteId
@@ -166,8 +190,8 @@ const removeFavorite = (id, type, title, favoriteId) => {
   }
 }
 
-const isFavorite = (id, type, title) => {
-  const uniqueKey = normalizeId(id) || `${type}_${title}`
+const isFavorite = (id, type, title, itemKey) => {
+  const uniqueKey = normalizeId(itemKey) || normalizeId(id) || `${type}_${title}`
   return favorites.value.some((fav) => getUniqueKey(fav) === uniqueKey)
 }
 
@@ -187,6 +211,7 @@ export async function addFavoriteAsync(item) {
         itemId: numericId,
         itemType: item.itemType || item.type || 'scenic',
         title: item.title || '',
+        itemKey: item.itemKey || '',
       })
       await refreshRemoteFavorites(true)
       return result?.status || 'success'
@@ -198,11 +223,11 @@ export async function addFavoriteAsync(item) {
   return addFavorite(item)
 }
 
-export async function removeFavoriteAsync(id, type, title, favoriteId) {
+export async function removeFavoriteAsync(id, type, title, favoriteId, itemKey) {
   if (shouldUseRemoteFavorites()) {
     const target = favorites.value.find((fav) => {
       if (favoriteId != null) return fav.favoriteId === favoriteId
-      return getUniqueKey(fav) === (normalizeId(id) || `${type}_${title}`)
+      return getUniqueKey(fav) === (normalizeId(itemKey) || normalizeId(id) || `${type}_${title}`)
     })
     const remoteId = favoriteId ?? target?.favoriteId
     if (!remoteId) {
@@ -218,15 +243,15 @@ export async function removeFavoriteAsync(id, type, title, favoriteId) {
     }
     return
   }
-  removeFavorite(id, type, title, favoriteId)
+  removeFavorite(id, type, title, favoriteId, itemKey)
 }
 
 export async function toggleFavorite(item) {
   const itemType = item?.itemType || item?.type
   const uniqueKey = getUniqueKey(item)
-  if (isFavorite(item.id, itemType, item.title)) {
+  if (isFavorite(item.id, itemType, item.title, item.itemKey)) {
     const current = favorites.value.find((fav) => getUniqueKey(fav) === uniqueKey)
-    await removeFavoriteAsync(item.id, itemType, item.title, current?.favoriteId)
+    await removeFavoriteAsync(item.id, itemType, item.title, current?.favoriteId, item.itemKey)
     return 'removed'
   }
   return addFavoriteAsync({ ...item, type: itemType, itemType })

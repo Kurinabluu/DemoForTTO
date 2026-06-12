@@ -20,5 +20,12 @@ function slugifySubNavPath(value) {
 
 export function buildSubNavKey(sectionPath, subNavName) {
   const path = String(sectionPath || '').replace(/^\/+/, '')
-  return `${path}:${slugifySubNavPath(subNavName)}`
+  const name = String(subNavName || '').trim()
+  if (path === 'trips/routes') {
+    const dayMatch = name.match(/^(\d{1,2})/)
+    if (dayMatch) {
+      return `${path}:${dayMatch[1]}`
+    }
+  }
+  return `${path}:${slugifySubNavPath(name)}`
 }

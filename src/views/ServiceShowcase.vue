@@ -765,7 +765,15 @@ watch(() => props.serviceName, (newServiceName) => {
         </div>
 
         <!-- 咨询弹窗 -->
-        <ContactDialog v-model:visible="consultationDialogVisible" />
+        <ContactDialog
+            v-model:visible="consultationDialogVisible"
+            source-page="服务展示页"
+            :source-module="currentConfig?.packagesTitle === '包车服务' ? '包车服务' : currentConfig?.packagesTitle === '专属定制' ? '专属定制' : currentConfig?.packagesTitle || '服务咨询'"
+            source-page-key="service-showcase"
+            :source-module-key="currentConfig?.packagesTitle === '包车服务' ? 'charter-service' : currentConfig?.packagesTitle === '专属定制' ? 'custom-service' : 'service-consultation'"
+            source-entry-key=""
+            inquiry-type="contact"
+        />
         <!-- 关于我们弹窗 -->
         <AboutUsDialog ref="aboutUsDialogRef" />
     </div>

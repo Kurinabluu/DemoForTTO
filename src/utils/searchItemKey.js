@@ -11,6 +11,9 @@ export const SERVICE_SECTION_TAGS = new Set([
 /** 与 TripsGrid 卡片 data-tour-title、URL dialogItemId 一致 */
 export function getTourItemDialogKey(item) {
   if (!item || typeof item !== 'object') return ''
+  if (item.itemKey != null && String(item.itemKey).trim() !== '') {
+    return String(item.itemKey).trim()
+  }
   if (item.id != null && String(item.id).trim() !== '') {
     return String(item.id).trim()
   }

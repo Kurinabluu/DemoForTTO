@@ -1,16 +1,50 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { Z_INDEX } from '@/constants/zIndex'
+import { getAuthToken } from '@/utils/authStore'
+import { isApiEnabled, submitInquiry } from '@/utils/ttoApi'
+import { buildInquirySourceSection } from '@/utils/inquirySource'
 
 const props = defineProps({
-    visible: { type: Boolean, default: false }
+    visible: { type: Boolean, default: false },
+    sourcePage: { type: String, default: '未知页面' },
+    sourceModule: { type: String, default: '联系我们' },
+    sourcePageKey: { type: String, default: '' },
+    sourceModuleKey: { type: String, default: '' },
+    sourceEntryKey: { type: String, default: '' },
+    inquiryType: { type: String, default: 'contact' },
 })
 
 const emit = defineEmits(['update:visible'])
 
-// 设备检测
 const isMobile = ref(false)
 const mobileBreakpoint = 768
+const inquiryFormRef = ref(null)
+const inquirySubmitting = ref(false)
+const inquiryForm = ref({
+    contactName: '',
+    phone: '',
+    email: '',
+    content: '',
+})
+
+const inquiryRules = {
+    contactName: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+    phone: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+    content: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
+}
+
+const canSubmitInquiry = computed(() => {
+    const form = inquiryForm.value
+    return Boolean(form.contactName.trim() && form.phone.trim() && form.content.trim())
+})
+
+const sourceSection = computed(() => buildInquirySourceSection(
+    props.sourcePageKey || props.sourcePage,
+    props.sourceModuleKey || props.sourceModule,
+    props.sourceEntryKey,
+))
 
 const checkDeviceType = () => {
     isMobile.value = window.innerWidth <= mobileBreakpoint
@@ -19,6 +53,51 @@ const checkDeviceType = () => {
 const handleResize = () => {
     checkDeviceType()
 }
+
+const handleClosed = () => {
+    inquiryFormRef.value?.clearValidate()
+    inquirySubmitting.value = false
+}
+
+const dialogVisible = computed({
+    get: () => props.visible,
+    set: (v) => emit('update:visible', v)
+})
+
+const fullscreen = computed(() => isMobile.value)
+
+const submitContactInquiry = async () => {
+    if (inquirySubmitting.value || !inquiryFormRef.value || !canSubmitInquiry.value) return
+
+    const valid = await inquiryFormRef.value.validate().catch(() => false)
+    if (!valid) return
+
+    inquirySubmitting.value = true
+    try {
+        if (isApiEnabled()) {
+            await submitInquiry({
+                contactName: inquiryForm.value.contactName.trim(),
+                phone: inquiryForm.value.phone.trim(),
+                email: inquiryForm.value.email.trim(),
+                inquiryType: props.inquiryType,
+                sourceSection: sourceSection.value,
+                sourcePageKey: props.sourcePageKey || props.sourcePage,
+                sourceModuleKey: props.sourceModuleKey || props.sourceModule,
+                sourceEntryKey: props.sourceEntryKey || '',
+                content: inquiryForm.value.content.trim(),
+            }, getAuthToken())
+        }
+
+        inquiryForm.value = { contactName: '', phone: '', email: '', content: '' }
+        dialogVisible.value = false
+        ElMessage.success('咨询已提交，我们会尽快联系你')
+    } catch (error) {
+        ElMessage.error(error?.message || '提交失败，请稍后重试')
+    } finally {
+        inquirySubmitting.value = false
+    }
+}
+
 onMounted(() => {
     checkDeviceType()
     window.addEventListener('resize', handleResize)
@@ -27,19 +106,12 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
 })
-
-const dialogVisible = computed({
-    get: () => props.visible,
-    set: (v) => emit('update:visible', v)
-})
-
-// 在手机端启用全屏
-const fullscreen = computed(() => isMobile.value)
 </script>
 
 <template>
-    <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center class="contact-dialog"
-        :z-index="Z_INDEX.dialog.high" :append-to-body="true" :lock-scroll="true" :fullscreen="fullscreen">
+    <el-dialog v-model="dialogVisible" title="咨询方式" :close-on-click-modal="true" align-center
+        class="contact-dialog" :z-index="Z_INDEX.dialog.high" :append-to-body="true" :lock-scroll="true"
+        :fullscreen="fullscreen" @closed="handleClosed">
         <div class="consultation-content">
             <div class="consultation-item">
                 <i class="contact-icon phone-icon"></i>
@@ -63,16 +135,35 @@ const fullscreen = computed(() => isMobile.value)
                     <div class="contact-note">欢迎加微咨询（输入微信号“TasmaniaTrips”进行搜索）</div>
                 </div>
             </div>
+            <el-form id="contact-inquiry-form" ref="inquiryFormRef" :model="inquiryForm" :rules="inquiryRules"
+                label-position="top" class="contact-inquiry-form" @submit.prevent="submitContactInquiry">
+                <div class="form-title">留言咨询</div>
+                <el-form-item label="联系人" prop="contactName">
+                    <el-input v-model="inquiryForm.contactName" placeholder="请输入联系人" />
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="inquiryForm.phone" placeholder="请输入电话" />
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="inquiryForm.email" placeholder="邮箱（选填）" />
+                </el-form-item>
+                <el-form-item label="咨询内容" prop="content">
+                    <el-input v-model="inquiryForm.content" type="textarea" :rows="3" placeholder="请描述您的咨询内容" />
+                </el-form-item>
+            </el-form>
         </div>
         <template #footer>
-            <el-button type="primary" @click="dialogVisible = false">确定</el-button>
+            <div class="contact-dialog-footer">
+                <el-button type="primary" native-type="submit" form="contact-inquiry-form" :loading="inquirySubmitting"
+                    :disabled="!canSubmitInquiry">
+                    提交咨询
+                </el-button>
+            </div>
         </template>
     </el-dialog>
 </template>
 
 <style lang="scss" scoped>
-// 显示对iphone4不友好，发现没有320px的适配，待修复
-// :deep(.el-dialog) {
 .consultation-content .consultation-item {
     display: flex;
     align-items: center;
@@ -121,5 +212,21 @@ const fullscreen = computed(() => isMobile.value)
     font-size: 12px;
     color: #999;
     margin-top: 2px;
+}
+
+.contact-inquiry-form {
+    margin-top: 14px;
+}
+
+.form-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.contact-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
 }
 </style>

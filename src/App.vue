@@ -6,7 +6,7 @@ import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
 import { useLoadingStore } from '@/stores/loadingStore'
-import { withRandomLoading } from '@/utils/loadingUtils'
+import { withLoading } from '@/utils/loadingUtils'
 import { Z_INDEX } from '@/constants/zIndex'
 
 // 电梯导航相关
@@ -58,7 +58,7 @@ const togglePosition = () => {
 }
 
 const goToFavorites = () => {
-  void withRandomLoading(undefined, { min: 160, max: 300, text: '正在打开收藏夹...' })
+  void withLoading(undefined, { text: '正在打开收藏夹...' })
   const href = router.resolve({ name: 'Favorites' }).href
   window.open(href, '_blank', 'noopener,noreferrer')
 }

@@ -17,6 +17,7 @@ const props = defineProps({
     tripType: { type: String, default: '一日游' },
     tripData: { type: Object, default: () => ({}) },
     itemId: { type: [Number, String], default: null },
+    itemKey: { type: String, default: '' },
     itemType: { type: String, default: 'scenic' }
 })
 
@@ -24,9 +25,8 @@ const emit = defineEmits(['update:visible', 'favorite-change'])
 
 const currentItemType = computed(() => props.itemType || props.tripType || 'scenic')
 
-// 收藏相关
 const isFavorite = computed(() => {
-    return checkFavorite(props.itemId, currentItemType.value, props.title)
+    return checkFavorite(props.itemId, currentItemType.value, props.title, props.itemKey)
 })
 
 const handleToggleFavorite = async () => {
@@ -36,6 +36,8 @@ const handleToggleFavorite = async () => {
         itemType: currentItemType.value,
         title: props.title,
         enTitle: props.enTitle,
+        itemKey: props.itemKey,
+        subNavName: props.tripData?.displaySubNav || props.tripData?.subNavName || props.tripType || '',
         image: props.banner,
         banner: props.banner,
         region: props.tripData?.region || '',
@@ -162,9 +164,9 @@ watch(dialogVisible, (visible) => {
                     <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
                 </div>
                 <div class="dlg-header-right">
-                    <span class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    <el-button text class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
-                    </span>
+                    </el-button>
                     <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
                     <el-icon class="dlg-close" @click="close"><el-icon-close /></el-icon>
                 </div>
@@ -284,7 +286,15 @@ watch(dialogVisible, (visible) => {
         </template>
     </el-dialog>
 
-    <ContactDialog v-model:visible="contactDialogVisible" />
+    <ContactDialog
+        v-model:visible="contactDialogVisible"
+        source-page="行程详情页"
+        source-module="立刻咨询此行程"
+        source-page-key="trip-detail"
+        :source-module-key="currentItemType === '多日游' ? 'multi-day-trip' : 'day-trip'"
+        :source-entry-key="String(itemKey || itemId || title || '').trim()"
+        inquiry-type="contact"
+    />
     <InfoSourceDialog v-model:visible="infoDialogVisible" :source-data="infoSourceRows"
         :entry-title="sourceEntryName" />
 </template>

@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, onActivated } from 'vue';
-import { ElPagination, ElInput, ElButton } from 'element-plus';
+import { ref, computed, watch, onMounted, onUnmounted, onActivated } from 'vue';
+import { ElPagination, ElInput, ElButton, ElSelect, ElOption } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import { favorites, removeFavoriteAsync, refreshRemoteFavorites } from '@/utils/favoritesStore';
+import { favorites, removeFavoriteAsync } from '@/utils/favoritesStore';
 import { notifyFavoriteResult } from '@/utils/favoriteMessages';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
@@ -16,7 +16,11 @@ import {
   resolveSpecialContentFallbackImage,
 } from '@/utils/freeInfoImageUtils';
 import { loadCatalogItemDetail } from '@/utils/contentRepository';
-import { isApiEnabled } from '@/utils/ttoApi';
+import { fetchFavorites, isApiEnabled } from '@/utils/ttoApi';
+import { getAuthToken, shouldUseRemoteFavorites } from '@/utils/authStore';
+import { withLoading } from '@/utils/loadingUtils';
+
+const ALL_SOURCE_VALUE = '__all__';
 
 const getThumbImageUrl = (imgPath) => {
   return resolveDataImage(imgPath, '', { variant: 'thumb' });
@@ -106,8 +110,13 @@ const getOriginalDialogImageUrl = (item) => {
 // 搜索相关
 const searchInput = ref('');
 const searchKeyword = ref('');
+const sourceFilter = ref(ALL_SOURCE_VALUE);
 const currentPage = ref(1);
 const windowWidth = ref(window.innerWidth);
+const remoteFavorites = ref([]);
+const remoteFavoritesTotal = ref(0);
+const remoteFavoritesLoading = ref(false);
+const useRemoteFavorites = computed(() => shouldUseRemoteFavorites());
 // 弹窗相关
 const dialogVisible = ref(false);
 const currentItem = ref(null);
@@ -123,21 +132,79 @@ const itemsPerPage = computed(() => {
     return 12;
   }
 });
-// 当前收藏数据（响应式，登录后远程同步会更新）
-const currentFavorites = computed(() => {
-  let data = favorites.value;
+const getSourceName = (item) => {
+  return String(item?.subNavName || item?.tripData?.displaySubNav || item?.tripData?.subNavName || '').trim();
+};
+
+const compareFavoriteOrder = (left, right) => {
+  const leftId = Number(left?.favoriteId);
+  const rightId = Number(right?.favoriteId);
+  const leftHasId = Number.isFinite(leftId);
+  const rightHasId = Number.isFinite(rightId);
+
+  if (leftHasId && rightHasId) {
+    return leftId - rightId;
+  }
+
+  const leftTime = Date.parse(left?.createdAt || left?.tripData?.createdAt || '');
+  const rightTime = Date.parse(right?.createdAt || right?.tripData?.createdAt || '');
+  const leftHasTime = Number.isFinite(leftTime);
+  const rightHasTime = Number.isFinite(rightTime);
+
+  if (leftHasTime && rightHasTime) {
+    return leftTime - rightTime;
+  }
+
+  return 0;
+};
+
+const sortedFavoriteItems = computed(() => {
+  return [...favorites.value].sort(compareFavoriteOrder);
+});
+
+const filteredFavoriteSourceItems = computed(() => {
+  let data = [...sortedFavoriteItems.value];
+  const activeSource = sourceFilter.value || ALL_SOURCE_VALUE;
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.toLowerCase();
     data = data.filter(item => item.title.toLowerCase().includes(keyword) ||
       (item.region || '').toLowerCase().includes(keyword) ||
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
-  return data.map((item) => {
+  if (activeSource !== ALL_SOURCE_VALUE) {
+    data = data.filter((item) => getSourceName(item) === activeSource);
+  }
+  return data;
+});
+
+// 当前收藏数据（响应式，登录后远程同步会更新）
+const localCurrentFavorites = computed(() => {
+  return filteredFavoriteSourceItems.value.map((item) => {
     if (findFreeInfoSourceItem(item?.title)) {
       return buildFreeInfoDialogPayload(item);
     }
     return item;
   });
+});
+
+const displayedFavorites = computed(() => {
+  if (useRemoteFavorites.value) {
+    return remoteFavorites.value;
+  }
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return localCurrentFavorites.value.slice(start, end);
+});
+
+const sourceOptions = computed(() => {
+  const options = new Set();
+  sortedFavoriteItems.value.forEach((item) => {
+    const source = getSourceName(item);
+    if (source) {
+      options.add(source);
+    }
+  });
+  return Array.from(options);
 });
 
 const isDayTripFavorite = (item) => {
@@ -151,13 +218,11 @@ const currentDialogBanner = computed(() => {
 });
 // 总页数
 const totalPages = computed(() => {
-  return Math.ceil(currentFavorites.value.length / itemsPerPage.value);
+  const total = useRemoteFavorites.value ? remoteFavoritesTotal.value : localCurrentFavorites.value.length;
+  return Math.max(1, Math.ceil(total / itemsPerPage.value));
 });
-// 分页数据
-const paginatedFavorites = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return currentFavorites.value.slice(start, end);
+const favoriteTotalCount = computed(() => {
+  return useRemoteFavorites.value ? remoteFavoritesTotal.value : localCurrentFavorites.value.length;
 });
 // 监听窗口大小变化
 const handleResize = () => {
@@ -166,23 +231,43 @@ const handleResize = () => {
 // 处理分页变化
 const handlePageChange = (page) => {
   currentPage.value = page;
+  if (useRemoteFavorites.value) {
+    void loadFavoritesPage();
+    return;
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 // 执行搜索（点击搜索按钮或按回车键后执行）
-const executeSearch = () => {
+const executeSearch = async () => {
   searchKeyword.value = searchInput.value;
   currentPage.value = 1;
+  if (useRemoteFavorites.value) {
+    await loadFavoritesPage();
+  }
 };
 // 清除搜索（点击清除按钮后执行）
-const clearSearch = () => {
+const clearSearch = async () => {
+  searchInput.value = '';
   searchKeyword.value = '';
   currentPage.value = 1;
+  if (useRemoteFavorites.value) {
+    await loadFavoritesPage();
+  }
+};
+const handleSourceChange = async () => {
+  currentPage.value = 1;
+  if (useRemoteFavorites.value) {
+    await loadFavoritesPage();
+  }
 };
 // 打开弹窗
 const openDialog = async (item) => {
   let enriched = item
   if (isApiEnabled() && item?.id != null) {
-    const detail = await loadCatalogItemDetail(item.id)
+    const detail = await withLoading(
+      () => loadCatalogItemDetail(item.id),
+      { text: '正在加载详情...' }
+    )
     if (detail) {
       enriched = {
         ...item,
@@ -208,8 +293,14 @@ const closeDialog = () => {
 // 取消收藏
 const handleRemoveFavorite = async (item, event) => {
   event.stopPropagation();
-  await removeFavoriteAsync(item.id, item.itemType || item.type, item.title, item.favoriteId);
-  notifyFavoriteResult('removed');
+  await withLoading(async () => {
+    await removeFavoriteAsync(item.id, item.itemType || item.type, item.title, item.favoriteId, item.itemKey);
+    notifyFavoriteResult('removed');
+    if (useRemoteFavorites.value) {
+      await loadFavoritesPage();
+      return;
+    }
+  }, { text: '正在取消收藏...' });
   if (currentPage.value > totalPages.value) {
     currentPage.value = Math.max(1, totalPages.value);
   }
@@ -218,6 +309,10 @@ const handleRemoveFavorite = async (item, event) => {
 const handleFavoriteChange = (result) => {
   if (result === 'removed') {
     closeDialog();
+    if (useRemoteFavorites.value) {
+      void loadFavoritesPage();
+      return;
+    }
     if (currentPage.value > totalPages.value) {
       currentPage.value = Math.max(1, totalPages.value);
     }
@@ -225,7 +320,50 @@ const handleFavoriteChange = (result) => {
 };
 
 async function syncFavorites() {
-  await refreshRemoteFavorites(true);
+  if (useRemoteFavorites.value) {
+    await loadFavoritesPage();
+    return;
+  }
+
+  const totalPagesCount = Math.max(1, Math.ceil(localCurrentFavorites.value.length / itemsPerPage.value));
+  if (currentPage.value > totalPagesCount) {
+    currentPage.value = totalPagesCount;
+  }
+}
+
+async function loadFavoritesPage() {
+  if (!useRemoteFavorites.value) {
+    return;
+  }
+
+  remoteFavoritesLoading.value = true;
+  try {
+    const data = await withLoading(() => fetchFavorites(getAuthToken(), {
+      pageNum: currentPage.value,
+      pageSize: itemsPerPage.value,
+      keyword: searchKeyword.value.trim(),
+      source: sourceFilter.value === ALL_SOURCE_VALUE ? '' : sourceFilter.value,
+    }), { text: '正在加载收藏...' });
+    remoteFavorites.value = Array.isArray(data?.list)
+      ? data.list.map((item) => (findFreeInfoSourceItem(item?.title) ? buildFreeInfoDialogPayload(item) : item))
+      : [];
+    remoteFavoritesTotal.value = Number(data?.total || 0);
+
+    const totalPageCount = Math.max(1, Math.ceil(remoteFavoritesTotal.value / itemsPerPage.value));
+    if (currentPage.value > totalPageCount) {
+      currentPage.value = totalPageCount;
+      await loadFavoritesPage();
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (error) {
+    remoteFavorites.value = [];
+    remoteFavoritesTotal.value = 0;
+    console.warn('[Favorites] 加载远程收藏失败:', error);
+  } finally {
+    remoteFavoritesLoading.value = false;
+  }
 }
 
 onMounted(async () => {
@@ -235,6 +373,9 @@ onMounted(async () => {
 
 onActivated(async () => {
   await syncFavorites();
+});
+watch([useRemoteFavorites, itemsPerPage], () => {
+  void syncFavorites();
 });
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
@@ -247,6 +388,10 @@ onUnmounted(() => {
     <div class="page-header">
       <h1 class="page-title">收藏项目</h1>
       <div class="search-box">
+        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable @change="handleSourceChange">
+          <ElOption :label="'全部来源'" :value="ALL_SOURCE_VALUE" />
+          <ElOption v-for="source in sourceOptions" :key="source" :label="source" :value="source" />
+        </ElSelect>
         <ElInput v-model="searchInput" placeholder="搜索收藏..." prefix-icon="Search" clearable class="search-input"
           @keyup.enter="executeSearch" @clear="clearSearch" />
         <ElButton type="primary" class="search-btn" @click="executeSearch">
@@ -259,7 +404,7 @@ onUnmounted(() => {
 
     <!-- 收藏列表网格 -->
     <div class="favorites-grid">
-      <div v-for="item in paginatedFavorites" :key="item.favoriteId || item.uniqueKey || item.id" class="favorite-card" @click="openDialog(item)">
+      <div v-for="item in displayedFavorites" :key="item.favoriteId || item.itemKey || item.uniqueKey || item.id" class="favorite-card" @click="openDialog(item)">
         <img :src="getCoverImageUrl(item)" :alt="item.title" class="card-image" loading="lazy" decoding="async"
           fetchpriority="low" />
         <div class="card-content">
@@ -275,15 +420,15 @@ onUnmounted(() => {
     </div>
 
     <!-- 空状态 -->
-    <div v-if="currentFavorites.length === 0" class="empty-state">
+    <div v-if="favoriteTotalCount === 0 && !remoteFavoritesLoading" class="empty-state">
       <div class="empty-icon">⭐</div>
       <p>暂无收藏内容</p>
     </div>
 
     <!-- 分页组件 -->
     <div v-if="totalPages > 1" class="pagination-container">
-      <ElPagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="currentFavorites.length"
-        layout="prev, pager, next, jumper" :disabled="currentFavorites.length === 0"
+      <ElPagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="favoriteTotalCount"
+        layout="prev, pager, next, jumper" :disabled="favoriteTotalCount === 0"
         @current-change="handlePageChange" />
     </div>
 
@@ -291,12 +436,12 @@ onUnmounted(() => {
     <TripDialog v-if="dialogVisible && isDayTripFavorite(currentItem)" v-model:visible="dialogVisible"
       :title="currentItem?.title || ''" :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner"
       :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.itemType || currentItem?.type || '一日游'"
-      :item-id="currentItem?.id || null" :item-type="currentItem?.itemType || currentItem?.type || '一日游'"
+      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''" :item-type="currentItem?.itemType || currentItem?.type || '一日游'"
       @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
     <FreeInfoDialog v-else-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
       :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner" :trip-data="currentItem?.tripData || {}"
-      :item-id="currentItem?.id || null" :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
+      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''" :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
       @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
   </div>
@@ -329,6 +474,12 @@ onUnmounted(() => {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.source-select {
+  width: 160px;
+  flex-shrink: 0;
 }
 
 .search-input {
@@ -452,6 +603,10 @@ onUnmounted(() => {
   }
 
   .search-box {
+    width: 100%;
+  }
+
+  .source-select {
     width: 100%;
   }
 
