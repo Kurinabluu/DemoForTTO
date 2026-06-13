@@ -20,6 +20,8 @@ const currentPage = ref(Number(route.query.page) || 1)
 const totalResults = ref(0)
 const isLoading = ref(false)
 const hydratedFromStore = ref(false)
+let searchRequestSeq = 0
+let lastSearchSignature = ''
 
 const hasResults = computed(() => totalResults.value > 0)
 const pageSize = SEARCH_PAGE_SIZE
@@ -124,6 +126,11 @@ const updateRoute = ({ queryKeyword, page }) => {
   if (page && page > 1) {
     query.page = page
   }
+  const currentKeyword = route.query.s ? String(route.query.s) : ''
+  const currentPage = Number(route.query.page) || 1
+  if (currentKeyword === (query.s || '') && currentPage === (page || 1)) {
+    return
+  }
   router.replace({ path: route.path, query })
 }
 
@@ -137,7 +144,14 @@ const applyStoredSession = (stored) => {
 }
 
 const performSearch = async ({ page = currentPage.value } = {}) => {
+  const requestId = ++searchRequestSeq
   const query = (keyword.value || '').trim()
+  const signature = `${query}::${Number(page) || 1}`
+
+  if (signature === lastSearchSignature) {
+    return
+  }
+  lastSearchSignature = signature
 
   if (!query) {
     const stored = getStoredSearchSession()
@@ -157,6 +171,9 @@ const performSearch = async ({ page = currentPage.value } = {}) => {
       () => searchAllContent(query, page, pageSize),
       { text: '正在搜索，请稍候...' }
     )
+    if (requestId !== searchRequestSeq) {
+      return
+    }
     results.value = payload.results
     currentPage.value = payload.pageNum || page || 1
     totalResults.value = Number(payload.total || 0)
@@ -168,7 +185,9 @@ const performSearch = async ({ page = currentPage.value } = {}) => {
       pageSize: payload.pageSize,
     })
   } finally {
-    isLoading.value = false
+    if (requestId === searchRequestSeq) {
+      isLoading.value = false
+    }
   }
 }
 
@@ -238,24 +257,19 @@ const openResult = (result) => {
 }
 
 watch(
-  () => route.query.s,
-  (newKeyword, oldKeyword) => {
-    if (newKeyword === oldKeyword) return
-    keyword.value = newKeyword ? String(newKeyword) : ''
-    searchInput.value = keyword.value
-    hydratedFromStore.value = false
-    void performSearch({ page: Number(route.query.page) || 1 })
-  }
-)
+  () => [route.query.s, route.query.page],
+  ([newKeyword, newPage], [oldKeyword, oldPage] = []) => {
+    const normalizedKeyword = newKeyword ? String(newKeyword) : ''
+    const normalizedPage = Number(newPage) || 1
+    if (newKeyword === oldKeyword && newPage === oldPage) return
 
-watch(
-  () => route.query.page,
-  (newPage) => {
-    const normalized = Number(newPage) || 1
-    currentPage.value = normalized
+    keyword.value = normalizedKeyword
+    searchInput.value = normalizedKeyword
+    currentPage.value = normalizedPage
     hydratedFromStore.value = false
-    if (keyword.value) {
-      void performSearch({ page: normalized })
+
+    if (normalizedKeyword) {
+      void performSearch({ page: normalizedPage })
     }
   }
 )

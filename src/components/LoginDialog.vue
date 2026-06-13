@@ -5,7 +5,6 @@ import { User, Lock, Star, Monitor } from '@element-plus/icons-vue'
 import { login, isLoggedIn, getAuthUsername, logout } from '@/utils/authStore'
 import {
   migrateLocalFavoritesToRemote,
-  refreshRemoteFavorites,
   switchToLocalFavorites,
 } from '@/utils/favoritesStore'
 import { Z_INDEX } from '@/constants/zIndex'
@@ -46,9 +45,14 @@ async function handleLogin() {
   loading.value = true
   try {
     await login(name, pwd)
-    await migrateLocalFavoritesToRemote()
-    await refreshRemoteFavorites(true)
+    const migrationResult = await migrateLocalFavoritesToRemote()
     ElMessage.success('登录成功')
+    if (migrationResult?.remainingCount > 0) {
+      const message = migrationResult.limitReached
+        ? `已有收藏接近上限，已迁移 ${migrationResult.migratedCount} 条，剩余 ${migrationResult.remainingCount} 条保留在本地。`
+        : `已迁移 ${migrationResult.migratedCount} 条本地收藏，仍有 ${migrationResult.remainingCount} 条未完成同步。`
+      ElMessage.warning(message)
+    }
     emit('logged-in')
     dialogVisible.value = false
     password.value = ''

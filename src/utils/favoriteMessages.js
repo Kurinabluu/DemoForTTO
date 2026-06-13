@@ -18,6 +18,10 @@ export function notifyFavoriteResult(result) {
     ElMessage.info('该项目已在收藏列表中')
     return
   }
+  if (result === 'busy') {
+    ElMessage.info('收藏操作正在处理中，请稍候')
+    return
+  }
   if (result === 'error') {
     ElMessage.error('收藏操作失败，请确认已登录且后端服务可用')
   }

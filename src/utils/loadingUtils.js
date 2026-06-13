@@ -24,7 +24,8 @@ const withLoading = async (task, options = {}) => {
   const loadingStore = useLoadingStore()
   loadingStore.startLoading(text)
   try {
-    await Promise.resolve(typeof task === 'function' ? task() : undefined)
+    const result = await Promise.resolve(typeof task === 'function' ? task() : undefined)
+    return result
   } finally {
     loadingStore.stopLoading()
   }

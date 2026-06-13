@@ -3,7 +3,6 @@ import { computed, ref, shallowRef, onMounted, onUnmounted, watch, nextTick } fr
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import freeInfoData from '@/data/split/freeinfo.json'
 import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail } from '@/utils/contentRepository'
 import { isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
@@ -519,7 +518,7 @@ function getPaginatedItems(items) {
 }
 
 // 从 contentRepository / JSON 获取数据
-const datas = shallowRef(freeInfoData || { subNav: [] })
+const datas = shallowRef({ subNav: [] })
 const dayTripNavs = shallowRef([])
 
 const places = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] })
@@ -747,8 +746,12 @@ const currentFreeInfoSection = computed(() => {
 })
 
 // 是否为免费信息下的“内容块模式”（isGrid=false）
+function isFalseLike(value) {
+    return value === false || value === 0 || value === '0' || value === 'false'
+}
+
 const isSpecialSection = computed(() => {
-    return props.activeTag === '自助游/自驾游免费参考信息' && currentFreeInfoSection?.value?.isGrid === false
+    return props.activeTag === '自助游/自驾游免费参考信息' && isFalseLike(currentFreeInfoSection?.value?.isGrid)
 })
 
 // 当前展示用的“特别内容”列表与标题
@@ -1153,6 +1156,10 @@ const activityFiltered = computed(() => {
 
 // 对外事件
 function buildSpecialContentTripData(item) {
+    const baseTripData = item?.tripData && typeof item.tripData === 'object'
+        ? { ...item.tripData }
+        : {}
+
     const features = Array.isArray(item?.info)
         ? item.info
             .filter(Boolean)
@@ -1162,26 +1169,49 @@ function buildSpecialContentTripData(item) {
                 desc: String(infoItem?.value || '').trim(),
             }))
             .filter((row) => row.title || row.desc)
-        : []
+        : Array.isArray(baseTripData.features)
+            ? baseTripData.features
+            : []
 
-    const tagItems = Array.isArray(item?.tagItems) ? item.tagItems : []
+    const tagItems = Array.isArray(item?.tagItems)
+        ? item.tagItems
+        : Array.isArray(baseTripData.tagItems)
+            ? baseTripData.tagItems
+            : []
     const tagsFromItems = tagItems
         .map((tagItem) => String(tagItem?.text || '').trim())
         .filter(Boolean)
     const tagsFromArray = Array.isArray(item?.tags)
         ? item.tags.map((tag) => String(tag || '').trim()).filter(Boolean)
         : []
-    const tags = tagsFromItems.length ? tagsFromItems : tagsFromArray
-
-    const sub = String(item?.sub || '').trim()
-    const location = String(item?.location || '').trim()
-    const badge = String(item?.badge || '').trim()
+    const tags = tagsFromItems.length
+        ? tagsFromItems
+        : tagsFromArray.length
+            ? tagsFromArray
+            : Array.isArray(baseTripData.tags)
+                ? baseTripData.tags
+                : []
+    const route = String(item?.sub || baseTripData.route || '').trim()
+    const location = String(item?.location || baseTripData.location || '').trim()
+    const badge = String(item?.badge || baseTripData.badge || '').trim()
 
     return {
-        route: sub || location || String(item?.title || '').trim(),
-        desc: [location, badge].filter(Boolean).join(' · '),
+        ...baseTripData,
+        route: route || location || String(item?.title || '').trim(),
+        desc: [location, badge].filter(Boolean).join(' · ') || baseTripData.desc || '',
         features,
         tags,
+        badge,
+        sub: route,
+        location,
+        badgeClass: item?.badgeClass || baseTripData.badgeClass || '',
+        cardClass: item?.cardClass || baseTripData.cardClass || '',
+        info: Array.isArray(item?.info)
+            ? item.info
+            : Array.isArray(baseTripData.info)
+                ? baseTripData.info
+                : [],
+        tagItems,
     }
 }
 

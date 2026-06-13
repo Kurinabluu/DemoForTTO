@@ -24,12 +24,15 @@ const props = defineProps({
 const emit = defineEmits(['update:visible', 'favorite-change'])
 
 const currentItemType = computed(() => props.itemType || props.tripType || 'scenic')
+const favoriteSubmitting = ref(false)
 
 const isFavorite = computed(() => {
     return checkFavorite(props.itemId, currentItemType.value, props.title, props.itemKey)
 })
 
 const handleToggleFavorite = async () => {
+    if (favoriteSubmitting.value) return
+    favoriteSubmitting.value = true
     const item = {
         id: props.itemId,
         type: currentItemType.value,
@@ -44,9 +47,13 @@ const handleToggleFavorite = async () => {
         town: props.tripData?.town || '',
         tripData: props.tripData
     }
-    const result = await toggleFavorite(item)
-    notifyFavoriteResult(result)
-    emit('favorite-change', result)
+    try {
+        const result = await toggleFavorite(item)
+        notifyFavoriteResult(result)
+        emit('favorite-change', result)
+    } finally {
+        favoriteSubmitting.value = false
+    }
 }
 
 const dialogVisible = computed({
@@ -164,7 +171,7 @@ watch(dialogVisible, (visible) => {
                     <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
                 </div>
                 <div class="dlg-header-right">
-                    <el-button text class="favorite-btn" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }" @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
                     </el-button>
                     <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>

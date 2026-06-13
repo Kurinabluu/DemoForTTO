@@ -1,8 +1,7 @@
-import navData from '@/data/split/nav.json'
 import freeInfoFallback from '@/data/split/freeinfo.json'
 import dayTripFallback from '@/data/split/daytrip.json'
 import { buildSubNavKey } from '@/utils/subNavKey'
-import { fetchItemDetail, fetchItemsBySubNavKey, isApiEnabled } from '@/utils/ttoApi'
+import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled } from '@/utils/ttoApi'
 
 function parseCardExtraJson(row) {
   if (!row?.cardExtraJson) return {}
@@ -44,10 +43,32 @@ function resolveItemType(row, extra = {}) {
   return row?.itemType || row?.tripType || extra.itemType || extra.tripType || 'scenic'
 }
 
+function buildFallbackItemKey(subNavKey, fallbackItem) {
+  const title = String(fallbackItem?.title || '').trim()
+  const enTitle = String(fallbackItem?.enTitle || '').trim()
+  const raw = title || enTitle
+  if (!raw) return ''
+
+  const ascii = raw
+    .normalize('NFKD')
+    .replace(/\p{M}+/gu, '')
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  const keyPart = ascii || raw.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff-]+/g, '')
+  return keyPart ? `${subNavKey}:${keyPart.substring(0, 96)}` : ''
+}
+
 /** 将详情 API 的结构化字段合并为前端 tripData 形状 */
 export function buildTripDataFromDetailDto(dto, extra = {}) {
   const baseTripData =
-    extra.tripData && typeof extra.tripData === 'object' ? { ...extra.tripData } : {}
+    dto?.tripData && typeof dto.tripData === 'object'
+      ? { ...dto.tripData }
+      : extra.tripData && typeof extra.tripData === 'object'
+        ? { ...extra.tripData }
+        : {}
 
   const tripData = { ...baseTripData }
 
@@ -123,75 +144,15 @@ function mapApiItem(row) {
     tripType: itemType,
     itemType,
     tripData,
+    badge: row?.badge ?? extra.badge ?? extra.badgeText ?? '',
+    badgeClass: row?.badgeClass ?? extra.badgeClass ?? extra.badge_class ?? '',
+    cardClass: row?.cardClass ?? extra.cardClass ?? extra.card_class ?? '',
+    sub: row?.sub ?? extra.sub ?? '',
+    location: row?.location ?? extra.location ?? '',
+    info: Array.isArray(row?.info) ? row.info : Array.isArray(extra.info) ? extra.info : [],
+    tagItems: Array.isArray(row?.tagItems) ? row.tagItems : Array.isArray(extra.tagItems) ? extra.tagItems : [],
+    tags: Array.isArray(row?.tags) ? row.tags : Array.isArray(extra.tags) ? extra.tags : [],
   }
-}
-
-function slugifySubNavPath(value) {
-  const raw = String(value || '').trim()
-  if (!raw) return 'item'
-
-  const ascii = raw
-    .normalize('NFKD')
-    .replace(/\p{M}+/gu, '')
-    .toLowerCase()
-    .replace(/[''`]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-
-  if (ascii) {
-    return ascii.substring(0, Math.min(96, ascii.length))
-  }
-
-  const fallback = raw.replace(/\s+/g, '-').replace(/[^\w\u4e00-\u9fff-]+/g, '')
-  return fallback || 'item'
-}
-
-function buildFallbackItemKey(subNavKey, fallbackItem) {
-  const title = String(fallbackItem?.title || '').trim()
-  const enTitle = String(fallbackItem?.enTitle || '').trim()
-  const keyPart = slugifySubNavPath(title || enTitle)
-  return keyPart ? `${subNavKey}:${keyPart}` : ''
-}
-
-/** isGrid=false 卡片字段（info/tagItems 等）存于本地 JSON；API 列表仅含 title/id，需保留本地展示数据 */
-function mergeSpecialSectionItems(apiRows, fallbackItems, subNavKey) {
-  if (!Array.isArray(fallbackItems) || !fallbackItems.length) {
-    return Array.isArray(apiRows) ? apiRows.map(mapApiItem).filter(Boolean) : []
-  }
-  if (!Array.isArray(apiRows) || !apiRows.length) {
-    return fallbackItems
-  }
-
-  const fallbackByTitle = new Map()
-  const fallbackByItemKey = new Map()
-  for (const item of fallbackItems) {
-    if (item?.title) fallbackByTitle.set(item.title, item)
-    const itemKey = buildFallbackItemKey(subNavKey, item)
-    if (itemKey) fallbackByItemKey.set(itemKey, item)
-    if (item?.itemKey) fallbackByItemKey.set(item.itemKey, item)
-    const enKey = buildFallbackItemKey(subNavKey, { title: item?.enTitle })
-    if (enKey) fallbackByItemKey.set(enKey, item)
-  }
-
-  return apiRows.map((row) => {
-    const apiItem = mapApiItem(row)
-    if (!apiItem) return null
-    const fallbackItem =
-      fallbackByItemKey.get(apiItem.itemKey) ||
-      fallbackByItemKey.get(buildFallbackItemKey(subNavKey, { title: apiItem?.enTitle })) ||
-      fallbackByTitle.get(apiItem.title)
-    if (!fallbackItem) return apiItem
-    return {
-      ...fallbackItem,
-      ...apiItem,
-      tripData: {
-        ...(fallbackItem?.tripData || {}),
-        ...(apiItem?.tripData || {}),
-      },
-      img: apiItem.img ?? fallbackItem.img,
-      cover: apiItem.cover ?? fallbackItem.cover,
-    }
-  }).filter(Boolean)
 }
 
 /** 免费信息网格：API 负责 id / 标题等基础字段，本地 JSON 负责更完整的卡片字段 */
@@ -253,16 +214,16 @@ export async function loadItemDetailById(itemId) {
 
 async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallbackSubNav) {
   const subNavKey = buildSubNavKey(sectionPath, subNavMeta.subNavName)
-  const useLocalCardData = fallbackSubNav?.isGrid === false
-  const useApiGridData = sectionPath === 'trips/freeinfo' && fallbackSubNav?.isGrid === true
   const useApiOnlyDayTripData = sectionPath === 'trips/routes' && isApiEnabled()
+  const useApiSpecialCardData =
+    sectionPath === 'trips/freeinfo' && (subNavMeta?.isGrid === false || fallbackSubNav?.isGrid === false)
 
   try {
     const rows = await fetchItemsBySubNavKey(subNavKey)
-    if (useLocalCardData && Array.isArray(fallbackItems) && fallbackItems.length) {
-      return mergeSpecialSectionItems(rows, fallbackItems, subNavKey)
+    if (useApiSpecialCardData) {
+      return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
     }
-    if (useApiGridData && Array.isArray(fallbackItems) && fallbackItems.length) {
+    if (sectionPath === 'trips/freeinfo' && (subNavMeta?.isGrid === true || fallbackSubNav?.isGrid === true) && Array.isArray(fallbackItems) && fallbackItems.length) {
       return mergeGridSectionItems(rows, fallbackItems, subNavKey)
     }
     if (useApiOnlyDayTripData) {
@@ -294,9 +255,15 @@ async function loadSectionBundle(sectionPath, fallback) {
     return fallback
   }
 
-  const sectionNav = Array.isArray(navData)
-    ? navData.find((item) => item.path === sectionPath)
-    : null
+  let sectionNav = null
+  try {
+    const navTree = await loadNavTree()
+    sectionNav = Array.isArray(navTree)
+      ? navTree.find((item) => item.path === sectionPath)
+      : null
+  } catch (error) {
+    console.warn('[contentRepository] nav API fallback:', sectionPath, error)
+  }
 
   if (!sectionNav?.subNav?.length) {
     return fallback
@@ -331,6 +298,17 @@ async function loadSectionBundle(sectionPath, fallback) {
 
 let freeInfoPromise = null
 let dayTripPromise = null
+let navTreePromise = null
+
+async function loadNavTree() {
+  if (!navTreePromise) {
+    navTreePromise = fetchNavTree().catch((error) => {
+      navTreePromise = null
+      throw error
+    })
+  }
+  return navTreePromise
+}
 
 export async function loadFreeInfoData() {
   if (!freeInfoPromise) {

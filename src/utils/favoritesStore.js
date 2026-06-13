@@ -10,10 +10,12 @@ import {
 } from '@/utils/authStore'
 
 const STORAGE_KEY = 'tto_favorites'
-export const MAX_FAVORITES = 500
+export const MAX_FAVORITES = 300
+const MAX_REMOTE_PAGE_SIZE = 50
 
 const favorites = ref([])
 let remoteLoaded = false
+const favoriteActionLocks = new Set()
 
 function loadLocalFavorites() {
   try {
@@ -106,9 +108,10 @@ export async function refreshRemoteFavorites(force = false, pageSize = 50) {
   }
 
   try {
-    const safePageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
+    const requestedPageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
       ? Math.floor(Number(pageSize))
-      : 50
+      : MAX_REMOTE_PAGE_SIZE
+    const safePageSize = Math.min(requestedPageSize, MAX_REMOTE_PAGE_SIZE)
     const token = getAuthToken()
     const merged = []
     let pageNum = 1
@@ -143,25 +146,54 @@ export async function migrateLocalFavoritesToRemote() {
   const localItems = loadLocalFavorites()
   if (!localItems.length) {
     await refreshRemoteFavorites(true)
-    return
+    return {
+      migratedCount: 0,
+      remainingCount: 0,
+      limitReached: false,
+    }
   }
 
-  for (const item of localItems) {
-    if (!item?.id) continue
+  const remainingItems = []
+  let migratedCount = 0
+  let limitReached = false
+
+  for (let index = 0; index < localItems.length; index += 1) {
+    const item = localItems[index]
+    if (!item?.id) {
+      remainingItems.push(item)
+      continue
+    }
     try {
-      await addFavoriteRemote(getAuthToken(), {
+      const result = await addFavoriteRemote(getAuthToken(), {
         itemId: Number(item.id),
         itemType: item.itemType || item.type || 'scenic',
         title: item.title || '',
         itemKey: item.itemKey || '',
       })
+      if (result?.status === 'limit') {
+        limitReached = true
+        remainingItems.push(item)
+        remainingItems.push(...localItems.slice(index + 1))
+        break
+      }
+      if (result?.status === 'exists' || result?.status === 'success') {
+        migratedCount += 1
+        continue
+      }
+      remainingItems.push(item)
     } catch (error) {
       console.warn('[favoritesStore] 迁移收藏失败:', item?.id, error)
+      remainingItems.push(item)
     }
   }
 
-  saveLocalFavorites([])
+  saveLocalFavorites(remainingItems)
   await refreshRemoteFavorites(true)
+  return {
+    migratedCount,
+    remainingCount: remainingItems.length,
+    limitReached,
+  }
 }
 
 const addFavorite = (item) => {
@@ -249,12 +281,23 @@ export async function removeFavoriteAsync(id, type, title, favoriteId, itemKey) 
 export async function toggleFavorite(item) {
   const itemType = item?.itemType || item?.type
   const uniqueKey = getUniqueKey(item)
-  if (isFavorite(item.id, itemType, item.title, item.itemKey)) {
-    const current = favorites.value.find((fav) => getUniqueKey(fav) === uniqueKey)
-    await removeFavoriteAsync(item.id, itemType, item.title, current?.favoriteId, item.itemKey)
-    return 'removed'
+  const lockKey = `toggle:${uniqueKey}`
+
+  if (favoriteActionLocks.has(lockKey)) {
+    return 'busy'
   }
-  return addFavoriteAsync({ ...item, type: itemType, itemType })
+
+  favoriteActionLocks.add(lockKey)
+  try {
+    if (isFavorite(item.id, itemType, item.title, item.itemKey)) {
+      const current = favorites.value.find((fav) => getUniqueKey(fav) === uniqueKey)
+      await removeFavoriteAsync(item.id, itemType, item.title, current?.favoriteId, item.itemKey)
+      return 'removed'
+    }
+    return addFavoriteAsync({ ...item, type: itemType, itemType })
+  } finally {
+    favoriteActionLocks.delete(lockKey)
+  }
 }
 
 const getFavorites = () => favorites.value

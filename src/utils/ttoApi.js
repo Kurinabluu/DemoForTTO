@@ -67,6 +67,10 @@ export async function fetchItemsBySubNavKey(subNavKey) {
   return requestJson('/tto/items', { params: { subNavKey } })
 }
 
+export async function fetchNavTree() {
+  return requestJson('/tto/nav')
+}
+
 export async function fetchItemDetail(itemId) {
   return requestJson(`/tto/items/${itemId}`)
 }

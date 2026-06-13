@@ -9,7 +9,8 @@
     "images:thumb": "node scripts/generate-thumbs.mjs",
     "prebuild": "npm run data:split && npm run images:thumb",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:p0": "node scripts/p0-integration-test.mjs"
   },
   "dependencies": {
     "element-plus": "^2.10.6",
