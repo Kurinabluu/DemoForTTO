@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import {
   addFavoriteRemote,
   fetchFavorites,
+  fetchItemsBySubNavKey,
   removeFavoriteRemote,
 } from '@/utils/ttoApi'
 import {
@@ -10,11 +11,16 @@ import {
 } from '@/utils/authStore'
 
 const STORAGE_KEY = 'tto_favorites'
+export const MAX_LOCAL_FAVORITES = 5
 export const MAX_FAVORITES = 300
 const MAX_REMOTE_PAGE_SIZE = 50
 
 const favorites = ref([])
 let remoteLoaded = false
+let remoteRefreshPromise = null
+let postLoginSyncPromise = null
+let postLoginSyncDeferred = null
+export const isPostLoginSyncing = ref(false)
 const favoriteActionLocks = new Set()
 
 function loadLocalFavorites() {
@@ -93,9 +99,48 @@ function mapRemoteFavorite(row) {
   }
 }
 
+export function getLocalFavoritesCount() {
+  return loadLocalFavorites().length
+}
+
+function getActiveFavoritesLimit() {
+  return shouldUseRemoteFavorites() ? MAX_FAVORITES : MAX_LOCAL_FAVORITES
+}
+
+export async function previewMigrationOverflow(authToken = getAuthToken()) {
+  const localCount = getLocalFavoritesCount()
+  const token = String(authToken || '').trim()
+  if (!localCount || !token) {
+    return {
+      wouldOverflow: false,
+      localCount,
+      remoteCount: 0,
+      combined: localCount,
+    }
+  }
+
+  const data = await fetchFavorites(token, { pageNum: 1, pageSize: 1 })
+  const remoteCount = Number(data?.total || 0)
+  const combined = localCount + remoteCount
+  return {
+    wouldOverflow: combined > MAX_FAVORITES,
+    localCount,
+    remoteCount,
+    combined,
+  }
+}
+
 export function switchToLocalFavorites() {
   remoteLoaded = false
   favorites.value = loadLocalFavorites()
+}
+
+export function isRemoteFavoritesLoaded() {
+  return remoteLoaded
+}
+
+export function getPostLoginSyncPromise() {
+  return postLoginSyncPromise
 }
 
 export async function refreshRemoteFavorites(force = false, pageSize = 50) {
@@ -106,46 +151,173 @@ export async function refreshRemoteFavorites(force = false, pageSize = 50) {
   if (remoteLoaded && !force) {
     return favorites.value
   }
-
-  try {
-    const requestedPageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
-      ? Math.floor(Number(pageSize))
-      : MAX_REMOTE_PAGE_SIZE
-    const safePageSize = Math.min(requestedPageSize, MAX_REMOTE_PAGE_SIZE)
-    const token = getAuthToken()
-    const merged = []
-    let pageNum = 1
-    let total = 0
-
-    while (true) {
-      const data = await fetchFavorites(token, { pageNum, pageSize: safePageSize })
-      const rows = Array.isArray(data?.list) ? data.list : []
-      if (!total) {
-        total = Number(data?.total || rows.length || 0)
-      }
-      merged.push(...rows.map(mapRemoteFavorite))
-      if (merged.length >= total || rows.length < safePageSize) {
-        break
-      }
-      pageNum += 1
-    }
-
-    favorites.value = merged
-    remoteLoaded = true
-  } catch (error) {
-    console.warn('[favoritesStore] 远程收藏加载失败:', error)
-    remoteLoaded = false
-    favorites.value = []
+  if (remoteRefreshPromise && !force) {
+    return remoteRefreshPromise
   }
-  return favorites.value
+
+  const runRefresh = async () => {
+    try {
+      const requestedPageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
+        ? Math.floor(Number(pageSize))
+        : MAX_REMOTE_PAGE_SIZE
+      const safePageSize = Math.min(requestedPageSize, MAX_REMOTE_PAGE_SIZE)
+      const token = getAuthToken()
+      const merged = []
+      let pageNum = 1
+      let total = 0
+
+      while (true) {
+        const data = await fetchFavorites(token, { pageNum, pageSize: safePageSize })
+        const rows = Array.isArray(data?.list) ? data.list : []
+        if (!total) {
+          total = Number(data?.total || rows.length || 0)
+        }
+        merged.push(...rows.map(mapRemoteFavorite))
+        if (merged.length >= total || rows.length < safePageSize) {
+          break
+        }
+        pageNum += 1
+      }
+
+      favorites.value = merged
+      remoteLoaded = true
+    } catch (error) {
+      console.warn('[favoritesStore] 远程收藏加载失败:', error)
+      remoteLoaded = false
+      favorites.value = []
+      throw error
+    }
+    return favorites.value
+  }
+
+  remoteRefreshPromise = runRefresh()
+  try {
+    return await remoteRefreshPromise
+  } finally {
+    remoteRefreshPromise = null
+  }
+}
+
+async function runPostLoginSyncWork(mode = 'migrate') {
+  if (mode === 'discard_local') {
+    saveLocalFavorites([])
+    await refreshRemoteFavorites(true)
+    return {
+      migratedCount: 0,
+      remainingCount: 0,
+      limitReached: true,
+      localDiscarded: true,
+    }
+  }
+
+  if (mode === 'skip') {
+    await refreshRemoteFavorites(true)
+    return {
+      migratedCount: 0,
+      remainingCount: getLocalFavoritesCount(),
+      limitReached: false,
+      skipped: true,
+    }
+  }
+
+  const migrationResult = await migrateLocalFavoritesToRemote()
+  await refreshRemoteFavorites(true)
+  return migrationResult
+}
+
+export function reservePostLoginSync() {
+  if (postLoginSyncDeferred) {
+    return postLoginSyncDeferred.promise
+  }
+
+  let resolveDeferred
+  let rejectDeferred
+  const promise = new Promise((resolve, reject) => {
+    resolveDeferred = resolve
+    rejectDeferred = reject
+  })
+
+  postLoginSyncDeferred = {
+    promise,
+    resolve: resolveDeferred,
+    reject: rejectDeferred,
+  }
+  postLoginSyncPromise = promise
+  isPostLoginSyncing.value = true
+  return promise
+}
+
+export function pausePostLoginSyncOverlay() {
+  isPostLoginSyncing.value = false
+}
+
+export function cancelPostLoginSync() {
+  if (postLoginSyncDeferred) {
+    postLoginSyncDeferred.resolve({
+      cancelled: true,
+      migratedCount: 0,
+      remainingCount: getLocalFavoritesCount(),
+      limitReached: false,
+    })
+  }
+  isPostLoginSyncing.value = false
+  postLoginSyncDeferred = null
+  postLoginSyncPromise = null
+  remoteLoaded = false
+}
+
+export async function releasePostLoginSync(mode = 'migrate') {
+  if (!shouldUseRemoteFavorites()) {
+    return {
+      migratedCount: 0,
+      remainingCount: 0,
+      limitReached: false,
+    }
+  }
+
+  if (!postLoginSyncDeferred) {
+    return syncFavoritesAfterLogin({ mode })
+  }
+
+  isPostLoginSyncing.value = true
+  try {
+    const result = await runPostLoginSyncWork(mode)
+    postLoginSyncDeferred.resolve(result)
+    return result
+  } catch (error) {
+    postLoginSyncDeferred.reject(error)
+    throw error
+  } finally {
+    isPostLoginSyncing.value = false
+    postLoginSyncDeferred = null
+    postLoginSyncPromise = null
+  }
+}
+
+export async function syncFavoritesAfterLogin({ mode = 'migrate' } = {}) {
+  if (!shouldUseRemoteFavorites()) {
+    return {
+      migratedCount: 0,
+      remainingCount: 0,
+      limitReached: false,
+    }
+  }
+
+  reservePostLoginSync()
+  return releasePostLoginSync(mode)
 }
 
 export async function migrateLocalFavoritesToRemote() {
-  if (!shouldUseRemoteFavorites()) return
+  if (!shouldUseRemoteFavorites()) {
+    return {
+      migratedCount: 0,
+      remainingCount: 0,
+      limitReached: false,
+    }
+  }
 
   const localItems = loadLocalFavorites()
   if (!localItems.length) {
-    await refreshRemoteFavorites(true)
     return {
       migratedCount: 0,
       remainingCount: 0,
@@ -188,7 +360,6 @@ export async function migrateLocalFavoritesToRemote() {
   }
 
   saveLocalFavorites(remainingItems)
-  await refreshRemoteFavorites(true)
   return {
     migratedCount,
     remainingCount: remainingItems.length,
@@ -202,8 +373,8 @@ const addFavorite = (item) => {
   if (exists) {
     return 'exists'
   }
-  if (favorites.value.length >= MAX_FAVORITES) {
-    return 'limit'
+  if (favorites.value.length >= getActiveFavoritesLimit()) {
+    return shouldUseRemoteFavorites() ? 'limit' : 'local_limit'
   }
   favorites.value.push({ ...item, uniqueKey })
   return 'success'
@@ -228,6 +399,10 @@ const isFavorite = (id, type, title, itemKey) => {
 }
 
 export async function addFavoriteAsync(item) {
+  if (isPostLoginSyncing.value) {
+    return 'busy'
+  }
+
   if (shouldUseRemoteFavorites()) {
     if (item?.id == null || item?.id === '') {
       console.warn('[favoritesStore] 登录状态下收藏需要有效的 itemId')
@@ -256,6 +431,10 @@ export async function addFavoriteAsync(item) {
 }
 
 export async function removeFavoriteAsync(id, type, title, favoriteId, itemKey) {
+  if (isPostLoginSyncing.value) {
+    throw new Error('收藏正在同步，请稍候')
+  }
+
   if (shouldUseRemoteFavorites()) {
     const target = favorites.value.find((fav) => {
       if (favoriteId != null) return fav.favoriteId === favoriteId
@@ -279,6 +458,10 @@ export async function removeFavoriteAsync(id, type, title, favoriteId, itemKey) 
 }
 
 export async function toggleFavorite(item) {
+  if (isPostLoginSyncing.value) {
+    return 'busy'
+  }
+
   const itemType = item?.itemType || item?.type
   const uniqueKey = getUniqueKey(item)
   const lockKey = `toggle:${uniqueKey}`
@@ -308,13 +491,74 @@ const clearFavorites = () => {
   favorites.value = []
 }
 
+const MIGRATION_TEST_SUB_NAVS = [
+  'trips/freeinfo:景点',
+  'trips/freeinfo:餐厅',
+  'trips/freeinfo:住宿',
+  'trips/freeinfo:徒步线路',
+]
+
+function mapCandidateFavorite(row) {
+  const id = row?.id ?? row?.itemId
+  if (id == null) return null
+  const itemType = row?.itemType || row?.tripType || 'scenic'
+  return {
+    id,
+    itemKey: row?.itemKey || '',
+    itemType,
+    type: itemType,
+    title: row?.title || `条目 ${id}`,
+    enTitle: row?.enTitle || '',
+    uniqueKey: row?.itemKey || String(id),
+    subNavName: row?.subNavName || '',
+    tripData: row?.tripData && typeof row.tripData === 'object' ? { ...row.tripData } : {},
+  }
+}
+
+export async function prepareMigrationTestLocalFavorites(targetCount = MAX_FAVORITES - 5) {
+  const safeTarget = Math.max(1, Math.min(Number(targetCount) || MAX_FAVORITES - 5, MAX_FAVORITES))
+  const candidates = []
+  const seen = new Set()
+
+  for (const subNavKey of MIGRATION_TEST_SUB_NAVS) {
+    try {
+      const rows = await fetchItemsBySubNavKey(subNavKey)
+      if (!Array.isArray(rows)) continue
+      for (const row of rows) {
+        const item = mapCandidateFavorite(row)
+        if (!item) continue
+        const dedupeKey = String(item.id)
+        if (seen.has(dedupeKey)) continue
+        seen.add(dedupeKey)
+        candidates.push(item)
+        if (candidates.length >= safeTarget) break
+      }
+    } catch (error) {
+      console.warn('[favoritesStore] 测试收藏条目拉取失败:', subNavKey, error)
+    }
+    if (candidates.length >= safeTarget) break
+  }
+
+  if (!candidates.length) {
+    throw new Error('未能获取可用于迁移测试的内容条目')
+  }
+
+  const list = candidates.slice(0, safeTarget)
+  saveLocalFavorites(list)
+  favorites.value = list
+  remoteLoaded = false
+  return list.length
+}
+
 watch(
   () => shouldUseRemoteFavorites(),
   (useRemote, prev) => {
     if (useRemote) {
-      // 登录流程由 LoginDialog 负责 migrate + refresh，避免与迁移竞态
+      // 登录流程由 authStore 统一 migrate + refresh，避免重复请求
       if (prev === false) return
-      void refreshRemoteFavorites(true)
+      void refreshRemoteFavorites(true).catch((error) => {
+        console.warn('[favoritesStore] 远程收藏加载失败:', error)
+      })
       return
     }
     switchToLocalFavorites()

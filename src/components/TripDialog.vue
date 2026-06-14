@@ -7,6 +7,7 @@ import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
 import { notifyFavoriteResult } from '@/utils/favoriteMessages'
+import { notifyApiError } from '@/utils/apiFeedback'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -51,6 +52,8 @@ const handleToggleFavorite = async () => {
         const result = await toggleFavorite(item)
         notifyFavoriteResult(result)
         emit('favorite-change', result)
+    } catch (error) {
+        notifyApiError(error, { action: '收藏操作', dedupeKey: 'favorite:toggle' })
     } finally {
         favoriteSubmitting.value = false
     }

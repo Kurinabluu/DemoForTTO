@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { isApiEnabled, login as apiLogin, registerTokenRefreshHandler } from '@/utils/ttoApi'
+import { isApiEnabled, login as apiLogin, registerAccount as apiRegister, registerTokenRefreshHandler } from '@/utils/ttoApi'
 
 const STORAGE_KEY = 'tto_auth_token'
 const USERNAME_KEY = 'tto_auth_username'
@@ -74,8 +74,34 @@ export function clearAuthSession() {
   setAuthSession(null)
 }
 
+export async function authenticateLogin(usernameInput, passwordInput) {
+  return apiLogin(usernameInput, passwordInput)
+}
+
+export async function authenticateRegister(usernameInput, passwordInput, { displayName, email } = {}) {
+  const body = {
+    username: usernameInput,
+    password: passwordInput,
+  }
+  const nickname = (displayName || '').trim()
+  const mail = (email || '').trim()
+  if (nickname) body.displayName = nickname
+  if (mail) body.email = mail
+  return apiRegister(body)
+}
+
 export async function login(usernameInput, passwordInput) {
-  const data = await apiLogin(usernameInput, passwordInput)
+  const data = await authenticateLogin(usernameInput, passwordInput)
+  setAuthSession({
+    token: data?.token,
+    username: data?.username,
+    userId: data?.userId,
+  })
+  return data
+}
+
+export async function register(usernameInput, passwordInput, { displayName, email } = {}) {
+  const data = await authenticateRegister(usernameInput, passwordInput, { displayName, email })
   setAuthSession({
     token: data?.token,
     username: data?.username,

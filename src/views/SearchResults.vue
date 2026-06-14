@@ -6,9 +6,14 @@ import {
   searchAllContent,
   persistSearchSession,
   getStoredSearchSession,
+  getCachedSearchPayload,
+  buildSearchSignature,
+  clearSearchCache,
   SEARCH_PAGE_SIZE
 } from '@/utils/searchService'
+import { consumeSearchNavigationIntent } from '@/utils/searchNavigation'
 import { withLoading } from '@/utils/loadingUtils'
+import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,7 +24,7 @@ const results = ref([])
 const currentPage = ref(Number(route.query.page) || 1)
 const totalResults = ref(0)
 const isLoading = ref(false)
-const hydratedFromStore = ref(false)
+const loadError = ref('')
 let searchRequestSeq = 0
 let lastSearchSignature = ''
 
@@ -143,12 +148,27 @@ const applyStoredSession = (stored) => {
   totalResults.value = Number(stored.totalResults || stored.total || stored.results?.length || 0)
 }
 
-const performSearch = async ({ page = currentPage.value } = {}) => {
+const applySearchPayload = (payload) => {
+  if (!payload) return
+  results.value = payload.results || []
+  currentPage.value = payload.pageNum || 1
+  totalResults.value = Number(payload.total || 0)
+  persistSearchSession({
+    query: payload.query,
+    results: payload.results,
+    totalResults: payload.total,
+    currentPage: currentPage.value,
+    pageSize: payload.pageSize,
+  })
+}
+
+const performSearch = async ({ page = currentPage.value, force = false } = {}) => {
   const requestId = ++searchRequestSeq
   const query = (keyword.value || '').trim()
-  const signature = `${query}::${Number(page) || 1}`
+  const normalizedPage = Number(page) || 1
+  const signature = buildSearchSignature(query, normalizedPage, pageSize)
 
-  if (signature === lastSearchSignature) {
+  if (!force && signature === lastSearchSignature) {
     return
   }
   lastSearchSignature = signature
@@ -165,47 +185,55 @@ const performSearch = async ({ page = currentPage.value } = {}) => {
     return
   }
 
+  const navigationIntent = consumeSearchNavigationIntent()
+  const preferCacheOnly = navigationIntent === 'reuse-cache'
+
+  if (!force) {
+    const cached = getCachedSearchPayload(query, normalizedPage, pageSize)
+    if (cached) {
+      applySearchPayload(cached)
+      return
+    }
+
+    const stored = getStoredSearchSession()
+    if (
+      stored
+      && buildSearchSignature(stored.query, stored.currentPage || 1, stored.pageSize || pageSize) === signature
+      && Array.isArray(stored.results)
+    ) {
+      applyStoredSession(stored)
+      return
+    }
+
+    if (preferCacheOnly) {
+      return
+    }
+  }
+
   isLoading.value = true
+  loadError.value = ''
   try {
     const payload = await withLoading(
-      () => searchAllContent(query, page, pageSize),
+      () => searchAllContent(query, normalizedPage, pageSize, { force }),
       { text: '正在搜索，请稍候...' }
     )
     if (requestId !== searchRequestSeq) {
       return
     }
-    results.value = payload.results
-    currentPage.value = payload.pageNum || page || 1
-    totalResults.value = Number(payload.total || 0)
-    persistSearchSession({
-      query: payload.query,
-      results: payload.results,
-      totalResults: payload.total,
-      currentPage: currentPage.value,
-      pageSize: payload.pageSize,
-    })
+    applySearchPayload(payload)
+  } catch (error) {
+    if (requestId !== searchRequestSeq) {
+      return
+    }
+    results.value = []
+    totalResults.value = 0
+    loadError.value = getApiErrorMessage(error)
+    notifyApiError(error, { action: '搜索', dedupeKey: 'search:results' })
   } finally {
     if (requestId === searchRequestSeq) {
       isLoading.value = false
     }
   }
-}
-
-const hydrateFromStoreIfPossible = () => {
-  const stored = getStoredSearchSession()
-  if (!stored) return false
-
-  const routeKeyword = (keyword.value || '').trim()
-  const storedKeyword = (stored.query || '').trim()
-  const routePage = Number(route.query.page) || 1
-  const storedPage = Number(stored.currentPage || 1)
-
-  if (routeKeyword && storedKeyword && routeKeyword === storedKeyword && routePage === storedPage) {
-    applyStoredSession(stored)
-    return true
-  }
-
-  return false
 }
 
 const handleSubmit = () => {
@@ -216,7 +244,15 @@ const handleSubmit = () => {
 const handlePageChange = (page) => {
   if (page === currentPage.value) return
   currentPage.value = page
+  loadError.value = ''
   updateRoute({ queryKeyword: keyword.value, page })
+}
+
+const retrySearch = () => {
+  lastSearchSignature = ''
+  clearSearchCache()
+  loadError.value = ''
+  void performSearch({ page: currentPage.value, force: true })
 }
 
 const openResult = (result) => {
@@ -266,7 +302,6 @@ watch(
     keyword.value = normalizedKeyword
     searchInput.value = normalizedKeyword
     currentPage.value = normalizedPage
-    hydratedFromStore.value = false
 
     if (normalizedKeyword) {
       void performSearch({ page: normalizedPage })
@@ -275,19 +310,15 @@ watch(
 )
 
 onMounted(() => {
-  if (hydrateFromStoreIfPossible()) {
-    hydratedFromStore.value = true
-    return
-  }
-  if (keyword.value) {
-    void performSearch({ page: currentPage.value })
-  } else {
+  if (!keyword.value) {
     const stored = getStoredSearchSession()
     if (stored) {
       applyStoredSession(stored)
       updateRoute({ queryKeyword: stored.query, page: stored.currentPage })
     }
+    return
   }
+  void performSearch({ page: currentPage.value })
 })
 </script>
 
@@ -314,7 +345,11 @@ onMounted(() => {
     <div v-if="isLoading" class="loading-state">正在搜索，请稍候...</div>
 
     <div v-else class="results-section">
-      <div v-if="hasResults" class="results-list">
+      <div v-if="loadError" class="error-state">
+        <p>{{ loadError }}</p>
+        <el-button type="primary" @click="retrySearch">重试</el-button>
+      </div>
+      <div v-else-if="hasResults" class="results-list">
         <article v-for="result in pagedResults" :key="result.id" class="result-card">
           <div class="result-meta">
             <span class="meta-tag">{{ result.sectionTag }}</span>
@@ -399,11 +434,28 @@ onMounted(() => {
 }
 
 .loading-state,
-.empty-state {
+.empty-state,
+.error-state {
   text-align: center;
   font-size: 14px;
   color: #64748b;
   padding: 40px 0;
+}
+
+.error-state {
+  color: #33b1a3;
+
+  p {
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
+
+  :deep(.el-button--primary) {
+    --el-button-bg-color: #33b1a3;
+    --el-button-border-color: #33b1a3;
+    --el-button-hover-bg-color: #3bc4b3;
+    --el-button-hover-border-color: #3bc4b3;
+  }
 }
 
 .results-list {

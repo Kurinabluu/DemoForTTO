@@ -20,7 +20,9 @@ const router = useRouter()
 // 收藏消息处理
 const handleFavoriteMessage = (event) => {
     const { type } = event.detail
-    if (type === 'limit') {
+    if (type === 'local_limit') {
+        ElMessage.warning(`未登录状态下收藏数量有限，请注册或登录后同步更多收藏（上限 ${MAX_FAVORITES} 个）`)
+    } else if (type === 'limit') {
         ElMessage.warning(`收藏数量已达上限（${MAX_FAVORITES}个），请先取消部分收藏后再添加`)
     } else if (type === 'exists') {
         ElMessage.info('该项目已在收藏列表中')

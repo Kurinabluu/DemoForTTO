@@ -1,8 +1,18 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, onActivated } from 'vue';
-import { ElPagination, ElInput, ElButton, ElSelect, ElOption } from 'element-plus';
+import { ElPagination, ElInput, ElButton, ElSelect, ElOption, ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue';
-import { favorites, removeFavoriteAsync } from '@/utils/favoritesStore';
+import {
+  favorites,
+  removeFavoriteAsync,
+  prepareMigrationTestLocalFavorites,
+  switchToLocalFavorites,
+  refreshRemoteFavorites,
+  getPostLoginSyncPromise,
+  isRemoteFavoritesLoaded,
+  isPostLoginSyncing,
+  MAX_FAVORITES,
+} from '@/utils/favoritesStore';
 import { notifyFavoriteResult } from '@/utils/favoriteMessages';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
@@ -13,17 +23,23 @@ import {
   getFreeInfoGridImagePath,
   resolveOriginalImages,
   getFreeInfoDialogImagePaths,
-  resolveSpecialContentFallbackImage,
 } from '@/utils/freeInfoImageUtils';
 import { loadCatalogItemDetail } from '@/utils/contentRepository';
-import { fetchFavorites, isApiEnabled } from '@/utils/ttoApi';
-import { getAuthToken, shouldUseRemoteFavorites } from '@/utils/authStore';
+import { isApiEnabled } from '@/utils/ttoApi';
+import { shouldUseRemoteFavorites, logout } from '@/utils/authStore';
 import { withLoading } from '@/utils/loadingUtils';
+import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback';
 
 const ALL_SOURCE_VALUE = '__all__';
 
+const FAVORITE_DEFAULT_IMAGE =
+  resolveDataImage('@/assets/img/default.png', '', { variant: 'thumb' })
+  || resolveDataImage('@/assets/img/default.png');
+
 const getThumbImageUrl = (imgPath) => {
-  return resolveDataImage(imgPath, '', { variant: 'thumb' });
+  const raw = String(imgPath || '').trim();
+  if (!raw) return '';
+  return resolveDataImage(raw, '', { variant: 'thumb' });
 };
 
 const getCoverImageUrl = (item) => {
@@ -34,11 +50,6 @@ const getCoverImageUrl = (item) => {
     if (gridPath) {
       const resolved = getThumbImageUrl(gridPath);
       if (resolved) return resolved;
-    }
-    const specialFallback = resolveSpecialContentFallbackImage(matched.sourceItem, subNavName, item?.title);
-    if (specialFallback) {
-      const resolvedFallback = getThumbImageUrl(specialFallback);
-      if (resolvedFallback) return resolvedFallback;
     }
   }
 
@@ -77,7 +88,7 @@ const getCoverImageUrl = (item) => {
       if (resolvedImage) return resolvedImage;
     }
   }
-  return resolveDataImage('');
+  return FAVORITE_DEFAULT_IMAGE;
 };
 
 const getOriginalDialogImageUrl = (item) => {
@@ -104,7 +115,7 @@ const getOriginalDialogImageUrl = (item) => {
     if (resolvedImage) return resolvedImage;
   }
 
-  return resolveDataImage('');
+  return FAVORITE_DEFAULT_IMAGE;
 };
 
 // 搜索相关
@@ -116,7 +127,11 @@ const windowWidth = ref(window.innerWidth);
 const remoteFavorites = ref([]);
 const remoteFavoritesTotal = ref(0);
 const remoteFavoritesLoading = ref(false);
+const remoteLoadError = ref('');
+const migrationTestLoading = ref(false);
 const useRemoteFavorites = computed(() => shouldUseRemoteFavorites());
+const isFavoritesSyncing = computed(() => isPostLoginSyncing.value);
+const isPageInteractionDisabled = computed(() => isFavoritesSyncing.value || remoteFavoritesLoading.value);
 // 弹窗相关
 const dialogVisible = ref(false);
 const currentItem = ref(null);
@@ -189,6 +204,9 @@ const localCurrentFavorites = computed(() => {
 
 const displayedFavorites = computed(() => {
   if (useRemoteFavorites.value) {
+    if (isFavoritesSyncing.value) {
+      return [];
+    }
     return remoteFavorites.value;
   }
   const start = (currentPage.value - 1) * itemsPerPage.value;
@@ -230,56 +248,65 @@ const handleResize = () => {
 };
 // 处理分页变化
 const handlePageChange = (page) => {
+  if (isFavoritesSyncing.value) return;
   currentPage.value = page;
   if (useRemoteFavorites.value) {
-    void loadFavoritesPage();
+    applyRemoteFavoritesView();
     return;
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 // 执行搜索（点击搜索按钮或按回车键后执行）
 const executeSearch = async () => {
+  if (isFavoritesSyncing.value) return;
   searchKeyword.value = searchInput.value;
   currentPage.value = 1;
   if (useRemoteFavorites.value) {
-    await loadFavoritesPage();
+    applyRemoteFavoritesView();
   }
 };
 // 清除搜索（点击清除按钮后执行）
 const clearSearch = async () => {
+  if (isFavoritesSyncing.value) return;
   searchInput.value = '';
   searchKeyword.value = '';
   currentPage.value = 1;
   if (useRemoteFavorites.value) {
-    await loadFavoritesPage();
+    applyRemoteFavoritesView();
   }
 };
 const handleSourceChange = async () => {
+  if (isFavoritesSyncing.value) return;
   currentPage.value = 1;
   if (useRemoteFavorites.value) {
-    await loadFavoritesPage();
+    applyRemoteFavoritesView();
   }
 };
 // 打开弹窗
 const openDialog = async (item) => {
+  if (isFavoritesSyncing.value) return;
   let enriched = item
   if (isApiEnabled() && item?.id != null) {
-    const detail = await withLoading(
-      () => loadCatalogItemDetail(item.id),
-      { text: '正在加载详情...' }
-    )
-    if (detail) {
-      enriched = {
-        ...item,
-        ...detail,
-        title: detail.title || item.title,
-        enTitle: detail.enTitle ?? item.enTitle,
-        itemType: item.itemType || item.type || detail.itemType || detail.tripType,
-        tripData: {
-          ...(item.tripData && typeof item.tripData === 'object' ? item.tripData : {}),
-          ...(detail.tripData && typeof detail.tripData === 'object' ? detail.tripData : {}),
-        },
+    try {
+      const detail = await withLoading(
+        () => loadCatalogItemDetail(item.id),
+        { text: '正在加载详情...' }
+      )
+      if (detail) {
+        enriched = {
+          ...item,
+          ...detail,
+          title: detail.title || item.title,
+          enTitle: detail.enTitle ?? item.enTitle,
+          itemType: item.itemType || item.type || detail.itemType || detail.tripType,
+          tripData: {
+            ...(item.tripData && typeof item.tripData === 'object' ? item.tripData : {}),
+            ...(detail.tripData && typeof detail.tripData === 'object' ? detail.tripData : {}),
+          },
+        }
       }
+    } catch (error) {
+      notifyApiError(error, { action: '详情', dedupeKey: 'favorites:detail' })
     }
   }
   currentItem.value = buildFreeInfoDialogPayload(enriched)
@@ -292,15 +319,21 @@ const closeDialog = () => {
 };
 // 取消收藏
 const handleRemoveFavorite = async (item, event) => {
+  if (isFavoritesSyncing.value) return;
   event.stopPropagation();
-  await withLoading(async () => {
-    await removeFavoriteAsync(item.id, item.itemType || item.type, item.title, item.favoriteId, item.itemKey);
-    notifyFavoriteResult('removed');
-    if (useRemoteFavorites.value) {
-      await loadFavoritesPage();
-      return;
-    }
-  }, { text: '正在取消收藏...' });
+  try {
+    await withLoading(async () => {
+      await removeFavoriteAsync(item.id, item.itemType || item.type, item.title, item.favoriteId, item.itemKey);
+      notifyFavoriteResult('removed');
+      if (useRemoteFavorites.value) {
+        applyRemoteFavoritesView();
+        return;
+      }
+    }, { text: '正在取消收藏...' });
+  } catch (error) {
+    notifyApiError(error, { action: '取消收藏', dedupeKey: 'favorites:remove' })
+    return
+  }
   if (currentPage.value > totalPages.value) {
     currentPage.value = Math.max(1, totalPages.value);
   }
@@ -310,7 +343,7 @@ const handleFavoriteChange = (result) => {
   if (result === 'removed') {
     closeDialog();
     if (useRemoteFavorites.value) {
-      void loadFavoritesPage();
+      applyRemoteFavoritesView();
       return;
     }
     if (currentPage.value > totalPages.value) {
@@ -319,9 +352,84 @@ const handleFavoriteChange = (result) => {
   }
 };
 
+async function handleMigrationTestPrep() {
+  if (migrationTestLoading.value) return
+  if (!isApiEnabled()) {
+    ElMessage.warning('请先开启 API 模式后再使用迁移测试')
+    return
+  }
+  migrationTestLoading.value = true
+  try {
+    logout()
+    switchToLocalFavorites()
+    const count = await prepareMigrationTestLocalFavorites(MAX_FAVORITES - 5)
+    currentPage.value = 1
+    remoteLoadError.value = ''
+    ElMessage.success(`已退出登录，并写入 ${count} 条本地收藏，请重新登录测试迁移`)
+  } catch (error) {
+    notifyApiError(error, { action: '准备迁移测试', dedupeKey: 'favorites:migration-test' })
+  } finally {
+    migrationTestLoading.value = false
+  }
+}
+
+function applyRemoteFavoritesView() {
+  const all = localCurrentFavorites.value;
+  remoteFavoritesTotal.value = all.length;
+
+  const totalPageCount = Math.max(1, Math.ceil(remoteFavoritesTotal.value / itemsPerPage.value));
+  if (currentPage.value > totalPageCount) {
+    currentPage.value = totalPageCount;
+  }
+
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  remoteFavorites.value = all.slice(start, start + itemsPerPage.value);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function syncRemoteFavoritesView({ showLoading = false, forceRefresh = false } = {}) {
+  if (!useRemoteFavorites.value) {
+    remoteFavoritesLoading.value = false;
+    return;
+  }
+
+  const pendingLoginSync = getPostLoginSyncPromise();
+  const showSyncLoading = isPostLoginSyncing.value || (showLoading && !pendingLoginSync);
+
+  if (showSyncLoading) {
+    remoteFavoritesLoading.value = true;
+  }
+  remoteLoadError.value = '';
+
+  try {
+    if (pendingLoginSync) {
+      const result = await pendingLoginSync;
+      if (!useRemoteFavorites.value || result?.cancelled) {
+        return;
+      }
+    } else if (!isRemoteFavoritesLoaded() || forceRefresh) {
+      if (showLoading) {
+        await withLoading(() => refreshRemoteFavorites(true), { text: '正在同步收藏...' });
+      } else {
+        await refreshRemoteFavorites(true);
+      }
+    }
+    if (useRemoteFavorites.value) {
+      applyRemoteFavoritesView();
+    }
+  } catch (error) {
+    remoteFavorites.value = [];
+    remoteFavoritesTotal.value = 0;
+    remoteLoadError.value = getApiErrorMessage(error);
+    notifyApiError(error, { action: '加载收藏', dedupeKey: 'favorites:list' });
+  } finally {
+    remoteFavoritesLoading.value = false;
+  }
+}
+
 async function syncFavorites() {
   if (useRemoteFavorites.value) {
-    await loadFavoritesPage();
+    await syncRemoteFavoritesView({ showLoading: true });
     return;
   }
 
@@ -331,39 +439,8 @@ async function syncFavorites() {
   }
 }
 
-async function loadFavoritesPage() {
-  if (!useRemoteFavorites.value) {
-    return;
-  }
-
-  remoteFavoritesLoading.value = true;
-  try {
-    const data = await withLoading(() => fetchFavorites(getAuthToken(), {
-      pageNum: currentPage.value,
-      pageSize: itemsPerPage.value,
-      keyword: searchKeyword.value.trim(),
-      source: sourceFilter.value === ALL_SOURCE_VALUE ? '' : sourceFilter.value,
-    }), { text: '正在加载收藏...' });
-    remoteFavorites.value = Array.isArray(data?.list)
-      ? data.list.map((item) => (findFreeInfoSourceItem(item?.title) ? buildFreeInfoDialogPayload(item) : item))
-      : [];
-    remoteFavoritesTotal.value = Number(data?.total || 0);
-
-    const totalPageCount = Math.max(1, Math.ceil(remoteFavoritesTotal.value / itemsPerPage.value));
-    if (currentPage.value > totalPageCount) {
-      currentPage.value = totalPageCount;
-      await loadFavoritesPage();
-      return;
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } catch (error) {
-    remoteFavorites.value = [];
-    remoteFavoritesTotal.value = 0;
-    console.warn('[Favorites] 加载远程收藏失败:', error);
-  } finally {
-    remoteFavoritesLoading.value = false;
-  }
+async function retryLoadFavorites() {
+  await syncRemoteFavoritesView({ showLoading: true, forceRefresh: true });
 }
 
 onMounted(async () => {
@@ -374,8 +451,30 @@ onMounted(async () => {
 onActivated(async () => {
   await syncFavorites();
 });
-watch([useRemoteFavorites, itemsPerPage], () => {
-  void syncFavorites();
+watch(useRemoteFavorites, async (useRemote) => {
+  if (!useRemote) {
+    remoteFavorites.value = [];
+    remoteFavoritesTotal.value = 0;
+    remoteLoadError.value = '';
+    remoteFavoritesLoading.value = false;
+    return;
+  }
+  await syncRemoteFavoritesView();
+});
+watch([itemsPerPage, currentPage, searchKeyword, sourceFilter], () => {
+  if (useRemoteFavorites.value) {
+    applyRemoteFavoritesView();
+  }
+});
+watch(favorites, () => {
+  if (useRemoteFavorites.value && isRemoteFavoritesLoaded() && !isPostLoginSyncing.value) {
+    applyRemoteFavoritesView();
+  }
+}, { deep: true });
+watch(isFavoritesSyncing, (syncing, wasSyncing) => {
+  if (wasSyncing && !syncing && useRemoteFavorites.value) {
+    void syncRemoteFavoritesView();
+  }
 });
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
@@ -383,18 +482,30 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="favorites-page">
+  <div class="favorites-page" :class="{ 'is-syncing': isFavoritesSyncing }">
     <!-- 页面标题 -->
     <div class="page-header">
-      <h1 class="page-title">收藏项目</h1>
+      <div class="page-title-row">
+        <h1 class="page-title">收藏项目</h1>
+        <ElButton
+          class="migration-test-btn"
+          size="small"
+          text
+          :loading="migrationTestLoading"
+          @click="handleMigrationTestPrep"
+        >
+          迁移测试
+        </ElButton>
+      </div>
       <div class="search-box">
-        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable @change="handleSourceChange">
+        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable :disabled="isPageInteractionDisabled" @change="handleSourceChange">
           <ElOption :label="'全部来源'" :value="ALL_SOURCE_VALUE" />
           <ElOption v-for="source in sourceOptions" :key="source" :label="source" :value="source" />
         </ElSelect>
         <ElInput v-model="searchInput" placeholder="搜索收藏..." prefix-icon="Search" clearable class="search-input"
+          :disabled="isPageInteractionDisabled"
           @keyup.enter="executeSearch" @clear="clearSearch" />
-        <ElButton type="primary" class="search-btn" @click="executeSearch">
+        <ElButton type="primary" class="search-btn" :disabled="isPageInteractionDisabled" @click="executeSearch">
           <el-icon>
             <Search />
           </el-icon>
@@ -419,8 +530,14 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <!-- 加载失败 -->
+    <div v-if="remoteLoadError && useRemoteFavorites" class="error-state">
+      <p>{{ remoteLoadError }}</p>
+      <ElButton type="primary" @click="retryLoadFavorites">重试</ElButton>
+    </div>
+
     <!-- 空状态 -->
-    <div v-if="favoriteTotalCount === 0 && !remoteFavoritesLoading" class="empty-state">
+    <div v-else-if="favoriteTotalCount === 0 && !remoteFavoritesLoading && !isFavoritesSyncing" class="empty-state">
       <div class="empty-icon">⭐</div>
       <p>暂无收藏内容</p>
     </div>
@@ -428,7 +545,7 @@ onUnmounted(() => {
     <!-- 分页组件 -->
     <div v-if="totalPages > 1" class="pagination-container">
       <ElPagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="favoriteTotalCount"
-        layout="prev, pager, next, jumper" :disabled="favoriteTotalCount === 0"
+        layout="prev, pager, next, jumper" :disabled="favoriteTotalCount === 0 || isPageInteractionDisabled"
         @current-change="handlePageChange" />
     </div>
 
@@ -454,6 +571,15 @@ onUnmounted(() => {
   margin-bottom: 40px;
 }
 
+.favorites-page.is-syncing {
+  .page-header,
+  .favorites-grid,
+  .pagination-container {
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -461,6 +587,22 @@ onUnmounted(() => {
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 30px;
+}
+
+.page-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.migration-test-btn {
+  color: #94a3b8;
+  font-size: 12px;
+  padding: 0 4px;
+
+  &:hover {
+    color: #33b1a3;
+  }
 }
 
 .page-title {
@@ -562,6 +704,17 @@ onUnmounted(() => {
 .empty-state {
   text-align: center;
   padding: 40px;
+}
+
+.error-state {
+  text-align: center;
+  padding: 40px;
+  color: #b45309;
+
+  p {
+    margin: 0 0 16px;
+    line-height: 1.6;
+  }
 }
 
 .empty-icon {

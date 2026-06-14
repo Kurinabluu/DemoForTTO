@@ -31,28 +31,67 @@ function buildHeaders(token, withJsonBody = false) {
   return headers
 }
 
-async function parseResponse(response) {
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`)
+export class ApiError extends Error {
+  constructor(message, { status, code, cause } = {}) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+    this.code = code
+    this.cause = cause
   }
-  const payload = await response.json()
+}
+
+async function parseResponse(response) {
+  let payload = null
+  try {
+    payload = await response.json()
+  } catch {
+    payload = null
+  }
+
+  if (!response.ok) {
+    const status = response.status
+    if (status >= 500) {
+      throw new ApiError('服务繁忙，请稍后再试', { status })
+    }
+    if (status === 401 || payload?.code === 401) {
+      throw new ApiError('未登录或登录已过期，请重新登录', { status, code: 401 })
+    }
+    throw new ApiError(payload?.msg || `请求失败（HTTP ${status}）`, { status })
+  }
+
   if (!payload || payload.code !== 1) {
-    throw new Error(payload?.msg || 'API 请求失败')
+    if (payload?.code === 401) {
+      throw new ApiError('未登录或登录已过期，请重新登录', { code: 401 })
+    }
+    const message = payload?.msg || '加载失败，请稍后再试'
+    throw new ApiError(message, { code: payload?.code })
   }
   return payload.data
 }
 
 async function requestJson(path, { params, method = 'GET', body, token } = {}) {
-  const response = await fetch(buildUrl(path, params), {
-    method,
-    headers: buildHeaders(token, body !== undefined),
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
-  const refreshedToken = response.headers.get('X-Auth-Token')
-  if (refreshedToken && typeof tokenRefreshHandler === 'function') {
-    tokenRefreshHandler(refreshedToken)
+  try {
+    const response = await fetch(buildUrl(path, params), {
+      method,
+      headers: buildHeaders(token, body !== undefined),
+      body: body === undefined ? undefined : JSON.stringify(body),
+    })
+    const refreshedToken = response.headers.get('X-Auth-Token')
+    if (refreshedToken && typeof tokenRefreshHandler === 'function') {
+      tokenRefreshHandler(refreshedToken)
+    }
+    return parseResponse(response)
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error
+    }
+    const message = String(error?.message || '')
+    if (error?.name === 'TypeError' || /failed to fetch|network|load failed/i.test(message)) {
+      throw new ApiError('网络异常，请检查网络后重试', { cause: error })
+    }
+    throw new ApiError(message || '请求失败', { cause: error })
   }
-  return parseResponse(response)
 }
 
 export function registerTokenRefreshHandler(handler) {
@@ -87,6 +126,13 @@ export async function login(username, password) {
   return requestJson('/auth/login', {
     method: 'POST',
     body: { username, password },
+  })
+}
+
+export async function registerAccount(payload) {
+  return requestJson('/auth/register', {
+    method: 'POST',
+    body: payload,
   })
 }
 

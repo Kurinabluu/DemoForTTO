@@ -2,11 +2,12 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { useNavStore } from '@/stores/nav'
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import data from '@/data/split/nav.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
-import { searchAllContent, persistSearchSession, getStoredSearchSession } from '@/utils/searchService'
-import { withLoading } from '@/utils/loadingUtils'
+import { getStoredSearchSession } from '@/utils/searchService'
+import { markSearchPageReset } from '@/utils/searchNavigation'
+import { notifyApiError } from '@/utils/apiFeedback'
 
 const comingSoonDialogRef = ref(null);
 
@@ -24,6 +25,8 @@ const tags = data.map(item => item.tagName)
 const searchInput = ref('')
 // 实际搜索关键词
 const searchKeyword = ref('')
+const committedSearchKeyword = ref('')
+const searchKeywordEdited = ref(false)
 const isSearching = ref(false)
 
 const localActiveTag = ref('')
@@ -34,10 +37,24 @@ const STORAGE_KEY = 'services_nav_active_tag'
 // 使用导航store
 const navStore = useNavStore()
 const router = useRouter()
+const route = useRoute()
 
 const isSearchPath = (path) => typeof path === 'string' && path.includes('/search')
 const isFavoritesPath = (path) => typeof path === 'string' && path.includes('/favorites')
 const isSearchRoute = computed(() => isSearchPath(router.currentRoute.value.path))
+
+function syncCommittedSearchFromRoute() {
+  if (!isSearchPath(route.path)) return
+  const queryKeyword = route.query.s ? String(route.query.s).trim() : ''
+  if (!queryKeyword) return
+  searchKeyword.value = queryKeyword
+  committedSearchKeyword.value = queryKeyword
+  searchKeywordEdited.value = false
+}
+
+function markSearchInputEdited() {
+  searchKeywordEdited.value = true
+}
 
 // 当前激活的标签（组件内部独立实现）
 const activeTag = computed(() => {
@@ -173,6 +190,8 @@ onMounted(() => {
     if (isSearchPath(currentPath)) {
       const storedSearch = getStoredSearchSession()
       searchKeyword.value = storedSearch?.query || ''
+      committedSearchKeyword.value = searchKeyword.value.trim()
+      searchKeywordEdited.value = false
     } else {
       searchKeyword.value = ''
     }
@@ -197,6 +216,10 @@ onMounted(() => {
 
 })
 
+watch(() => [router.currentRoute.value.path, router.currentRoute.value.query.s], () => {
+  syncCommittedSearchFromRoute()
+})
+
 // 监听路由变化，同步标签状态
 watch(() => router.currentRoute.value.path, () => {
   // 根据路由路径找到对应的标签
@@ -207,6 +230,8 @@ watch(() => router.currentRoute.value.path, () => {
     if (isSearchPath(currentPath)) {
       const storedSearch = getStoredSearchSession()
       searchKeyword.value = storedSearch?.query || ''
+      committedSearchKeyword.value = searchKeyword.value.trim()
+      searchKeywordEdited.value = false
     } else {
       searchKeyword.value = ''
     }
@@ -251,23 +276,36 @@ watch(() => router.currentRoute.value.path, () => {
   syncTagWithRoute()
 })
 
-// 搜索按钮点击事件
+// 搜索：未改词且未编辑输入框时，第 1 页不请求；其他页只回到第 1 页并用缓存
 async function onSearch() {
   const keyword = (searchKeyword.value || '').trim()
   if (!keyword || isSearching.value) return
 
   isSearching.value = true
   try {
-    let payload = null
-    await withLoading(async () => {
-      payload = await searchAllContent(keyword)
-      persistSearchSession({ ...payload, currentPage: 1 })
+    const onSearchPage = route.path.endsWith('/search')
+    const currentPage = Number(route.query.page) || 1
+    const unchangedQuery = keyword === committedSearchKeyword.value && !searchKeywordEdited.value
 
-      await router.push({
+    if (unchangedQuery && onSearchPage) {
+      if (currentPage === 1) return
+      markSearchPageReset()
+      await router.replace({
         path: '/DemoForTTO/search',
-        query: { s: payload.query }
+        query: { s: keyword },
       })
-    }, { text: '正在搜索...' })
+      return
+    }
+
+    committedSearchKeyword.value = keyword
+    searchKeywordEdited.value = false
+
+    await router.push({
+      path: '/DemoForTTO/search',
+      query: { s: keyword },
+    })
+  } catch (error) {
+    notifyApiError(error, { action: '搜索', dedupeKey: 'search:nav' })
   } finally {
     isSearching.value = false
   }
@@ -299,7 +337,7 @@ async function onSearch() {
         </div>
         <div class="search-container">
           <el-input v-model="searchKeyword" placeholder="搜索全站..." class="search-input" size="large" clearable
-            @keyup.enter="onSearch">
+            @input="markSearchInputEdited" @clear="markSearchInputEdited" @keyup.enter="onSearch">
             <template #prefix>
               <el-icon>
                 <Search />

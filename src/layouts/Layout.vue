@@ -10,11 +10,14 @@ import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
 import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
+import FavoritesSyncOverlay from '@/components/FavoritesSyncOverlay.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
 import { buildInquirySourceSection } from '@/utils/inquirySource';
 import { fetchAuthSession, isApiEnabled, submitInquiry } from '@/utils/ttoApi';
 import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
+import { registerLoginDialogOpener } from '@/utils/loginDialogBridge';
 import { ElMessage } from 'element-plus';
+import { getApiErrorMessage } from '@/utils/apiFeedback';
 
 const navStore = useNavStore();
 const router = useRouter();
@@ -164,7 +167,7 @@ async function submitContactInquiry() {
         isContactDialogVisible.value = false
     } catch (error) {
         inquirySubmitting.value = false
-        ElMessage.error(error?.message || '提交失败，请稍后重试')
+        ElMessage.error(getApiErrorMessage(error))
     }
 }
 const headerLogo = resolveDataImage('@/assets/img/header_logo.png', '', { variant: 'thumb' }) || resolveDataImage('@/assets/img/header_logo.png')
@@ -253,6 +256,7 @@ async function touchAuthSession() {
 
 // 组件挂载时检查是否首次访问
 onMounted(() => {
+    registerLoginDialogOpener(openLoginDialog)
     void touchAuthSession()
     // 检查是否是首次访问
     if (navStore.isFirstVisit()) {
@@ -325,6 +329,7 @@ onMounted(() => {
         <ComingSoonDialog ref="comingSoonDialogRef" />
         <AboutUsDialog ref="aboutUsDialogRef" />
         <LoginDialog v-model:visible="loginDialogVisible" />
+        <FavoritesSyncOverlay />
 
         <!-- 加入我们弹窗 -->
         <el-dialog v-model="isJoinUsDialogVisible" append-to-body align-center width="520px" class="join-us-dialog"

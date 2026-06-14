@@ -2,6 +2,7 @@ import freeInfoFallback from '@/data/split/freeinfo.json'
 import dayTripFallback from '@/data/split/daytrip.json'
 import { buildSubNavKey } from '@/utils/subNavKey'
 import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled } from '@/utils/ttoApi'
+import { notifyApiWarning } from '@/utils/apiFeedback'
 
 function parseCardExtraJson(row) {
   if (!row?.cardExtraJson) return {}
@@ -204,6 +205,9 @@ export async function loadCatalogItemDetail(itemId) {
     return mapApiDetailToItem(dto)
   } catch (error) {
     console.warn('[contentRepository] detail API fallback:', itemId, error)
+    if (isApiEnabled()) {
+      throw error
+    }
     return null
   }
 }
@@ -233,6 +237,14 @@ async function fetchSubNavItems(sectionPath, subNavMeta, fallbackItems, fallback
     if (items.length) return items
   } catch (error) {
     console.warn('[contentRepository] API fallback:', subNavKey, error)
+    if (isApiEnabled()) {
+      const hasFallback = Array.isArray(fallbackItems) && fallbackItems.length > 0
+      if (useApiOnlyDayTripData || !hasFallback) {
+        notifyApiWarning('暂时无法加载，请稍后再试', {
+          dedupeKey: 'content:api-failed',
+        })
+      }
+    }
   }
   return Array.isArray(fallbackItems) ? fallbackItems : []
 }

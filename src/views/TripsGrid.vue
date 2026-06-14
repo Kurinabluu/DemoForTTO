@@ -8,6 +8,7 @@ import { isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
+import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 
@@ -279,8 +280,16 @@ onMounted(() => {
         }
         if (Array.isArray(dayTrips) && dayTrips.length) {
             dayTripNavs.value = dayTrips
+        } else if (isApiEnabled()) {
+            notifyApiWarning('暂时无法加载，请稍后再试', {
+                dedupeKey: 'trips:daytrip-empty',
+            })
         }
-    }, { text: '正在加载内容...' })
+    }, { text: '正在加载内容...' }).catch((error) => {
+        if (isApiEnabled()) {
+            notifyApiError(error, { action: '加载内容', dedupeKey: 'trips:load' })
+        }
+    })
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', scheduleUpdateMobileScrollPage, { passive: true })
@@ -1348,12 +1357,16 @@ async function onOpenTour(item) {
     let sourceItem = item
     const isSpecialContentItem = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
     if (isApiEnabled() && item?.id != null && !isSpecialContentItem) {
-        const enriched = await withLoading(
-            () => loadCatalogItemDetail(item.id),
-            { text: '正在打开详情...' }
-        )
-        if (enriched) {
-            sourceItem = { ...item, ...enriched }
+        try {
+            const enriched = await withLoading(
+                () => loadCatalogItemDetail(item.id),
+                { text: '正在打开详情...' }
+            )
+            if (enriched) {
+                sourceItem = { ...item, ...enriched }
+            }
+        } catch (error) {
+            notifyApiError(error, { action: '详情', dedupeKey: 'trips:detail' })
         }
     }
     emit('openTourDialog', buildTourDialogPayload(sourceItem))
@@ -1437,17 +1450,13 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">
-                                <span
-                                    v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                    :key="idx">
+                                <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                     <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                     <span v-else>{{ seg.text }}</span>
                                 </span>
                             </div>
                             <div class="card-sub" :title="item.sub">
-                                <span
-                                    v-for="(seg, idx) in getHighlightSegments(item.sub, highlightKw)"
-                                    :key="idx">
+                                <span v-for="(seg, idx) in getHighlightSegments(item.sub, highlightKw)" :key="idx">
                                     <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                     <span v-else>{{ seg.text }}</span>
                                 </span>
@@ -1457,7 +1466,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                         <div class="custom-pagination custom-pagination--fixed">
                             <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage
-                                    }}</span> /
+                            }}</span> /
                                 {{
                                     mobileTotalPages }} 页</div>
                         </div>
@@ -1499,14 +1508,13 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">
-                                <span
-                                    v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                    :key="idx">
+                                <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                     <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                     <span v-else>{{ seg.text }}</span>
                                 </span>
@@ -1540,14 +1548,13 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">
-                                <span
-                                    v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                    :key="idx">
+                                <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                     <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                     <span v-else>{{ seg.text }}</span>
                                 </span>
@@ -1578,8 +1585,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
                             :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
-                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                :key="idx">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                 <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                 <span v-else>{{ seg.text }}</span>
                             </span>
@@ -1609,8 +1615,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
                             :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
                         <div class="card-title" :title="item.title">
-                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                :key="idx">
+                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                 <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                 <span v-else>{{ seg.text }}</span>
                             </span>
@@ -1643,14 +1648,13 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">
-                                <span
-                                    v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)"
-                                    :key="idx">
+                                <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
                                     <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
                                     <span v-else>{{ seg.text }}</span>
                                 </span>
@@ -1736,7 +1740,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
@@ -1773,7 +1778,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
@@ -1867,7 +1873,8 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                             class="town-title center">
                             — {{ getTownDisplayName(item) }} —
                         </h2>
-                        <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
@@ -1987,7 +1994,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
     .coming-grid {
         width: 90%;
         display: grid;
@@ -2414,6 +2421,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         }
 
                         .activity-info .info-item {
+
                             .info-label,
                             .info-value {
                                 font-size: 11px;

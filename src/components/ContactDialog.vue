@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { getApiErrorMessage } from '@/utils/apiFeedback'
 import { Z_INDEX } from '@/constants/zIndex'
 import { getAuthToken } from '@/utils/authStore'
 import { isApiEnabled, submitInquiry } from '@/utils/ttoApi'
@@ -92,7 +93,7 @@ const submitContactInquiry = async () => {
         dialogVisible.value = false
         ElMessage.success('咨询已提交，我们会尽快联系你')
     } catch (error) {
-        ElMessage.error(error?.message || '提交失败，请稍后重试')
+        ElMessage.error(getApiErrorMessage(error))
     } finally {
         inquirySubmitting.value = false
     }
