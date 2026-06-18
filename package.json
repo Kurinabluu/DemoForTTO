@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "data:split": "node scripts/split-data.mjs",
+    "data:split": "node scripts/split-data.mjs && node scripts/fix-scenic-locations.mjs",
     "dev": "npm run data:split && vite",
     "images:thumb": "node scripts/generate-thumbs.mjs",
     "prebuild": "npm run data:split && npm run images:thumb",

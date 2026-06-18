@@ -4,6 +4,7 @@ import {
   buildTourDialogQueryParams,
   shouldAttachTourDialogLocate
 } from '../src/utils/searchItemKey.js'
+import { buildDayTripTabQuery } from '../src/utils/subNavKey.js'
 
 const projectRoot = process.cwd()
 const dataFilePath = path.join(projectRoot, 'src', 'data', 'data.json')
@@ -186,7 +187,11 @@ function createSearchIndexRows(dataSource = []) {
       section.subNav.forEach((subNav) => {
         if (subNav?.hasOwnProperty('isShow') && !subNav.isShow) return
         const queryKey = section.tagName === DAYTRIP_TAG ? 'dayTripTab' : 'subNavName'
-        const queryParams = { [queryKey]: subNav.subNavName }
+        const queryParams = {
+          [queryKey]: section.tagName === DAYTRIP_TAG
+            ? buildDayTripTabQuery(subNav.subNavName)
+            : subNav.subNavName
+        }
         pushResult({
           title: `${section.tagName} - ${subNav.subNavName}`,
           summary: summaryFromItem(subNav),

@@ -66,7 +66,6 @@
           "tripData": {
             "route": "4057 Cradle Mountain Rd, Cradle Mountain TAS 7310, Australia（摇篮山游客中心）",
             "desc": "摇篮山-圣克莱尔湖国家公园是塔斯马尼亚荒野世界遗产区的核心，以高山荒野、冰川湖泊和知名徒步路线著称。",
-            "region": "西北部",
             "town": "Cradle Mountain",
             "features": [
               {
@@ -118,7 +117,6 @@
           "tripData": {
             "route": "66 Lake Dobson Rd, National Park TAS 7140, Australia",
             "desc": "费尔德山国家公园成立于1916年，是塔斯马尼亚最古老的国家公园，距霍巴特约1小时车程。景观从温带雨林过渡至高山湖泊，可观赏瀑布、古老桉树林及野生动物。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -168,7 +166,6 @@
           "enTitle": "Bruny Island",
           "tripData": {
             "route": "Bruny Island, Tasmania, Australia（登岛点：Kettering Ferry Terminal, 1041 Bruny Island Main Rd, Kettering TAS 7155）",
-            "region": "霍巴特及南部",
             "town": "Bruny Island",
             "desc": "布鲁尼岛是塔斯马尼亚东南沿海的离岛，需乘渡轮抵达。以连接南北岛的狭长地峡“颈项”（The Neck）、新鲜生蚝、本地奶酪以及出海观赏海豹、海豚的生态巡航为主要体验。",
             "features": [
@@ -220,7 +217,6 @@
           "tripData": {
             "route": "Port Arthur, Tasmania, Australia",
             "desc": "阿瑟港是塔斯曼半岛上一处19世纪的流放罪犯遗址，作为世界遗产地，以严酷的安保和独特的监狱制度闻名，现为重要的历史遗迹与博物馆。如今，游客仍可再次探索、进行导览，了解相关历史。",
-            "region": "霍巴特及南部",
             "town": "Port Arthur",
             "features": [
               {
@@ -262,7 +258,6 @@
           "tripData": {
             "route": "Salamanca Place, Hobart TAS 7004, Australia",
             "desc": "萨拉曼卡市集是霍巴特每周六举行的著名街头市集，拥有超过350个摊位，展示塔斯马尼亚艺术品、手工艺品、农产品和食品，是塔斯马尼亚州访问量最大的旅游景点。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -313,7 +308,6 @@
           "tripData": {
             "route": "Tasman National Park, Arthur Highway, Port Arthur TAS 7182, Australia",
             "desc": "公园东海岸以壮观的海蚀地貌为特色，其标志性景点霍伊角是南半球最高的海边悬崖之一，高度近300米。",
-            "region": "霍巴特及南部",
             "town": "Tasman Peninsula",
             "features": [
               {
@@ -357,7 +351,6 @@
           "tripData": {
             "route": "Franklin-Gordon Wild Rivers National Park, Tasmania, Australia",
             "desc": "富兰克林-戈登野河国家公园保存着塔斯马尼亚最原始的河流与温带雨林。",
-            "region": "西海岸",
             "town": "Strahan",
             "features": [
               {
@@ -382,7 +375,8 @@
               "防雨外套必备",
               "激流漂流项目",
               "自备干粮饮水"
-            ]
+            ],
+            "belongsToSpot": "Strahan"
           }
         },
         {
@@ -400,7 +394,6 @@
           "tripData": {
             "route": "Southwest National Park, Strathgordon TAS 7139, Australia",
             "desc": "西南国家公园以广阔的温带雨林、河流系统，以及纽扣草平原等多种地貌为特征。",
-            "region": "西海岸",
             "town": "Strahan",
             "features": [
               {
@@ -426,7 +419,8 @@
               "钓鱼需许可证",
               "天气变化快速",
               "自备全部补给"
-            ]
+            ],
+            "belongsToSpot": "Strahan"
           }
         },
         {
@@ -444,7 +438,6 @@
           "tripData": {
             "route": "Strahan TAS 7468",
             "desc": "斯特拉恩是塔斯马尼亚西海岸的一个港口小镇，毗邻塔斯马尼亚旷野世界遗产区。作为通往西南部荒野的主要门户，小镇的核心体验由戈登河荒野游轮、西海岸荒野铁路与悠久的历史海港共同构成①。",
-            "region": "西海岸",
             "town": "Strahan",
             "features": [
               {
@@ -495,7 +488,6 @@
           "tripData": {
             "route": "Queenstown, Tasmania, Australia",
             "desc": "皇后镇是通往西海岸的大门，拥有丰富然而艰辛的采矿历史。 它也靠近塔斯马尼亚的世界遗产荒野地区的边缘，被大湖所包围。该镇曾经是世界上最富有的矿业镇之一。",
-            "region": "西海岸",
             "town": "Queenstown",
             "features": [
               {
@@ -548,7 +540,6 @@
           "tripData": {
             "route": "1/3 Wilmot Rd, Huonville TAS 7109, Australia（胡恩维尔游客中心）",
             "desc": "胡恩河谷是塔斯马尼亚南部的一个乡村地区与河谷，以胡恩河下游流域为中心。该地区历史上以苹果种植闻名，现今经济亦包括樱桃种植、三文鱼养殖及旅游业。其行政与商业中心是位于霍巴特以南约38公里处的胡恩维尔。",
-            "region": "霍巴特及南部",
             "town": "Huonville",
             "features": [
               {
@@ -588,7 +579,6 @@
           "enTitle": "Ocean Beach",
           "tripData": {
             "route": "Ocean Beach, Strahan TAS 7468, Australia",
-            "region": "西海岸",
             "town": "Strahan",
             "desc": "海洋海滩是位于塔斯马尼亚西海岸的一片绵长的海滩。",
             "features": [
@@ -618,7 +608,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Ocean_Beach_(Tasmania)&oldid=1058076733"
               }
-            ]
+            ],
+            "belongsToSpot": "Strahan"
           }
         },
         {
@@ -636,7 +627,6 @@
           "tripData": {
             "route": "Cradle Mountain, Tasmania, Australia（游客中心地址：4057 Cradle Mountain Rd, Cradle Mountain TAS 7310）",
             "desc": "探访塔斯马尼亚标志性的山峰，感受原始森林和高山湖泊的魅力。",
-            "region": "西北部",
             "town": "Cradle Mountain",
             "features": [
               {
@@ -678,7 +668,6 @@
           "tripData": {
             "route": "Binalong Bay TAS 7216, Australia",
             "desc": "火焰湾的海岸线特征是石英砂海滩与花岗岩群并存。海滩延伸约29公里，花岗岩表面则覆盖着橙红色地衣。",
-            "region": "东海岸",
             "town": "St Helens",
             "features": [
               {
@@ -719,7 +708,6 @@
           "tripData": {
             "route": "Wineglass Bay, Freycinet National Park, Coles Bay TAS 7215, Australia",
             "desc": "塔斯马尼亚的酒杯湾，以酒杯造型的白色沙滩和蓝绿色海水闻名。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -745,7 +733,8 @@
               "允许游泳",
               "允许非动力船只",
               "主要观景时间日出至日落"
-            ]
+            ],
+            "belongsToSpot": "Freycinet National Park"
           }
         },
         {
@@ -763,7 +752,6 @@
           "tripData": {
             "route": "Maria Island National Park, Tasmania, Australia（渡轮登岛点：Triabunna TAS 7190）",
             "desc": "玛丽亚岛是塔斯马尼亚东海岸的一座国家公园岛屿。岛上多山，拥有彩绘悬崖与蕴含二叠纪化石的崖壁等地质景观①。其海岸线包括沙滩与悬崖，是袋熊、袋鼠及塔斯马尼亚袋獾（恶魔）保护种群的重要栖息地。玛丽亚岛是塔斯马尼亚东海岸的一座国家公园岛屿。岛上多山，拥有彩绘悬崖与蕴含二叠纪化石的崖壁等地质景观①。其海岸线包括沙滩与悬崖，是袋熊、袋鼠及塔斯马尼亚袋獾（恶魔）保护种群的重要栖息地。",
-            "region": "东海岸",
             "town": "Triabunna",
             "features": [
               {
@@ -816,7 +804,6 @@
           "tripData": {
             "route": "Tasman Peninsula, Tasmania, Australia（主要景点入口：Port Arthur TAS 7182）",
             "desc": "该地区的官方名称为Turrakana / Tasman Peninsula。塔斯曼半岛拥有世界遗产地亚瑟港历史遗址，并以崎岖的海岸线与塔斯曼国家公园而闻名。",
-            "region": "霍巴特及南部",
             "town": "Tasman Peninsula",
             "features": [
               {
@@ -866,7 +853,6 @@
           "tripData": {
             "route": "Hobart Waterfront, Hobart TAS 7000, Australia（Salamanca Place附近）",
             "desc": "沿着霍巴特美丽的海滨漫步，探索历史建筑、艺术画廊和美食餐厅。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -919,7 +905,6 @@
           "tripData": {
             "route": "Cataract Gorge, Launceston TAS 7250, Australia",
             "desc": "卡塔赖特峡谷（Cataract Gorge）是朗塞斯顿市内的一个天然峡谷景区，位于南埃斯克河下游，以世界最长单跨缆车和维多利亚式悬崖花园为特色。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -970,7 +955,6 @@
           "tripData": {
             "route": "St Helens, Tasmania, Australia",
             "desc": "圣海伦斯是塔斯马尼亚东北海岸最大的城镇，以“游戏钓鱼之都”和生蚝闻名，是一个以旅游、渔业和木材为基础经济的海滨度假地。",
-            "region": "东海岸",
             "town": "St Helens",
             "features": [
               {
@@ -1019,7 +1003,6 @@
           "tripData": {
             "route": "Richmond Bridge, Richmond TAS 7025, Australia",
             "desc": "里奇蒙古桥是澳大利亚最古老的石桥，建于1823年，位于历史小镇里奇蒙。",
-            "region": "霍巴特及南部",
             "town": "Richmond",
             "features": [
               {
@@ -1061,7 +1044,6 @@
           "tripData": {
             "route": "Tamar Valley, Tasmania, Australia（起点：Launceston TAS 7250）",
             "desc": "塔玛谷是一个由平行断层构成的地质下沉带（地堑）。流经此地的塔玛河实为河口，名为kanamaluka，是澳大利亚最长的河口。该河谷是塔斯马尼亚最大的葡萄酒产区。图上为塔玛河（Tamar River）。",
-            "region": "朗塞斯顿及北部",
             "town": "Tamar Valley",
             "features": [
               {
@@ -1124,7 +1106,6 @@
           "tripData": {
             "route": "Freycinet National Park, Coles Bay TAS 7215, Australia",
             "desc": "菲欣纳国家公园建于1916年，与费尔德山国家公园同为塔斯马尼亚最古老的国家公园。公园以粉红色花岗岩山脉、僻静海湾（如酒杯湾）及多样的温带森林与海岸地貌为特色。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -1183,7 +1164,6 @@
           "tripData": {
             "route": "Bicheno, Tasmania, Australia（主要观景点：Whalers Lookout）",
             "desc": "作为塔州东海岸的传统渔港，比切诺现已发展成为以优美海滩和丰富水上活动闻名的热门度假小镇。游客可在此体验独特的海岸景观、观察小企鹅归巢，并品尝新鲜海产。",
-            "region": "东海岸",
             "town": "Bicheno",
             "features": [
               {
@@ -1241,7 +1221,6 @@
           "tripData": {
             "route": "Mount Wellington, Hobart TAS 7054, Australia",
             "desc": "惠灵顿山山顶设有潘纳克尔观景台，可俯瞰霍巴特全景、德元河入海口及南极远景，冬季可观赏雪景。该山是俯瞰霍巴特的主要地点之一，游客可选择沿1937年建成的登山步道徒步，或经机动车道驾车直达山顶。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -1304,7 +1283,6 @@
           "tripData": {
             "route": "655 Main Rd, Berriedale TAS 7011, Australia",
             "desc": "新旧艺术博物馆包含古典文物、现代艺术品，美食等；展览采用无说明标签的创新形式，观众通过语音导览系统获取作品介绍、艺术家访谈等内容。博物馆每年举办音乐艺术节与公共艺术展览。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -1367,7 +1345,6 @@
           "tripData": {
             "route": "Richmond, Tasmania, Australia（图上景点处为Richmond Bridge）",
             "desc": "里奇蒙位于霍巴特东北约25公里处，是塔斯马尼亚保存最完好的殖民时期古镇之一。小镇拥有众多由囚犯建造的乔治亚风格砂岩建筑，其中最著名的是建于1823-1825年的里奇蒙桥，它是澳大利亚仍在使用的最古老的石桥。",
-            "region": "霍巴特及南部",
             "town": "Richmond",
             "features": [
               {
@@ -1431,7 +1408,6 @@
           "tripData": {
             "route": "New Norfolk, Tasmania, Australia",
             "desc": "新诺福克是位于德文特河畔的历史小镇，距霍巴特西北约32公里。它由诺福克岛移民于1807年建立，是塔斯马尼亚第四古老的欧洲定居点。小镇以历史建筑、河畔风光及作为德文特河谷门户而闻名。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -1502,7 +1478,6 @@
           "tripData": {
             "route": "Stanley, Tasmania, Australia（主要地标：The Nut）",
             "desc": "斯坦利是塔斯马尼亚西北海岸的历史小镇，紧邻座古老的火山栓“The Nut”(图1)。小镇至今仍保留着完好的19世纪建筑。",
-            "region": "西北部",
             "town": "Stanley",
             "features": [
               {
@@ -1567,7 +1542,6 @@
           "tripData": {
             "route": "Launceston, Tasmania, Australia",
             "desc": "朗塞斯顿位于塔斯马尼亚北部，是澳大利亚历史最悠久的城市之一。城市坐落在北埃斯克河与南埃斯克河交汇形成塔玛河的河口，拥有许多历史建筑。它是塔斯马尼亚第二大城市，在2022年被评为“澳大利亚年度城镇”。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -1630,7 +1604,6 @@
           "tripData": {
             "route": "Maria Island National Park, Tasmania, Australia（需从Triabunna乘渡轮上岛）",
             "desc": "彩绘崖是玛丽亚岛东海岸一处由砂岩构成的海蚀崖。",
-            "region": "东海岸",
             "town": "Triabunna",
             "features": [
               {
@@ -1662,7 +1635,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Maria_Island&oldid=1318021096"
               }
-            ]
+            ],
+            "belongsToSpot": "Maria Island"
           }
         },
         {
@@ -1682,7 +1656,6 @@
           "tripData": {
             "route": "Queens Domain, Hobart TAS 7000, Australia",
             "desc": "女王领地是霍巴特市中心东北部一片广阔的公共绿地。这片成立于1860年的区域集自然、历史与休闲于一体，包含政府大厦、皇家植物园等主要地标。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -1747,7 +1720,6 @@
           "tripData": {
             "route": "Queens Domain, Hobart TAS 7000, Australia",
             "desc": "塔斯马尼亚皇家植物园位于霍巴特的女王领地内，建于1818年，是澳大利亚第二古老的植物园，占地面积约14公顷。园内拥有大量历史悠久的重要树木、丰富的植物收藏，以及世界上唯一的亚南极植物屋。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -1791,7 +1763,6 @@
           "tripData": {
             "route": "620 Middle Tea Tree Rd, Richmond TAS 7025, Australia",
             "desc": "霍巴特动物园与水族馆（原名Zoodoo野生动物园）是位于里奇蒙的一个私营动物园，于1999年开放。其动物收藏从最初的本地救援物种，逐步扩展至包括非洲狮、斑马、骆驼等多种外来动物，并于2025年增设了水族馆。该动物园提供动物互动与喂食体验。",
-            "region": "霍巴特及南部",
             "town": "Richmond",
             "features": [
               {
@@ -1848,7 +1819,6 @@
           "tripData": {
             "route": "296 Gillespies Rd, Nabowla TAS 7260, Australia",
             "desc": "布莱德斯托薰衣草庄园是位于塔斯马尼亚纳伯拉的一个薰衣草农场。它成立于1922年，被认为是世界上最大的狭叶薰衣草商业种植园。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -1924,7 +1894,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Battery_Point&oldid=1314710618"
               }
-            ]
+            ],
+            "town": "Battery Point"
           }
         },
         {
@@ -1955,7 +1926,6 @@
           "tripData": {
             "route": "Constitution Dock, Hobart TAS 7000, Australia",
             "desc": "宪法码头是霍巴特港内、德文特河畔的一个海港区码头。它毗邻维多利亚码头、萨拉曼卡广场和巴特里角，构成沙利文湾滨水区的一部分。该码头以作为每年悉尼至霍巴特帆船赛的集结地和庆祝场所而闻名。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -2037,7 +2007,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Sandy_Bay,_Tasmania&oldid=1310944938"
               }
-            ]
+            ],
+            "town": "Sandy Bay"
           }
         },
         {
@@ -2086,7 +2057,6 @@
           "tripData": {
             "route": "Douglas-Apsley National Park, Tasmania, Australia（主要入口近Bicheno）",
             "desc": "道格拉斯-阿普斯利国家公园位于塔斯马尼亚东海岸，是一个成立于1989年的较新国家公园。它保护着东海岸干燥森林的集水区，以深峡谷、野花和温和的内陆气候为特色，并提供从短途步行到三日徒步的徒步活动。",
-            "region": "东海岸",
             "town": "Bicheno",
             "features": [
               {
@@ -2134,7 +2104,6 @@
           "tripData": {
             "route": "Hartz Mountains National Park, Geeveston TAS 7116, Australia",
             "desc": "哈茨山是位于塔斯马尼亚西南部的双峰山，属于哈茨山国家公园，距霍巴特约55公里。该地区以恶劣多变的西南部天气著称，其主峰海拔1254米，在晴好天气可俯瞰西南部和北部的壮丽景色。",
-            "region": "霍巴特及南部",
             "town": "Geeveston",
             "features": [
               {
@@ -2185,7 +2154,6 @@
           "tripData": {
             "route": "Oyster Cove, Kettering TAS 7155, Australia",
             "desc": "蚝湾（又名帕塔利纳）是塔斯马尼亚东南部一个半乡村地区，因历史上曾作为殖民时期关押土著塔斯马尼亚人的场所，其部分区域被列为土著保护区。",
-            "region": "霍巴特及南部",
             "town": "Kingston",
             "features": [
               {
@@ -2265,7 +2233,6 @@
           "tripData": {
             "route": "Great Oyster Bay, Coles Bay TAS 7215, Australia",
             "desc": "大牡蛎湾是塔斯马尼亚东海岸一个宽阔且受庇护的海湾，塔斯曼公路沿其西岸而行，可观赏菲欣纳国家公园内哈泽兹山等花岗岩峰峦的景色。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -2296,7 +2263,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Great_Oyster_Bay&oldid=1316427529"
               }
-            ]
+            ],
+            "belongsToSpot": "Freycinet National Park"
           }
         },
         {
@@ -2306,7 +2274,6 @@
           "tripData": {
             "route": "Moulting Lagoon, Coles Bay TAS 7215, Australia",
             "desc": "莫尔廷泻湖是塔斯马尼亚东海岸一片重要的复合湿地系统，由河流汇入形成，是国际公认的拉姆萨尔湿地和重要鸟类保护区，尤以聚集大量黑天鹅而闻名。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -2337,7 +2304,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Moulting_Lagoon_Important_Bird_Area&oldid=1092920267"
               }
-            ]
+            ],
+            "belongsToSpot": "Freycinet National Park"
           }
         },
         {
@@ -2357,7 +2325,6 @@
           "tripData": {
             "route": "Ross, Tasmania, Australia",
             "desc": "罗斯是塔斯马尼亚中部的一个历史村庄，被列入国家遗产名录，以其古老的石桥、原始的砂岩建筑和囚犯历史而闻名。",
-            "region": "中部地区",
             "town": "Ross",
             "features": [
               {
@@ -2406,7 +2373,6 @@
           "tripData": {
             "route": "Ross Bridge, Ross TAS 7209, Australia",
             "desc": "罗斯桥是一座于1836年7月竣工的砂岩历史桥梁，由囚犯劳工建造，是澳大利亚第三古老且仍在使用的桥梁。",
-            "region": "中部地区",
             "town": "Ross",
             "features": [
               {
@@ -2466,7 +2432,6 @@
           "tripData": {
             "route": "King Island, Tasmania, Australia（主要城镇：Currie）",
             "desc": "金岛是巴斯海峡中属于塔斯马尼亚的第二大岛，以农业和旅游业为主要经济，以其历史沉船、自然生态和特色物产而闻名。",
-            "region": "金岛",
             "town": "Currie",
             "features": [
               {
@@ -2514,7 +2479,6 @@
           "tripData": {
             "route": "Flinders Island, Tasmania, Australia（主要城镇：Whitemark）",
             "desc": "塔斯马尼亚弗诺群岛中最大的岛屿，拥有崎岖的山脉、沿海沙丘与泻湖，以及独特的历史。",
-            "region": "东海岸",
             "town": "Flinders Island",
             "features": [
               {
@@ -2593,7 +2557,6 @@
           "tripData": {
             "route": "Penguin, Tasmania, Australia",
             "desc": "一座以沿海小企鹅栖息地命名的北部海岸小镇，镇中心设有标志性的“大企鹅”雕塑，街道也装饰着企鹅主题的公共设施。",
-            "region": "西北部",
             "town": "Penguin",
             "features": [
               {
@@ -2666,7 +2629,6 @@
           "tripData": {
             "route": "Sheffield, Tasmania, Australia",
             "desc": "一座以“壁画小镇”闻名的内陆小镇，以遍布全镇、描绘当地历史与风光的壁画作为核心旅游特色，背靠罗兰山。",
-            "region": "西北部",
             "town": "Sheffield",
             "features": [
               {
@@ -2737,7 +2699,6 @@
           "tripData": {
             "route": "River Derwent, Hobart TAS 7000, Australia",
             "desc": "一条发源于中央高地的河流，下游形成宽阔的河口，流经霍巴特市区，最终注入风暴湾。它是霍巴特港口的重要组成部分。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -2799,7 +2760,6 @@
           "tripData": {
             "route": "Liawenee, Tasmania, Australia（中部高地，靠近Great Lake）",
             "desc": "一个位于中部高地的小型定居点，最初为水电项目而建，以其异常寒冷的气候和附近大湖的鳟鱼垂钓活动而闻名。",
-            "region": "中部地区",
             "town": "Miena",
             "features": [
               {
@@ -2879,7 +2839,6 @@
           "tripData": {
             "route": "Macquarie Island, Subantarctic, Australia",
             "desc": "一个位于海洋板块边界上的亚南极岛屿，于1997年被列为世界遗产。岛上无永久居民，但有研究站。",
-            "region": "西海岸",
             "town": "Strahan",
             "features": [
               {
@@ -2943,7 +2902,6 @@
           "tripData": {
             "route": "Deloraine, Tasmania, Australia",
             "desc": "一座位于米安德河畔的农业小镇，也是通往摇篮山等自然景区的门户，并以每年举办的大型手工艺博览会闻名。",
-            "region": "朗塞斯顿及北部",
             "town": "Deloraine",
             "features": [
               {
@@ -3005,7 +2963,6 @@
           "tripData": {
             "route": "Deal Island, Kent Group, Tasmania, Australia（属于肯特群岛国家公园）",
             "desc": "一个完全位于肯特群岛国家公园内的花岗岩岛屿，岛上建有一座历史灯塔，并拥有机场跑道、码头和博物馆等设施。",
-            "region": "东海岸",
             "town": "Flinders Island",
             "features": [
               {
@@ -3039,7 +2996,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Deal_Island_(Tasmania)&oldid=1197665920"
               }
-            ]
+            ],
+            "belongsToSpot": "Flinders Island"
           }
         },
         {
@@ -3059,7 +3017,6 @@
           "tripData": {
             "route": "Central Highlands, Tasmania, Australia",
             "desc": "塔斯马尼亚被称为“湖泊之乡”的地理区域，其地理与行政边界基本重合，区内包含多个国家公园、保护区与众多湖泊。",
-            "region": "中部地区",
             "town": "Miena",
             "features": [
               {
@@ -3122,7 +3079,6 @@
           "tripData": {
             "route": "Ben Lomond National Park, Tasmania, Australia",
             "desc": "一座位于本洛蒙德国家公园内的高山，其高原海拔超过1200米，拥有塔斯马尼亚主要的阿尔卑斯滑雪场，可通过名为“雅各布天梯”的公路或步行道抵达。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -3173,7 +3129,6 @@
           "tripData": {
             "route": "ole Creek, Tasmania, Australia",
             "desc": "一座以蜂蜜生产闻名的城镇，其蜂蜜产量约占塔斯马尼亚的35%。城镇周边是莫尔溪喀斯特国家公园的所在地。",
-            "region": "西北部",
             "town": "Mole Creek",
             "features": [
               {
@@ -3223,7 +3178,6 @@
           "tripData": {
             "route": "Mole Creek Karst National Park, Mole Creek TAS 7304, Australia",
             "desc": "塔斯马尼亚唯一一个为保护喀斯特地貌而建立的国家公园，包含300多个已知洞穴和落水洞，其中两个已被开发为展示洞穴。公园属于塔斯马尼亚荒野世界遗产地的一部分。",
-            "region": "西北部",
             "town": "Mole Creek",
             "features": [
               {
@@ -3254,7 +3208,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mole_Creek_Karst_National_Park&oldid=1318019791"
               }
-            ]
+            ],
+            "belongsToSpot": "Mole Creek"
           }
         },
         {
@@ -3272,7 +3227,6 @@
           "tripData": {
             "route": "Tahune AirWalk, Arve Rd, Geeveston TAS 7116, Australia",
             "desc": "一个钢结构的树冠层步道，部分位置悬于树顶之上高达50米，全长620米。步道俯瞰侯恩河与皮克顿河的交汇处。",
-            "region": "霍巴特及南部",
             "town": "Huonville",
             "features": [
               {
@@ -3344,7 +3298,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Geeveston&oldid=1317443848"
               }
-            ]
+            ],
+            "town": "Geeveston"
           }
         },
         {
@@ -3423,7 +3378,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Quamby_Bluff&oldid=1313272182"
               }
-            ]
+            ],
+            "town": "Flinders Island"
           }
         },
         {
@@ -3463,7 +3419,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Gordon_River&oldid=1186960124"
               }
-            ]
+            ],
+            "belongsToSpot": "Strahan",
+            "town": "Strahan"
           }
         },
         {
@@ -3541,7 +3499,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Zeehan&oldid=1322153774"
               }
-            ]
+            ],
+            "town": "Zeehan"
           }
         },
         {
@@ -3616,7 +3575,6 @@
           "tripData": {
             "route": "Macquarie Harbour, Strahan TAS 7468, Australia",
             "desc": "麦夸里港是一个面积约315平方公里的浅水峡湾，平均深度15米。历史上曾作为监狱所在地，如今是西海岸旅游的主要出发点。",
-            "region": "西海岸",
             "town": "Strahan",
             "features": [
               {
@@ -3647,7 +3605,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Macquarie_Harbour&oldid=1302420034"
               }
-            ]
+            ],
+            "belongsToSpot": "Strahan"
           }
         },
         {
@@ -3726,7 +3685,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Dove_Lake_(Tasmania)&oldid=1288761885"
               }
-            ]
+            ],
+            "belongsToSpot": "Cradle Mountain",
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -3763,7 +3724,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Adventure_Bay,_Tasmania&oldid=1243420150"
               }
-            ]
+            ],
+            "belongsToSpot": "Bruny Island",
+            "town": "Bruny Island"
           }
         },
         {
@@ -3802,7 +3765,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Eaglehawk_Neck&oldid=1236612754"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -3840,7 +3805,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Norfolk_Bay_(Tasmania)&oldid=1322413461"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -3881,7 +3848,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Frederick_Henry_Bay&oldid=1284328128"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -3920,7 +3889,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Tessellated_pavement&oldid=1320878291"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -3961,7 +3932,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Cape_Pillar&oldid=1236610970"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -4002,7 +3975,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Roaring_Beach&oldid=1288771576"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -4042,7 +4017,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Barn_Bluff&oldid=1161653756"
               }
-            ]
+            ],
+            "belongsToSpot": "Cradle Mountain",
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -4079,7 +4056,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Callington_Mill&oldid=1325400117"
               }
-            ]
+            ],
+            "town": "Oatlands"
           }
         },
         {
@@ -4118,7 +4096,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=West_Coast_Wilderness_Railway&oldid=1316738090"
               }
-            ]
+            ],
+            "belongsToSpot": "Strahan",
+            "town": "Strahan"
           }
         },
         {
@@ -4158,7 +4138,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Russell_Falls&oldid=1291553095"
               }
-            ]
+            ],
+            "belongsToSpot": "Mount Field National Park",
+            "town": "Hobart"
           }
         },
         {
@@ -4237,7 +4219,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Horseshoe_Falls_(Tasmania)&oldid=1291552819"
               }
-            ]
+            ],
+            "belongsToSpot": "Mount Field National Park",
+            "town": "Hobart"
           }
         },
         {
@@ -4275,7 +4259,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Maritime_Museum_Tasmania&oldid=1316211142"
               }
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -4316,7 +4301,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Swansea,_Tasmania&oldid=1310882915"
               }
-            ]
+            ],
+            "town": "Swansea"
           }
         },
         {
@@ -4357,7 +4343,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Coles_Bay,_Tasmania&oldid=1284326130"
               }
-            ]
+            ],
+            "town": "Coles Bay"
           }
         },
         {
@@ -4396,7 +4383,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Tasmania_Zoo&oldid=1319384626"
               }
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -4435,7 +4423,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mount_Mawson&oldid=1319943481"
               }
-            ]
+            ],
+            "belongsToSpot": "Mount Field National Park",
+            "town": "Hobart"
           }
         },
         {
@@ -4475,7 +4465,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Campbell_Town,_Tasmania&oldid=1310483108"
               }
-            ]
+            ],
+            "town": "Campbell Town"
           }
         },
         {
@@ -4556,7 +4547,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Walls_of_Jerusalem_National_Park&oldid=1317870113"
               }
-            ]
+            ],
+            "belongsToSpot": "Cradle Mountain",
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -4594,7 +4587,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Devils_Gullet_State_Reserve&oldid=1315294345"
               }
-            ]
+            ],
+            "belongsToSpot": "Cradle Mountain",
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -4633,7 +4628,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mount_Nelson,_Tasmania&oldid=1322747380"
               }
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -4672,7 +4668,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Franklin,_Tasmania&oldid=1318960628"
               }
-            ]
+            ],
+            "town": "Huonville"
           }
         },
         {
@@ -4713,7 +4710,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Salamanca_Arts_Centre&oldid=1298052444"
               }
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -4789,7 +4787,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -4865,7 +4864,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -4903,7 +4904,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "belongsToSpot": "Freycinet National Park",
+            "town": "Coles Bay"
           }
         },
         {
@@ -4941,7 +4944,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -4979,7 +4983,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Grindelwald"
           }
         },
         {
@@ -5017,7 +5022,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "belongsToSpot": "Bruny Island",
+            "town": "Bruny Island"
           }
         },
         {
@@ -5148,7 +5155,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "belongsToSpot": "Bruny Island",
+            "town": "Bruny Island"
           }
         },
         {
@@ -5186,7 +5195,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Coles Bay"
           }
         },
         {
@@ -5224,7 +5234,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5262,7 +5273,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5338,7 +5350,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Corinna"
           }
         },
         {
@@ -5376,7 +5389,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5414,7 +5428,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Burnie"
           }
         },
         {
@@ -5452,7 +5467,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Wynyard"
           }
         },
         {
@@ -5490,7 +5506,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5604,7 +5621,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -5642,7 +5660,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5680,7 +5699,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Wynyard"
           }
         },
         {
@@ -5718,7 +5738,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5832,7 +5853,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -5870,7 +5892,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Richmond"
           }
         },
         {
@@ -5908,7 +5931,9 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "belongsToSpot": "Strahan",
+            "town": "Strahan"
           }
         },
         {
@@ -5946,7 +5971,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -6022,7 +6048,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -6060,7 +6087,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -6098,7 +6126,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -6136,7 +6165,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -6174,7 +6204,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -6250,7 +6281,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Kempton"
           }
         },
         {
@@ -6364,7 +6396,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Huonville"
           }
         },
         {
@@ -6478,7 +6511,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Penguin"
           }
         },
         {
@@ -6516,7 +6550,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -6554,7 +6589,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -6744,7 +6780,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Huonville"
           }
         },
         {
@@ -6896,7 +6933,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -6972,7 +7010,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -7200,7 +7239,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -7238,7 +7278,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Latrobe"
           }
         },
         {
@@ -7276,7 +7317,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -7662,7 +7704,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Stanley"
           }
         },
         {
@@ -7700,7 +7743,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Latrobe"
           }
         },
         {
@@ -7738,7 +7782,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Latrobe"
           }
         },
         {
@@ -7814,7 +7859,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "url"
               }
-            ]
+            ],
+            "town": "Stanley"
           }
         },
         {
@@ -8279,7 +8325,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Beaconsfield"
           }
         },
         {
@@ -8403,7 +8450,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Beauty Point"
           }
         },
         {
@@ -8434,7 +8482,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -8620,7 +8669,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -8744,7 +8794,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -8806,7 +8857,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Campbell Town"
           }
         },
         {
@@ -8930,7 +8982,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Flinders Island",
+            "town": "Flinders Island"
           }
         },
         {
@@ -8971,7 +9025,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mount_Pelion_West&oldid=1080611822"
               }
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -9093,7 +9148,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mersey_River_(Tasmania)&oldid=1265882430"
               }
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -9155,7 +9211,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Cradle Mountain",
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -9291,7 +9349,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Kingston_Beach&oldid=1290249796"
               }
-            ]
+            ],
+            "town": "Kingston"
           }
         },
         {
@@ -9331,7 +9390,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Macquarie_Harbour_Penal_Station&oldid=130989"
               }
-            ]
+            ],
+            "town": "Strahan"
           }
         },
         {
@@ -9411,7 +9471,8 @@
                 "desc": "Wikipedia,The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Oatlands,_Tasmania&oldid=1320028703"
               }
-            ]
+            ],
+            "town": "Oatlands"
           }
         },
         {
@@ -9442,7 +9503,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Flinders Island",
+            "town": "Flinders Island"
           }
         },
         {
@@ -9473,7 +9536,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Flinders Island",
+            "town": "Flinders Island"
           }
         },
         {
@@ -9814,7 +9879,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -10062,7 +10128,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Penguin"
           }
         },
         {
@@ -10093,7 +10160,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Penguin"
           }
         },
         {
@@ -10279,7 +10347,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "George Town"
           }
         },
         {
@@ -10342,7 +10411,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -11024,7 +11094,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Geeveston"
           }
         },
         {
@@ -11210,7 +11281,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Maria Island",
+            "town": "Triabunna"
           }
         },
         {
@@ -11241,7 +11314,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Maria Island",
+            "town": "Triabunna"
           }
         },
         {
@@ -11303,7 +11378,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -11520,7 +11596,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Mole Creek",
+            "town": "Mole Creek"
           }
         },
         {
@@ -11551,7 +11629,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Mole Creek",
+            "town": "Mole Creek"
           }
         },
         {
@@ -11582,7 +11662,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Richmond"
           }
         },
         {
@@ -11613,7 +11694,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Wynyard"
           }
         },
         {
@@ -11644,7 +11726,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Burnie"
           }
         },
         {
@@ -11675,7 +11758,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Currie"
           }
         },
         {
@@ -11768,7 +11852,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Mole Creek",
+            "town": "Mole Creek"
           }
         },
         {
@@ -12357,7 +12443,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "St Marys"
           }
         },
         {
@@ -12667,7 +12754,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cygnet"
           }
         },
         {
@@ -12884,7 +12972,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         },
         {
@@ -12915,7 +13005,9 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "belongsToSpot": "Tasman Peninsula",
+            "town": "Tasman Peninsula"
           }
         }
       ]
@@ -12933,7 +13025,6 @@
             "route": "The Kentish Hotel",
             "desc": "位于塔斯马尼亚历史小镇Oatlands的遗产乡村酒店，建于1832年。餐厅提供塔斯马尼亚新鲜农产品，午餐和晚餐服务。周三至周日营业。",
             "website": "",
-            "region": "中部地区",
             "town": "Oatlands",
             "features": [
               {
@@ -12967,7 +13058,6 @@
           "tripData": {
             "route": "Great Lake Hotel",
             "desc": "位于塔斯马尼亚中央高地Miena的获奖乡村酒店餐厅，由主厨Paul Foreman掌勺，主打新鲜当地食材（鱼、野味等），提供现代乡村酒吧风格的午餐和晚餐。荣获2022及2023年塔斯马尼亚酒店/酒吧年度金奖。需提前预订，座位有限。",
-            "region": "中部地区",
             "town": "Miena",
             "features": [
               {
@@ -13002,7 +13092,6 @@
           "tripData": {
             "route": "Mill Kitchen at Clyde Mill",
             "desc": "位于塔斯马尼亚Bothwell历史水磨坊内的餐厅，主打季节性、本地食材，提供丰盛家常菜。开放5天（周二、周三关闭），周六营业至深夜。可预订品鉴和导览。",
-            "region": "中部地区",
             "town": "Bothwell",
             "features": [
               {
@@ -13036,7 +13125,6 @@
           "tripData": {
             "route": "Da Angelo Ristorante",
             "desc": "位于霍巴特Battery Point的意大利餐厅，自1994年营业至今。以每日新鲜制作的意面（宽面、意式馄饨、土豆团子、通心粉）和传统比萨闻名。提供温暖友好的就餐氛围，适合家庭聚餐、纪念日等。被多次评为霍巴特顶级意大利餐厅。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -13071,7 +13159,6 @@
           "tripData": {
             "route": "Cataract on Paterson",
             "desc": "位于朗塞斯顿CBD边缘的现代餐厅，以火山石烧烤（Stonegrill）为特色，提供创新且价格合理的菜单。使用塔斯马尼亚本地食材（牛羊肉、海鲜、散养鸡肉等）。设有私密包间（最多18人）和功能空间。酒吧提供精选塔斯马尼亚葡萄酒、啤酒和烈酒及创意鸡尾酒。每天晚餐营业。同时有社区回馈项目“Giving Back”。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -13106,7 +13193,6 @@
           "tripData": {
             "route": "Flora's Restaurant",
             "desc": "位于Craigie Knowe Vineyard内的餐厅，在葡萄园中的帐篷内提供现代塔斯马尼亚菜单，融合亚洲风味。食材部分来自庄园。周五至周二午餐，周六晚餐。可举办婚礼、生日、商务聚会等活动。",
-            "region": "东海岸",
             "town": "Cranbrook",
             "features": [
               {
@@ -13140,7 +13226,6 @@
           "tripData": {
             "route": "Rockwall Bar and Grill",
             "desc": "位于霍巴特历史悠久的Salamanca Place乔治亚砂岩仓库内的餐厅，以塔斯马尼亚优质牛排闻名。菜单主打塔斯马尼亚农产品：草饲牛排、布鲁尼岛生蚝、自由放养Scottsdale猪肉等。大部分菜品无麸质，提供乳糜泻安全用餐体验。设有私人用餐空间，可承办活动和公司聚会。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -13175,7 +13260,6 @@
           "tripData": {
             "route": "Syra Restaurant",
             "desc": "位于霍巴特Battery Point Salamanca Square的餐厅，提供晚餐服务。周三至周日营业，周五至周日中午开始。可通过网站预订或联系。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -13208,7 +13292,6 @@
           "tripData": {
             "route": "The Astor Grill",
             "desc": "位于霍巴特Macquarie Street 1920年代装饰艺术建筑Astor House内的当代餐厅。主打塔斯马尼亚本地食材，提供无麸质、素食、纯素、无乳制品选项。设有两个功能厅（Macquarie Room和Blue Room），可容纳55人坐席/65人站席。周三至周五午餐，周二至周六晚餐。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -13243,7 +13326,6 @@
           "tripData": {
             "route": "The Den",
             "desc": "位于霍巴特Salamanca Place的餐厅与鸡尾酒吧，主打创意鸡尾酒和塔斯马尼亚风味小食。每日中午营业至深夜，提供Jalapeno poppers、烤串等分享式菜品。近马拉松终点线，适合赛后放松。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -13278,7 +13360,6 @@
           "tripData": {
             "route": "Tullah Lakeside Bar and Grill",
             "desc": "位于Tullah Lakeside Lodge内的餐厅，提供早餐、午餐、晚餐。菜单以塔斯马尼亚本地食材为主，包括牛排、鸡肉、海鲜、沙拉等。每周四为Parmi之夜（鸡肉帕尔马）。提供精酿啤酒、本地葡萄酒和鸡尾酒。可在线点餐，有室外座位。",
-            "region": "西海岸",
             "town": "Tullah",
             "features": [
               {
@@ -13312,7 +13393,6 @@
           "tripData": {
             "route": "Central Restaurant & Bar",
             "desc": "位于Formby Hotel内的餐厅与酒吧，以丰富菜单著称，提供共享拼盘、披萨、意面、牛排、海鲜等。设有儿童菜单、葡萄酒单（塔斯马尼亚及澳洲葡萄酒）。生日当天出示证件可免费用主餐。每日黑板特价（如Vale Lamb Feast）。不主动提供蒜香小披萨则可免费获得。可举办功能活动：The Deck（最多32人晚餐）、The Front Room（最多60人）。酒吧周四至周六16:00至深夜，有欢乐时光和现场音乐。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -13347,7 +13427,6 @@
           "tripData": {
             "route": "Taste. by Bold Cuisine",
             "desc": "位于塔斯马尼亚Devonport的高级餐厅，由厨师Simon Bold主理，提供每月更换的融合传统与现代风味的品尝菜单。可选择3道菜（$95/人）或6道菜厨师精选（$120/人），可选配酒。餐厅有丰富酒单和烈酒推车。营业时间周三至周六18:00起。小型场所，不适合15岁以下儿童。不接受严格素食、无乳制品、严重过敏、无洋葱大蒜、无糖及FODMAP饮食。需信用卡预授权，取消或未到场收取$50/人。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -13382,7 +13461,6 @@
           "tripData": {
             "route": "Eat. by Bold Cuisine",
             "desc": "位于塔斯马尼亚Devonport的休闲咖啡馆，提供早餐、午餐及咖啡。菜单注重新鲜时令食材，创意与品质并重。空间现代、温馨，适合放松用餐。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -13417,7 +13495,6 @@
           "tripData": {
             "route": "The Lighthouse Bistro",
             "desc": "位于塔斯马尼亚西北海岸Ulverstone的餐厅，以休闲优雅的氛围、海鲜、烧烤及酒吧经典菜品著称。设有儿童游乐区Goody's Playhouse。提供早餐、午餐、晚餐。促销活动：周一至周四午餐扇贝套餐；儿童免费用餐（条件适用）；生日当天免费用餐；若不主动问是否需要蒜香面包则免费赠送。有老年人折扣。可举办会议及私人活动，Trade Winds会议室最多容纳30人。",
-            "region": "西北部",
             "town": "Ulverstone",
             "features": [
               {
@@ -13452,7 +13529,6 @@
           "tripData": {
             "route": "Kauri Bistro",
             "desc": "位于Tall Timbers Hotel内的获奖餐厅，以塔斯马尼亚本地新鲜食材为特色，尤其以Cape Grim牛排闻名。餐厅以Kauri Timber Company命名，可容纳150人。提供早餐和晚餐，儿童菜单、丰富酒单及鸡尾酒。设有儿童游乐区和足球场，深受家庭客人欢迎。",
-            "region": "西北部",
             "town": "Smithton",
             "features": [
               {
@@ -13487,7 +13563,6 @@
           "tripData": {
             "route": "Rosevears Hotel Restaurant",
             "desc": "位于Rosevears Hotel内的水滨餐厅，拥有落地玻璃窗，可欣赏塔马河全景。供应午餐和晚餐（周一至周日），周末提供吧台简餐（15:00-17:00）。需提前预订（特别是8人以上或24小时内预订）。圣诞节休息。提供正餐、甜点、吧台菜单及酒水单。",
-            "region": "朗塞斯顿及北部",
             "town": "Rosevears",
             "features": [
               {
@@ -13522,7 +13597,6 @@
           "tripData": {
             "route": "Railton Hotel Pub",
             "desc": "位于Railton Hotel内的乡村酒吧，提供啤酒、苹果酒、葡萄酒和酒吧餐食。有台球桌和飞镖。可预订Oregon Room用于私人活动或会议（最多35人）。周二至周日营业。",
-            "region": "西北部",
             "town": "Railton",
             "features": [
               {
@@ -13557,7 +13631,6 @@
           "tripData": {
             "route": "Bridge Bistro",
             "desc": "位于塔斯马尼亚Smithton的餐厅，提供单点正餐和乡村风格吧台餐。设有餐桌、私人卡座和吧台用餐区。促销活动：生日当天免费用餐、若服务员未主动问询则免费赠送蒜香面包、老年人优惠。有儿童菜单。毗邻The Nut、Stanley和Tarkine荒野等景点。",
-            "region": "西北部",
             "town": "Smithton",
             "features": [
               {
@@ -13591,7 +13664,6 @@
           "tripData": {
             "route": "Beach Hotel Burnie Bistro",
             "desc": "位于Beach Hotel Burnie内的获奖餐厅，提供早餐、午餐和晚餐。菜单使用塔斯马尼亚本地食材，包括Cape Grim牛排和当地龙虾。餐厅可容纳120人，适合生日、庆典等。提供宴会、自助餐、定制菜单等选项。",
-            "region": "西北部",
             "town": "Burnie",
             "features": [
               {
@@ -13630,7 +13702,6 @@
           "tripData": {
             "route": "Get Shucked",
             "desc": "位于塔斯马尼亚布鲁尼岛的生蚝农场直营餐厅，提供从海湾到餐桌的新鲜太平洋生蚝。菜单包括天然生蚝及多种烹饪方式（Kilpatrick、亚洲风味等），可点混合拼盘。设有生蚝外带服务（含柠檬）及全球首家生蚝汽车穿梭店。餐厅供应塔斯马尼亚葡萄酒、啤酒、苹果酒及软饮。",
-            "region": "霍巴特及南部",
             "town": "Bruny Island",
             "features": [
               {
@@ -13665,7 +13736,6 @@
           "tripData": {
             "route": "Ashgrove Cheese",
             "desc": "位于塔斯马尼亚Elizabeth Town的家族乳制品农场及奶酪工厂，自1993年起生产优质奶酪、牛奶、奶油和黄油。Dairy Door提供早餐、午餐、奶酪吐司、松露奶酪火锅、High Cheese（奶酪版下午茶）、Cheesy Flight等体验。可观看奶酪制作过程，购买农场特产和礼品。",
-            "region": "西北部",
             "town": "Elizabeth Town",
             "features": [
               {
@@ -13706,7 +13776,6 @@
           "tripData": {
             "route": "Tesoro",
             "desc": "位于霍巴特市中心的现代意大利餐厅，主厨Glen Tilly融合塔斯马尼亚本地食材与传统意大利烹饪，提供早餐、早午餐、午餐、晚餐及开胃酒。设有私人包间（可容纳34人），适合举办活动。招牌菜品包括桌边奶酪车轮黑椒意面，特色体验包括High Cheese、芝士飞行拼盘等。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -13744,7 +13813,6 @@
           "tripData": {
             "route": "Bruny Island Cheese Co.",
             "desc": "位于布鲁尼岛的 artisan 奶酪工厂兼品鉴室，由 Nick Haddow 于 2003 年创立。现场可免费品尝奶酪和啤酒，观看奶酪制作，并设有 dine-in 菜单（奶酪拼盘、午餐）。提供付费品鉴体验（$40/人，周一至周六 11:30），需预约。同时销售自产精酿啤酒和调味品。",
-            "region": "霍巴特及南部",
             "town": "Bruny Island",
             "features": [
               {
@@ -13785,7 +13853,6 @@
           "tripData": {
             "route": "Suzie Lucks Restaurant + Bar",
             "desc": "位于霍巴特Battery Point Salamanca Square的亚洲融合餐厅与酒吧，以南亚风味为灵感，使用塔斯马尼亚本地食材。提供午餐、晚餐及创意鸡尾酒，有专门的素食、纯素及无麸质选项。可举办私人活动，主餐厅可容纳150人，私密中庭适合14-100人。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -13823,7 +13890,6 @@
           "tripData": {
             "route": "Mr. Good Guy",
             "desc": "位于德文港和霍巴特的两家现代亚洲餐厅，主打东南亚街头风味，融合塔斯马尼亚本地食材。提供午餐、晚餐及创意鸡尾酒，设有酒吧和私人活动空间。德文港分店获评塔斯马尼亚最佳亚洲餐厅（2018）。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -13856,7 +13922,6 @@
           "tripData": {
             "route": "Lost Farm Sports Bar",
             "desc": "位于塔斯马尼亚Barnbougle Lost Farm高尔夫度假村内的体育酒吧，提供赛后小酌和休闲餐饮。每天中午开放至深夜，供应冷饮和酒吧简餐，可自烤BBQ包，设有台球桌、Tote投注和超过10个体育频道。是放松、观赛、社交的理想场所。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -13890,7 +13955,6 @@
           "tripData": {
             "route": "The Dunes Clubhouse",
             "desc": "位于塔斯马尼亚Barnbougle The Dunes高尔夫球场内的海滨俱乐部餐厅，每日供应早餐、午餐和晚餐，主打新鲜塔斯马尼亚食材的丰盛餐食。设有酒吧和休息区，冬季开放壁炉，营业至深夜。欢迎预订晚餐。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -13924,7 +13988,6 @@
           "tripData": {
             "route": "Fork it Farm",
             "desc": "位于塔斯马尼亚Lebrina的农场、肉制品工坊及餐饮体验场地，专注饲养伯克郡猪，制作手工香肠、培根、火腿等。提供私人餐饮体验：长桌宴（10-12人，$1900起）和户外野餐派对（最多20人，$35/人），可自带酒水。也可参观农场、入住农场民宿。",
-            "region": "朗塞斯顿及北部",
             "town": "Lebrina",
             "features": [
               {
@@ -13964,7 +14027,6 @@
           "tripData": {
             "route": "Restaurant MARIA",
             "desc": "位于霍巴特布鲁克街码头的地中海风味餐厅，灵感源自20世纪60年代地中海沿岸的浪漫与优雅。提供厨师精选菜单（$140/人，配酒+$100），不接受单点，可满足素食/鱼素等饮食需求。设有私人包间（最多20人）及全店包场（130人站立/62人就坐）。营业时间为周二至周六17:30-22:00。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -13998,7 +14060,6 @@
           "tripData": {
             "route": "Pitzi Pasta Bar",
             "desc": "位于霍巴特市中心的意式手工面食吧，专营新鲜手工意面和季节性开胃菜。5人以上团体须选择每位$95的套餐。取消预约需提前12小时以上，否则收取$50/人。不接受素食或生酮饮食。欢迎儿童但无高脚椅和儿童菜单。提供私人活动承办。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14035,7 +14096,6 @@
           "tripData": {
             "route": "Pigeon Whole Bakers",
             "desc": "位于霍巴特CBD的手工面包房，成立于2011年，以新鲜酸面包、糕点、三明治和咖啡闻名。店内设有少量靠窗堂食座位，主要以外带为主。提供多种面包（石磨酸面包、蔓越莓核桃、淡黑麦等）、可颂、巧克力面包、杏仁可颂、三明治等。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14069,7 +14129,6 @@
           "tripData": {
             "route": "Shambles Brewery",
             "desc": "位于霍巴特Elizabeth Street的精酿啤酒厂和酒吧，由前科学老师Cornel和朋友于2015年创立，场地前身为肉加工厂，故名‘Shambles’。主打多种自酿啤酒（如夏日艾尔、美式IPA、赛松IPA、波特等）。设有啤酒花园、大型功能空间、乒乓球桌。提供零食、简餐（可查看官网）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14107,7 +14166,6 @@
           "tripData": {
             "route": "Hobart Brewing Co.",
             "desc": "位于霍巴特水滨红棚内的精酿啤酒厂，2015年创立。提供16+款新鲜桶装啤酒，另有葡萄酒和烈酒。设有台球桌、火坑，常有餐车驻场（周四至周日）。Taproom 7天开放，周一至周五15:00起，周末12:00起。不设预订，先到先得。无现金支付。可承办活动。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14145,7 +14203,6 @@
           "tripData": {
             "route": "Melshell Oyster Shack",
             "desc": "位于塔斯马尼亚东海岸 Dolphin Sands 的家庭生蚝农场，自1984年经营。提供现开新鲜生蚝（$28/打起）、自烤海鲜串（含虾、生蚝、扇贝等）及塔斯马尼亚葡萄酒（$12/杯起）。设有水滨座位，可参加农场导览。仅工作日开放（10am-4pm），周末及公共假日休息。",
-            "region": "东海岸",
             "town": "Dolphin Sands",
             "features": [
               {
@@ -14186,7 +14243,6 @@
           "tripData": {
             "route": "Tarkine Fresh Oysters",
             "desc": "位于塔斯马尼亚西北部Smithton的生蚝农场零售店与咖啡馆，拥有超过40年养殖历史。提供新鲜现开生蚝、预包装生蚝（新鲜或调味）、特色海鲜浓汤、生蚝宝包等。可参与岸上生蚝农场参观（$30/人或$60/人含品鉴和葡萄酒/啤酒）。零售店和咖啡馆周二至周六营业，可预约游览。",
-            "region": "西北部",
             "town": "Smithton",
             "features": [
               {
@@ -14223,7 +14279,6 @@
           "tripData": {
             "route": "Freycinet Marine Farm",
             "desc": "位于塔斯马尼亚东海岸Coles Bay的海鲜餐厅和零售点，主营太平洋生蚝、塔斯马尼亚蓝青口、扇贝、龙虾、三文鱼等本地海鲜。提供现开生蚝、青口、炸鱼薯条、海鲜浓汤等，有户外甲板座位。也提供外带和海鲜礼盒。不设预订，欢迎散客。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -14261,7 +14316,6 @@
           "tripData": {
             "route": "Lobster Shack Tasmania",
             "desc": "位于塔斯马尼亚东海岸Bicheno水滨的龙虾主题咖啡馆，每日供应新鲜南部岩龙虾（活龙虾现场烹饪），招牌龙虾卷、芝士焗龙虾、蒜蓉黄油龙虾等。同时提供生蚝、扇贝、海鲜拼盘、炸鱼薯条、无麸质选项。设有户外甲板、小型海事博物馆。仅限Walk-in，可外带，宠物狗允许上甲板。",
-            "region": "东海岸",
             "town": "Bicheno",
             "features": [
               {
@@ -14295,7 +14349,6 @@
           "tripData": {
             "route": "Aloft",
             "desc": "位于霍巴特布鲁克街码头顶层的水滨餐厅，提供俯瞰德文特河的壮丽景色。主打塔斯马尼亚本地时令食材，菜单为厨师精选品尝菜单（$150/人，可选配酒$100），融合泛亚洲风味，有素食/纯素/鱼素选项。仅供应晚餐，周二至周六17:30起。设有开放式厨房吧台座位。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14328,7 +14381,6 @@
           "tripData": {
             "route": "The Point Revolving Restaurant",
             "desc": "位于霍巴特Wrest Point酒店17层的旋转餐厅，俯瞰德文特河，提供法式灵感菜单。选用塔斯马尼亚优质食材，招牌菜包括桌边烹制的Crêpes Suzette。母亲节午餐（5月10日）$175/人，儿童$75。晚餐周二至周六18:00起。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14365,7 +14417,6 @@
           "tripData": {
             "route": "Boardwalk Café",
             "desc": "位于霍巴特Wrest Point酒店内的河畔咖啡馆，提供新鲜咖啡、小吃、自制糕点、吐司、披萨等，可欣赏德文特河景。宽敞明亮的中庭空间，适合朋友聚会。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14402,7 +14453,6 @@
           "tripData": {
             "route": "Longhorn Smokehouse",
             "desc": "位于霍巴特Wrest Point内的美式烧烤餐厅，主打‘低温慢煮’烟熏肉类，如猪肋排、手撕猪肉、和牛西冷、熏牛胸肉等，使用本地食材和自制酱汁。设有多种美酒及鸡尾酒。可接待团体活动。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14436,7 +14486,6 @@
           "tripData": {
             "route": "Kwan Ho",
             "desc": "位于霍巴特Wrest Point内的中餐厅，由Me Wah餐厅经营，提供粤菜、川菜、上海菜等，适合共享宴会。餐厅俯瞰德文特河、塔斯曼大桥和码头。2026年6月8-22日关闭。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14470,7 +14519,6 @@
           "tripData": {
             "route": "Boardwalk Bistro",
             "desc": "位于霍巴特Wrest Point内的家庭友好餐厅，提供自助早餐、午餐、晚餐。菜单包括烤肉、披萨、汉堡，设有无麸质、无乳糖、素食、清真等选项。特色甜品为‘无限圣代’（$16/人）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14504,7 +14552,6 @@
           "tripData": {
             "route": "Barilla Bay",
             "desc": "位于塔斯马尼亚Cambridge的生蚝农场与海鲜餐厅，俯瞰皮特沃特保护区。提供新鲜生蚝及多种塔斯马尼亚海鲜、非海鲜选项。设有零售店及楼上餐厅（需预订）。每月最后一个周四（10-4月，除12月）举办畅吃生蚝之夜（$65/人）。可参加生蚝农场、姜汁啤酒及鲍鱼加工厂之旅（周四至周六11:00）。也可承办婚礼和活动。",
-            "region": "霍巴特及南部",
             "town": "Cambridge",
             "features": [
               {
@@ -14538,7 +14585,6 @@
           "tripData": {
             "route": "Pearl + Co",
             "desc": "位于霍巴特维多利亚码头的水滨生蚝吧与餐厅，提供新鲜塔斯马尼亚生蚝、生鱼片、生腌鱼塔可、海鲜意面、龙虾等。饮品包括鸡尾酒、本地葡萄酒、精酿啤酒和苹果酒。设有户外甲板座位，可欣赏码头美景。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14573,7 +14619,6 @@
           "tripData": {
             "route": "Kelp Bar",
             "desc": "位于霍巴特维多利亚码头Mures顶层的海滨酒吧与餐厅，可欣赏宪法码头及威灵顿山美景。提供塔斯马尼亚海鲜、本地精酿啤酒、国际烈酒、丰富葡萄酒及创意鸡尾酒。设有户外阳台和室内壁炉区，每日下午4-6点为鸡尾酒欢乐时光（$15）。可承办私人活动。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14609,7 +14654,6 @@
           "tripData": {
             "route": "Fish Frenzy",
             "desc": "位于霍巴特Sullivans Cove伊丽莎白街码头的水滨海鲜餐厅，以新鲜鱼薯、海鲜拼盘、海鲜浓汤闻名。荣获2020年TripAdvisor旅行者选择奖。提供室内外座位，可堂食或外带。不提供预订和电话订单，快速服务。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14649,7 +14693,6 @@
           "tripData": {
             "route": "Drunken Admiral",
             "desc": "位于霍巴特旧码头猎人街的家庭经营海鲜餐厅，自1979年营业，以独特的航海主题氛围和新鲜塔斯马尼亚海鲜著称。菜单提供海鲜、非海鲜选项（鸡肉、牛肉等），每日更新渔获，可按喜好烹饪。设有全套酒吧，精选塔州葡萄酒、啤酒、金酒和威士忌。可接待大型团体、提供套餐菜单，也可预订蛋糕。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14683,7 +14726,6 @@
           "tripData": {
             "route": "Blue Eye",
             "desc": "位于霍巴特Salamanca Place历史谷物筒仓内的海鲜餐厅，主打新鲜本地塔斯马尼亚鱼和海鲜，提供生蚝、烤鱼、鱼薯以及每日季节特色菜。下午3-5点为生蚝特惠时段（$2.5/个）。有无麸质、无乳制品及非海鲜选项。周二至周六营业，可堂食或外带。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14720,7 +14762,6 @@
           "tripData": {
             "route": "The Elegance Lounge Seafood Bar & Grill",
             "desc": "位于德文港Rooke Street的斯里兰卡-塔斯马尼亚融合海鲜烧烤餐厅，主打火焰炙烤的塔斯马尼亚海鲜（生蚝、扇贝、龙虾、牛肉等），提供午餐和晚餐，拥有多个风格各异的私人活动空间（Sunset Bay、The Pearl等）。融合斯里兰卡热情与塔州纯净食材，环境优雅而温馨。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -14758,7 +14799,6 @@
           "tripData": {
             "route": "Hamlet Cafe",
             "desc": "位于霍巴特Molle Street的社会企业咖啡馆，为残障、神经多样性及有心理健康问题的人士提供培训与就业机会。使用塔斯马尼亚时令食材，供应早餐和午餐，周一至周五营业。所有收益用于支持包容性就业项目。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14792,7 +14832,6 @@
           "tripData": {
             "route": "Sunbear",
             "desc": "位于霍巴特Collins Street的家庭经营咖啡馆，营造宾至如归的温馨氛围。使用塔斯马尼亚本地食材自制食品（面包、酱料、糕点等），提供早餐和午餐简餐。店内装修采用回收材料，注重环保。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14826,7 +14865,6 @@
           "tripData": {
             "route": "Jam Packed Cafe",
             "desc": "位于霍巴特历史水滨猎人街的咖啡馆，每日供应咖啡、甜品及全日餐点。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14865,7 +14903,6 @@
           "tripData": {
             "route": "Landscape Restaurant & Grill",
             "desc": "位于霍巴特猎人街水滨区历史悠久的IXL果酱工厂内的获奖高级餐厅，专注于塔斯马尼亚优质食材，采用Asado炭烤方式烹饪。设有私人包间，展示约翰·格洛弗艺术奖获奖作品。2025年塔斯马尼亚酒店奖最佳高级餐厅得主。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -14899,7 +14936,6 @@
           "tripData": {
             "route": "Leaping Goat",
             "desc": "位于塔斯马尼亚西北部Quoiba的特色咖啡烘焙店兼咖啡馆，自2014年起小批量烘焙精品咖啡豆，提供多种拼配和单一产地咖啡。店内可品尝咖啡、购买咖啡豆及设备，也有咖啡饮用。团队拥有超过20年行业经验。",
-            "region": "西北部",
             "town": "Quoiba",
             "features": [
               {
@@ -14932,7 +14968,6 @@
           "tripData": {
             "route": "Infuse Coffee Roasters",
             "desc": "位于塔斯马尼亚西北部South Burnie的精品咖啡烘焙坊和咖啡馆，成立于2010年。提供多款获奖咖啡豆、单品豆、冲泡器具及配件，设有Espresso Bar，可品尝现做咖啡及轻食。店内还有多种冲泡演示和器具销售。",
-            "region": "西北部",
             "town": "South Burnie",
             "features": [
               {
@@ -14967,7 +15002,6 @@
           "tripData": {
             "route": "Mount Gnomon Farm",
             "desc": "位于塔斯马尼亚西北部Penguin的农场餐厅与住宿体验地，以自由放养稀有品种猪、羊、牛以及菜园农产为基础。食材来自自家农场，主打从农场到餐桌。同时设有五座豪华穹顶住宿、婚礼及活动场地。",
-            "region": "西北部",
             "town": "Penguin",
             "features": [
               {
@@ -15004,7 +15038,6 @@
           "tripData": {
             "route": "Mudbar Restaurant",
             "desc": "位于朗塞斯顿Seaport Boulevard的水滨餐厅和酒吧，主营新鲜塔斯马尼亚本地食材，融合亚洲与欧洲风味。提供午餐、晚餐及丰富鸡尾酒，拥有私人酒窖和活动空间。食材部分来自自有农场，践行从农场到餐桌理念。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -15037,7 +15070,6 @@
           "tripData": {
             "route": "Van Diemens Land Creamery - Elizabeth Town",
             "desc": "位于塔斯马尼亚Elizabeth Town的冰激凌工厂与咖啡馆，自2005年家族经营，使用自家农场的鲜奶制作冰激凌。提供午餐（11:00-15:00）和甜点，经典及特色冰激凌口味如胡椒浆果与革木蜂蜜、咸焦糖等。可观看冰激凌制作过程。",
-            "region": "西北部",
             "town": "Elizabeth Town",
             "features": [
               {
@@ -15070,7 +15102,6 @@
           "tripData": {
             "route": "VDLC Waterfront Punt",
             "desc": "位于霍巴特宪法码头的浮动冰激凌店，提供由自家牧场新鲜制作的冰激凌和甜品，可欣赏水滨景色。提供多种纯素选项（使用蚕豆蛋白制成）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15104,7 +15135,6 @@
           "tripData": {
             "route": "Miners Gold Brewery",
             "desc": "位于塔斯马尼亚Beaconsfield的精酿啤酒厂与餐厅，成立于2019年，以Beaconsfield金矿历史命名。主打新鲜塔斯马尼亚手工啤酒（含IPA、酸啤酒等），餐厅提供当地食材制作的菜肴，包括澳洲经典、Cape Grim牛排、垂直烤串及无麸质/素食选项。设有户外啤酒花园和木柴壁炉。",
-            "region": "朗塞斯顿及北部",
             "town": "Beaconsfield",
             "features": [
               {
@@ -15138,7 +15168,6 @@
           "tripData": {
             "route": "Ghost Rock Eatery",
             "desc": "位于塔斯马尼亚西北部Cradle Coast产区的酒庄餐厅，提供午餐（每日11:00-15:30）和酒庄品鉴（11:00-17:00），主打本地塔斯马尼亚农产品。餐厅和酒窖门俯瞰葡萄园和巴斯海峡。可在餐厅享用午餐后参加品鉴。设有三卧室庄园住宿。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -15172,7 +15201,6 @@
           "tripData": {
             "route": "The Berry Patch",
             "desc": "位于塔斯马尼亚Turners Beach的家庭经营农场，拥有超过20年浆果种植历史。设有农场咖啡馆和乡村商店，提供新鲜时令浆果、蔬菜、自制果酱等农产品。菜单主打从农场到餐桌的料理。",
-            "region": "西北部",
             "town": "Turners Beach",
             "features": [
               {
@@ -15211,7 +15239,6 @@
           "tripData": {
             "route": "Fico",
             "desc": "位于霍巴特Macquarie Street的休闲高级餐厅，提供9道菜套餐（经典$185，含牡蛎/鱼子酱/松露/奶酪的$240）。菜单每周更换，使用塔斯马尼亚本地时令可持续食材。曾获多项奖项，包括2021/2022年塔斯马尼亚年度餐厅。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15245,7 +15272,6 @@
           "tripData": {
             "route": "Windows on Westella",
             "desc": "位于塔斯马尼亚Ulverstone的全天候现代咖啡馆，提供塔斯马尼亚本地食品和葡萄酒。特色菜包括腌洋葱和美味华夫饼。可参观相邻的塔州腌洋葱生产设施，并俯瞰Broad Acres葡萄园。",
-            "region": "西北部",
             "town": "Ulverstone",
             "features": [
               {
@@ -15286,7 +15312,6 @@
           "tripData": {
             "route": "Templo",
             "desc": "位于霍巴特帕特里克街的小型邻家餐厅，仅设25个座位。提供每日更换的固定价格菜单（$100/人），注重塔斯马尼亚本地时令食材和小生产者的自然酒。欢迎自带酒水（每瓶$30开瓶费）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15323,7 +15348,6 @@
           "tripData": {
             "route": "Faro Bar + Restaurant",
             "desc": "位于霍巴特MONA博物馆内的艺术餐厅，由行政主厨Vince Trim主理。午餐提供单点或四道菜厨师菜单（$135/人），晚餐提供五道菜（$185/人）或七道菜配酒奢享套餐（$375/人）。餐厅拥有James Turrell灯光艺术装置、河山景观及现场音乐表演。需预订（晚餐必须预订）。",
-            "region": "霍巴特及南部",
             "town": "Berriedale",
             "features": [
               {
@@ -15360,7 +15384,6 @@
           "tripData": {
             "route": "Fern Tree Tavern",
             "desc": "位于塔斯马尼亚Fern Tree山脚下的乡村酒馆，提供自制舒适餐食、塔州啤酒葡萄酒和特色蛋糕。适合登山后放松或家庭聚餐。可举办婚礼和派对等。",
-            "region": "霍巴特及南部",
             "town": "Fern Tree",
             "features": [
               {
@@ -15398,7 +15421,6 @@
           "tripData": {
             "route": "Waterman's Hotel",
             "desc": "位于霍巴特Salamanca Place的历史酒店内的餐厅和酒吧，使用塔斯马尼亚时令农产品，提供午餐特价（周二至周五）和晚餐菜单。可品尝塔州葡萄酒、啤酒和金酒。环境优雅，适合浪漫晚餐或朋友聚会。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -15437,7 +15459,6 @@
           "tripData": {
             "route": "Deep South Brewing Co.",
             "desc": "位于北霍巴特Argyle Street的精酿啤酒厂兼餐厅，提供多款自酿啤酒和时令小酒。楼下设私人包间、台球桌和酿酒区，楼上夹层用餐区适合大型团体。可承接婚礼、派对等活动。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -15470,7 +15491,6 @@
           "tripData": {
             "route": "Spotty Dog Brewerys",
             "desc": "位于霍巴特Derwent Park的独立精酿啤酒厂兼餐吧，主打金牌啤酒和店内炸鸡。厨房Chicken Shop供应炸鸡、汉堡、素食选项等。拥有绝佳的海湾和威灵顿山景观，可承办私人活动。",
-            "region": "霍巴特及南部",
             "town": "Derwent Park",
             "features": [
               {
@@ -15509,7 +15529,6 @@
           "tripData": {
             "route": "Peppina",
             "desc": "位于霍巴特Salamanca Place的历史建筑内，提供现代意式料理，突出塔斯马尼亚食材。早餐每日7:00-10:30供应，晚餐分为周日至周四17:30-20:30和周五周六17:00-20:30。招牌包括木烤肉丸、烤章鱼、龙虾意面、提拉米苏等。可预约私人包间。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15543,7 +15562,6 @@
           "tripData": {
             "route": "Ogee",
             "desc": "位于北霍巴特Murray Street的小型邻家餐厅，仅28座，灵感源自欧洲小酒馆。有露天座位。不接受7人以上团体预订。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -15577,7 +15595,6 @@
           "tripData": {
             "route": "Old Wharf Restaurant",
             "desc": "位于霍巴特Hunter Street历史码头区的餐厅，由主厨Alvin Sim主理，菜单融合经典菜式与塔斯马尼亚本地食材。可欣赏海港景色。提供团体预订。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15609,7 +15626,6 @@
           "tripData": {
             "route": "Bush Inn Brewhouse",
             "desc": "位于塔斯马尼亚Deloraine历史建筑（建于1848年）内的家族经营精酿啤酒厂与餐厅。提供小批量精酿啤酒、塔斯马尼亚葡萄酒和烈酒，菜单使用本地食材。可承办私人活动。",
-            "region": "朗塞斯顿及北部",
             "town": "Deloraine",
             "features": [
               {
@@ -15647,7 +15663,6 @@
           "tripData": {
             "route": "Willie Smith's Apple Shed",
             "desc": "位于塔斯马尼亚休恩河谷Grove的苹果主题餐厅和酒厂，提供本地苹果酒、季节性塔斯马尼亚美食（著名苹果派、猪肉、素食等）。设有苹果博物馆、每周五现场音乐、每周六艺术市集。可举办婚礼和活动。",
-            "region": "霍巴特及南部",
             "town": "Grove",
             "features": [
               {
@@ -15681,7 +15696,6 @@
           "tripData": {
             "route": "Sonny Wine Bar",
             "desc": "位于霍巴特Elizabeth Street的邻家葡萄酒吧，仅提供吧台和小桌座位，经营自然酒和本地食材小食（生蚝、吐司、意面、奶酪等）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15717,7 +15731,6 @@
           "tripData": {
             "route": "Bar Wa Izakaya",
             "desc": "位于霍巴特Elizabeth Street的日式居酒屋，融合塔斯马尼亚与东京风味，提供多样化分享小菜、拉面（午市12:00-15:00）、清酒、鸡尾酒及日本啤酒。设有楼上休息室和壁炉区。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -15752,7 +15765,6 @@
           "tripData": {
             "route": "The Bay Restaurant",
             "desc": "位于塔斯马尼亚Freycinet国家公园Coles Bay内的餐厅，供应当代澳洲风味早餐（自助）和晚餐（单点），主打塔斯马尼亚海鲜和本地葡萄酒。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -15786,7 +15798,6 @@
           "tripData": {
             "route": "Richardson's Bistro",
             "desc": "位于塔斯马尼亚Freycinet国家公园内Richardson's Beach旁的休闲餐厅，提供海鲜、汉堡、牛排、咖啡茶点等全日餐饮。冬季暂时关闭（期间改为Hazards Bar and Lounge供应简餐）。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -15819,7 +15830,6 @@
           "tripData": {
             "route": "Hazards Bar & Lounge",
             "desc": "位于塔斯马尼亚Freycinet Lodge内的酒吧及休息室，提供塔斯马尼亚啤酒、葡萄酒、苹果酒和鸡尾酒。设有开放式壁炉。",
-            "region": "东海岸",
             "town": "Coles Bay",
             "features": [
               {
@@ -15853,7 +15863,6 @@
           "tripData": {
             "route": "Kate's Berry Farm",
             "desc": "位于塔斯马尼亚东海岸Swansea的浆果农场咖啡馆，供应新鲜浆果甜品、冰淇淋等季节性农产品。",
-            "region": "东海岸",
             "town": "Swansea",
             "features": [
               {
@@ -15891,7 +15900,6 @@
           "tripData": {
             "route": "The Agrarian Kitchen",
             "desc": "位于塔斯马尼亚New Norfolk的获奖餐厅，主打从自家菜园和本地供应商采购的季节性食材，提供固定午间套餐（$220/人）。餐厅采用传统手艺（奶酪制作、全动物屠宰、发酵、柴火烹饪等）。接受预订，需提前24小时告知饮食要求。",
-            "region": "霍巴特及南部",
             "town": "New Norfolk",
             "features": [
               {
@@ -15925,7 +15933,6 @@
           "tripData": {
             "route": "Born In Brunswick",
             "desc": "位于北霍巴特Elizabeth Street的全日早午餐咖啡馆。菜单使用本地、可持续、时令食材，提供酸面包、塔州章鱼炒蛋、炸鸡汉堡、热蛋糕、提拉米苏法式吐司等，有素食选项。可承办最多150人的站立式活动。周末及公共假日实行一桌一单，仅接受Walk-in。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -15962,7 +15969,6 @@
           "tripData": {
             "route": "Timbre Kitchen",
             "desc": "位于塔斯马尼亚西塔马Legana Velo Wines内的餐厅，由主厨Matt Adams创立于2016年。每日更换菜单，使用本地社区后院种植的时令食材，突出发酵和腌制工艺。供应共享式餐桌宴会，主打木火烹饪。可举办婚礼和特别活动。",
-            "region": "朗塞斯顿及北部",
             "town": "Legana",
             "features": [
               {
@@ -15998,7 +16004,6 @@
           "tripData": {
             "route": "Mures Upper Deck",
             "desc": "位于霍巴特维多利亚码头的获奖海鲜餐厅，家族经营超过50年，拥有自家渔船实现“从钩到盘”。主打塔斯马尼亚本地海鲜和可持续渔业。可举办最多150人坐席或180人鸡尾酒会的活动。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -16035,7 +16040,6 @@
           "tripData": {
             "route": "Mures Lower Deck",
             "desc": "位于霍巴特维多利亚码头的家庭友好型海鲜小酒馆及咖啡馆。提供经典炸鱼薯条、塔州扇贝、鱿鱼、生蚝、海鲜拼盘、披萨等，同时有36+种口味冰淇淋、鱼市场零售柜台。可外带或堂食。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -16069,7 +16073,6 @@
           "tripData": {
             "route": "Hursey Seafoods",
             "desc": "位于塔斯马尼亚Stanley港口的海鲜餐厅，拥有自家渔船船队，可持续捕捞野生海鲜。招牌菜为活龙虾（全年供应）、钩钓鲨鱼、条纹笛鲷、巨型螃蟹等。提供室内外用餐、外带及新鲜鱼零售。餐厅设有电梯，可容纳100人，适合家庭用餐和私人活动。",
-            "region": "西北部",
             "town": "Stanley",
             "features": [
               {
@@ -16104,7 +16107,6 @@
           "tripData": {
             "route": "41° South Tasmania and Georgie's Cafe",
             "desc": "位于塔斯马尼亚Red Hills的咖啡馆与农场体验地，提供自产内陆淡水养殖的Atlantic Salmon制成的热熏三文鱼产品，以及本地人参制品。咖啡馆菜单以熏三文鱼和当地时令食材为主。可自助参观农场、湿地、喂鱼，了解可持续养殖方式，团体可预约导览。",
-            "region": "朗塞斯顿及北部",
             "town": "Red Hills",
             "features": [
               {
@@ -16255,7 +16257,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Battery Point"
           }
         },
         {
@@ -16287,7 +16290,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -16319,7 +16323,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -16607,7 +16612,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Battery Point"
           }
         },
         {
@@ -16639,7 +16645,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -16671,7 +16678,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Battery Point"
           }
         },
         {
@@ -17055,7 +17063,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -17087,7 +17096,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -17695,7 +17705,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Tamar Valley"
           }
         },
         {
@@ -18623,7 +18634,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Sandy Bay"
           }
         },
         {
@@ -19752,7 +19764,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cygnet"
           }
         },
         {
@@ -19783,7 +19796,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cygnet"
           }
         },
         {
@@ -21209,7 +21223,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -22171,7 +22186,8 @@
               "Modern Australian",
               "Cellar Door",
               "Coal River Valley"
-            ]
+            ],
+            "town": "Richmond"
           }
         },
         {
@@ -22238,7 +22254,8 @@
               "Restaurant",
               "Retail",
               "Family Friendly"
-            ]
+            ],
+            "town": "Richmond"
           }
         },
         {
@@ -22273,7 +22290,8 @@
               "Cider",
               "Dog Friendly",
               "Event Space"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22306,7 +22324,8 @@
               "海鲜",
               "获奖餐厅",
               "历史遗址"
-            ]
+            ],
+            "town": "Oatlands"
           }
         },
         {
@@ -22338,7 +22357,8 @@
               "持牌酒吧",
               "乔治亚建筑",
               "塔斯马尼亚"
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -22371,7 +22391,8 @@
               "塔斯马尼亚食材",
               "预约制",
               "日式"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22404,7 +22425,8 @@
               "塔斯马尼亚食材",
               "季节性菜单",
               "预约制"
-            ]
+            ],
+            "town": "Coles Bay"
           }
         },
         {
@@ -22437,7 +22459,8 @@
               "牛排",
               "公共假日附加费",
               "霍巴特"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22470,7 +22493,8 @@
               "早午餐",
               "无现金",
               "私人用餐"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22503,7 +22527,8 @@
               "塔斯马尼亚食材",
               "素食友好",
               "海滨"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22534,7 +22559,8 @@
               "精致餐饮",
               "塔斯马尼亚食材",
               "历史庄园"
-            ]
+            ],
+            "town": "Prospect"
           }
         },
         {
@@ -22565,7 +22591,8 @@
               "历史建筑",
               "塔斯马尼亚食材",
               "酒庄餐厅"
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -22597,7 +22624,8 @@
               "活动场地",
               "午餐晚餐",
               "Huonville"
-            ]
+            ],
+            "town": "Huonville"
           }
         },
         {
@@ -22630,7 +22658,8 @@
               "晚餐",
               "朗塞斯顿",
               "可承办活动"
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -22663,7 +22692,8 @@
               "家庭友好",
               "历史建筑",
               "性价比"
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -22696,7 +22726,8 @@
               "泰式",
               "深夜营业",
               "素食选项"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -22729,7 +22760,8 @@
               "儿童攀岩",
               "狗友好",
               "啤酒吧"
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -22761,7 +22793,8 @@
               "早餐",
               "客房送餐",
               "Devonport"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -22794,7 +22827,8 @@
               "壁炉",
               "私密活动",
               "Wynyard"
-            ]
+            ],
+            "town": "Wynyard"
           }
         },
         {
@@ -22827,7 +22861,8 @@
               "厨师帽奖",
               "成人用餐",
               "预订制"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -22860,7 +22895,8 @@
               "咖啡",
               "家庭友好",
               "海景"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -22891,7 +22927,8 @@
               "度假村餐厅",
               "山景",
               "木火炉"
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -22923,7 +22960,8 @@
               "客房送餐",
               "塔斯马尼亚葡萄酒",
               "西海岸"
-            ]
+            ],
+            "town": "Zeehan"
           }
         }
       ]
@@ -27642,7 +27680,6 @@
           "tripData": {
             "route": "Great Lake Hotel Accommodation",
             "desc": "位于塔斯马尼亚中央高地Miena小镇，大湖岸边，提供多种经济型住宿选择：国王自炊客房、家庭客房、国王客房及新建钓鱼小屋。所有房间均配有高品质床品、戴森取暖器、电热毯及独立卫浴（钓鱼小屋为公共卫浴）。部分房间配有小厨房或全套厨房。含欧陆早餐（送房）。",
-            "region": "中部地区",
             "town": "Miena",
             "features": [
               {
@@ -27678,7 +27715,6 @@
           "tripData": {
             "route": "Tullah Lakeside Lodge",
             "desc": "位于塔斯马尼亚西海岸Tullah的湖滨住宿，坐落在Lake Rosebery湖畔，环境宁静。提供多种房型：湖景家庭房（含双层床）、湖景皇后房、豪华家庭房、豪华皇后房、豪华双人房等。房间配有私人浴室、电视、冰箱、茶/咖啡设施、空调。部分房间有湖景阳台。设有餐厅、酒吧、礼品店、按摩服务（需预约）。环保实践：太阳能、热泵、LED照明、环保洗护用品。可举办婚礼、会议等活动。",
-            "region": "西海岸",
             "town": "Tullah",
             "features": [
               {
@@ -27713,7 +27749,6 @@
           "tripData": {
             "route": "Formby Hotel",
             "desc": "位于塔斯马尼亚Devonport的经济型酒店，提供带独立卫浴的客房（皇后房、皇后+单人、皇后+双单等）以及共享设施的背包客宿舍（女性/男性宿舍）。所有独立卫浴客房近期翻新。酒店内设Central Restaurant & Bar（每日营业，周五有现场音乐）、游戏室、TASkeno。提供客人洗衣房、共用厨房和休息区。免费停车（需前台领取停车许可证）。注意：住宿位于一楼以上，仅楼梯，无轮椅通道；周五周六晚间楼下酒吧有现场音乐至午夜。",
-            "region": "西北部",
             "town": "Devonport",
             "features": [
               {
@@ -27748,7 +27783,6 @@
           "tripData": {
             "route": "The Lighthouse Hotel",
             "desc": "位于塔斯马尼亚Ulverstone的新装修酒店，提供价格实惠的高品质客房，包括高级房（皇后床、皇后+单人、家庭房、行政套房等）和标准房。酒店内设健身房、室外按摩浴缸、家庭小酒馆、儿童游乐区、鸡尾酒吧、公共酒吧、游戏室、TAB及会议室。提供客房送餐和热早餐。",
-            "region": "西北部",
             "town": "Ulverstone",
             "features": [
               {
@@ -27783,7 +27817,6 @@
           "tripData": {
             "route": "The Somerset Hotel",
             "desc": "位于塔斯马尼亚Somerset主街的经济型住宿，提供干净舒适的带卫浴客房（皇后床、皇后+单人、豪华房等），房间配有基本厨房设施（微波炉、冰箱、烤面包机、水壶、餐具）。酒店内设公共及休闲酒吧、游戏室、TAB及TASkeno设施。客人可享受姐妹酒店Seabrook Hotel的折扣餐。距离海滩、冲浪俱乐部仅数分钟，距Burnie市中心7.7公里。",
-            "region": "西北部",
             "town": "Somerset",
             "features": [
               {
@@ -27818,7 +27851,6 @@
           "tripData": {
             "route": "Railton Hotel Accommodation",
             "desc": "位于塔斯马尼亚Railton的历史酒店，建于1858年，1910年火灾后重建。提供7间标准客房（多数带共用卫浴）和1间带私人卫浴的客房。房间配有茶/咖啡、冰箱、电视、暖气。含早餐，免费停车，提供山地车安全存放。适合前往Cradle Mountain和Wild Mersey山地自行车道的游客。",
-            "region": "西北部",
             "town": "Railton",
             "features": [
               {
@@ -27853,7 +27885,6 @@
           "tripData": {
             "route": "The Bridge Hotel",
             "desc": "位于塔斯马尼亚Smithton的汽车旅馆与酒店，提供近期翻新的经济型汽车旅馆客房（带独立卫浴、小厨房设施）以及经济型酒店客房（部分带共用卫浴）。酒店内设公共酒吧、鸡尾酒吧、家庭小酒馆、游戏室、TASkeno、瓶装酒店、客用洗衣房、共用厨房和休息室。紧邻Duck River，步行可至镇中心。提供免费停车、WiFi等。",
-            "region": "西北部",
             "town": "Smithton",
             "features": [
               {
@@ -27888,7 +27919,6 @@
           "tripData": {
             "route": "Beach Hotel Burnie",
             "desc": "位于塔斯马尼亚Burnie的四星级翻新客房，坐落在海滩旁。所有客房配有独立卫浴、茶咖设施、迷你吧、FOXTEL频道、免费WiFi，含欧陆早餐。酒店内设公共酒吧、TAB、获奖餐厅，可举办会议和活动。",
-            "region": "西北部",
             "town": "Burnie",
             "features": [
               {
@@ -27923,7 +27953,6 @@
           "tripData": {
             "route": "BIG4 Tassie Getaway Parks Ulverstone",
             "desc": "位于塔斯马尼亚Ulverstone的海滨假日公园，提供多种住宿选择：小木屋（一居、两居、家庭房等，配备厨房、私人浴室、舒适床铺）以及供电营地。宠物友好（特定小木屋和营地）。设施包括巨型跳跃枕、社区营地厨房、便利设施楼、洗衣房。邻近Fairway Park游乐场、自行车道、滑板公园、海滩。",
-            "region": "西北部",
             "town": "Ulverstone",
             "features": [
               {
@@ -27958,7 +27987,6 @@
           "tripData": {
             "route": "Auldington Hotel",
             "desc": "位于塔斯马尼亚朗塞斯顿的4.5星精品酒店，由1899年建成的修道院改建而成，保留了历史建筑特色（高天花板、中央楼梯等），内部为现代时尚装修。共18间客房，均带独立卫浴（部分有深浴缸或水疗浴缸），设施包括空调、迷你吧、茶咖、浴袍、免费WiFi、蓝光播放器等。提供无障碍客房及专用停车位。酒店有电梯、免费街外停车、花园、宽敞场地。前台服务时间8:30-20:30，客人24小时进出。服务包括旅游预订、洗衣、Netflix、打印等。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -27993,7 +28021,6 @@
           "tripData": {
             "route": "Rosevears Hotel",
             "desc": "位于塔斯马尼亚Tamar Valley西岸的历史乡村酒店，建于1831年，经过现代翻新。提供26间现代客房，每间均带私人阳台和塔马河全景水景。房型包括特大床房（可选双床）、带户外水疗的特大床房、两卧室套房以及Rebecca套房（两间皇后床带独立卫浴、全尺寸冰箱、休息区）。接待时间9:00-17:00。",
-            "region": "朗塞斯顿及北部",
             "town": "Rosevears",
             "features": [
               {
@@ -28028,7 +28055,6 @@
           "tripData": {
             "route": "Heemskirk Motor Hotel",
             "desc": "位于塔斯马尼亚西海岸Zeehan的汽车酒店，提供汽车旅馆式客房和两卧室自助式公寓。所有客房配备独立卫浴、智能电视、空调、冰箱、茶咖设施、吹风机、直拨电话、免费高速WiFi。房型包括双人房（可住2人）。免费停车。地理位置优越，40分钟至Strahan和Queenstown，1小时至摇篮山和Tarkine雨林。",
-            "region": "西海岸",
             "town": "Zeehan",
             "features": [
               {
@@ -28067,7 +28093,6 @@
           "tripData": {
             "route": "The Tasman",
             "desc": "位于霍巴特CBD的奢华精品酒店，融合乔治亚遗产建筑与现代设计，荣获世界50佳酒店等多项大奖。提供独特客房与套房，设有Peppina餐厅和Mary Mary酒吧，配备健身中心、商务设施，并深度链接塔斯马尼亚当地体验。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28102,7 +28127,6 @@
           "tripData": {
             "route": "YHA Hobart Central",
             "desc": "位于霍巴特中央商务区的生态认证背包客旅舍，距离水滨仅一个街区。提供私人房、合住房和家庭房，配备共用厨房、阅读室、免费Wi-Fi。无电梯，无现金支付，100%禁烟。前台每日有限时段服务，提供旅游预订和行李寄存。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28140,7 +28164,6 @@
           "tripData": {
             "route": "Customs House Hotel",
             "desc": "位于霍巴特海事区历史建筑中的酒店，距离码头、萨拉曼卡和电池角仅几步之遥。提供多种房型（部分带阳台和水景），所有客房均设独立卫浴。酒店内设餐厅（早/午/晚餐）和Derwent Bar（每周四至周六全日厨房），周五周六晚有现场音乐。可举办活动，提供有限停车位（需预订）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28178,7 +28201,6 @@
           "tripData": {
             "route": "Battery Point Manor",
             "desc": "位于霍巴特Battery Point的乔治亚风格庄园，建于1834年，享有德文特河、船只和山脉的壮丽景色。提供宽敞舒适的客房和公寓，距离萨拉曼卡广场和霍巴特水滨仅5分钟步行路程。周边环绕餐厅、咖啡馆和商店。免费WiFi、免费街边停车。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -28215,7 +28237,6 @@
           "tripData": {
             "route": "Mayfair Plaza Motel",
             "desc": "位于塔斯马尼亚Sandy Bay的经济型汽车旅馆，提供免费WiFi、免费停车、客用洗衣房。房间分布于两层（有斜坡通道），设有无障碍客房。接待时间有限，晚到需提前联系。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -28249,7 +28270,6 @@
           "tripData": {
             "route": "Peppers Silo Hotel",
             "desc": "位于朗塞斯顿塔马河畔的精品酒店，由历史谷仓改建而成，融合现代奢华与工业风格。提供塔马河景房、峡谷河景房等，房间宽敞。设有Silos餐厅（名厨Massimo Mele主理）、咖啡厅、Woody's酒吧、Silo Day水疗中心和健身房。不接收现金支付。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -28284,7 +28304,6 @@
           "tripData": {
             "route": "Alice’s Cottages",
             "desc": "位于朗塞斯顿宁静街道的遗产名录小屋群，提供7栋独具特色的自助式情侣小屋（英、爱、苏格兰、威尔士、法、外乡人、铁皮木主题）。每栋小屋配备壁炉、水疗或爪足浴缸、早餐篮、反向循环空调、免费WiFi、停车位。无前台，全程自助入住。步行可达市中心餐厅和咖啡馆。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -28319,7 +28338,6 @@
           "tripData": {
             "route": "The Dunes Cottages",
             "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村内的3.5星 cottage，共22栋两卧室小屋，可住2-4人。每栋配有deck、高尔夫球场景观、独立空调、平板电视、FOXTEL、小冰箱、茶咖设施。价格随季节和入住人数变动。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -28353,7 +28371,6 @@
           "tripData": {
             "route": "Ocean Villas",
             "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村The Dunes球场的海滨豪华别墅，面积为114平方米，可欣赏巴斯海峡和Barnbougle海滩的无间断海景。两卧室、两浴室，配有开放式起居/用餐区、设备齐全的厨房、独立洗衣房和66平方米的露台。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -28387,7 +28404,6 @@
           "tripData": {
             "route": "Bunker Villas",
             "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村The Dunes的住宿，共4间行政卧室（每间带皇后床和独立卫浴），设有开放式起居/用餐区、小厨房（含电磁炉）、洗衣设施和球场景观。适合团体或家庭入住。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -28421,7 +28437,6 @@
           "tripData": {
             "route": "Lost Farm Lodge",
             "desc": "位于塔斯马尼亚Barnbougle高尔夫度假村Lost Farm球场的住宿，提供单皇后套房和双皇后套房。可选择海景或球场景观，房间配有电视、茶咖设施、大型步入式淋浴和独立空调。",
-            "region": "朗塞斯顿及北部",
             "town": "Bridport",
             "features": [
               {
@@ -28455,7 +28470,6 @@
           "tripData": {
             "route": "East Beach Tourist Park",
             "desc": "位于塔斯马尼亚Low Head的海滨假日公园，占地22英亩，提供小木屋（带独立卫浴、厨房设施）、供电/无供电营地、自给自足房车营地。设有营地厨房、浴室、洗衣房、免费WiFi、宠物友好（需牵引）。距离朗塞斯顿40分钟车程。",
-            "region": "朗塞斯顿及北部",
             "town": "Low Head",
             "features": [
               {
@@ -28492,7 +28506,6 @@
           "tripData": {
             "route": "Fork it Farm - Farmstay",
             "desc": "位于塔斯马尼亚Lebrina的再生农场生态农舍，半独立一卧室自助式小屋，使用太阳能和雨水收集系统。包含农场自制早餐（培根、鸡蛋、酸面包等），可参观农场、采摘香草、收集鸡蛋、品尝室内烟熏肉拼盘。坐落在Pipers Brook葡萄酒产区中心，可观赏农场、林地和葡萄园景观。",
-            "region": "朗塞斯顿及北部",
             "town": "Lebrina",
             "features": [
               {
@@ -28527,7 +28540,6 @@
           "tripData": {
             "route": "The Dragonfly Inn",
             "desc": "位于朗塞斯顿西郊的维多利亚式遗产 mansion，提供10间风格各异的客房，每间均带独立卫浴、休息区、反向循环空调。自助入住（15:00起），含早餐篮（可在Grand Dining Room享用）。酒店屡获殊荣，支持可持续旅行和LGBTQ+友好。",
-            "region": "朗塞斯顿及北部",
             "town": "West Launceston",
             "features": [
               {
@@ -28565,7 +28577,6 @@
           "tripData": {
             "route": "Art Hotel on York",
             "desc": "位于朗塞斯顿CBD的特色艺术酒店，由1870年代老面包店改建而成，客房装饰有国际艺术家Cristina Palacios的版画。提供双人房、行政大床房、豪华大床房、庭院大床房、阳台大床房、高级大床套房、双床房及国王套房。免费WiFi、免费停车（车位有限）、空调、部分房间有小阳台。餐厅目前暂停营业。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -28600,7 +28611,6 @@
           "tripData": {
             "route": "Pod Inn",
             "desc": "位于朗塞斯顿市中心的胶囊旅馆，提供单人/双人胶囊床位（侧开门胶囊，内部尺寸宽100-160cm，长200cm）。胶囊配备刷卡推门、可调氛围灯、电脑桌、保险箱、阅读灯、空调等。共用浴室和厕所，提供免费WiFi、小厨房、休息区。无停车场，附近有公共停车选项。接待时间有限，非工作时间自助入住。附带日式餐厅（Gatsu Gatsu），住客用餐9.5折。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -28633,7 +28643,6 @@
           "tripData": {
             "route": "Moss Hotel",
             "desc": "位于霍巴特Salamanca Place的精品酒店，由19世纪中期仓库改建而成，提供独特设计的客房（25号及39号两栋）。房间内融合自然元素和历史特色，部分带阳台。提供限量安全停车位（$20/天）。酒店注重健康卫生措施，无现金支付。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -28670,7 +28679,6 @@
           "tripData": {
             "route": "Hotel Grand Chancellor Launceston",
             "desc": "位于朗塞斯顿市中心的4.5星酒店，提供165间客房和套房，部分可欣赏城市景观。设有The Avenue Restaurant & Lobby Bar、Grand High Tea、24小时客房送餐、健身中心、收费停车场。",
-            "region": "朗塞斯顿及北部",
             "town": "Launceston",
             "features": [
               {
@@ -28704,7 +28712,6 @@
           "tripData": {
             "route": "Ibis Styles Hobart",
             "desc": "位于霍巴特Macquarie Street的4星级酒店，提供室内游泳池、健身中心、餐厅（Mr Good Guy Restaurant，印尼菜）和酒吧。客房配备免费Wi-Fi、平板电视、空调、独立卫浴（部分带步入式淋浴）。酒店设有无烟环境、无障碍设施、24小时前台、行李寄存、洗衣服务、会议设施。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28737,7 +28744,6 @@
           "tripData": {
             "route": "Clydesdale Manor",
             "desc": "位于霍巴特Sandy Bay的历史庄园风格住宿，提供舒适客房和便捷的设施，靠近市中心和萨拉曼卡区。可提供免费WiFi、行李寄存、洗衣服务。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -28773,7 +28779,6 @@
           "tripData": {
             "route": "Crowne Plaza Hobart",
             "desc": "位于霍巴特CBD的4.5星酒店，距离萨拉曼卡广场、宪法码头和水滨仅几步之遥。客房位于5-9层，可欣赏海港、山景或城景，配备55寸智能电视、触摸控制、Antipodes洗浴用品。设有Club Lounge（顶层12层，提供早餐和晚间小食）、健身中心、餐厅。提供会议和活动空间（含屋顶AURA场地）。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28810,7 +28815,6 @@
           "tripData": {
             "route": "Grande Vue Hotel",
             "desc": "位于霍巴特Battery Point的Queen Anne风格 mansion，建于1906年，2020年翻新为私人酒店。提供9间带独立卫浴和小厨房的独特客房，设有公共客用厨房（提供塔斯马尼亚早餐备品）、休息室、餐厅、景观花园。酒店无前台，无电梯，提供免费街边停车（部分房间有停车许可证）。欢迎12岁以上儿童。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -28846,7 +28850,6 @@
           "tripData": {
             "route": "Hadley’s Orient Hotel",
             "desc": "位于霍巴特Murray Street的遗产精品酒店，始建于1834年，是塔斯马尼亚最古老的持续运营酒店。提供维多利亚套房、行政套房、高级房、家庭房等多种房型，客房近期翻新，设有现代卫浴和步入式淋浴。酒店内设Orient Bar（每日16:00起营业，提供鸡尾酒、塔斯马尼亚葡萄酒及小吃），并定期举办艺术展览。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -28884,7 +28887,6 @@
           "tripData": {
             "route": "Islington Hotel",
             "desc": "位于霍巴特South Hobart的五星级精品酒店，始建于1847年，属于Small Luxury Hotels of the World成员，荣获米其林一钥。拥有11间各具特色的客房及套房，配备定制大床、大理石浴室、花园或威灵顿山景观。提供免费早餐、全天咖啡茶点、免费WiFi和停车。餐厅供应塔斯马尼亚本地可持续食材。仅限成人入住。",
-            "region": "霍巴特及南部",
             "town": "South Hobart",
             "features": [
               {
@@ -28923,7 +28925,6 @@
           "tripData": {
             "route": "Salamanca Terraces",
             "desc": "位于霍巴特Salamanca Place的自助式公寓，提供一室、两室联排别墅和顶层公寓。所有公寓均配备设施齐全的厨房（工作室公寓配小厨房）、洗衣设施、空调、免费WiFi和免费停车。24小时前台位于对街的Lenna of Hobart。位置优越，毗邻水滨和Battery Point历史区，步行可达萨拉曼卡市场。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -28959,7 +28960,6 @@
           "tripData": {
             "route": "MACq 01 Hotel",
             "desc": "位于霍巴特水滨猎人街的奢华故事主题酒店，以讲述塔斯马尼亚故事为特色。提供猎人客房、水滨客房等多种房型，设有Evolve Bar、The Story Bar和餐厅。酒店提供免费故事导览，讲述原住民、囚犯、捕鲸者等历史。客房可欣赏水滨或城市景观，配备高端设施。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -28998,7 +28998,6 @@
           "tripData": {
             "route": "Maylands Lodge",
             "desc": "位于霍巴特New Town的历史遗产精品酒店，拥有12间融合现代与历史奢华的客房和套房。提供猎人套房、皮尔斯房、布朗内尔房等多种房型，部分房间可欣赏威灵顿山景观。酒店内设高茶服务，曾荣获多项旅游及酒店业奖项。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29033,7 +29032,6 @@
           "tripData": {
             "route": "RACV Hobart Hotel",
             "desc": "位于霍巴特Collins Street的现代酒店，距离萨拉曼卡广场和市中心步行可达。提供酒店客房、一室公寓、家庭连通房、德文特河景公寓及顶层套房。内设Charcoal餐厅（塔斯马尼亚食材）、Cascade on Collins酒吧、健身房、电动汽车充电站、停车场。拥有会议和婚礼场地，获可持续旅游认证。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29068,7 +29066,6 @@
           "tripData": {
             "route": "Salamanca Inn",
             "desc": "位于霍巴特Battery Point的4.5星全套房酒店，毗邻萨拉曼卡广场和历史水滨。60间套房均配备全套厨房、洗衣设施、55英寸智能电视、Foxtel、空调、WiFi。设施包括地下停车场、4个快充电动车位、屋顶恒温泳池和水疗中心、餐厅、酒吧、会议室。家庭经营，提供单间、复式及多卧室套房，部分可赏萨拉曼卡或德文特河景。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29106,7 +29103,6 @@
           "tripData": {
             "route": "Salamanca Wharf Hotel",
             "desc": "位于霍巴特Castray Esplanade的精品公寓酒店，由两座1840年砂岩仓库改建而成。提供22间自助式套房（阁楼顶层公寓、高级公寓、一室公寓及无障碍公寓），配备花岗岩厨房、洗衣设施、智能电视、Foxtel、私人保险箱、豪华床品。部分客房设有水疗浴缸或阳台，可欣赏萨拉曼卡或德文特河景。酒店内设Gigi's Diner餐厅，提供早餐和汉堡。设施包括室内停车库（限高限长）、电动汽车充电、24小时前台。步行可达萨拉曼卡市场、码头和市中心。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29142,7 +29138,6 @@
           "tripData": {
             "route": "Sullivans Cove Apartments",
             "desc": "位于霍巴特水滨精选自炊式公寓，分布在四个标志性地点（Battery Point & Salamanca、Hunter Street & IXL、Wapping）。提供从豪华一室公寓到三卧室顶层公寓等50多套独特公寓，所有1-3卧室公寓均配备全套厨房和洗衣设施（Kelly Street Studio除外带厨房）。免费WiFi，部分地点可提供停车位（需额外收费）。前台24小时协助，无传统酒店服务。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29178,7 +29173,6 @@
           "tripData": {
             "route": "The Henry Jones Art Hotel",
             "desc": "位于霍巴特Hunter Street水滨的澳洲首家艺术酒店，由历史悠久的码头仓库改建而成（含IXL果酱工厂旧址），2018年全面翻新。酒店内陈列500多件艺术品，设有Landscape Restaurant & Grill（曾获厨师帽奖）、IXL Long Bar、Jam Packed咖啡馆。提供豪华客房和套房，可欣赏水景或城市景观。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29214,7 +29208,6 @@
           "tripData": {
             "route": "The Old Woolstore Apartment Hotel",
             "desc": "位于霍巴特Macquarie Street的现代公寓酒店，提供工作室、一室、两室、三室及无障碍公寓，均配备厨房或小厨房。内设Stockmans Restaurant和Baaa Bar，提供自助洗衣、停车场、自行车清洗设施。酒店获得多项旅游和可持续认证。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29249,7 +29242,6 @@
           "tripData": {
             "route": "Vibe Hotel Hobart",
             "desc": "位于霍巴特CBD Argyle Street的精品生活方式酒店，是TFE Hotels旗下品牌。提供标准客房、无障碍房、海景/山景房、豪华套房、一卧及两卧公寓、顶层公寓。设施包括游泳池、健身房、餐厅（Belvedere）、酒吧、会议室（最多180人）。可步行至萨拉曼卡市场和水滨，靠近MONA渡轮。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29285,7 +29277,6 @@
           "tripData": {
             "route": "Zero Davey Boutique Apartment Hotel",
             "desc": "位于霍巴特Sullivans Cove海滨的精品公寓酒店，2004年开业。提供工作室公寓、两卧、三卧公寓及顶层公寓，均配备厨房设施（陶瓷炉、微波炉）、洗衣干衣机、迷你吧、免费WiFi、反向循环空调。设施包括小型健身房、桑拿、有限安全停车场（需提前预订）。步行可达MONA渡轮码头、萨拉曼卡广场、CBD。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29321,7 +29312,6 @@
           "tripData": {
             "route": "429 Apartments & Suites",
             "desc": "位于霍巴特Sandy Bay的公寓式住宿，俯瞰德文特河，对面是Wrest Point Casino。提供多种房型：豪华水景房、豪华自助式单间/双床房、皇后房等。房间配备超高清电视、免费WiFi，自助式客房带小厨房。设施包括免费停车、付费洗衣、可购买早餐包。部分客房享有河景。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -29354,7 +29344,6 @@
           "tripData": {
             "route": "Airone Capsule Hotel",
             "desc": "位于霍巴特Collins Road的胶囊酒店，提供经济型胶囊住宿，24小时营业。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29390,7 +29379,6 @@
           "tripData": {
             "route": "Allurity Hotel",
             "desc": "位于霍巴特CBD Bathurst Street的现代酒店，提供多种房型（标准皇后/双床、豪华皇后/双床、套房、水疗套房、家庭房、无障碍房）。设施包括安全停车位、免费WiFi、行李寄存。前台8:00-21:00，晚到可预约。位置便利，周日门口有农夫市集和工艺品市场。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29426,7 +29414,6 @@
           "tripData": {
             "route": "Bay View Villas",
             "desc": "位于西霍巴特的自助式公寓住宿，提供一卧、两卧、三卧海景或标准公寓。所有公寓均配备设施齐全的厨房、宽敞起居区、部分带阳台和海港景观。设施包括室内恒温泳池、游戏室（台球、乒乓球）、户外烧烤区、免费WiFi、免费停车、电梯、客用洗衣房。前台8:00-17:00，可自助晚到入住。",
-            "region": "霍巴特及南部",
             "town": "South Hobart",
             "features": [
               {
@@ -29464,7 +29451,6 @@
           "tripData": {
             "route": "Best Western Hobart",
             "desc": "位于霍巴特Bathurst Street的新装修酒店，拥有140余间客房，可欣赏城市、威灵顿山或德文特河景。房型包括带阳台的国王房、双床房、行政房、豪华套房、家庭套房、两卧室公寓及无障碍房。设施包括Embers Bar-Pizza-Grill餐厅（塔州农产品）、5间会议室（最多300人）、24小时前台、免费WiFi、付费停车、电动车充电、商务中心、礼品店、客用洗衣房。步行10分钟可达萨拉曼卡广场和水滨。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29499,7 +29485,6 @@
           "tripData": {
             "route": "Blue Hills Motel",
             "desc": "位于霍巴特Battery Point的经济型汽车旅馆，提供皇后房（近期翻新）和预算双床房（未翻新）。部分房间可欣赏威灵顿山、德文特河或赌场景观。设施包括免费高速WiFi、电视、有限停车位（先到先得）、客用洗衣房。步行可达萨拉曼卡市场、水滨、CBD和渡轮码头。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29533,7 +29518,6 @@
           "tripData": {
             "route": "Central Hotel",
             "desc": "位于霍巴特Collins Street的历史酒吧兼住宿场所，提供经济型客房（需通过预订合作伙伴或直接联系酒店）。酒店内设餐厅（供应午餐和晚餐）、酒吧、游戏区、Keno/TOTE投注和现场音乐（周五晚5-7点）。提供多种餐饮选择，包括牛排、海鲜、汉堡、沙拉、儿童餐等。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29568,7 +29552,6 @@
           "tripData": {
             "route": "DoubleTree By Hilton Hobart",
             "desc": "位于霍巴特Macquarie Street的4星级酒店，拥有206间客房和套房，可欣赏城市景观。设施包括室内游泳池、健身中心、餐厅（Leatherwood）、24小时酒吧、24小时前台、商务中心、电动车充电站、自助停车（$37/天）。酒店提供免费WiFi、客房送餐、残疾人设施。步行可达萨拉曼卡广场、宪法码头和德文特河。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29602,7 +29585,6 @@
           "tripData": {
             "route": "Graham Apartments",
             "desc": "位于霍巴特New Town的自助式公寓酒店，提供一卧、两卧、三卧公寓（部分为经济型或带双层床）。所有公寓均配备齐全厨房、免费WiFi、Netflix、舒适起居区。设施包括免费街外停车、可供租用的汽车、婴儿用品（婴儿床、高椅、洗澡盆、幼儿玩具）。位置便利，靠近北霍巴特餐饮区和公共交通。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29638,7 +29620,6 @@
           "tripData": {
             "route": "Hobart Waterfront Apartments",
             "desc": "位于霍巴特水滨Brooke Street的公寓式住宿，提供酒店房、豪华单间公寓和一卧公寓。所有房型均配备免费WiFi、空调、电视、厨房设施（咖啡机、微波炉等），部分房型最多可入住5人。设施包括客用洗衣房、每日清洁（周日和公共假日除外），停车位需预订（$20/晚）。步行可至水滨景点。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29675,7 +29656,6 @@
           "tripData": {
             "route": "Mantra One Sandy Bay Road Hobart",
             "desc": "位于霍巴特Sandy Bay Road的城市酒店，提供单间公寓、一卧行政公寓、一卧公寓、两卧家庭公寓及一卧高级公寓（配备厨房）。所有公寓均带厨房或小厨房、洗衣设施、电视、DVD播放器、FOXTEL、空调。设施包括停车场（$28/晚，需预订）、前台每日有限时段服务。步行可达萨拉曼卡广场、水滨和MONA渡轮码头。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -29709,7 +29689,6 @@
           "tripData": {
             "route": "Motel Mayfair On Cavell",
             "desc": "位于西霍巴特的历史汽车旅馆，由20世纪初的宅邸改建而成，提供标准房、家庭房、自助式公寓、水疗套房等多种房型。所有房间配备微波炉、冰箱、烤面包机、茶咖设施、电视、免费WiFi。设施包括免费停车、花园、客用洗衣房。步行可达霍巴特CBD、萨拉曼卡区和德文特河。",
-            "region": "霍巴特及南部",
             "town": "South Hobart",
             "features": [
               {
@@ -29746,7 +29725,6 @@
           "tripData": {
             "route": "Quest Savoy Aparthotel Hobart",
             "desc": "位于霍巴特Elizabeth Street市中心的公寓式酒店，提供单间（标准、高级、行政）、一卧和两卧公寓。部分公寓位于附楼（仅楼梯），主楼有电梯。所有公寓均配备厨房或小厨房、免费WiFi、空调、电视。设施包括免费客人洗衣房、收费停车场（附近）、折扣使用Savoy Day Spa。距离萨拉曼卡市场、水滨区域步行约8-10分钟。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -29783,7 +29761,6 @@
           "tripData": {
             "route": "Quest Trinity House",
             "desc": "位于霍巴特Glebe历史街区的公寓式酒店，占地1.2公顷园林，提供单间、一至四卧公寓及四卧联排别墅。所有公寓均配备厨房或小厨房、洗衣设施、独立起居区、免费WiFi、空调。设施包括免费停车、烧烤区、无障碍客房。步行可至霍巴特水滨、萨拉曼卡市场和皇家植物园。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29817,7 +29794,6 @@
           "tripData": {
             "route": "Riverfront Motel",
             "desc": "位于Rosetta德文特河畔的汽车旅馆，占地8英亩，提供多种住宿选择：经济型客房、河景房、家庭房、公寓、一卧/两卧乡村别墅、多卧别墅及大型住宅（River House, Coach House, Mansion）。设施包括餐厅（早餐/晚餐，周五至周日午餐）、免费停车、自行车租赁。距离MONA仅900米，距离霍巴特市中心约15分钟车程。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29855,7 +29831,6 @@
           "tripData": {
             "route": "Rydges Hobart",
             "desc": "位于北霍巴特Argyle Street的精品风格酒店，位于遗产名录建筑内，提供64间客房与套房。设施包括1898 Restaurant & Bar、游泳池、健身房、免费WiFi、停车场。部分房型为历史建筑改装（如Manor Suite、Trust Cottage Suite）。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29891,7 +29866,6 @@
           "tripData": {
             "route": "Salamanca Galleria Apartments",
             "desc": "位于霍巴特萨拉曼卡广场的公寓式住宿，提供自助式套房。位置优越，距离咖啡馆、餐厅、酒吧、画廊和商店仅几步之遥。提供自助入住设施，适合游客和商务旅客。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29926,7 +29900,6 @@
           "tripData": {
             "route": "Nord - North Hobart Apartments",
             "desc": "位于北霍巴特Elizabeth Street的公寓式住宿，地处北霍巴特餐饮和酒吧区中心。公寓在1楼（约12级台阶），无专属停车位，但附近有议会停车场（夜间免费）。步行至霍巴特CBD约15-20分钟。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -29962,7 +29935,6 @@
           "tripData": {
             "route": "Salamanca Suites",
             "desc": "位于萨拉曼卡Place东端的精品公寓式酒店，提供18间带阳台或庭院的公寓（单间、一卧、两卧）。所有公寓均配备洗衣设施、空调、免费WiFi、免费停车。单间配小厨房，一卧和两卧配全套厨房。24小时前台位于对街的Lenna of Hobart。步行可达水滨、MONA渡轮码头、历史悠久的Battery Point和CBD。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -29997,7 +29969,6 @@
           "tripData": {
             "route": "Sixty Six Boutique Apartments",
             "desc": "位于北霍巴特Burnett Street的精品公寓，地处北霍巴特餐饮和酒吧区中心。提供精心设计的居住空间，设有安全地下停车场（需预订，$10/晚）。位置便利，步行可达餐厅酒吧，驾车5分钟至霍巴特水滨，15分钟至MONA博物馆。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30033,7 +30004,6 @@
           "tripData": {
             "route": "St Ives Hobart Accommodation Tasmania",
             "desc": "位于霍巴特Battery Point的4星酒店式公寓，提供宽敞的单间和两卧公寓，配备全套厨房设施、免费WiFi、免费停车、液晶电视、独立空调、舒适乳胶床垫。部分房型带阳台和河景。步行可达萨拉曼卡市场、水滨和MONA渡轮码头。提供无障碍客房。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -30068,7 +30038,6 @@
           "tripData": {
             "route": "The Macquarie Hobart",
             "desc": "位于霍巴特CBD Macquarie Street的遗产精品酒店，建于1875年，原是著名外科医生宅邸及RACT总部。提供15间独特客房（含套房、家庭房等），部分客房拥有4米高天花板和古董家具。设施包括免费WiFi、迷你吧、茶咖设施、独立空调、免费欧陆早餐。设有Macquarie Wine Bar（全塔州酒饮），有限付费停车。步行5分钟可达萨拉曼卡和水滨。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30105,7 +30074,6 @@
           "tripData": {
             "route": "Travelodge Hotel Hobart",
             "desc": "位于霍巴特CBD Macquarie Street的经济型酒店，步行可达萨拉曼卡广场、Battery Point和水滨。客房配备小厨房（微波炉、冰箱、水壶）、免费WiFi、平板电视、Dreamcatcher床垫。酒店提供24小时前台、洗衣设施、瑜伽/普拉提工作室、付费停车场（$25/晚）、自助早餐。部分房间可欣赏威灵顿山或德文特河景。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30143,7 +30111,6 @@
           "tripData": {
             "route": "Waterfront Lodge Motel",
             "desc": "位于霍巴特New Town Bay的经济型汽车旅馆，距离市中心约7公里，提供免费WiFi、免费停车、烧烤区、客用休息室和洗衣设施。客房配备私人浴室、电视、暖气、电热毯、小厨房（微波炉、冰箱、烤面包机、茶咖设备）。房型包括单人间、双人间、家庭间、水疗套房等。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30179,7 +30146,6 @@
           "tripData": {
             "route": "Wrest Point",
             "desc": "位于Sandy Bay的塔斯马尼亚标志性酒店和赌场综合体，提供多种住宿选择：Wrest Point Tower（塔楼海景/山景/城市景客房）、Water Edge Rooms、Motor Inn。设施包括室内恒温泳池、健身中心、免费停车场、免费WiFi。拥有5间餐厅（含The Point Revolving Restaurant旋转餐厅）和4间酒吧，设有赌场、娱乐场所和会议设施。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -30215,7 +30181,6 @@
           "tripData": {
             "route": "Alabama Hotel",
             "desc": "位于霍巴特CBD利物浦街的精品艺术酒店，建于1867年，2013年重新开业。提供标准大床房、双床房和豪华大床房，所有房间均无独立卫浴（共用浴室）。设有小型酒吧、休息室、绿植阳台。环保措施包括无塑料、使用玻璃水瓶、环保清洁等。无电梯、无电视、无厨房设施。免费WiFi。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30255,7 +30220,6 @@
           "tripData": {
             "route": "Argyle Motor Lodge",
             "desc": "位于北霍巴特Lewis Street的经典汽车旅馆，霍巴特第一家汽车旅馆，建于1960年代末。提供标准大床/双床房、行政大床/双床套房、自助式一室公寓、两卧室家庭单元等。设施包括免费WiFi、免费停车、客用洗衣房、烧烤区、可送餐的欧陆早餐。房间配备微波炉、冰箱、茶咖设施。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30291,7 +30255,6 @@
           "tripData": {
             "route": "Astor Private Hotel",
             "desc": "位于霍巴特Macquarie Street的小型私人酒店，建于1922年，由两栋乔治亚联排别墅改建而成。提供23间客房，包括带独立卫浴的皇后套房（近期翻新，高天花板）和经济型客房（带洗手盆、茶咖设施，共用浴室）。酒店氛围温馨，提供老式个人服务，可协助旅行安排和餐饮推荐。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30328,7 +30291,6 @@
           "tripData": {
             "route": "Bay Hotel Apartments",
             "desc": "位于霍巴特Sandy Bay的自助式公寓酒店，提供单间双人/双床公寓、两卧室别墅及单层公寓等房型。所有公寓均配备厨房设施（微波炉、灶台、小冰箱、水壶等）、免费WiFi、免费停车、电视。部分房型位于二楼（无电梯）。距离萨拉曼卡广场、水滨和Wrest Point Casino仅数分钟车程。",
-            "region": "霍巴特及南部",
             "town": "Sandy Bay",
             "features": [
               {
@@ -30364,7 +30326,6 @@
           "tripData": {
             "route": "Black Buffalo Hotel",
             "desc": "位于北霍巴特Federal Street的酒店，提供标准大床房、标准皇后房、家庭套房、国王套房和三人套房等房型。所有房间配备茶咖设施、迷你冰箱、电视、免费WiFi。酒店内设餐厅（每天午餐和晚餐），提供客房送餐、免费街外停车。部分房间设有无障碍设施。距离霍巴特CBD、萨拉曼卡和水滨仅数分钟路程。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30399,7 +30360,6 @@
           "tripData": {
             "route": "Hobart Tower Motel",
             "desc": "位于New Town Park Street的汽车旅馆，坐落在Cleary’s Gate Hill，可欣赏霍巴特CBD、威灵顿山和港口全景。提供单人间、双床间、大床间和家庭套房，均配备独立卫浴、空调、电视、茶咖设施、免费WiFi。设施包括免费停车、投币洗衣房。酒店历史可追溯至1950年代，原为海员建造的瞭望塔。距离北霍巴特餐饮区步行15分钟，CBD车程2公里。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30435,7 +30395,6 @@
           "tripData": {
             "route": "Marquis Hotel West Hobart",
             "desc": "位于西霍巴特Brisbane Street的汽车旅馆，提供新装修的客房（双人/双床、家庭房），可欣赏德文特河景。设施包括免费WiFi、免费停车、餐厅（自助餐及单点）、酒吧（含游戏机、TOTE、Keno）、客用洗衣房、瓶装酒店。家庭友好，设有台球桌。距离霍巴特CBD仅数分钟步行路程。",
-            "region": "霍巴特及南部",
             "town": "South Hobart",
             "features": [
               {
@@ -30472,7 +30431,6 @@
           "tripData": {
             "route": "Martin Cash Motel",
             "desc": "位于Glenorchy Main Road的汽车旅馆，共28间客房，提供标准大床房、行政大床房、双床房、宽敞房和公寓式房型。所有房间配备茶咖设施、烤面包机、微波炉、独立卫浴，部分设有小厨房。设施包括免费无线WiFi、免费停车、客用烧烤设施。可提供欧陆早餐送餐服务，并可挂账至姐妹酒店Riverfront Motel用餐。距离霍巴特CBD约10分钟车程。",
-            "region": "霍巴特及南部",
             "town": "North Hobart",
             "features": [
               {
@@ -30506,7 +30464,6 @@
           "tripData": {
             "route": "Shoreline Hotel",
             "desc": "位于Howrah的汽车旅馆式住宿，提供13间地面层客房，包括国王房、皇后房、皇后+单人、皇后+双人沙发床以及无障碍双床房。所有房间配备独立卫浴、茶咖设施、微波炉、烤面包机、免费WiFi、电视，部分可欣赏德文特河和威灵顿山景。酒店内设咖啡馆、餐厅、运动酒吧、游戏室、啤酒花园等餐饮娱乐设施。免费停车，距离霍巴特CBD约15分钟车程。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30541,7 +30498,6 @@
           "tripData": {
             "route": "Argyle Accommodation",
             "desc": "位于霍巴特CBD Argyle Street的2星级经济型住宿，距离萨拉曼卡市场约1.3公里，步行可达塔斯马尼亚博物馆和艺术馆、宪法码头等景点。提供10间客房（含大床房、国王房、豪华国王房），部分带私人卫浴。房间配备小厨房、用餐区、免费WiFi、平板电视、空调。提供行李寄存、洗衣服务，允许携带宠物。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30575,7 +30531,6 @@
           "tripData": {
             "route": "The Tasmanian Inn",
             "desc": "位于霍巴特CBD Campbell Street的精品酒吧与住宿，楼上有6间客房及一套独立公寓。房型包括双人间（部分带共用浴室）、独立卫浴双人房、双床房（带私人阳台）及宽敞公寓（含全套厨房）。楼下为餐厅和酒吧（周二至周六营业），提供塔斯马尼亚本地精酿啤酒、葡萄酒及餐食。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30612,7 +30567,6 @@
           "tripData": {
             "route": "Backpackers Imperial Hotel",
             "desc": "位于霍巴特CBD Collins Street的经济型背包客旅馆，提供混合宿舍、女性宿舍、单人间、双床间、皇后房等多种房型。设施包括免费WiFi、设备齐全的厨房、宽敞公共休息区（电视、Netflix）、台球桌、图书交换、洗衣设施、行李寄存、24小时安保。床铺已铺好床单，可租借毛巾。部分房间带锁柜，需自行带锁。接待时间有限，晚到需提前通知。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30648,7 +30602,6 @@
           "tripData": {
             "route": "Montacute Boutique Bunkhouse",
             "desc": "位于霍巴特历史悠久的Battery Point的精品背包客旅馆，由1895年建筑改造而成，荣获多项奖项。提供私人皇后房、私人双床位房以及4/6/8人宿舍（含女性宿舍）。所有房间均为共享浴室。设施包括宽敞厨房、餐厅、免费WiFi、免费停车、免费茶咖、洗衣房、休息室（壁炉、游戏）、烧烤区、花园、行李寄存。提供毛巾，有宠物狗居住。步行可达萨拉曼卡广场和餐厅。",
-            "region": "霍巴特及南部",
             "town": "Battery Point",
             "features": [
               {
@@ -30684,7 +30637,6 @@
           "tripData": {
             "route": "Narrara Backpackers",
             "desc": "位于霍巴特Goulburn Street的家庭经营背包客旅馆，步行5分钟可达市中心。提供多种房型：私人单人间、双人间、双床间、家庭一室公寓（带独立卫浴和小厨房），以及3/4/6/8人宿舍（含女性宿舍）。设施包括设备齐全的商用厨房、免费茶咖、WiFi、洗衣房、旅游咨询台、免费街边停车、共享阳台、2个公共休息室。所有床铺提供免费床上用品。",
-            "region": "霍巴特及南部",
             "town": "Hobart",
             "features": [
               {
@@ -30804,7 +30756,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -30836,7 +30789,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -30900,7 +30854,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -30964,7 +30919,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Strahan"
           }
         },
         {
@@ -31028,7 +30984,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -31060,7 +31017,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -31092,7 +31050,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -31124,7 +31083,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Scamander"
           }
         },
         {
@@ -31156,7 +31116,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Scamander"
           }
         },
         {
@@ -31188,7 +31149,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Scamander"
           }
         },
         {
@@ -31220,7 +31182,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Bruny Island"
           }
         },
         {
@@ -31668,7 +31631,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -31701,7 +31665,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Mole Creek"
           }
         },
         {
@@ -31734,7 +31699,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Miena"
           }
         },
         {
@@ -31800,7 +31766,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -31866,7 +31833,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -31932,7 +31900,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -31965,7 +31934,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Miena"
           }
         },
         {
@@ -32031,7 +32001,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Mole Creek"
           }
         },
         {
@@ -32097,7 +32068,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32163,7 +32135,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32229,7 +32202,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32262,7 +32236,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32295,7 +32270,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32394,7 +32370,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Mole Creek"
           }
         },
         {
@@ -32427,7 +32404,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32460,7 +32438,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -32493,7 +32472,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Deloraine"
           }
         },
         {
@@ -34671,7 +34651,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cygnet"
           }
         },
         {
@@ -34704,7 +34685,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Cygnet"
           }
         },
         {
@@ -34803,7 +34785,8 @@
               "tag1",
               "tag2",
               "tag3"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -35002,7 +34985,8 @@
               "自助式客房",
               "乡村酒店",
               "Oatlands"
-            ]
+            ],
+            "town": "Oatlands"
           }
         },
         {
@@ -35036,7 +35020,8 @@
               "遗产酒店",
               "塔斯马尼亚",
               "Bothwell"
-            ]
+            ],
+            "town": "Bothwell"
           }
         },
         {
@@ -35071,7 +35056,8 @@
               "星空观测",
               "塔斯马尼亚东南部",
               "近海岸"
-            ]
+            ],
+            "town": "Hobart"
           }
         },
         {
@@ -35106,7 +35092,8 @@
               "含早餐",
               "Coal River Valley",
               "奢华住宿"
-            ]
+            ],
+            "town": "Prospect"
           }
         },
         {
@@ -35141,7 +35128,8 @@
               "家庭友好",
               "朗塞斯顿",
               "自助式"
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -35211,7 +35199,8 @@
               "24小时前台",
               "Devonport",
               "水疗套房"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -35246,7 +35235,8 @@
               "室内泳池",
               "体育酒吧",
               "Tarkine门户"
-            ]
+            ],
+            "town": "Smithton"
           }
         },
         {
@@ -35281,7 +35271,8 @@
               "可持续",
               "集装箱小屋",
               "电动汽车充电"
-            ]
+            ],
+            "town": "Wynyard"
           }
         },
         {
@@ -35316,7 +35307,8 @@
               "自助入住",
               "森林景观",
               "摇篮山门户"
-            ]
+            ],
+            "town": "Moina"
           }
         },
         {
@@ -35351,7 +35343,8 @@
               "热水浴缸",
               "小企鹅",
               "农场体验"
-            ]
+            ],
+            "town": "Devonport"
           }
         },
         {
@@ -35386,7 +35379,8 @@
               "国家公园",
               "禁止宠物",
               "禁火"
-            ]
+            ],
+            "town": "Cradle Mountain"
           }
         },
         {
@@ -35421,7 +35415,8 @@
               "海景阳台",
               "Penguin",
               "精品酒店"
-            ]
+            ],
+            "town": "Penguin"
           }
         },
         {
@@ -35456,7 +35451,8 @@
               "阳台",
               "生态认证",
               "朗塞斯顿"
-            ]
+            ],
+            "town": "Launceston"
           }
         },
         {
@@ -35491,7 +35487,8 @@
               "酒廊",
               "George Town",
               "儿童免费"
-            ]
+            ],
+            "town": "George Town"
           }
         }
       ]

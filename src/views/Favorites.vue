@@ -19,8 +19,6 @@ import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
 import TripDialog from '@/components/TripDialog.vue';
 import {
   buildFreeInfoDialogPayload,
-  findFreeInfoSourceItem,
-  getFreeInfoGridImagePath,
   resolveOriginalImages,
   getFreeInfoDialogImagePaths,
 } from '@/utils/freeInfoImageUtils';
@@ -43,16 +41,6 @@ const getThumbImageUrl = (imgPath) => {
 };
 
 const getCoverImageUrl = (item) => {
-  const matched = findFreeInfoSourceItem(item?.title);
-  const subNavName = matched?.subNavName || item?.subNavName || item?.tripData?.displaySubNav || '';
-  if (matched?.sourceItem) {
-    const gridPath = getFreeInfoGridImagePath(matched.sourceItem, subNavName);
-    if (gridPath) {
-      const resolved = getThumbImageUrl(gridPath);
-      if (resolved) return resolved;
-    }
-  }
-
   const tripDataImageGroups = [
     item?.tripData?.cover ? [item.tripData.cover] : [],
     item?.tripData?.images,
@@ -92,10 +80,12 @@ const getCoverImageUrl = (item) => {
 };
 
 const getOriginalDialogImageUrl = (item) => {
-  const matched = findFreeInfoSourceItem(item?.title);
-  const subNavName = matched?.subNavName || item?.subNavName || item?.tripData?.displaySubNav || '';
+  const subNavName = item?.subNavName || item?.tripData?.displaySubNav || '';
   const imagePaths = getFreeInfoDialogImagePaths(
-    matched?.sourceItem,
+    {
+      cover: item?.tripData?.cover || item?.cover || item?.banner || '',
+      img: item?.tripData?.img ?? item?.img ?? item?.banner ?? item?.image,
+    },
     subNavName,
     item?.tripData || {},
   );
@@ -194,12 +184,7 @@ const filteredFavoriteSourceItems = computed(() => {
 
 // 当前收藏数据（响应式，登录后远程同步会更新）
 const localCurrentFavorites = computed(() => {
-  return filteredFavoriteSourceItems.value.map((item) => {
-    if (findFreeInfoSourceItem(item?.title)) {
-      return buildFreeInfoDialogPayload(item);
-    }
-    return item;
-  });
+  return filteredFavoriteSourceItems.value.map((item) => buildFreeInfoDialogPayload(item));
 });
 
 const displayedFavorites = computed(() => {
@@ -317,6 +302,27 @@ const closeDialog = () => {
   dialogVisible.value = false;
   currentItem.value = null;
 };
+
+const onOpenRelatedSpot = async (spot) => {
+  if (!spot) return
+  await openDialog({
+    ...spot,
+    itemType: spot.itemType || spot.tripType || '景点信息',
+    type: spot.itemType || spot.tripType || '景点信息',
+  })
+};
+
+const onOpenParentSpot = async (parentInfo) => {
+  if (!parentInfo?.id) return
+  dialogVisible.value = false
+  await openDialog({
+    id: parentInfo.id,
+    title: parentInfo.title,
+    itemType: '景点信息',
+    type: '景点信息',
+  })
+};
+
 // 取消收藏
 const handleRemoveFavorite = async (item, event) => {
   if (isFavoritesSyncing.value) return;
@@ -487,24 +493,19 @@ onUnmounted(() => {
     <div class="page-header">
       <div class="page-title-row">
         <h1 class="page-title">收藏项目</h1>
-        <ElButton
-          class="migration-test-btn"
-          size="small"
-          text
-          :loading="migrationTestLoading"
-          @click="handleMigrationTestPrep"
-        >
+        <ElButton class="migration-test-btn" size="small" text :loading="migrationTestLoading"
+          @click="handleMigrationTestPrep">
           迁移测试
         </ElButton>
       </div>
       <div class="search-box">
-        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable :disabled="isPageInteractionDisabled" @change="handleSourceChange">
+        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable
+          :disabled="isPageInteractionDisabled" @change="handleSourceChange">
           <ElOption :label="'全部来源'" :value="ALL_SOURCE_VALUE" />
           <ElOption v-for="source in sourceOptions" :key="source" :label="source" :value="source" />
         </ElSelect>
         <ElInput v-model="searchInput" placeholder="搜索收藏..." prefix-icon="Search" clearable class="search-input"
-          :disabled="isPageInteractionDisabled"
-          @keyup.enter="executeSearch" @clear="clearSearch" />
+          :disabled="isPageInteractionDisabled" @keyup.enter="executeSearch" @clear="clearSearch" />
         <ElButton type="primary" class="search-btn" :disabled="isPageInteractionDisabled" @click="executeSearch">
           <el-icon>
             <Search />
@@ -515,12 +516,14 @@ onUnmounted(() => {
 
     <!-- 收藏列表网格 -->
     <div class="favorites-grid">
-      <div v-for="item in displayedFavorites" :key="item.favoriteId || item.itemKey || item.uniqueKey || item.id" class="favorite-card" @click="openDialog(item)">
+      <div v-for="item in displayedFavorites" :key="item.favoriteId || item.itemKey || item.uniqueKey || item.id"
+        class="favorite-card" @click="openDialog(item)">
         <img :src="getCoverImageUrl(item)" :alt="item.title" class="card-image" loading="lazy" decoding="async"
           fetchpriority="low" />
         <div class="card-content">
           <h3 class="card-title">{{ item.title }}</h3>
-          <p class="card-region">{{ item.region || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}</p>
+          <p class="card-region">{{ item.region || item.tripData?.route || item.tripData?.desc || item.subNavName ||
+            item.town || '' }}</p>
           <div class="card-actions">
             <span class="remove-btn" @click="handleRemoveFavorite(item, $event)">
               ★ 点击取消收藏
@@ -553,14 +556,16 @@ onUnmounted(() => {
     <TripDialog v-if="dialogVisible && isDayTripFavorite(currentItem)" v-model:visible="dialogVisible"
       :title="currentItem?.title || ''" :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner"
       :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.itemType || currentItem?.type || '一日游'"
-      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''" :item-type="currentItem?.itemType || currentItem?.type || '一日游'"
-      @update:visible="closeDialog"
+      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''"
+      :item-type="currentItem?.itemType || currentItem?.type || '一日游'" @update:visible="closeDialog"
       @favorite-change="handleFavoriteChange" />
     <FreeInfoDialog v-else-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
       :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner" :trip-data="currentItem?.tripData || {}"
-      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''" :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
-      @update:visible="closeDialog"
-      @favorite-change="handleFavoriteChange" />
+      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''"
+      :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
+      :parent-spot-title="currentItem?.parentSpotTitle || ''" :parent-spot-id="currentItem?.parentSpotId || null"
+      @update:visible="closeDialog" @favorite-change="handleFavoriteChange" @open-related-spot="onOpenRelatedSpot"
+      @open-parent-spot="onOpenParentSpot" />
   </div>
 </template>
 
@@ -572,6 +577,7 @@ onUnmounted(() => {
 }
 
 .favorites-page.is-syncing {
+
   .page-header,
   .favorites-grid,
   .pagination-container {

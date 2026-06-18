@@ -103,7 +103,7 @@ function onClickTag(tag, event) {
       }
       // 如果是一日游/多日游路径（trips/routes），添加dayTripTab参数
       else if (tagData.path === 'trips/routes') {
-        fullPath = `/DemoForTTO/${tagData.path}?dayTripTab=1日行程`
+        fullPath = `/DemoForTTO/${tagData.path}?dayTripTab=1`
       }
 
       // 在新窗口打开前，更新 tto_last_path，确保新窗口能正确渲染内容

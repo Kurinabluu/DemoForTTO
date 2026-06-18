@@ -2,12 +2,12 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import ContactDialog from './ContactDialog.vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
-import dayTripData from '@/data/split/daytrip.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
 import { notifyFavoriteResult } from '@/utils/favoriteMessages'
 import { notifyApiError } from '@/utils/apiFeedback'
+import { loadCatalogItemDetail } from '@/utils/contentRepository'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -64,6 +64,7 @@ const dialogVisible = computed({
     set: (v) => emit('update:visible', v)
 })
 
+const resolvedDetailItem = ref(null)
 const contactDialogVisible = ref(false)
 const infoDialogVisible = ref(false)
 const bannerCarouselRef = ref(null)
@@ -74,29 +75,6 @@ const openContactDialog = () => {
 
 const openInfoDialog = () => {
     infoDialogVisible.value = true
-}
-
-const getTripRouteInfo = (title, tripType) => {
-    try {
-        if (!title || !dayTripData?.subNav) {
-            return getDefaultTripInfo(title)
-        }
-
-        if (Array.isArray(dayTripData.subNav)) {
-            for (const subNav of dayTripData.subNav) {
-                if (subNav?.items && Array.isArray(subNav.items)) {
-                    const tripItem = subNav.items.find(item => item?.title === title)
-                    if (tripItem?.tripData) {
-                        return tripItem.tripData
-                    }
-                }
-            }
-        }
-
-        return getDefaultTripInfo(title)
-    } catch (error) {
-        return getDefaultTripInfo(title)
-    }
 }
 
 function getDefaultTripInfo(title = '未知行程') {
@@ -113,11 +91,17 @@ function getDefaultTripInfo(title = '未知行程') {
 }
 
 const routeInfo = computed(() => {
-    if (props.tripData && Object.keys(props.tripData).length > 0) {
-        return props.tripData;
+    if (resolvedDetailItem.value?.tripData && Object.keys(resolvedDetailItem.value.tripData).length > 0) {
+        return resolvedDetailItem.value.tripData
     }
-    return getTripRouteInfo(props.title, props.tripType);
+    if (props.tripData && Object.keys(props.tripData).length > 0) {
+        return props.tripData
+    }
+    return getDefaultTripInfo(dialogTitle.value)
 })
+
+const dialogTitle = computed(() => resolvedDetailItem.value?.title || props.title || '')
+const dialogEnTitle = computed(() => resolvedDetailItem.value?.enTitle || props.enTitle || '')
 
 const infoSourceRows = computed(() => {
     if (Array.isArray(routeInfo.value?.source)) return routeInfo.value.source
@@ -155,8 +139,21 @@ const dialogImages = computed(() => {
     return props.banner ? [resolveDataImage(props.banner)] : []
 })
 
+const loadDetailFromApi = async () => {
+    if (props.itemId == null || props.itemId === '') return
+    const detailKey = String(props.itemId)
+    if (resolvedDetailItem.value?.id != null && String(resolvedDetailItem.value.id) === detailKey) return
+    try {
+        const detail = await loadCatalogItemDetail(props.itemId)
+        resolvedDetailItem.value = detail || null
+    } catch (error) {
+        notifyApiError(error, { action: '加载详情', dedupeKey: 'daytrip:detail' })
+    }
+}
+
 watch(dialogVisible, (visible) => {
     if (!visible) return
+    void loadDetailFromApi()
     nextTick(() => {
         if (bannerCarouselRef.value?.setActiveItem) {
             bannerCarouselRef.value.setActiveItem(0)
@@ -171,7 +168,7 @@ watch(dialogVisible, (visible) => {
         <template #header="{ close }">
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
-                    <div class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></div>
+                    <div class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle }}）</span></div>
                 </div>
                 <div class="dlg-header-right">
                     <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }" @click="handleToggleFavorite">

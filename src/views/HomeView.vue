@@ -3,10 +3,10 @@ import { ref, onMounted, onUnmounted, computed, watch, defineAsyncComponent } fr
 import { ElMessage } from 'element-plus'
 import ServicesNav from '@/components/ServicesNav.vue'
 import navData from '@/data/split/nav.json'
-import dayTripData from '@/data/split/daytrip.json'
 import { useNavStore } from '@/stores/nav'
 import { Search } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
+import { buildDayTripTabQuery, resolveDayTripSubNavName } from '@/utils/subNavKey'
 import { MAX_FAVORITES } from '@/utils/favoritesStore'
 
 const FreeInfoDialog = defineAsyncComponent(() => import('@/components/FreeInfoDialog.vue'))
@@ -109,10 +109,10 @@ function onClickSubTab(tab) {
             // 根据当前路径决定使用哪个query参数
             const currentPath = route.path
             if (currentPath.includes('/DemoForTTO/trips/routes')) {
-                // 一日游/多日游页面使用dayTripTab参数
+                // 一日游/多日游页面使用 dayTripTab 数字键（如 1、16）
                 router.push({
                     path: '/DemoForTTO/trips/routes',
-                    query: { dayTripTab: tab }
+                    query: { dayTripTab: buildDayTripTabQuery(tab) }
                 })
             } else if (currentPath.includes('/DemoForTTO/trips/freeinfo')) {
                 // 免费信息页面使用subNavName参数
@@ -162,7 +162,7 @@ function doSubSearch() {
 }
 
 // 只保留弹窗相关的状态
-const isFreeInfoDialogVisible = ref(false)
+const freeInfoDialogStack = ref([])
 const isTripDialogVisible = ref(false)
 const dialogEnTitle = ref('')
 const dialogTitle = ref('大堡礁单日游')
@@ -172,6 +172,8 @@ const dialogTripType = ref('一日游')
 const dialogItemId = ref(null)
 const dialogItemKey = ref('')
 const dialogItemType = ref('scenic')
+
+const defaultDialogBanner = new URL('@/assets/img/footer2.jpg', import.meta.url).href
 
 const isPlaceListVisible = ref(false)
 const listPlaceName = ref('')
@@ -333,37 +335,10 @@ function generateMockItems() {
     listItems.value = items
 }
 
-function openPlaceList({ placeName, itemType }) {
+function openPlaceList({ placeName, itemType, items = [] }) {
     listPlaceName.value = placeName
     listItemType.value = itemType
-
-    // 从data.json中获取数据
-    const placeData = dayTripData
-    if (placeData && placeData.subNav) {
-        const subNav = placeData.subNav.find(sub => sub.subNavName === itemType)
-        if (subNav && subNav.items) {
-            if (itemType === '餐厅' || itemType === '住宿') {
-                const placeItem = subNav.items.find(item => item.place === placeName)
-                if (placeItem && placeItem.list) {
-                    listItems.value = placeItem.list
-                } else {
-                    const allItems = []
-                    subNav.items.forEach(item => {
-                        if (item.list) {
-                            allItems.push(...item.list)
-                        }
-                    })
-                    listItems.value = allItems
-                }
-            } else {
-                listItems.value = subNav.items
-            }
-        } else {
-            generateMockItems()
-        }
-    } else {
-        generateMockItems()
-    }
+    listItems.value = Array.isArray(items) ? items : []
 
     isPlaceListVisible.value = true
 }
@@ -382,21 +357,69 @@ function onSelectPlaceItem(item) {
 
 // 弹窗控制
 // 弹窗相关方法
-function openTourDialog(item) {
-    dialogTitle.value = item?.title || '大堡礁单日游'
-    dialogEnTitle.value = item?.enTitle || ''
-    dialogBanner.value = item?.banner || new URL('@/assets/img/footer2.jpg', import.meta.url).href
-    dialogTripData.value = item?.tripData || {}
-    dialogTripType.value = item?.tripType || '一日游'
-    dialogItemId.value = item?.id ?? item?.tripData?.id ?? null
-    dialogItemKey.value = item?.itemKey || item?.tripData?.itemKey || ''
-    dialogItemType.value = item?.itemType || item?.tripType || 'scenic'
-
-    if (dialogTripType.value === '一日游' || dialogTripType.value === '多日游') {
-        isTripDialogVisible.value = true
-    } else {
-        isFreeInfoDialogVisible.value = true
+function createFreeInfoDialogEntry(item) {
+    return {
+        stackKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        title: item?.title || '',
+        enTitle: item?.enTitle || '',
+        banner: item?.banner || defaultDialogBanner,
+        tripData: item?.tripData || {},
+        tripType: item?.tripType || '景点信息',
+        itemId: item?.id ?? item?.tripData?.id ?? null,
+        itemKey: item?.itemKey || item?.tripData?.itemKey || '',
+        itemType: item?.itemType || item?.tripType || '景点信息',
+        parentSpotTitle: item?.parentSpotTitle || item?.tripData?.parentSpotTitle || '',
+        parentSpotId: item?.parentSpotId ?? item?.tripData?.parentSpotId ?? null,
     }
+}
+
+function isDayTripDialogType(tripType) {
+    const normalized = String(tripType || '').trim()
+    return normalized === '一日游' || normalized === '多日游' || normalized.includes('日行程')
+}
+
+function closeFreeInfoStackItem(stackKey) {
+    freeInfoDialogStack.value = freeInfoDialogStack.value.filter((entry) => entry.stackKey !== stackKey)
+}
+
+function openTourDialog(item, { stack = false } = {}) {
+    const tripType = item?.tripType || item?.itemType || '一日游'
+
+    if (isDayTripDialogType(tripType)) {
+        freeInfoDialogStack.value = []
+        dialogTitle.value = item?.title || '大堡礁单日游'
+        dialogEnTitle.value = item?.enTitle || ''
+        dialogBanner.value = item?.banner || defaultDialogBanner
+        dialogTripData.value = item?.tripData || {}
+        dialogTripType.value = tripType
+        dialogItemId.value = item?.id ?? item?.tripData?.id ?? null
+        dialogItemKey.value = item?.itemKey || item?.tripData?.itemKey || ''
+        dialogItemType.value = item?.itemType || tripType
+        isTripDialogVisible.value = true
+        return
+    }
+
+    const entry = createFreeInfoDialogEntry(item)
+    if (stack && freeInfoDialogStack.value.length > 0) {
+        freeInfoDialogStack.value.push(entry)
+        return
+    }
+    freeInfoDialogStack.value = [entry]
+}
+
+function onOpenRelatedSpot(spot) {
+    if (!spot) return
+    openTourDialog({
+        ...spot,
+        tripType: spot.tripType || '景点信息',
+        itemType: spot.itemType || '景点信息',
+        tripData: spot.tripData || {},
+    }, { stack: true })
+}
+
+function onOpenParentSpot(parentInfo) {
+    if (!parentInfo) return
+    openTourDialog(parentInfo, { stack: true })
 }
 
 // 响应式选择轮播图（<=1024 为手机/平板）与高度
@@ -481,10 +504,10 @@ function initializeSubNav() {
     }
 
     if (route.query.dayTripTab) {
-        const fromQuery = String(route.query.dayTripTab)
-        if (subNavList.some(sub => sub.subNavName === fromQuery)) {
-            currentSubNavTab.value = fromQuery
-            navStore.saveSelectedSubNav(fromQuery)
+        const resolved = resolveDayTripSubNavName(route.query.dayTripTab, subNavList)
+        if (subNavList.some(sub => sub.subNavName === resolved)) {
+            currentSubNavTab.value = resolved
+            navStore.saveSelectedSubNav(resolved)
             return
         }
     }
@@ -527,12 +550,12 @@ watch(() => route.query, (newQuery) => {
 
     // 如果query中有dayTripTab参数（一日游/多日游页面），使用它
     if (newQuery.dayTripTab) {
-        // 检查这个子导航是否在当前路由的子导航列表中
         if (currentRouteData.value && currentRouteData.value.subNav) {
-            const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === newQuery.dayTripTab);
+            const resolved = resolveDayTripSubNavName(newQuery.dayTripTab, currentRouteData.value.subNav)
+            const isValidSubNav = currentRouteData.value.subNav.some(sub => sub.subNavName === resolved)
             if (isValidSubNav) {
-                currentSubNavTab.value = newQuery.dayTripTab;
-                navStore.saveSelectedSubNav(newQuery.dayTripTab);
+                currentSubNavTab.value = resolved
+                navStore.saveSelectedSubNav(resolved)
                 subSearch.value = '';
                 if (newQuery.dialogItemId) {
                     committedKeyword.value = '';
@@ -630,19 +653,35 @@ onMounted(() => {
                     </li>
                 </ul>
             </div>
-            <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList" :sub-tab="currentSubNavTab"
-                :s="committedKeyword" />
+            <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList"
+                :sub-tab="currentSubNavTab" :s="committedKeyword" />
         </div>
 
         <!-- 弹窗组件 -->
-        <FreeInfoDialog v-if="isFreeInfoDialogVisible" v-model:visible="isFreeInfoDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId" :item-key="dialogItemKey"
-            :item-type="dialogItemType" />
-        <TripDialog v-if="isTripDialogVisible" v-model:visible="isTripDialogVisible" :title="dialogTitle" :en-title="dialogEnTitle"
-            :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType" :item-id="dialogItemId" :item-key="dialogItemKey"
-            :item-type="dialogItemType" />
-        <PlaceListDialog v-if="isPlaceListVisible" v-model="isPlaceListVisible" :place-name="listPlaceName" :item-type="listItemType"
-            :items="listItems" @select="onSelectPlaceItem" />
+        <FreeInfoDialog
+            v-for="(dlg, index) in freeInfoDialogStack"
+            :key="dlg.stackKey"
+            :visible="true"
+            :title="dlg.title"
+            :en-title="dlg.enTitle"
+            :banner="dlg.banner"
+            :trip-data="dlg.tripData"
+            :trip-type="dlg.tripType"
+            :item-id="dlg.itemId"
+            :item-key="dlg.itemKey"
+            :item-type="dlg.itemType"
+            :parent-spot-title="dlg.parentSpotTitle"
+            :parent-spot-id="dlg.parentSpotId"
+            :stack-layer="index"
+            @update:visible="(visible) => { if (!visible) closeFreeInfoStackItem(dlg.stackKey) }"
+            @open-related-spot="onOpenRelatedSpot"
+            @open-parent-spot="onOpenParentSpot"
+        />
+        <TripDialog v-if="isTripDialogVisible" v-model:visible="isTripDialogVisible" :title="dialogTitle"
+            :en-title="dialogEnTitle" :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType"
+            :item-id="dialogItemId" :item-key="dialogItemKey" :item-type="dialogItemType" />
+        <PlaceListDialog v-if="isPlaceListVisible" v-model="isPlaceListVisible" :place-name="listPlaceName"
+            :item-type="listItemType" :items="listItems" @select="onSelectPlaceItem" />
     </el-main>
 </template>
 

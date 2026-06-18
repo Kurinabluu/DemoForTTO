@@ -87,7 +87,7 @@ const routes = [
             component: () => import('@/views/TripsGrid.vue'),
             props: (route) => ({
               activeTag: '一日游/多日游',
-              dayTripTab: route.query.dayTripTab || '1日行程'
+              dayTripTab: route.query.dayTripTab || '1'
             })
           },
           {

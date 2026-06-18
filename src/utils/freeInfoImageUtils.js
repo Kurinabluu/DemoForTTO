@@ -1,25 +1,6 @@
-import freeInfoData from '@/data/split/freeinfo.json'
 import { resolveDataImage } from '@/utils/dataImageResolver'
-import { isApiEnabled } from '@/utils/ttoApi'
 
 export function findFreeInfoSourceItem(title) {
-  const normalizedTitle = String(title || '').trim()
-  if (!normalizedTitle) return null
-  const subNavList = freeInfoData?.subNav
-  if (!Array.isArray(subNavList)) return null
-
-  for (const subNav of subNavList) {
-    if (!Array.isArray(subNav?.items)) continue
-    const sourceItem = subNav.items.find(
-      (entry) => String(entry?.title || '').trim() === normalizedTitle,
-    )
-    if (sourceItem) {
-      return {
-        subNavName: String(subNav?.subNavName || '').trim(),
-        sourceItem,
-      }
-    }
-  }
   return null
 }
 
@@ -71,16 +52,13 @@ const SPECIAL_SECTION_FALLBACK_IMAGES = [
 
 export function resolveSpecialContentFallbackImage(sourceItem, subNavName = '', title = '') {
   const normalizedTitle = String(title || sourceItem?.title || '').trim()
-  const subNavList = freeInfoData?.subNav
-  if (!Array.isArray(subNavList) || !subNavList.length) {
-    return SPECIAL_SECTION_FALLBACK_IMAGES[0]
+  const normalizedSubNav = String(subNavName || sourceItem?.subNavName || '').trim()
+  const seed = `${normalizedSubNav}:${normalizedTitle}`
+  let hash = 0
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
   }
-
-  const subNav = subNavList.find((entry) => String(entry?.subNavName || '').trim() === String(subNavName || '').trim())
-  const items = Array.isArray(subNav?.items) ? subNav.items : []
-  const index = items.findIndex((entry) => String(entry?.title || '').trim() === normalizedTitle)
-  const safeIndex = index >= 0 ? index : 0
-  return SPECIAL_SECTION_FALLBACK_IMAGES[safeIndex % SPECIAL_SECTION_FALLBACK_IMAGES.length]
+  return SPECIAL_SECTION_FALLBACK_IMAGES[hash % SPECIAL_SECTION_FALLBACK_IMAGES.length]
 }
 
 function buildSpecialContentTripData(sourceItem = {}) {
@@ -171,25 +149,25 @@ export function getFreeInfoDialogImagePaths(sourceItem, subNavName = '', tripDat
 }
 
 export function buildFreeInfoDialogPayload(favoriteItem) {
-  const matched = findFreeInfoSourceItem(favoriteItem?.title)
   const subNavName =
     favoriteItem?.tripData?.displaySubNav ||
     favoriteItem?.subNavName ||
-    matched?.subNavName ||
     ''
-  const sourceItem = matched?.sourceItem
-  const sourceTripData =
-    sourceItem &&
-    (Array.isArray(sourceItem?.info) ||
-      Array.isArray(sourceItem?.tagItems) ||
-      Array.isArray(sourceItem?.tags) ||
-      sourceItem?.badge ||
-      sourceItem?.location ||
-      sourceItem?.sub)
-      ? buildSpecialContentTripData(sourceItem)
-      : sourceItem?.tripData && typeof sourceItem.tripData === 'object'
-        ? sourceItem.tripData
-        : {}
+  const sourceTripData = favoriteItem?.tripData && typeof favoriteItem.tripData === 'object'
+    ? { ...favoriteItem.tripData }
+    : {}
+  const specialTripData =
+    Array.isArray(sourceTripData?.info) ||
+    Array.isArray(sourceTripData?.tagItems) ||
+    Array.isArray(sourceTripData?.tags) ||
+    sourceTripData?.badge ||
+    sourceTripData?.location ||
+    sourceTripData?.sub
+      ? buildSpecialContentTripData(sourceTripData)
+      : {}
+  const finalSourceTripData = Object.keys(specialTripData).length
+    ? { ...specialTripData, ...sourceTripData }
+    : sourceTripData
   const itemType =
     favoriteItem?.itemType ||
     favoriteItem?.tripType ||
@@ -200,11 +178,11 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
   const hasRemoteMedia =
     favoriteItem?.cover ||
     favoriteItem?.img != null ||
-    (favoriteItem?.tripData?.img != null && (!matched?.sourceItem || isApiEnabled()))
+    favoriteItem?.tripData?.img != null
 
   const specialFallbackImage =
-    sourceItem && !hasRemoteMedia
-      ? resolveSpecialContentFallbackImage(sourceItem, subNavName, favoriteItem?.title)
+    !hasRemoteMedia
+      ? resolveSpecialContentFallbackImage(favoriteItem?.tripData || favoriteItem, subNavName, favoriteItem?.title)
       : ''
 
   if (hasRemoteMedia && favoriteItem?.tripData && Object.keys(favoriteItem.tripData).length) {
@@ -231,7 +209,7 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
       itemType,
       tripType: itemType,
       tripData: {
-        ...sourceTripData,
+        ...finalSourceTripData,
         ...tripData,
       },
       banner: resolvedImages[0] || specialFallbackImage || favoriteItem.banner || favoriteItem.image || '',
@@ -239,18 +217,18 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
   }
 
   const imagePaths = getFreeInfoDialogImagePaths(
-    sourceItem,
+    favoriteItem?.tripData || favoriteItem,
     subNavName,
     favoriteItem?.tripData || {},
   )
   const resolvedImages = resolveOriginalImages(imagePaths)
 
   const tripData = {
-    ...sourceTripData,
+    ...finalSourceTripData,
     ...(favoriteItem?.tripData && typeof favoriteItem.tripData === 'object' ? favoriteItem.tripData : {}),
-    img: sourceItem?.img ?? favoriteItem?.img ?? favoriteItem?.tripData?.img,
-    imgSource: sourceItem?.imgSource ?? favoriteItem?.tripData?.imgSource,
-    cover: sourceItem?.cover ?? favoriteItem?.cover ?? favoriteItem?.tripData?.cover,
+    img: favoriteItem?.img ?? favoriteItem?.tripData?.img,
+    imgSource: favoriteItem?.tripData?.imgSource,
+    cover: favoriteItem?.cover ?? favoriteItem?.tripData?.cover,
     displaySubNav: subNavName || favoriteItem?.tripData?.displaySubNav,
   }
 

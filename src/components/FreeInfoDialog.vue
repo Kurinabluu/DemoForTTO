@@ -1,17 +1,12 @@
 <script setup>
 import { computed, nextTick, ref, watch } from 'vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
-import freeInfoData from '@/data/split/freeinfo.json'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
 import { notifyFavoriteResult } from '@/utils/favoriteMessages'
 import { notifyApiError } from '@/utils/apiFeedback'
-import {
-    findFreeInfoSourceItem,
-    getFreeInfoDialogImagePaths,
-    resolveOriginalImages,
-} from '@/utils/freeInfoImageUtils'
+import { loadCatalogItemDetail } from '@/utils/contentRepository'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -23,10 +18,13 @@ const props = defineProps({
     tripData: { type: Object, default: () => ({}) },
     itemId: { type: [Number, String], default: null },
     itemKey: { type: String, default: '' },
-    itemType: { type: String, default: 'scenic' }
+    itemType: { type: String, default: 'scenic' },
+    parentSpotTitle: { type: String, default: '' },
+    parentSpotId: { type: [Number, String], default: null },
+    stackLayer: { type: Number, default: 0 },
 })
 
-const emit = defineEmits(['update:visible', 'favorite-change'])
+const emit = defineEmits(['update:visible', 'favorite-change', 'open-related-spot', 'open-parent-spot'])
 
 const resolvedItemType = computed(() => props.itemType || props.tripType || 'scenic')
 const favoriteSubmitting = ref(false)
@@ -68,6 +66,7 @@ const dialogVisible = computed({
     set: (v) => emit('update:visible', v)
 })
 
+const resolvedDetailItem = ref(null)
 const infoDialogVisible = ref(false)
 const bannerCarouselRef = ref(null)
 const activeBannerIndex = ref(0)
@@ -78,28 +77,6 @@ const openInfoDialog = () => {
 
 const handleBannerChange = (currentIndex) => {
     activeBannerIndex.value = Number(currentIndex) || 0
-}
-
-const getFreeInfoData = (title) => {
-    try {
-        if (!title || !freeInfoData) {
-            return getDefaultFreeInfo(title)
-        }
-
-        if (freeInfoData?.subNav && Array.isArray(freeInfoData.subNav)) {
-            for (const subNav of freeInfoData.subNav) {
-                if (!subNav?.items || !Array.isArray(subNav.items)) continue
-                const infoItem = subNav.items.find(item => item?.title === title)
-                if (infoItem?.tripData) {
-                    return infoItem.tripData
-                }
-            }
-        }
-
-        return getDefaultFreeInfo(title)
-    } catch (error) {
-        return getDefaultFreeInfo(title)
-    }
 }
 
 function getDefaultFreeInfo(title = '未知信息') {
@@ -115,17 +92,38 @@ function getDefaultFreeInfo(title = '未知信息') {
     }
 }
 
-const routeInfo = computed(() => {
-    if (props.tripData && Object.keys(props.tripData).length > 0) {
-        return props.tripData;
+function mergeTripData(detailTripData, propsTripData) {
+    const fromDetail = detailTripData && typeof detailTripData === 'object' ? detailTripData : {}
+    const fromProps = propsTripData && typeof propsTripData === 'object' ? propsTripData : {}
+    return {
+        ...fromProps,
+        ...fromDetail,
+        childSpots: Array.isArray(fromProps.childSpots) && fromProps.childSpots.length
+            ? fromProps.childSpots
+            : (Array.isArray(fromDetail.childSpots) ? fromDetail.childSpots : []),
+        parentSpotTitle: fromProps.parentSpotTitle || fromDetail.parentSpotTitle || '',
+        parentSpotId: fromProps.parentSpotId ?? fromDetail.parentSpotId ?? null,
+        parentSpotOpenPayload: fromProps.parentSpotOpenPayload || fromDetail.parentSpotOpenPayload || null,
+        belongsToSpot: fromDetail.belongsToSpot || fromProps.belongsToSpot || '',
+        parentItemId: fromDetail.parentItemId ?? fromProps.parentItemId ?? null,
     }
-    return getFreeInfoData(props.title);
+}
+
+const routeInfo = computed(() => {
+    if (resolvedDetailItem.value?.tripData) {
+        return mergeTripData(resolvedDetailItem.value.tripData, props.tripData)
+    }
+    if (props.tripData && Object.keys(props.tripData).length > 0) {
+        return props.tripData
+    }
+    return getDefaultFreeInfo(props.title)
 })
 
-const freeInfoSourceMeta = computed(() => findFreeInfoSourceItem(props.title))
+const dialogTitle = computed(() => resolvedDetailItem.value?.title || props.title || '')
+const dialogEnTitle = computed(() => resolvedDetailItem.value?.enTitle || props.enTitle || '')
 
 const scenicItemImageSource = computed(() => {
-    const imgSource = freeInfoSourceMeta.value?.sourceItem?.imgSource
+    const imgSource = routeInfo.value?.imgSource
     return Array.isArray(imgSource) ? imgSource : []
 })
 
@@ -142,17 +140,119 @@ const sourceEntryName = computed(() => {
 const isScenicInfo = computed(() => resolvedItemType.value === '景点信息')
 const isRestaurantInfo = computed(() => resolvedItemType.value === '餐厅信息')
 
-const dialogImages = computed(() => {
-    const sourceMeta = freeInfoSourceMeta.value
-    const sourcePaths = getFreeInfoDialogImagePaths(
-        sourceMeta?.sourceItem,
-        sourceMeta?.subNavName || routeInfo.value?.displaySubNav || '',
-        routeInfo.value,
-    )
-    if (sourcePaths.length) {
-        return resolveOriginalImages(sourcePaths)
-    }
+const childSpots = computed(() => {
+    const raw = routeInfo.value?.childSpots
+    if (!Array.isArray(raw)) return []
+    return raw.filter((spot) => spot && typeof spot === 'object' && spot.title)
+})
 
+const isSubSpotDialog = computed(() => props.parentSpotTitle && props.parentSpotId)
+
+const siblingSpots = computed(() => {
+    if (!isSubSpotDialog.value) return []
+    return childSpots.value.filter((spot) => spot.title !== props.title)
+})
+
+const parentSpotCard = computed(() => {
+    const payload = routeInfo.value?.parentSpotOpenPayload
+    if (payload && typeof payload === 'object' && payload.title) {
+        return payload
+    }
+    if (!props.parentSpotTitle) return null
+    return {
+        id: props.parentSpotId,
+        title: props.parentSpotTitle,
+        img: props.banner,
+        banner: props.banner,
+    }
+})
+
+const childSpotsSectionTitle = computed(() => {
+    if (isSubSpotDialog.value) return ''
+    if (!childSpots.value.length) return ''
+    return '此地还可游览'
+})
+
+const dialogZIndex = computed(() => Z_INDEX.dialog.base + (props.stackLayer || 0) * 20)
+
+const loadDetailFromApi = async () => {
+    if (props.itemId == null || props.itemId === '') return
+    const detailKey = String(props.itemId)
+    if (resolvedDetailItem.value?.id != null && String(resolvedDetailItem.value.id) === detailKey) return
+    try {
+        const detail = await loadCatalogItemDetail(props.itemId)
+        if (!detail) {
+            resolvedDetailItem.value = null
+            return
+        }
+        resolvedDetailItem.value = {
+            ...detail,
+            tripData: mergeTripData(detail.tripData, props.tripData),
+        }
+    } catch (error) {
+        notifyApiError(error, { action: '加载详情', dedupeKey: 'free-info:detail' })
+    }
+}
+
+const resolveChildSpotImage = (spot) => {
+    const raw = spot?.img || spot?.banner || ''
+    return resolveDataImage(raw, '')
+}
+
+const openRelatedSpot = (spot) => {
+    if (!spot) return
+
+    const siblingList = childSpots.value
+    const parentTitle = isSubSpotDialog.value ? props.parentSpotTitle : props.title
+    const parentId = isSubSpotDialog.value ? props.parentSpotId : props.itemId
+    const parentPayload = isSubSpotDialog.value
+        ? routeInfo.value?.parentSpotOpenPayload
+        : {
+            title: props.title,
+            enTitle: props.enTitle,
+            banner: props.banner,
+            id: props.itemId,
+            itemKey: props.itemKey,
+            tripType: '景点信息',
+            itemType: '景点信息',
+            tripData: {
+                ...routeInfo.value,
+                childSpots: siblingList,
+            },
+        }
+
+    emit('open-related-spot', {
+        ...spot,
+        tripType: spot.tripType || '景点信息',
+        itemType: spot.itemType || '景点信息',
+        parentSpotTitle: parentTitle,
+        parentSpotId: parentId,
+        tripData: {
+            ...(spot.tripData || {}),
+            childSpots: siblingList,
+            parentSpotTitle: parentTitle,
+            parentSpotId: parentId,
+            parentSpotOpenPayload: parentPayload,
+        },
+    })
+}
+
+const openParentSpot = () => {
+    const payload = routeInfo.value?.parentSpotOpenPayload
+    if (payload && typeof payload === 'object') {
+        emit('open-parent-spot', payload)
+        return
+    }
+    if (!props.parentSpotId) return
+    emit('open-parent-spot', {
+        id: props.parentSpotId,
+        title: props.parentSpotTitle,
+        tripType: '景点信息',
+        itemType: '景点信息',
+    })
+}
+
+const dialogImages = computed(() => {
     const imageGroups = isRestaurantInfo.value
         ? [routeInfo.value?.img]
         : [
@@ -193,7 +293,7 @@ const normalizeImageSourceEntry = (entry) => {
 }
 
 const imageSourceMeta = computed(() => {
-    const raw = routeInfo.value?.imgSource ?? props.tripData?.imgSource ?? scenicItemImageSource.value
+    const raw = routeInfo.value?.imgSource ?? scenicItemImageSource.value
     if (!Array.isArray(raw) || raw.length === 0) return []
     return raw.map(normalizeImageSourceEntry).filter(Boolean)
 })
@@ -219,8 +319,12 @@ const getImageAltText = (index) => {
 }
 
 watch(dialogVisible, (visible) => {
-    if (!visible) return
+    if (!visible) {
+        resolvedDetailItem.value = null
+        return
+    }
     activeBannerIndex.value = 0
+    void loadDetailFromApi()
     nextTick(() => {
         if (bannerCarouselRef.value?.setActiveItem) {
             bannerCarouselRef.value.setActiveItem(0)
@@ -231,14 +335,16 @@ watch(dialogVisible, (visible) => {
 
 <template>
     <el-dialog v-model="dialogVisible" :show-close="false" width="980px" class="free-info-dialog" align-center
-        :z-index="Z_INDEX.dialog.base" :append-to-body="true" :lock-scroll="true">
+        :z-index="dialogZIndex" :append-to-body="true" :lock-scroll="true">
         <template #header="{ close }">
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
-                    <span class="dlg-title">{{ title }}<span v-if="enTitle">（{{ enTitle }}）</span></span>
+                    <span class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle
+                            }}）</span></span>
                 </div>
                 <div class="dlg-header-right">
-                    <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }"
+                        @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
                     </el-button>
                     <el-icon class="dlg-close" @click="close"><el-icon-close /></el-icon>
@@ -306,6 +412,56 @@ watch(dialogVisible, (visible) => {
                 </div>
                 <div class="tag-row">
                     <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
+                </div>
+                <!-- 母景点弹窗：显示包含的子景点 -->
+                <div v-if="isScenicInfo && !isSubSpotDialog && childSpots.length" class="child-spots-section">
+                    <div class="child-spots-title">{{ childSpotsSectionTitle }}</div>
+                    <div class="child-spots-grid">
+                        <button v-for="spot in childSpots" :key="spot.itemKey || spot.id || spot.title" type="button"
+                            class="child-spot-card" @click="openRelatedSpot(spot)">
+                            <img v-if="resolveChildSpotImage(spot)" :src="resolveChildSpotImage(spot)" :alt="spot.title"
+                                class="child-spot-thumb" />
+                            <span v-else class="child-spot-thumb child-spot-thumb--empty">{{ spot.title?.slice(0, 1) ||
+                                '景'
+                                }}</span>
+                            <span class="child-spot-name">{{ spot.title }}</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- 子景点弹窗：左侧所属景点 + 竖线 + 右侧同区域其他景点 -->
+                <div v-if="isScenicInfo && isSubSpotDialog" class="sibling-spots-section">
+                    <div class="sibling-spots-layout">
+                        <div class="sibling-parent-block">
+                            <span class="sibling-parent-label">所属景点</span>
+                            <div class="sibling-spots-grid sibling-spots-grid--single">
+                                <button v-if="parentSpotCard" type="button" class="child-spot-card"
+                                    @click="openParentSpot">
+                                    <img v-if="resolveChildSpotImage(parentSpotCard)"
+                                        :src="resolveChildSpotImage(parentSpotCard)" :alt="parentSpotTitle"
+                                        class="child-spot-thumb" />
+                                    <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
+                                        parentSpotTitle?.slice(0, 1) || '景' }}</span>
+                                    <span class="child-spot-name">{{ parentSpotTitle }}</span>
+                                </button>
+                            </div>
+                        </div>
+                        <span class="sibling-divider" aria-hidden="true"></span>
+                        <div class="sibling-others-block">
+                            <span class="sibling-label">同区域其他景点</span>
+                            <div v-if="siblingSpots.length" class="sibling-spots-grid">
+                                <button v-for="spot in siblingSpots" :key="spot.itemKey || spot.id || spot.title"
+                                    type="button" class="child-spot-card" @click="openRelatedSpot(spot)">
+                                    <img v-if="resolveChildSpotImage(spot)" :src="resolveChildSpotImage(spot)"
+                                        :alt="spot.title" class="child-spot-thumb" />
+                                    <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
+                                        spot.title?.slice(0, 1) ||
+                                        '景'
+                                        }}</span>
+                                    <span class="child-spot-name">{{ spot.title }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -574,6 +730,137 @@ watch(dialogVisible, (visible) => {
     word-break: break-word;
 }
 
+.child-spots-section {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #e5efec;
+}
+
+.child-spots-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a7a6f;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+}
+
+.sibling-spots-section {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #e5efec;
+}
+
+.sibling-spots-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.sibling-parent-block {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.sibling-parent-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5f6b76;
+    letter-spacing: 0.5px;
+}
+
+.sibling-divider {
+    flex: 0 0 2px;
+    align-self: stretch;
+    min-height: 48px;
+    background: #279486;
+    border-radius: 1px;
+}
+
+.sibling-others-block {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sibling-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5f6b76;
+    letter-spacing: 0.5px;
+}
+
+.sibling-spots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.sibling-spots-grid--single {
+    grid-template-columns: minmax(100px, 120px);
+    width: fit-content;
+    max-width: 100%;
+}
+
+.child-spots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.child-spot-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid #dcefe9;
+    border-radius: 10px;
+    background: #f7faf9;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        border-color: #33b1a3;
+        box-shadow: 0 2px 8px rgba(39, 148, 134, 0.12);
+    }
+}
+
+.child-spot-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #e5e7eb;
+}
+
+.child-spot-thumb--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #6b7280;
+}
+
+.child-spot-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1f2937;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
 .dlg-footer {
     position: relative;
     padding: 0 12px 12px;
@@ -612,7 +899,7 @@ watch(dialogVisible, (visible) => {
     margin-top: 24px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
     .dlg-header {
         gap: 8px;
     }
@@ -676,6 +963,29 @@ watch(dialogVisible, (visible) => {
     .section-title {
         font-size: 20px;
         margin-bottom: 12px;
+    }
+
+    .sibling-spots-layout {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sibling-divider {
+        display: none;
+    }
+
+    .sibling-parent-block,
+    .sibling-others-block {
+        width: 100%;
+    }
+
+    .sibling-spots-grid--single {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 120px));
+    }
+
+    .child-spots-grid,
+    .sibling-spots-grid {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
     }
 }
 </style>
