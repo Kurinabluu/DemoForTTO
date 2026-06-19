@@ -2,6 +2,69 @@ import { buildSubNavKey } from '@/utils/subNavKey'
 import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled } from '@/utils/ttoApi'
 import { notifyApiWarning } from '@/utils/apiFeedback'
 
+/**
+ * ============================================================
+ * [临时开发功能] 本地 JSON 兜底数据
+ * ============================================================
+ * 用途：在开发阶段没有可用数据库时，使用本地 JSON 文件作为数据兜底
+ * 
+ * 使用场景：
+ * - 数据库不可用（如本地开发环境未配置数据库）
+ * - API 接口调用失败且 isApiEnabled = false
+ * - 后端服务未启动
+ * 
+ * 使用方式：
+ * 1. 确认 `VITE_USE_LOCAL_JSON_FALLBACK=true` 在 .env.development 中
+ * 2. 确保 `src/data/fallback/freeinfo_fallback.json` 文件存在且数据完整
+ * 3. 系统会在 API 失败时自动回退到本地 JSON 数据
+ * 
+ * 删除计划：
+ * - 当后端数据库正式上线且功能稳定后删除此功能
+ * - 删除步骤：
+ *   1. 删除 src/data/fallback/freeinfo_fallback.json 文件
+ *   2. 删除本文件中的 LOCAL_JSON_FALLBACK 相关代码
+ *   3. 删除 .env.development 中的 VITE_USE_LOCAL_JSON_FALLBACK 配置
+ * ============================================================
+ */
+import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'
+import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'
+
+// 是否启用本地 JSON 兜底（可通过环境变量控制）
+const USE_LOCAL_JSON_FALLBACK = import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK === 'true'
+
+/**
+ * [临时开发功能] 从本地 JSON 文件获取数据
+ * 用于开发阶段数据库不可用时的兜底
+ */
+function loadLocalFallbackData(dataKey) {
+  if (!USE_LOCAL_JSON_FALLBACK) {
+    return null
+  }
+
+  try {
+    if (dataKey === 'freeinfo') {
+      console.info('[contentRepository] [临时开发功能] 使用本地 freeinfo_fallback.json 兜底数据')
+      return freeinfoFallbackData
+    } else if (dataKey === 'daytrip') {
+      console.info('[contentRepository] [临时开发功能] 使用本地 daytrip_fallback.json 兜底数据')
+      return daytripFallbackData
+    }
+  } catch (error) {
+    console.warn(`[contentRepository] [临时开发功能] 加载本地兜底数据失败 (${dataKey}):`, error)
+  }
+
+  return null
+}
+
+/**
+ * [临时开发功能] 检查子导航数据是否有效
+ * 用于判断是否需要使用兜底数据
+ */
+function hasValidSubNavData(data) {
+  if (!data || typeof data !== 'object') return false
+  return Array.isArray(data.subNav) && data.subNav.length > 0
+}
+
 function parseCardExtraJson(row) {
   if (!row?.cardExtraJson) return {}
   try {
@@ -170,7 +233,7 @@ async function fetchSubNavItems(sectionPath, subNavMeta) {
   } catch (error) {
     console.warn('[contentRepository] API fallback:', subNavKey, error)
     if (isApiEnabled()) {
-      notifyApiWarning('暂时无法加载，请稍后再试', {
+      notifyApiWarning('后端服务暂不可用，请稍后再试', {
         dedupeKey: 'content:api-failed',
       })
     }
@@ -189,6 +252,15 @@ export async function loadItemsBySubNav(sectionPath, subNavName) {
 
 async function loadSectionBundle(sectionPath) {
   if (!isApiEnabled()) {
+    // [临时开发功能] API 未启用时，尝试使用本地 JSON 兜底
+    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
+    const fallbackData = loadLocalFallbackData(fallbackKey)
+    if (fallbackData) {
+      return {
+        path: sectionPath,
+        subNav: fallbackData.subNav || [],
+      }
+    }
     return { path: sectionPath, subNav: [] }
   }
 
@@ -200,9 +272,29 @@ async function loadSectionBundle(sectionPath) {
       : null
   } catch (error) {
     console.warn('[contentRepository] nav API fallback:', sectionPath, error)
+    // [临时开发功能] API 调用失败时，尝试使用本地 JSON 兜底
+    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
+    const fallbackData = loadLocalFallbackData(fallbackKey)
+    if (fallbackData) {
+      console.info(`[contentRepository] [临时开发功能] API 调用失败，使用本地 JSON 兜底 (${fallbackKey})`)
+      return {
+        path: sectionPath,
+        subNav: fallbackData.subNav || [],
+      }
+    }
   }
 
   if (!sectionNav?.subNav?.length) {
+    // [临时开发功能] API 返回空数据时，尝试使用本地 JSON 兜底
+    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
+    const fallbackData = loadLocalFallbackData(fallbackKey)
+    if (fallbackData) {
+      console.info(`[contentRepository] [临时开发功能] API 返回空数据，使用本地 JSON 兜底 (${fallbackKey})`)
+      return {
+        path: sectionPath,
+        subNav: fallbackData.subNav || [],
+      }
+    }
     return { path: sectionPath, subNav: [] }
   }
 
@@ -215,6 +307,20 @@ async function loadSectionBundle(sectionPath) {
       }
     })
   )
+
+  // [临时开发功能] 检查是否所有子导航的items都为空，如果是则使用兜底数据
+  const allItemsEmpty = subNav.every(sub => !Array.isArray(sub.items) || sub.items.length === 0)
+  if (allItemsEmpty) {
+    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
+    const fallbackData = loadLocalFallbackData(fallbackKey)
+    if (fallbackData) {
+      console.info(`[contentRepository] [临时开发功能] 所有子导航数据为空，使用本地 JSON 兜底 (${fallbackKey})`)
+      return {
+        path: sectionPath,
+        subNav: fallbackData.subNav || [],
+      }
+    }
+  }
 
   return {
     path: sectionPath,

@@ -4,6 +4,7 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { ElIcon } from 'element-plus'
 import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
 import ContactDialog from '@/components/ContactDialog.vue'
+import TripDialog from '@/components/TripDialog.vue'
 import servicesData from '@/data/split/services.json'
 // 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
 // 导入所有需要的图片，使用@别名
@@ -488,6 +489,152 @@ watch(() => props.serviceName, (newServiceName) => {
         loadServiceData(newServiceName)
     }
 })
+
+// 可订购项目静态数据（热门项目专属）
+const orderableItems = ref([
+    {
+        id: 1,
+        title: 'Tahune AirWalk 空中步道',
+        description: '在塔斯马尼亚南部森林中体验独特的空中步道，漫步于树冠之上，俯瞰胡恩河的壮丽景色。',
+        price: '35',
+        groupPrice: '30',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: '@/assets/img/places/TahuneAirWalk.jpg',
+        tag: '门票',
+        features: ['树冠漫步', '胡恩河景', '适合全家'],
+        preparation: ['舒适的步行鞋', '防晒霜和帽子', '相机', '水和零食'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '门票价格基于成人标准票价，2-16岁儿童享受儿童价',
+        notes: ['请提前15分钟到达入口', '空中步道全长约20米', '部分路段较窄，请注意安全', '雨天候客可能会关闭']
+    },
+    {
+        id: 2,
+        title: 'Port Arthur Historic Site 亚瑟港历史遗址',
+        description: '探索澳大利亚最著名的历史遗址，了解塔斯马尼亚的殖民历史，体验夜间幽灵之旅。',
+        price: '45',
+        groupPrice: '38',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: '@/assets/img/places/PortArthur.jpg',
+        tag: '门票',
+        features: ['历史遗址', '夜间幽灵之旅', '导览服务'],
+        preparation: ['舒适的步行鞋', '防晒/雨具', '相机', '保暖外套'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '门票包含主监狱建筑、岛屿游船和花园门票',
+        notes: ['建议预留3-4小时参观', '可参加免费导览活动', '幽灵之旅需额外购票', '餐厅和咖啡厅需另行付费']
+    },
+    {
+        id: 3,
+        title: 'Cradle Mountain 摇摇篮山国家公园',
+        description: '塔斯马尼亚最著名的国家公园，体验世界遗产级的自然风光，徒步穿越原始荒野。',
+        price: '25',
+        groupPrice: '20',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+        tag: '门票',
+        features: ['世界遗产', '徒步路线', '野生动物'],
+        preparation: ['防水徒步鞋', '保暖衣物', '雨具', '充足的饮用水和食物'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '门票有效期为24小时，可在园区内多次使用',
+        notes: ['徒步线路多样，请选择适合自己体力的路线', '部分路线需要预订', '可以看到塔斯马尼亚恶魔等特有动物', '冬季可能有雪，注意防滑']
+    },
+    {
+        id: 4,
+        title: 'Wineglass Bay 酒杯湾游船',
+        description: '乘坐游船探索菲欣纳国家公园最美的酒杯湾，欣赏粉红色花岗岩山脉与碧蓝海水的完美结合。',
+        price: '120',
+        groupPrice: '105',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: '@/assets/img/places/wineglassbay.jpg',
+        tag: '游船',
+        features: ['酒杯湾', '游船体验', '海景风光'],
+        preparation: ['防晒霜和帽子', '晕船药（如易晕车）', '保暖外套', '相机'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '游船价格包含船上午餐和饮品',
+        notes: ['全程约3.5小时', '提供素食选择，请提前告知', '可能看到海豚和鲸鱼', '风大浪急时请注意安全']
+    },
+    {
+        id: 5,
+        title: 'Bonorong Wildlife Sanctuary 野生动物保护区',
+        description: '近距离接触塔斯马尼亚独有的野生动物，包括袋熊、袋獾和考拉，了解野生动物保护工作。',
+        price: '32',
+        groupPrice: '27',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: '@/assets/img/places/MariaIsland.jpg',
+        tag: '门票',
+        features: ['袋熊', '袋獾', '夜间游览'],
+        preparation: ['舒适的步行鞋', '防晒用品', '相机', '驱蚊液'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '门票包含园区入场和每日喂食表演',
+        notes: ['每天有固定的动物喂食时间', '夜间游览需额外购票', '可以亲手喂袋鼠', '请勿在园区内饮食']
+    },
+    {
+        id: 6,
+        title: 'MONA 现代艺术博物馆',
+        description: '参观澳大利亚最具争议性的私人博物馆，体验独特的地下建筑设计与前卫艺术作品。',
+        price: '28',
+        groupPrice: '23',
+        currency: 'A$',
+        priceUnit: '/人',
+        image: '@/assets/img/places/MONA/2.jpg',
+        tag: '门票',
+        features: ['现代艺术', '地下建筑', '独特体验'],
+        preparation: ['舒适的步行鞋（需走很多路）', '相机', '开放的心态'],
+        personalInfo: '无需特殊个人信息，请携带有效护照',
+        feeBasis: '门票包含地下博物馆全部展览和船上往返',
+        notes: ['馆内禁止拍照的部分请遵守规定', '建议预留4-5小时参观', '可下载MONA App获得更好的导览体验', '博物馆商店有独特的纪念品']
+    }
+])
+
+// 可订购项目弹窗相关
+const orderableDialogVisible = ref(false)
+const orderableDialogData = ref({
+    title: '',
+    enTitle: '',
+    banner: '',
+    tripType: '热门项目',
+    tripData: {}
+})
+
+const openOrderableDialog = (item) => {
+    // 构建兼容 TripDialog 的 tripData 格式
+    const tripData = {
+        displaySubNav: '热门项目',
+        desc: item.description,
+        route: item.title,
+        features: item.features?.map((f, idx) => ({
+            icon: ['#22c55e', '#3b82f6', '#f59e0b'][idx % 3] || '#22c55e',
+            title: f,
+            desc: ''
+        })) || [],
+        tags: item.tags || [],
+        orderableInfo: {
+            singlePriceLabel: '标准价格',
+            singlePrice: item.price,
+            groupPriceLabel: '团购价格',
+            groupPrice: item.groupPrice,
+            currency: item.currency,
+            priceUnit: item.priceUnit,
+            preparation: item.preparation || [],
+            personalInfo: item.personalInfo || '',
+            feeBasis: item.feeBasis || '',
+            notes: item.notes || []
+        }
+    }
+
+    orderableDialogData.value = {
+        title: item.title,
+        enTitle: item.enTitle || '',
+        banner: item.image,
+        tripType: '热门项目',
+        tripData
+    }
+    orderableDialogVisible.value = true
+}
 </script>
 
 <template>
@@ -609,6 +756,51 @@ watch(() => props.serviceName, (newServiceName) => {
                 <el-step title="服务反馈，持续优化" /> -->
             </el-steps>
             <div class="order-now fowe7 fs14 pointer" @click="openConsultationDialog">立即咨询 >></div>
+        </div>
+
+        <!-- 可订购项目版块（热门项目专属） -->
+        <div v-if="props.serviceName === '热门项目'" class="orderable-section">
+            <h2 class="section-title">热门景点门票与活动项目</h2>
+            <p class="orderable-intro">以下项目可通过TTO代订，省去排队购票烦恼，让你专心享受旅程</p>
+            <div class="orderable-grid">
+                <div v-for="item in orderableItems" :key="item.id" class="orderable-card"
+                    @click="openOrderableDialog(item)">
+                    <div class="orderable-image">
+                        <img :src="getImageUrl(item.image)" :alt="item.title" class="orderable-img" loading="lazy"
+                            decoding="async">
+                        <div class="orderable-tag">{{ item.tag }}</div>
+                    </div>
+                    <div class="orderable-content">
+                        <h3 class="orderable-title">{{ item.title }}</h3>
+                        <p class="orderable-description">{{ item.description }}</p>
+                        <div class="orderable-features">
+                            <span v-for="(feature, idx) in item.features" :key="idx" class="feature-tag">{{ feature
+                            }}</span>
+                        </div>
+                        <div class="orderable-price-row">
+                            <div class="price-info">
+                                <span class="price-item">
+                                    <span class="price-label">单人价</span>
+                                    <span class="price-value">
+                                        <span class="price-currency">{{ item.currency }}</span>
+                                        <span class="price-num">{{ item.price }}</span>
+                                        <span class="price-unit">{{ item.priceUnit }}</span>
+                                    </span>
+                                </span>
+                                <span class="price-item group">
+                                    <span class="price-label">团购价</span>
+                                    <span class="price-value">
+                                        <span class="price-currency">{{ item.currency }}</span>
+                                        <span class="price-num group-price-num">{{ item.groupPrice }}</span>
+                                        <span class="price-unit">{{ item.priceUnit }}</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <button class="consult-btn fs14 pointer">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!--  横向自动播放展示列表 -->
@@ -765,15 +957,18 @@ watch(() => props.serviceName, (newServiceName) => {
         </div>
 
         <!-- 咨询弹窗 -->
-        <ContactDialog
-            v-model:visible="consultationDialogVisible"
-            source-page="服务展示页"
+        <ContactDialog v-model:visible="consultationDialogVisible" source-page="服务展示页"
             :source-module="currentConfig?.packagesTitle === '包车服务' ? '包车服务' : currentConfig?.packagesTitle === '专属定制' ? '专属定制' : currentConfig?.packagesTitle || '服务咨询'"
             source-page-key="service-showcase"
             :source-module-key="currentConfig?.packagesTitle === '包车服务' ? 'charter-service' : currentConfig?.packagesTitle === '专属定制' ? 'custom-service' : 'service-consultation'"
-            source-entry-key=""
-            inquiry-type="contact"
-        />
+            source-entry-key="" inquiry-type="contact" />
+
+        <!-- 可订购项目详情弹窗 - 使用TripDialog组件 -->
+        <TripDialog v-if="orderableDialogVisible" v-model:visible="orderableDialogVisible"
+            :title="orderableDialogData.title" :en-title="orderableDialogData.enTitle"
+            :banner="orderableDialogData.banner" :trip-type="orderableDialogData.tripType"
+            :trip-data="orderableDialogData.tripData" />
+
         <!-- 关于我们弹窗 -->
         <AboutUsDialog ref="aboutUsDialogRef" />
     </div>
@@ -947,6 +1142,167 @@ watch(() => props.serviceName, (newServiceName) => {
 
         :deep(.el-step__desciption) {
             font-size: 13px !important;
+        }
+    }
+
+    // 可订购项目版块样式
+    .orderable-section {
+        margin-top: 60px;
+        padding: 40px 0;
+
+        .orderable-intro {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .orderable-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .orderable-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eee;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        .orderable-image {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+
+            .orderable-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .orderable-tag {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: #279486;
+                color: #fff;
+                padding: 4px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        }
+
+        .orderable-content {
+            padding: 16px;
+
+            .orderable-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #333;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+
+            .orderable-description {
+                font-size: 13px;
+                color: #666;
+                line-height: 1.6;
+                margin-bottom: 12px;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .orderable-features {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 12px;
+
+                .feature-tag {
+                    background: #f0f9f8;
+                    color: #279486;
+                    padding: 3px 8px;
+                    border-radius: 3px;
+                    font-size: 11px;
+                    border: 1px solid #d4e8e5;
+                }
+            }
+
+            .orderable-price-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-top: 12px;
+
+                .price-info {
+                    display: flex;
+                    gap: 16px;
+                    align-items: flex-end;
+
+                    .price-item {
+                        display: flex;
+                        align-items: baseline;
+                        gap: 6px;
+
+                        .price-label {
+                            font-size: 12px;
+                            color: #999;
+                        }
+
+                        .price-value {
+                            display: flex;
+                            align-items: baseline;
+                            gap: 1px;
+
+                            .price-currency {
+                                font-size: 12px;
+                                color: #666;
+                                font-weight: 500;
+                            }
+
+                            .price-num {
+                                font-size: 18px;
+                                color: #666;
+                                font-weight: 700;
+                            }
+
+                            .price-unit {
+                                font-size: 11px;
+                                color: #999;
+                            }
+                        }
+
+                        &.group {
+                            .price-value {
+
+                                .price-currency,
+                                .price-num {
+                                    color: #279486;
+                                }
+
+                                .group-price-num {
+                                    font-size: 22px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1168,20 +1524,6 @@ watch(() => props.serviceName, (newServiceName) => {
         line-height: 1.6;
         margin-bottom: 16px;
         text-align: left;
-    }
-
-    .consult-btn {
-        padding: 5px 20px;
-        background: #33b1a3;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-weight: 500;
-        transition: background-color .3s;
-    }
-
-    .consult-btn:hover {
-        background: #2da099;
     }
 
     .car-price-bottom {
@@ -1532,6 +1874,29 @@ watch(() => props.serviceName, (newServiceName) => {
         padding: 30px 15px;
         margin-top: 20px;
 
+        .orderable-section {
+            margin-top: 40px;
+
+            .orderable-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .orderable-price-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+
+                .price-info {
+                    width: 100%;
+                }
+
+                .consult-btn {
+                    align-self: flex-end;
+                }
+            }
+        }
+
         .advantages-section {
             .advantages-flex {
                 display: grid;
@@ -1572,6 +1937,76 @@ watch(() => props.serviceName, (newServiceName) => {
         .steps-box,
         .advantages-section {
             margin-top: 20px;
+        }
+
+        .orderable-section {
+            margin-top: 30px;
+            padding: 20px 0;
+
+            .orderable-intro {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .orderable-grid {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 16px;
+            }
+
+            .orderable-card {
+                .orderable-image {
+                    height: 160px;
+                }
+
+                .orderable-content {
+                    padding: 12px;
+
+                    .orderable-title {
+                        font-size: 15px;
+                    }
+
+                    .orderable-description {
+                        font-size: 12px;
+                    }
+
+                    .orderable-features {
+                        gap: 6px;
+
+                        .feature-tag {
+                            font-size: 10px;
+                            padding: 2px 6px;
+                        }
+                    }
+
+                    .orderable-price-row {
+                        flex-direction: column;
+                        align-items: stretch;
+                        gap: 10px;
+
+                        .price-info {
+                            width: 100%;
+                            gap: 12px;
+                            align-items: flex-end;
+
+                            .price-item {
+                                gap: 4px;
+
+                                .price-num {
+                                    font-size: 18px;
+                                }
+
+                                .group-price-num {
+                                    font-size: 20px;
+                                }
+                            }
+                        }
+
+                        .consult-btn {
+                            align-self: flex-end;
+                        }
+                    }
+                }
+            }
         }
 
         .advantages-section {

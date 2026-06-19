@@ -160,6 +160,24 @@ const isMobile = computed(() => {
     return windowWidth.value <= PHONE_MAX_WIDTH
 })
 
+// 判断是否应该显示"后端服务暂不可用"的提示
+// 当API启用但数据为空时，说明后端可能没启动或API失败
+// 当API未启用时（完全使用本地文件），说明完全离线，显示"网络未连接"
+const shouldShowApiErrorTip = computed(() => {
+    // 如果API启用，说明应该从后端获取数据
+    // 如果此时数据为空，可能是后端没启动或API失败，显示"后端服务暂不可用"
+    // 只有当API未启用时（完全使用本地文件），才显示"该分类下暂无结果"
+    return isApiEnabled()
+})
+
+// 获取空状态提示文案
+function getEmptyTipText() {
+    if (shouldShowApiErrorTip.value) {
+        return '服务暂不可用，请稍后再试'
+    }
+    return '网络未连接，请检查网络'
+}
+
 // 当前网格总页数（按每页 itemsPerPage 条计算，移动端页码显示用）
 const mobileTotalPages = computed(() => {
     const total = getTotalItems()
@@ -1455,7 +1473,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                         <div class="custom-pagination custom-pagination--fixed">
                             <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage
-                                    }}</span> /
+                            }}</span> /
                                 {{
                                     mobileTotalPages }} 页</div>
                         </div>
@@ -1481,6 +1499,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                                 mobileTotalPages }} 页</div>
                     </div>
                 </div>
+                <div v-if="currentDayTripItems.length === 0" class="empty-tip">{{ getEmptyTipText() }}</div>
             </template>
         </template>
 
@@ -1759,7 +1778,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     </template>
                 </div>
             </template>
-            <div v-else class="empty-tip">该分类下暂无结果</div>
+            <div v-else class="empty-tip">{{ getEmptyTipText() }}</div>
         </template>
         <!-- <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...
@@ -1793,7 +1812,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     </template>
                 </div>
             </template>
-            <div v-else class="empty-tip">该分类下暂无结果</div>
+            <div v-else class="empty-tip">{{ getEmptyTipText() }}</div>
         </template>
 
         <!-- <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
@@ -1884,7 +1903,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     </template>
                 </div>
             </template>
-            <div v-else class="empty-tip">该分类下暂无结果</div>
+            <div v-else class="empty-tip">{{ getEmptyTipText() }}</div>
         </template>
         <!-- <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...

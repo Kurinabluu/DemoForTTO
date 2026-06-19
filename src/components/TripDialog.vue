@@ -168,10 +168,12 @@ watch(dialogVisible, (visible) => {
         <template #header="{ close }">
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
-                    <div class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle }}）</span></div>
+                    <div class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle }}）</span>
+                    </div>
                 </div>
                 <div class="dlg-header-right">
-                    <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }" @click="handleToggleFavorite">
+                    <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }"
+                        @click="handleToggleFavorite">
                         {{ isFavorite ? '★' : '☆' }}
                     </el-button>
                     <el-button type="primary" size="large" @click="openContactDialog">立刻咨询此行程</el-button>
@@ -200,7 +202,26 @@ watch(dialogVisible, (visible) => {
                         <div class="section-desc">
                             {{ routeInfo.desc }}
                         </div>
-                        <div class="map-details">
+
+                        <!-- 可订购项目详情 -->
+                        <div class="map-details" v-if="routeInfo.orderableInfo">
+                            <h3 class="map-title">项目详情</h3>
+                            <div class="detail-item" v-if="routeInfo.orderableInfo.preparation?.length">
+                                <span class="detail-label">需要准备：</span>
+                                <span class="detail-value">{{ routeInfo.orderableInfo.preparation.join('、') }}</span>
+                            </div>
+                            <div class="detail-item" v-if="routeInfo.orderableInfo.personalInfo">
+                                <span class="detail-label">个人信息：</span>
+                                <span class="detail-value">{{ routeInfo.orderableInfo.personalInfo }}</span>
+                            </div>
+                            <div class="detail-item" v-if="routeInfo.orderableInfo.feeBasis">
+                                <span class="detail-label">费用依据：</span>
+                                <span class="detail-value">{{ routeInfo.orderableInfo.feeBasis }}</span>
+                            </div>
+                        </div>
+
+                        <!-- 行程详情（非可订购项目） -->
+                        <div class="map-details" v-else>
                             <h3 class="map-title">行程详情</h3>
                             <div class="detail-item">
                                 <span class="detail-label">行程时长：</span>
@@ -245,7 +266,32 @@ watch(dialogVisible, (visible) => {
                     </div>
                 </div>
 
-                <div class="price-section">
+                <!-- 可订购项目特殊信息 -->
+                <template v-if="routeInfo.orderableInfo">
+                    <div class="price-section">
+                        <h3 class="price-title">项目价格</h3>
+                        <div class="price-items">
+                            <div class="price-item">{{ routeInfo.orderableInfo.singlePriceLabel }} {{
+                                routeInfo.orderableInfo.currency }} {{ routeInfo.orderableInfo.singlePrice }}{{
+                                    routeInfo.orderableInfo.priceUnit }}<span class="child-price"
+                                    v-if="routeInfo.orderableInfo.groupPrice">（{{
+                                        routeInfo.orderableInfo.groupPriceLabel }} {{ routeInfo.orderableInfo.currency }} {{
+                                        routeInfo.orderableInfo.groupPrice }}{{ routeInfo.orderableInfo.priceUnit }}）</span>
+                            </div>
+                        </div>
+
+                        <div class="price-includes" v-if="routeInfo.orderableInfo.notes?.length > 1">
+                            <div class="includes-title">注意事项：</div>
+                            <ul class="includes-list">
+                                <li v-for="(note, idx) in routeInfo.orderableInfo.notes" :key="idx">{{ note }}</li>
+                            </ul>
+                        </div>
+
+                        <div class="price-note">* 更多详细信息可通过联系方式咨询</div>
+                    </div>
+                </template>
+
+                <div class="price-section" v-else>
                     <h3 class="price-title">行程价格</h3>
                     <div class="price-items">
                         <div class="price-item">成人 AUD $288/位<span class="child-price">（儿童半价）</span></div>
@@ -293,15 +339,9 @@ watch(dialogVisible, (visible) => {
         </template>
     </el-dialog>
 
-    <ContactDialog
-        v-model:visible="contactDialogVisible"
-        source-page="行程详情页"
-        source-module="立刻咨询此行程"
-        source-page-key="trip-detail"
-        :source-module-key="currentItemType === '多日游' ? 'multi-day-trip' : 'day-trip'"
-        :source-entry-key="String(itemKey || itemId || title || '').trim()"
-        inquiry-type="contact"
-    />
+    <ContactDialog v-model:visible="contactDialogVisible" source-page="行程详情页" source-module="立刻咨询此行程"
+        source-page-key="trip-detail" :source-module-key="currentItemType === '多日游' ? 'multi-day-trip' : 'day-trip'"
+        :source-entry-key="String(itemKey || itemId || title || '').trim()" inquiry-type="contact" />
     <InfoSourceDialog v-model:visible="infoDialogVisible" :source-data="infoSourceRows"
         :entry-title="sourceEntryName" />
 </template>
