@@ -163,15 +163,16 @@ const isMobile = computed(() => {
 // 判断是否应该显示"后端服务暂不可用"的提示
 // 当API启用但数据为空时，说明后端可能没启动或API失败
 // 当API未启用时（完全使用本地文件），说明完全离线，显示"网络未连接"
+// 当用户主动选择了筛选条件（地点/距离）但无匹配结果时，显示"暂无匹配结果"
 const shouldShowApiErrorTip = computed(() => {
-    // 如果API启用，说明应该从后端获取数据
-    // 如果此时数据为空，可能是后端没启动或API失败，显示"后端服务暂不可用"
-    // 只有当API未启用时（完全使用本地文件），才显示"该分类下暂无结果"
-    return isApiEnabled()
+    return isApiEnabled() && !selectedLocationKey.value && !selectedDistance.value
 })
 
 // 获取空状态提示文案
 function getEmptyTipText() {
+    if (selectedLocationKey.value || selectedDistance.value) {
+        return '暂无匹配结果'
+    }
     if (shouldShowApiErrorTip.value) {
         return '服务暂不可用，请稍后再试'
     }

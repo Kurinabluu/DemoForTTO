@@ -12918,11 +12918,6 @@
                 "tag3"
               ]
             }
-          },
-          {
-            "id": "2202",
-            "title": "data update测试标题",
-            "enTitle": "DATA UPDATE TEST"
           }
         ]
       },
@@ -38234,7 +38229,7 @@
     "available": true,
     "hasSubNav": false,
     "isTrip": false,
-    "path": "service/ticket",
+    "path": "/popular",
     "serviceConfig": {
       "heroImg": "../assets/img/footer1.jpg",
       "heroTitle": "让等待不再是旅行难题，高效管理时间",
