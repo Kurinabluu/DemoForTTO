@@ -33,10 +33,10 @@ VITE_USE_LOCAL_JSON_FALLBACK=false
 
 确保以下文件存在且数据完整：
 
-- `src/data/fallback/freeinfo_fallback.json` - 自助游/自驾游免费参考信息数据
+- `src/data/fallback/freeinfo_fallback.json` - 自助游/自驾游免费参考信息数据（878 条）
 - `src/data/fallback/daytrip_fallback.json` - 一日游/多日游数据
 
-这些文件应与 `src/data/split/` 目录下的正式数据文件保持同步。
+这些文件应与 `src/data/split/` 目录下的正式数据文件保持同步。运行 `scripts/fix-towns.mjs` 时会自动同步 fallback 文件。
 
 ## 工作原理
 

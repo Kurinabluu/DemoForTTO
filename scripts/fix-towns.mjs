@@ -428,10 +428,45 @@ skipLog.forEach((item, i) => {
 });
 console.log('  ... and ' + (skipLog.length - 10) + ' more');
 
-// Write back
+// Write back to freeinfo.json
 fs.writeFileSync(path.join(__dirname, '..', 'src/data/split/freeinfo.json'), JSON.stringify(freeinfo, null, 2), 'utf8');
 console.log('');
 console.log('freeinfo.json updated!');
+
+// Also sync to data.json (source of truth)
+const dataJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'src/data/data.json'), 'utf8'));
+const dataSection = dataJson.find(s => s.tagName === '自助游/自驾游免费参考信息');
+if (dataSection) {
+  let dataSynced = 0;
+  freeinfo.subNav.forEach(sn => {
+    sn.items.forEach(freeItem => {
+      const fd = freeItem.tripData || {};
+      if (!fd.town) return;
+      dataSection.subNav.forEach(ds => {
+        ds.items.forEach(dataItem => {
+          if (dataItem.title === freeItem.title && ds.subNavName === sn.subNavName) {
+            if (!dataItem.tripData) dataItem.tripData = {};
+            if (!dataItem.tripData.town || dataItem.tripData.town !== fd.town) {
+              dataItem.tripData.town = fd.town;
+              dataItem.tripData.postcode = fd.postcode || '';
+              dataItem.tripData.locationLabel = fd.locationLabel || '';
+              dataSynced++;
+            }
+          }
+        });
+      });
+    });
+  });
+  fs.writeFileSync(path.join(__dirname, '..', 'src/data/data.json'), JSON.stringify(dataJson, null, 2), 'utf8');
+  console.log('data.json synced: ' + dataSynced + ' items');
+}
+
+// Also sync fallback file
+const fallbackPath = path.join(__dirname, '..', 'src/data/fallback/freeinfo_fallback.json');
+if (fs.existsSync(fallbackPath)) {
+  fs.writeFileSync(fallbackPath, JSON.stringify(freeinfo, null, 2), 'utf8');
+  console.log('freeinfo_fallback.json synced');
+}
 
 // Also write the skip log for user reference
 fs.writeFileSync('scripts/skip-log.json', JSON.stringify(skipLog, null, 2));
