@@ -18,6 +18,8 @@ import {
     getLocationSortOrder,
     getTownByLocationLabel,
     resolveLocationLabel,
+    SORT_MODES,
+    SORT_MODE_LABELS,
     TAS_LOCATION_POSTCODES,
     UNCATEGORIZED_LOCATION,
 } from '@/utils/tasLocationPostcodes'
@@ -72,6 +74,7 @@ const isSearching = ref(false) // 搜索加载状态
 const isLocalSearch = computed(() => searchQuery.value.trim().length > 0)
 const selectedLocationKey = ref('')
 const selectedDistance = ref('')
+const sortMode = ref(SORT_MODES.POSTCODE)
 const loadingState = computed(() => isSearching.value)
 
 const FREE_INFO_FILTER_SUBTABS = ['景点', '餐厅', '住宿']
@@ -741,7 +744,7 @@ watch(
     }
 )
 
-watch(() => [selectedLocationKey.value, selectedDistance.value], () => {
+watch(() => [selectedLocationKey.value, selectedDistance.value, sortMode.value], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
     resetRenderLimit()
@@ -789,7 +792,7 @@ const locationOptions = computed(() => {
                 ? hotels.value?.items || []
                 : []
 
-    return buildLocationOptionsFromItems(currentItems)
+    return buildLocationOptionsFromItems(currentItems, sortMode.value)
 })
 
 function getDistanceReferenceTown() {
@@ -838,7 +841,7 @@ function getLocationDisplayName(item) {
 function sortByLocation(items) {
     const list = Array.isArray(items) ? [...items] : []
     return list.sort((a, b) => {
-        const orderDiff = getLocationSortOrder(a) - getLocationSortOrder(b)
+        const orderDiff = getLocationSortOrder(a, sortMode.value) - getLocationSortOrder(b, sortMode.value)
         if (orderDiff !== 0) return orderDiff
         const subSpotDiff = getSubSpotSortOrderFromDb(a) - getSubSpotSortOrderFromDb(b)
         if (subSpotDiff !== 0) return subSpotDiff
@@ -1436,6 +1439,9 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                 size="large">
                 <el-option v-for="location in tasDistanceOptions" :key="location" :label="location" :value="location" />
             </el-select>
+            <el-select v-model="sortMode" class="sort-select" size="large">
+                <el-option v-for="(label, value) in SORT_MODE_LABELS" :key="value" :label="label" :value="value" />
+            </el-select>
         </template>
     </div>
 
@@ -1982,11 +1988,15 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
     &--with-filter {
         max-width: 1200px;
         display: grid;
-        grid-template-columns: minmax(280px, 1fr) 280px 280px;
+        grid-template-columns: minmax(280px, 1fr) 280px 280px 200px;
         gap: 12px;
         align-items: center;
 
         .area-select {
+            width: 100%;
+        }
+
+        .sort-select {
             width: 100%;
         }
     }
