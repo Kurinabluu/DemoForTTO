@@ -3473,16 +3473,26 @@
           },
           {
             "title": "利菲瀑布",
-            "img": "",
+            "img": "../assets/img/item/Tasmania/LiffeyFalls/bn1.jpg",
+            "imgSource": [
+              {
+                "source": "https://unsplash.com/photos/water-falls-in-the-forest-pimLmaJLLbE?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                "sourceName": "Unsplash",
+                "photographerLink": "https://unsplash.com/@mattpalmer?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                "photographer": "Matt Palmer"
+              }
+            ],
             "enTitle": "Liffey Falls",
             "tripData": {
-              "route": "塔斯马尼亚中部",
+              "route": "Liffey Falls Upper Track, Liffey Tasmania 7301",
               "desc": "利菲河上一系列四个层叠式瀑布，瀑布位于大西部阶梯，海拔约514米，总落差约120-160米。",
+              "region": "中部地区",
+              "town": "Miena",
               "features": [
                 {
                   "icon": "#22c55e",
                   "title": "层叠瀑布序列",
-                  "desc": "可依次观赏四个被命名的层叠瀑布：亚历山德拉瀑布、霍普顿瀑布、利普（或斯波特/阿尔伯特）瀑布和维多利亚瀑布"
+                  "desc": "可依次观赏四个被命名的层叠瀑布：亚历山德拉瀑布（Alexandra Falls）、霍普顿瀑布（Hopetoun Falls）、利普/斯波特/阿尔伯特瀑布（Leap / Spot / Albert Falls）和维多利亚瀑布（Victoria Falls）"
                 },
                 {
                   "icon": "#3b82f6",
@@ -3507,7 +3517,9 @@
                   "desc": "Wikipedia,The Free Encyclopedia",
                   "url": "https://en.wikipedia.org/w/index.php?title=Liffey_Falls&oldid=1291552921"
                 }
-              ]
+              ],
+              "postcode": "7301",
+              "locationLabel": "Liffey 7301"
             }
           },
           {

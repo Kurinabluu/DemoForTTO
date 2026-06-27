@@ -64,13 +64,13 @@ export function resolveSpecialContentFallbackImage(sourceItem, subNavName = '', 
 function buildSpecialContentTripData(sourceItem = {}) {
   const features = Array.isArray(sourceItem?.info)
     ? sourceItem.info
-        .filter(Boolean)
-        .map((infoItem) => ({
-          icon: '#33b1a3',
-          title: String(infoItem?.label || '').trim(),
-          desc: String(infoItem?.value || '').trim(),
-        }))
-        .filter((row) => row.title || row.desc)
+      .filter(Boolean)
+      .map((infoItem) => ({
+        icon: '#33b1a3',
+        title: String(infoItem?.label || '').trim(),
+        desc: String(infoItem?.value || '').trim(),
+      }))
+      .filter((row) => row.title || row.desc)
     : []
 
   const tagItems = Array.isArray(sourceItem?.tagItems) ? sourceItem.tagItems : []
@@ -158,11 +158,11 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
     : {}
   const specialTripData =
     Array.isArray(sourceTripData?.info) ||
-    Array.isArray(sourceTripData?.tagItems) ||
-    Array.isArray(sourceTripData?.tags) ||
-    sourceTripData?.badge ||
-    sourceTripData?.location ||
-    sourceTripData?.sub
+      Array.isArray(sourceTripData?.tagItems) ||
+      Array.isArray(sourceTripData?.tags) ||
+      sourceTripData?.badge ||
+      sourceTripData?.location ||
+      sourceTripData?.sub
       ? buildSpecialContentTripData(sourceTripData)
       : {}
   const finalSourceTripData = Object.keys(specialTripData).length
@@ -238,7 +238,7 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
     tripData.images = resolvedImages
   }
 
-  const gridPath = getFreeInfoGridImagePath(sourceItem, subNavName)
+  const gridPath = getFreeInfoGridImagePath(favoriteItem?.tripData || favoriteItem, subNavName)
   const banner =
     resolvedImages[0] ||
     (gridPath ? resolveDataImage(gridPath, '') : '') ||
@@ -249,8 +249,8 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
 
   return {
     ...favoriteItem,
-    title: favoriteItem.title || sourceItem?.title || '',
-    enTitle: favoriteItem.enTitle ?? sourceItem?.enTitle ?? '',
+    title: favoriteItem.title || favoriteItem?.tripData?.title || '',
+    enTitle: favoriteItem.enTitle ?? favoriteItem?.tripData?.enTitle ?? '',
     type: itemType,
     itemType,
     tripType: itemType,

@@ -91,6 +91,8 @@ function mapRemoteFavorite(row) {
     banner: row?.banner || row?.image || '',
     region: row?.region || tripData.region || '',
     town: row?.town || tripData.town || '',
+    locationLabel: row?.locationLabel || tripData.locationLabel || '',
+    postcode: row?.postcode || tripData.postcode || '',
     tripData,
     subNavName: row?.subNavName || tripData.displaySubNav || '',
     tripType: itemType,

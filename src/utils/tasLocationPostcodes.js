@@ -10,7 +10,7 @@ import {
   VALID_SPOT_PARENT_KEYS,
 } from './scenicLocationMappings.js'
 
-export const UNCATEGORIZED_LOCATION = '暂未分类分区'
+export const UNCATEGORIZED_LOCATION = '暂未分类'
 
 /** 排序模式常量 */
 export const SORT_MODES = {
@@ -401,28 +401,13 @@ export function isSubSpotItem(item) {
 
 export function resolveLocationLabel(item) {
   const fromDb = getLocationLabelFromDb(item)
-  if (fromDb) return fromDb
-
-  const town = getGroupingTownFromItem(item)
-  if (!town) return UNCATEGORIZED_LOCATION
-
-  const defaultPostcode = townDefaultPostcodeMap.get(town.toLowerCase()) || ''
-  const extractedPostcode = extractPostcodeFromItem(item)
-  let postcode = defaultPostcode
-
-  if (extractedPostcode) {
-    const extractedLabel = townPostcodeLabelMap.get(`${town.toLowerCase()}::${extractedPostcode}`)
-    if (extractedLabel) {
-      postcode = extractedPostcode
-    }
+  if (fromDb) {
+    // 验证 DB 值是否为 "地名 邮编" 格式
+    const parts = String(fromDb).trim().split(/\s+/)
+    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
+    if (/^\d{4}$/.test(postcode)) return fromDb
   }
-
-  if (postcode) {
-    const mapped = townPostcodeLabelMap.get(`${town.toLowerCase()}::${postcode}`)
-    if (mapped) return mapped
-    return `${town} ${postcode}`
-  }
-  return town
+  return UNCATEGORIZED_LOCATION
 }
 
 export function getLocationSortOrder(item, mode = SORT_MODES.POSTCODE) {
@@ -454,6 +439,140 @@ export function buildLocationOptionsFromItems(items = [], mode = SORT_MODES.POST
     if (leftOrder !== rightOrder) return leftOrder - rightOrder
     return left.localeCompare(right, 'en')
   })
+}
+
+/**
+ * 构建按邮编分组的选项列表，供 el-option-group 使用
+ * @param {Array} items - 当前子标签下的条目列表
+ * @param {string} mode - 排序模式
+ * @returns {Array<{label: string, options: Array<{label: string, value: string}>}>}
+ */
+export function getLocationOptionGroups(items = [], mode = SORT_MODES.POSTCODE) {
+  const labels = new Set(TAS_LOCATION_POSTCODES.map((item) => item.label))
+
+  items.forEach((item) => {
+    const label = resolveLocationLabel(item)
+    if (label && label !== UNCATEGORIZED_LOCATION) {
+      labels.add(label)
+    }
+  })
+
+  const sortedList = getOrderMap(mode)
+  const sortedLabels = Array.from(labels).sort((left, right) => {
+    const leftOrder = sortedList.has(left) ? sortedList.get(left) : 9998
+    const rightOrder = sortedList.has(right) ? sortedList.get(right) : 9998
+    if (leftOrder !== rightOrder) return leftOrder - rightOrder
+    return left.localeCompare(right, 'en')
+  })
+
+  const groups = new Map()
+  sortedLabels.forEach((label) => {
+    const parts = String(label).trim().split(/\s+/)
+    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
+    if (!groups.has(postcode)) {
+      groups.set(postcode, [])
+    }
+    groups.get(postcode).push({ label, value: label })
+  })
+
+  return Array.from(groups.entries()).map(([postcode, options]) => ({
+    label: postcode,
+    options,
+  }))
+}
+
+/**
+ * 构建 Cascader 懒加载数据
+ * 供 el-cascader 的 lazyLoad 回调使用
+ * 仅包含当前条目中实际使用的地名+邮编标签，不含全量 TAS_LOCATION_POSTCODES
+ * 未分类的条目统一归入"暂未分类"组
+ * @param {Array} items - 当前子标签下的条目列表
+ * @param {string} mode - 排序模式
+ * @returns {Function} lazyLoad 回调函数 (node, resolve) => void
+ */
+export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
+  const categorizedLabels = new Set()
+  let hasUncategorized = false
+
+  // 只收集当前条目中实际出现的地名+邮编标签
+  items.forEach((item) => {
+    const label = resolveLocationLabel(item)
+    if (!label) return
+    if (label === UNCATEGORIZED_LOCATION) {
+      hasUncategorized = true
+      return
+    }
+    // 此时 resolveLocationLabel 已确保返回的是 "地名 邮编" 格式
+    categorizedLabels.add(label)
+  })
+
+  const sortedList = getOrderMap(mode)
+  const sortedLabels = Array.from(categorizedLabels).sort((left, right) => {
+    const leftOrder = sortedList.has(left) ? sortedList.get(left) : 9998
+    const rightOrder = sortedList.has(right) ? sortedList.get(right) : 9998
+    if (leftOrder !== rightOrder) return leftOrder - rightOrder
+    return left.localeCompare(right, 'en')
+  })
+
+  const isPostcodeMode = mode === SORT_MODES.POSTCODE
+
+  // 按第一级 key 分组
+  const groupMap = new Map()
+  sortedLabels.forEach((label) => {
+    const parts = String(label).trim().split(/\s+/)
+    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
+
+    let firstLevelKey
+    if (isPostcodeMode) {
+      firstLevelKey = postcode
+    } else {
+      // 名称模式：取地名首字母大写
+      const townName = parts.length >= 2 ? parts.slice(0, -1).join(' ') : label
+      firstLevelKey = townName.charAt(0).toUpperCase()
+    }
+
+    if (!firstLevelKey) return
+
+    if (!groupMap.has(firstLevelKey)) {
+      groupMap.set(firstLevelKey, [])
+    }
+    groupMap.get(firstLevelKey).push(label)
+  })
+
+  // 第一级排序：邮编模式按数字，名称模式按字母
+  const firstLevelKeys = Array.from(groupMap.keys()).sort((a, b) => {
+    if (isPostcodeMode) {
+      const numA = parseInt(a, 10)
+      const numB = parseInt(b, 10)
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB
+    }
+    return a.localeCompare(b, 'en')
+  })
+
+  // 未分类条目放在最后
+  if (hasUncategorized) {
+    firstLevelKeys.push(UNCATEGORIZED_LOCATION)
+  }
+
+  return function lazyLoad(node, resolve) {
+    if (node.level === 0) {
+      resolve(firstLevelKeys.map((key) => {
+        const isUncategorized = key === UNCATEGORIZED_LOCATION
+        return {
+          value: key,
+          label: key,
+          leaf: isUncategorized,
+        }
+      }))
+    } else {
+      const locations = groupMap.get(node.value) || []
+      resolve(locations.map((loc) => ({
+        value: loc,
+        label: loc,
+        leaf: true,
+      })))
+    }
+  }
 }
 
 export function getTownByLocationLabel(label) {

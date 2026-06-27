@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, onActivated } from 'vue';
 import { ElPagination, ElInput, ElButton, ElSelect, ElOption, ElMessage } from 'element-plus';
-import { Search } from '@element-plus/icons-vue';
+import { Search, Refresh } from '@element-plus/icons-vue';
 import {
   favorites,
   removeFavoriteAsync,
@@ -173,7 +173,7 @@ const filteredFavoriteSourceItems = computed(() => {
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.toLowerCase();
     data = data.filter(item => item.title.toLowerCase().includes(keyword) ||
-      (item.region || '').toLowerCase().includes(keyword) ||
+      (item.locationLabel || item.region || '').toLowerCase().includes(keyword) ||
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
   if (activeSource !== ALL_SOURCE_VALUE) {
@@ -213,6 +213,11 @@ const sourceOptions = computed(() => {
 const isDayTripFavorite = (item) => {
   const type = String(item?.itemType || item?.type || '').trim();
   return type === '一日游' || type === '多日游' || type.includes('日游') || type.includes('行程') || type === 'trip';
+};
+
+const isFreeInfoFavorite = (item) => {
+  const type = String(item?.itemType || item?.type || '').trim();
+  return type === '景点信息' || type === '餐厅信息' || type === '住宿信息' || type === 'scenic';
 };
 
 const currentDialogBanner = computed(() => {
@@ -424,10 +429,11 @@ async function syncRemoteFavoritesView({ showLoading = false, forceRefresh = fal
       applyRemoteFavoritesView();
     }
   } catch (error) {
-    remoteFavorites.value = [];
-    remoteFavoritesTotal.value = 0;
     remoteLoadError.value = getApiErrorMessage(error);
     notifyApiError(error, { action: '加载收藏', dedupeKey: 'favorites:list' });
+    if (remoteFavorites.value.length === 0) {
+      remoteFavoritesTotal.value = 0;
+    }
   } finally {
     remoteFavoritesLoading.value = false;
   }
@@ -511,6 +517,12 @@ onUnmounted(() => {
             <Search />
           </el-icon>
         </ElButton>
+        <ElButton class="refresh-btn" :disabled="isPageInteractionDisabled" :loading="remoteFavoritesLoading"
+          @click="retryLoadFavorites" title="从服务器同步最新数据">
+          <el-icon>
+            <Refresh />
+          </el-icon>
+        </ElButton>
       </div>
     </div>
 
@@ -522,8 +534,14 @@ onUnmounted(() => {
           fetchpriority="low" />
         <div class="card-content">
           <h3 class="card-title">{{ item.title }}</h3>
-          <p class="card-region">{{ item.region || item.tripData?.route || item.tripData?.desc || item.subNavName ||
-            item.town || '' }}</p>
+          <p class="card-region">
+            <template v-if="isFreeInfoFavorite(item)">
+              {{ item.locationLabel || item.tripData?.locationLabel || (item.tripData?.town && item.tripData?.postcode ? item.tripData.town + ' ' + item.tripData.postcode : '') || '暂未分类' }}
+            </template>
+            <template v-else>
+              {{ item.locationLabel || item.tripData?.locationLabel || item.region || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}
+            </template>
+          </p>
           <div class="card-actions">
             <span class="remove-btn" @click="handleRemoveFavorite(item, $event)">
               ★ 点击取消收藏
@@ -534,7 +552,7 @@ onUnmounted(() => {
     </div>
 
     <!-- 加载失败 -->
-    <div v-if="remoteLoadError && useRemoteFavorites" class="error-state">
+    <div v-if="remoteLoadError && useRemoteFavorites && favoriteTotalCount === 0 && !remoteFavoritesLoading" class="error-state">
       <p>{{ remoteLoadError }}</p>
       <ElButton type="primary" @click="retryLoadFavorites">重试</ElButton>
     </div>
@@ -638,6 +656,18 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
+.refresh-btn {
+  flex-shrink: 0;
+  color: #33b1a3;
+  border-color: #33b1a3;
+
+  &:hover {
+    color: #fff;
+    background-color: #33b1a3;
+    border-color: #33b1a3;
+  }
+}
+
 .favorites-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -715,7 +745,7 @@ onUnmounted(() => {
 .error-state {
   text-align: center;
   padding: 40px;
-  color: #b45309;
+  color: #33b1a3;
 
   p {
     margin: 0 0 16px;

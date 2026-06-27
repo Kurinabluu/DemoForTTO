@@ -48,6 +48,8 @@ const handleToggleFavorite = async () => {
         banner: props.banner,
         region: props.tripData?.region || '',
         town: props.tripData?.town || '',
+        locationLabel: props.tripData?.locationLabel || '',
+        postcode: props.tripData?.postcode || '',
         tripData: props.tripData
     }
     try {
@@ -114,7 +116,11 @@ const routeInfo = computed(() => {
         return mergeTripData(resolvedDetailItem.value.tripData, props.tripData)
     }
     if (props.tripData && Object.keys(props.tripData).length > 0) {
-        return props.tripData
+        const hasContent = props.tripData.route || props.tripData.desc
+            || (Array.isArray(props.tripData.features) && props.tripData.features.length)
+        if (hasContent) return props.tripData
+        // tripData 稀疏时（如仅含 locationLabel/postcode），用默认值补全内容
+        return { ...getDefaultFreeInfo(props.title), ...props.tripData }
     }
     return getDefaultFreeInfo(props.title)
 })
@@ -406,10 +412,6 @@ watch(dialogVisible, (visible) => {
                         <div class="f-desc">{{ feature.desc }}</div>
                     </div>
                 </div>
-                <div class="location-row" v-if="isScenicInfo && routeInfo.route">
-                    <span class="location-label">地址：</span>
-                    <span class="location-value">{{ routeInfo.route }}</span>
-                </div>
                 <div class="tag-row">
                     <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
                 </div>
@@ -636,27 +638,6 @@ watch(dialogVisible, (visible) => {
     .dlg-text {
         padding: 18px 20px 10px;
     }
-}
-
-.location-row {
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: #f7faf9;
-    border: 1px solid #e5efec;
-    line-height: 1.7;
-}
-
-.location-label {
-    color: #111827;
-    font-weight: 700;
-    margin-right: 4px;
-}
-
-.location-value {
-    color: #374151;
-    font-size: 14px;
-    word-break: break-word;
 }
 
 .section-title {
@@ -947,17 +928,6 @@ watch(dialogVisible, (visible) => {
 
     .img-source-note--scenic {
         text-align: right;
-    }
-
-    .location-row {
-        margin-top: 8px;
-        padding: 8px 10px;
-        line-height: 1.6;
-    }
-
-    .location-label,
-    .location-value {
-        font-size: 12px;
     }
 
     .section-title {

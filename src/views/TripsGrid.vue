@@ -13,7 +13,7 @@ import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 import {
-    buildLocationOptionsFromItems,
+    createLocationLazyLoad,
     getGroupingTownFromItem,
     getLocationSortOrder,
     getTownByLocationLabel,
@@ -72,8 +72,16 @@ const localSearchKeyword = ref('')
 const searchQuery = ref('') // 实际执行的搜索词
 const isSearching = ref(false) // 搜索加载状态
 const isLocalSearch = computed(() => searchQuery.value.trim().length > 0)
-const selectedLocationKey = ref('')
-const selectedDistance = ref('')
+const selectedLocationKey = ref([])
+const selectedDistance = ref([])
+const selectedLocationLabel = computed(() => {
+  const arr = selectedLocationKey.value
+  return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
+})
+const selectedDistanceLabel = computed(() => {
+  const arr = selectedDistance.value
+  return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
+})
 const sortMode = ref(SORT_MODES.POSTCODE)
 const loadingState = computed(() => isSearching.value)
 
@@ -168,12 +176,12 @@ const isMobile = computed(() => {
 // 当API未启用时（完全使用本地文件），说明完全离线，显示"网络未连接"
 // 当用户主动选择了筛选条件（地点/距离）但无匹配结果时，显示"暂无匹配结果"
 const shouldShowApiErrorTip = computed(() => {
-    return isApiEnabled() && !selectedLocationKey.value && !selectedDistance.value
+    return isApiEnabled() && !selectedLocationLabel.value && !selectedDistanceLabel.value
 })
 
 // 获取空状态提示文案
 function getEmptyTipText() {
-    if (selectedLocationKey.value || selectedDistance.value) {
+    if (selectedLocationLabel.value || selectedDistanceLabel.value) {
         return '暂无匹配结果'
     }
     if (shouldShowApiErrorTip.value) {
@@ -744,7 +752,7 @@ watch(
     }
 )
 
-watch(() => [selectedLocationKey.value, selectedDistance.value, sortMode.value], () => {
+watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.value], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
     resetRenderLimit()
@@ -754,8 +762,13 @@ watch(() => [selectedLocationKey.value, selectedDistance.value, sortMode.value],
 })
 
 watch(() => props.subTab, () => {
-    selectedLocationKey.value = ''
-    selectedDistance.value = ''
+    selectedLocationKey.value = []
+    selectedDistance.value = []
+})
+
+watch(() => sortMode.value, () => {
+    selectedLocationKey.value = []
+    selectedDistance.value = []
 })
 
 watch(() => loadMoreTriggerRef.value, () => {
@@ -767,23 +780,21 @@ const shouldShowLocationFilter = computed(() => {
 
 const shouldShowAreaFilters = computed(() => shouldShowLocationFilter.value)
 
-const tasDistanceOptions = computed(() => TAS_LOCATION_POSTCODES.map(item => item.label))
-
 watch(() => shouldShowAreaFilters.value, (enabled) => {
     if (!enabled) {
-        selectedLocationKey.value = ''
-        selectedDistance.value = ''
+        selectedLocationKey.value = []
+        selectedDistance.value = []
     }
 })
 
 function filterByLocation(items) {
     const sourceItems = Array.isArray(items) ? items : []
-    if (!shouldShowLocationFilter.value || !selectedLocationKey.value) return sourceItems
+    if (!shouldShowLocationFilter.value || !selectedLocationLabel.value) return sourceItems
 
-    return sourceItems.filter(item => resolveLocationLabel(item) === selectedLocationKey.value)
+    return sourceItems.filter(item => resolveLocationLabel(item) === selectedLocationLabel.value)
 }
 
-const locationOptions = computed(() => {
+const locationCascaderProps = computed(() => {
     const currentItems = props.subTab === '景点'
         ? places.value?.items || []
         : props.subTab === '餐厅'
@@ -792,12 +803,32 @@ const locationOptions = computed(() => {
                 ? hotels.value?.items || []
                 : []
 
-    return buildLocationOptionsFromItems(currentItems, sortMode.value)
+    return {
+        lazy: true,
+        lazyLoad: createLocationLazyLoad(currentItems, sortMode.value),
+        showAllLevels: false,
+    }
+})
+
+const distanceCascaderProps = computed(() => {
+    const currentItems = props.subTab === '景点'
+        ? places.value?.items || []
+        : props.subTab === '餐厅'
+            ? restaurants.value?.items || []
+            : props.subTab === '住宿'
+                ? hotels.value?.items || []
+                : []
+
+    return {
+        lazy: true,
+        lazyLoad: createLocationLazyLoad(currentItems, sortMode.value),
+        showAllLevels: false,
+    }
 })
 
 function getDistanceReferenceTown() {
-    if (!selectedDistance.value) return ''
-    return getTownByLocationLabel(selectedDistance.value) || selectedDistance.value
+    if (!selectedDistanceLabel.value) return ''
+    return getTownByLocationLabel(selectedDistanceLabel.value) || selectedDistanceLabel.value
 }
 
 function getItemDistance(item) {
@@ -857,7 +888,7 @@ function shouldShowLocationTitle(list, index) {
 
 const scenicDisplayItems = computed(() => {
     const baseItems = sortByLocation(scenicFiltered.value)
-    if (selectedDistance.value) {
+    if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
     return baseItems
@@ -872,19 +903,19 @@ const scenicUncategorizedDisplayItems = computed(() => {
 })
 
 const scenicMainGridItems = computed(() => {
-    if (selectedLocationKey.value) return scenicDisplayItems.value
+    if (selectedLocationLabel.value) return scenicDisplayItems.value
     return scenicCategorizedDisplayItems.value
 })
 const restaurantDisplayItems = computed(() => {
     const baseItems = sortByLocation(restaurantFiltered.value)
-    if (selectedDistance.value) {
+    if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
     return baseItems
 })
 const hotelDisplayItems = computed(() => {
     const baseItems = sortByLocation(hotelFiltered.value)
-    if (selectedDistance.value) {
+    if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
     return baseItems
@@ -1431,14 +1462,10 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             </template>
         </el-input>
         <template v-if="shouldShowAreaFilters">
-            <el-select v-model="selectedLocationKey" clearable filterable placeholder="地点（邮编）" class="area-select"
-                size="large">
-                <el-option v-for="location in locationOptions" :key="location" :label="location" :value="location" />
-            </el-select>
-            <el-select v-model="selectedDistance" clearable filterable placeholder="按距离排序" class="distance-select"
-                size="large">
-                <el-option v-for="location in tasDistanceOptions" :key="location" :label="location" :value="location" />
-            </el-select>
+            <el-cascader v-model="selectedLocationKey" :props="locationCascaderProps" clearable filterable
+                placeholder="地点（邮编）" class="area-select" size="large" :key="'loc-' + sortMode" />
+            <el-cascader v-model="selectedDistance" :props="distanceCascaderProps" clearable filterable
+                placeholder="按距离排序" class="distance-select" size="large" :key="'dist-' + sortMode" />
             <el-select v-model="sortMode" class="sort-select" size="large">
                 <el-option v-for="(label, value) in SORT_MODE_LABELS" :key="value" :label="label" :value="value" />
             </el-select>
@@ -1763,7 +1790,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                         </div>
                     </template>
                 </div>
-                <div v-if="!selectedLocationKey && scenicUncategorizedDisplayItems.length"
+                <div v-if="!selectedLocationLabel && scenicUncategorizedDisplayItems.length"
                     class="coming-grid coming-grid--scenic">
                     <h1 class="region-title center">{{ UNCATEGORIZED_LOCATION }}</h1>
                     <template v-for="(item, i) in scenicUncategorizedDisplayItems" :key="'rt-uncategorized-' + i">
