@@ -15,6 +15,7 @@ import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 import {
     createLocationLazyLoad,
     getGroupingTownFromItem,
+    getLocationDisplayLabel,
     getLocationSortOrder,
     getTownByLocationLabel,
     resolveLocationLabel,
@@ -75,12 +76,12 @@ const isLocalSearch = computed(() => searchQuery.value.trim().length > 0)
 const selectedLocationKey = ref([])
 const selectedDistance = ref([])
 const selectedLocationLabel = computed(() => {
-  const arr = selectedLocationKey.value
-  return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
+    const arr = selectedLocationKey.value
+    return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
 })
 const selectedDistanceLabel = computed(() => {
-  const arr = selectedDistance.value
-  return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
+    const arr = selectedDistance.value
+    return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
 })
 const sortMode = ref(SORT_MODES.POSTCODE)
 const loadingState = computed(() => isSearching.value)
@@ -866,7 +867,8 @@ function sortByDistance(items) {
 }
 
 function getLocationDisplayName(item) {
-    return resolveLocationLabel(item)
+    const label = resolveLocationLabel(item)
+    return getLocationDisplayLabel(label, sortMode.value)
 }
 
 function sortByLocation(items) {
@@ -1507,7 +1509,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                         <div class="custom-pagination custom-pagination--fixed">
                             <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage
-                            }}</span> /
+                                    }}</span> /
                                 {{
                                     mobileTotalPages }} 页</div>
                         </div>

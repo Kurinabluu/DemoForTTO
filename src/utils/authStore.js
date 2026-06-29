@@ -113,3 +113,25 @@ export async function register(usernameInput, passwordInput, { displayName, emai
 export function logout() {
   clearAuthSession()
 }
+
+// 监听其他标签页的 localStorage 变更，同步登录状态
+// 修复：A 标签页退出登录后，B 标签页不刷新仍保持登录态的问题
+window.addEventListener('storage', (event) => {
+  if (event.key === STORAGE_KEY) {
+    if (!event.newValue) {
+      // 其他标签页清除了 token（退出登录）
+      token.value = ''
+      username.value = ''
+      userId.value = ''
+    } else if (event.newValue !== token.value) {
+      // 其他标签页更新了 token（登录/刷新）
+      token.value = event.newValue
+    }
+  }
+  if (event.key === USERNAME_KEY) {
+    username.value = event.newValue || ''
+  }
+  if (event.key === USER_ID_KEY) {
+    userId.value = event.newValue || ''
+  }
+})
