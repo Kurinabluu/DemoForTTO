@@ -248,7 +248,7 @@ function showAboutUsDialog() {
 async function touchAuthSession() {
     if (!isApiEnabled() || !isLoggedIn.value) return
     try {
-        await fetchAuthSession(getAuthToken())
+        await fetchAuthSession()
     } catch {
         // 会话过期时不阻塞页面
     }

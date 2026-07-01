@@ -1,43 +1,71 @@
-import { ref, computed } from 'vue'
-import { isApiEnabled, login as apiLogin, registerAccount as apiRegister, registerTokenRefreshHandler } from '@/utils/ttoApi'
+import { computed, ref } from 'vue'
+import {
+  fetchAuthSession,
+  isApiEnabled,
+  login as apiLogin,
+  logoutAccount as apiLogout,
+  registerAccount as apiRegister,
+} from '@/utils/ttoApi'
 
-const STORAGE_KEY = 'tto_auth_token'
-const USERNAME_KEY = 'tto_auth_username'
-const USER_ID_KEY = 'tto_auth_user_id'
+const AUTH_SYNC_CHANNEL = 'tto-auth-sync'
+const authSyncChannel = typeof BroadcastChannel === 'function' ? new BroadcastChannel(AUTH_SYNC_CHANNEL) : null
 
-function readStorage(key) {
-  try {
-    return localStorage.getItem(key)
-  } catch {
-    return null
+export const isLoggedIn = ref(false)
+const username = ref('')
+const userId = ref(null)
+let bootstrapPromise = null
+
+function getCurrentSession() {
+  return {
+    username: username.value || '',
+    userId: userId.value,
   }
 }
 
-function writeStorage(key, value) {
-  try {
-    if (value == null || value === '') {
-      localStorage.removeItem(key)
-    } else {
-      localStorage.setItem(key, value)
+function broadcastAuthSession(type, session = null) {
+  if (!authSyncChannel) return
+  authSyncChannel.postMessage({ type, session })
+}
+
+function applyAuthSession(session, { broadcast = false } = {}) {
+  const nextUsername = session?.username ? String(session.username).trim() : ''
+  const nextUserId = session?.userId != null && session.userId !== ''
+    ? Number(session.userId)
+    : null
+
+  isLoggedIn.value = Boolean(nextUsername || Number.isFinite(nextUserId))
+  username.value = nextUsername
+  userId.value = Number.isFinite(nextUserId) ? nextUserId : null
+
+  if (broadcast) {
+    broadcastAuthSession(isLoggedIn.value ? 'auth-session' : 'auth-clear', isLoggedIn.value ? getCurrentSession() : null)
+  }
+}
+
+export async function bootstrapAuthSession() {
+  if (bootstrapPromise) return bootstrapPromise
+
+  bootstrapPromise = (async () => {
+    try {
+      if (!isApiEnabled()) {
+        return null
+      }
+      const session = await fetchAuthSession()
+      applyAuthSession(session, { broadcast: Boolean(session) })
+      return session
+    } catch {
+      applyAuthSession(null, { broadcast: false })
+      return null
+    } finally {
+      bootstrapPromise = null
     }
-  } catch {
-    // ignore
-  }
+  })()
+
+  return bootstrapPromise
 }
-
-function updateTokenOnly(nextToken) {
-  token.value = nextToken || ''
-  writeStorage(STORAGE_KEY, token.value)
-}
-
-const token = ref(readStorage(STORAGE_KEY))
-const username = ref(readStorage(USERNAME_KEY))
-const userId = ref(readStorage(USER_ID_KEY))
-
-export const isLoggedIn = computed(() => Boolean(token.value))
 
 export function getAuthToken() {
-  return token.value || ''
+  return ''
 }
 
 export function getAuthUsername() {
@@ -45,10 +73,7 @@ export function getAuthUsername() {
 }
 
 export function getAuthUserId() {
-  const raw = userId.value
-  if (raw == null || raw === '') return null
-  const parsed = Number(raw)
-  return Number.isFinite(parsed) ? parsed : null
+  return userId.value
 }
 
 export function shouldUseRemoteFavorites() {
@@ -56,22 +81,11 @@ export function shouldUseRemoteFavorites() {
 }
 
 export function setAuthSession(session) {
-  token.value = session?.token || ''
-  username.value = session?.username || ''
-  userId.value = session?.userId != null ? String(session.userId) : ''
-
-  writeStorage(STORAGE_KEY, token.value)
-  writeStorage(USERNAME_KEY, username.value)
-  writeStorage(USER_ID_KEY, userId.value)
+  applyAuthSession(session, { broadcast: true })
 }
 
-registerTokenRefreshHandler((nextToken) => {
-  if (!nextToken) return
-  updateTokenOnly(nextToken)
-})
-
 export function clearAuthSession() {
-  setAuthSession(null)
+  applyAuthSession(null, { broadcast: true })
 }
 
 export async function authenticateLogin(usernameInput, passwordInput) {
@@ -93,7 +107,6 @@ export async function authenticateRegister(usernameInput, passwordInput, { displ
 export async function login(usernameInput, passwordInput) {
   const data = await authenticateLogin(usernameInput, passwordInput)
   setAuthSession({
-    token: data?.token,
     username: data?.username,
     userId: data?.userId,
   })
@@ -103,35 +116,43 @@ export async function login(usernameInput, passwordInput) {
 export async function register(usernameInput, passwordInput, { displayName, email } = {}) {
   const data = await authenticateRegister(usernameInput, passwordInput, { displayName, email })
   setAuthSession({
-    token: data?.token,
     username: data?.username,
     userId: data?.userId,
   })
   return data
 }
 
-export function logout() {
+export async function logout() {
   clearAuthSession()
+  if (!isApiEnabled()) return
+  try {
+    await apiLogout()
+  } catch {
+    // ignore logout network errors; local state already cleared
+  }
 }
 
-// 监听其他标签页的 localStorage 变更，同步登录状态
-// 修复：A 标签页退出登录后，B 标签页不刷新仍保持登录态的问题
-window.addEventListener('storage', (event) => {
-  if (event.key === STORAGE_KEY) {
-    if (!event.newValue) {
-      // 其他标签页清除了 token（退出登录）
-      token.value = ''
-      username.value = ''
-      userId.value = ''
-    } else if (event.newValue !== token.value) {
-      // 其他标签页更新了 token（登录/刷新）
-      token.value = event.newValue
+if (authSyncChannel) {
+  authSyncChannel.addEventListener('message', (event) => {
+    const message = event.data || {}
+    if (message.type === 'auth-request') {
+      if (isLoggedIn.value) {
+        broadcastAuthSession('auth-session', getCurrentSession())
+      }
+      return
     }
-  }
-  if (event.key === USERNAME_KEY) {
-    username.value = event.newValue || ''
-  }
-  if (event.key === USER_ID_KEY) {
-    userId.value = event.newValue || ''
-  }
-})
+    if (message.type === 'auth-session') {
+      applyAuthSession(message.session, { broadcast: false })
+      return
+    }
+    if (message.type === 'auth-clear') {
+      applyAuthSession(null, { broadcast: false })
+    }
+  })
+
+  Promise.resolve().then(() => {
+    broadcastAuthSession('auth-request')
+  })
+}
+
+void bootstrapAuthSession()

@@ -75,6 +75,7 @@ async function requestJson(path, { params, method = 'GET', body, token } = {}) {
     const response = await fetch(buildUrl(path, params), {
       method,
       headers: buildHeaders(token, body !== undefined),
+      credentials: 'include',
       body: body === undefined ? undefined : JSON.stringify(body),
     })
     const refreshedToken = response.headers.get('X-Auth-Token')
@@ -118,8 +119,8 @@ export async function pingApi() {
   return requestJson('/common/ping')
 }
 
-export async function fetchAuthSession(token) {
-  return requestJson('/auth/session', { token })
+export async function fetchAuthSession() {
+  return requestJson('/auth/session')
 }
 
 export async function login(username, password) {
@@ -133,6 +134,12 @@ export async function registerAccount(payload) {
   return requestJson('/auth/register', {
     method: 'POST',
     body: payload,
+  })
+}
+
+export async function logoutAccount() {
+  return requestJson('/auth/logout', {
+    method: 'POST',
   })
 }
 

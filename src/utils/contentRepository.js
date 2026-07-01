@@ -43,14 +43,11 @@ function loadLocalFallbackData(dataKey) {
 
   try {
     if (dataKey === 'freeinfo') {
-      console.info('[contentRepository] [临时开发功能] 使用本地 freeinfo_fallback.json 兜底数据')
       return freeinfoFallbackData
     } else if (dataKey === 'daytrip') {
-      console.info('[contentRepository] [临时开发功能] 使用本地 daytrip_fallback.json 兜底数据')
       return daytripFallbackData
     }
-  } catch (error) {
-    console.warn(`[contentRepository] [临时开发功能] 加载本地兜底数据失败 (${dataKey}):`, error)
+  } catch {
   }
 
   return null
@@ -213,7 +210,6 @@ export async function loadCatalogItemDetail(itemId) {
     const dto = await fetchItemDetail(itemId)
     return mapApiDetailToItem(dto)
   } catch (error) {
-    console.warn('[contentRepository] detail API fallback:', itemId, error)
     if (isApiEnabled()) {
       throw error
     }
@@ -230,8 +226,7 @@ async function fetchSubNavItems(sectionPath, subNavMeta) {
   try {
     const rows = await fetchItemsBySubNavKey(subNavKey)
     return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
-  } catch (error) {
-    console.warn('[contentRepository] API fallback:', subNavKey, error)
+  } catch {
     if (isApiEnabled()) {
       notifyApiWarning('后端服务暂不可用，请稍后再试', {
         dedupeKey: 'content:api-failed',
@@ -270,13 +265,11 @@ async function loadSectionBundle(sectionPath) {
     sectionNav = Array.isArray(navTree)
       ? navTree.find((item) => item.path === sectionPath)
       : null
-  } catch (error) {
-    console.warn('[contentRepository] nav API fallback:', sectionPath, error)
+  } catch {
     // [临时开发功能] API 调用失败时，尝试使用本地 JSON 兜底
     const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
     const fallbackData = loadLocalFallbackData(fallbackKey)
     if (fallbackData) {
-      console.info(`[contentRepository] [临时开发功能] API 调用失败，使用本地 JSON 兜底 (${fallbackKey})`)
       return {
         path: sectionPath,
         subNav: fallbackData.subNav || [],
@@ -289,7 +282,6 @@ async function loadSectionBundle(sectionPath) {
     const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
     const fallbackData = loadLocalFallbackData(fallbackKey)
     if (fallbackData) {
-      console.info(`[contentRepository] [临时开发功能] API 返回空数据，使用本地 JSON 兜底 (${fallbackKey})`)
       return {
         path: sectionPath,
         subNav: fallbackData.subNav || [],
@@ -314,7 +306,6 @@ async function loadSectionBundle(sectionPath) {
     const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
     const fallbackData = loadLocalFallbackData(fallbackKey)
     if (fallbackData) {
-      console.info(`[contentRepository] [临时开发功能] 所有子导航数据为空，使用本地 JSON 兜底 (${fallbackKey})`)
       return {
         path: sectionPath,
         subNav: fallbackData.subNav || [],

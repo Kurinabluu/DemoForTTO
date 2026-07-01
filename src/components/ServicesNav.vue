@@ -57,6 +57,10 @@ function markSearchInputEdited() {
 }
 
 // 当前激活的标签（组件内部独立实现）
+if (tags.length > 0 && !localActiveTag.value) {
+  localActiveTag.value = tags[0]
+}
+
 const activeTag = computed(() => {
   if (isSearchRoute.value) {
     return ''
@@ -67,11 +71,6 @@ const activeTag = computed(() => {
   // 优先使用组件内部的激活标签状态
   if (localActiveTag.value) {
     return localActiveTag.value
-  }
-  // 如果都没有，使用默认标签
-  if (tags.length > 0 && !localActiveTag.value) {
-    localActiveTag.value = tags[0]
-    return tags[0]
   }
   return ''
 })

@@ -227,8 +227,9 @@ const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson 
 // 初始化展示列表数据
 const initShowcaseData = () => {
     // 优先使用currentConfig中的showcaseData，如果存在且有内容
-    const dataToUse = currentConfig?.showcaseData && currentConfig.showcaseData.length > 0
-        ? currentConfig.showcaseData
+    const config = currentConfig.value || {}
+    const dataToUse = config.showcaseData && config.showcaseData.length > 0
+        ? config.showcaseData
         : mockShowcaseData;
 
     showcaseItems.value = dataToUse.map(item => ({

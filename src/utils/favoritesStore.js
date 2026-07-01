@@ -29,8 +29,7 @@ function loadLocalFavorites() {
     if (stored) {
       return JSON.parse(stored)
     }
-  } catch (error) {
-    console.error('加载收藏数据失败:', error)
+  } catch {
   }
   return []
 }
@@ -38,8 +37,7 @@ function loadLocalFavorites() {
 function saveLocalFavorites(list) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
-  } catch (error) {
-    console.error('保存收藏数据失败:', error)
+  } catch {
   }
 }
 
@@ -184,7 +182,6 @@ export async function refreshRemoteFavorites(force = false, pageSize = 50) {
       favorites.value = merged
       remoteLoaded = true
     } catch (error) {
-      console.warn('[favoritesStore] 远程收藏加载失败:', error)
       remoteLoaded = false
       favorites.value = []
       throw error
@@ -355,8 +352,7 @@ export async function migrateLocalFavoritesToRemote() {
         continue
       }
       remainingItems.push(item)
-    } catch (error) {
-      console.warn('[favoritesStore] 迁移收藏失败:', item?.id, error)
+    } catch {
       remainingItems.push(item)
     }
   }
@@ -407,12 +403,10 @@ export async function addFavoriteAsync(item) {
 
   if (shouldUseRemoteFavorites()) {
     if (item?.id == null || item?.id === '') {
-      console.warn('[favoritesStore] 登录状态下收藏需要有效的 itemId')
       return 'error'
     }
     const numericId = Number(item.id)
     if (!Number.isFinite(numericId)) {
-      console.warn('[favoritesStore] 无效 itemId:', item.id)
       return 'error'
     }
     try {
@@ -424,8 +418,7 @@ export async function addFavoriteAsync(item) {
       })
       await refreshRemoteFavorites(true)
       return result?.status || 'success'
-    } catch (error) {
-      console.warn('[favoritesStore] 远程添加收藏失败:', error)
+    } catch {
       return 'error'
     }
   }
@@ -451,7 +444,6 @@ export async function removeFavoriteAsync(id, type, title, favoriteId, itemKey) 
       await removeFavoriteRemote(getAuthToken(), remoteId)
       await refreshRemoteFavorites(true)
     } catch (error) {
-      console.warn('[favoritesStore] 远程取消收藏失败:', error)
       throw error
     }
     return
@@ -535,8 +527,7 @@ export async function prepareMigrationTestLocalFavorites(targetCount = MAX_FAVOR
         candidates.push(item)
         if (candidates.length >= safeTarget) break
       }
-    } catch (error) {
-      console.warn('[favoritesStore] 测试收藏条目拉取失败:', subNavKey, error)
+    } catch {
     }
     if (candidates.length >= safeTarget) break
   }
@@ -559,7 +550,6 @@ watch(
       // 登录流程由 authStore 统一 migrate + refresh，避免重复请求
       if (prev === false) return
       void refreshRemoteFavorites(true).catch((error) => {
-        console.warn('[favoritesStore] 远程收藏加载失败:', error)
       })
       return
     }
