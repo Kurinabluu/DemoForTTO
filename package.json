@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "data:split": "node scripts/split-data.mjs && node scripts/fix-scenic-locations.mjs",
-    "dev": "npm run data:split && vite",
+    "data:sync": "node scripts/merge-data.mjs && npm run data:split",
+    "dev": "npm run data:sync && vite",
     "images:thumb": "node scripts/generate-thumbs.mjs",
-    "prebuild": "npm run data:split && npm run images:thumb",
+    "prebuild": "npm run data:sync && npm run images:thumb",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src",

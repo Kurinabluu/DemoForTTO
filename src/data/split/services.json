@@ -1,68 +1,70 @@
 [
   {
-    "id": 3,
-    "tagName": "热门项目",
+    "id": 8,
+    "tagName": "行程管家",
     "available": true,
     "hasSubNav": false,
     "isTrip": false,
-    "path": "service/ticket",
+    "path": "service/steward",
     "serviceConfig": {
       "heroImg": "../assets/img/footer1.jpg",
-      "heroTitle": "让等待不再是旅行难题，高效管理时间",
-      "heroDesc": "在塔斯马尼亚，每一分钟都该属于美景，而非等待。TTO代订门票及旅游项目，为你省下宝贵的旅行时间：省下的1小时入住等待，换来一次海岸线的悠闲漫步；省下的30分钟餐厅等位，成就日落时分的品酒时光。一切琐事交给TTO，把你的等待留给霍巴特港的夕阳，把时间赠予菲欣纳的徒步，将惊喜托付给与野生动物的邂逅。选择代订门票及旅游项目，让塔斯马尼亚之旅只剩下纯粹的美好体验。",
+      "heroTitle": "把麻烦交给我们，把时间留给风景",
+      "heroDesc": "带着对塔斯马尼亚的深度解读，根据你的品味，为你定制独一无二的礼宾专案：从私人庄园的品酒盛宴，到跟随生态学家探访袋熊栖息地；从专属直升机俯瞰酒杯湾，到在世界遗产地享受匠心打造的野餐体验。每一处细节都经过精心策划，每一次体验都彰显独特个性。TTO是你懂塔州、懂旅行的专业伙伴，是你在塔斯马尼亚的“自己人”。",
       "features": [
-        "酒店免等入住",
-        "餐厅预留就座",
-        "行程无缝对接",
-        "全程无忧代办"
+        "净化你的行程，为你过滤掉所有繁琐与等待，留下纯粹体验",
+        "服务无处不在，却从不打扰你的旅行节奏",
+        "安心托付，让你在异国他乡也能完全放松，尽享旅程",
+        "我们不只是服务者，更是懂行的同行伙伴"
       ],
-      "stepsTitle": "代订门票与热门项目四步流程",
+      "stepsTitle": "行程管家服务四步流程",
       "steps": [
-        "告知需求与出行时间",
-        "选择景点门票、餐厅或活动项目",
-        "确认订单与支付",
-        "凭确认函即到即享，省去排队等待"
+        "提出需求与预算范围",
+        "获得专属方案与透明报价",
+        "确认方案并签约支付",
+        "管家全程协调执行，随时响应"
       ],
-      "packagesTitle": "旅行无忧代办计划",
+      "packagesTitle": "管家服务套餐",
       "packages": [
         {
           "id": 1,
-          "title": "无忧畅行通行证",
-          "description": "代订各大景点门票,省去排队购票烦恼，让你专心游玩。",
+          "title": "私人订制礼宾专案",
+          "description": "为你提供全方位的旅行支持：负责行程规划与优化，安排交通住宿及活动预约，随时协调行程中各类需求，并提供应急支持与本地建议",
           "currency": "¥",
-          "price": "99",
+          "price": "688",
           "amount": "/ 人",
-          "info": "（包含门票）",
-          "img": "../assets/img/footer1.jpg"
-        },
-        {
-          "id": 2,
-          "title": "臻享体验规划",
-          "description": "(包含无忧畅行通行证)提前预订热门餐厅座位，预约特色活动，让你的旅行不仅顺畅，而且还能收获独特体验！",
-          "currency": "¥",
-          "price": "199",
-          "amount": "",
           "info": "",
-          "img": "../assets/img/footer2.jpg"
+          "img": "../assets/img/footer1.jpg"
         }
       ],
-      "advantagesTitle": "TTO能做到的，不止这些",
+      "advantagesTitle": "全方位的旅行支持",
       "advantages": [
         {
           "id": 1,
-          "title": "无忧畅行通行证，帮你即到即入",
-          "description": "无需担忧购票问题，支付问题不是事",
+          "title": "行程规划与优化",
+          "description": "为你打造真正个性化的旅程，让每个景点都符合你的旅行节奏与兴趣偏好",
           "url": "../assets/img/carService/carType.png"
         },
         {
           "id": 2,
-          "title": "臻享体验规划，让你坐下即享",
-          "description": "没有饥肠辘辘等待美食的烦恼，没有等待清理酒店房间的疲惫，即到即享",
+          "title": "安排交通住宿与活动安排",
+          "description": "为你安排全程交通、精选住宿与特色活动，实现各环节间的无缝衔接。",
+          "url": "../assets/img/carService/carType.png"
+        },
+        {
+          "id": 3,
+          "title": "随时需求响应与协调",
+          "description": "配备专属管家及时响应你的需求，灵活调整安排，从容应对旅途变化。",
+          "url": "../assets/img/carService/carType.png"
+        },
+        {
+          "id": 4,
+          "title": "应急支持与本地建议",
+          "description": "提供全天候应急支持，并分享当地人才知道的实用资讯与隐藏景点。",
           "url": "../assets/img/carService/carType.png"
         }
       ],
-      "contactTitle": "订购代订门票及旅游项目服务",
-      "contactIntro": "如需了解详情或预约代订门票及旅游项目，请联系我们的专属顾问"
+      "contactTitle": "订购专属管家服务",
+      "contactIntro": "如需了解详情或预约管家服务，请联系我们的专属顾问"
     }
   },
   {

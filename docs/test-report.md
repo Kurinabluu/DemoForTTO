@@ -57,6 +57,7 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
         "town": "Tasman Peninsula",
         "postcode": "7182",
         "locationLabel": "Tasman Peninsula 7182",
+        "parentItemKey": "trips/freeinfo:景点:turrakana-tasman-peninsula",
         "parentItemId": 1119,
         "belongsToSpot": "Tasman Peninsula"
       }
@@ -69,7 +70,7 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
 - ✅ 基本信息完整（id, itemKey, title, enTitle）
 - ✅ 景点数据完整（tripData.desc, route）
 - ✅ 地点信息完整（town, postcode, locationLabel）
-- ✅ 母子景点关联正确（parentItemId, belongsToSpot）
+- ✅ 母子景点关联正确（parentItemId, parentItemKey, belongsToSpot）
 - ✅ 特征数据完整（features）
 - ✅ 图片数据完整（cover, thumbnail, img）
 
@@ -98,6 +99,7 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
     "belongsToSpot": null,
     "parentItemId": null,
     "tripData": {
+      "parentItemKey": "trips/freeinfo:景点:turrakana-tasman-peninsula",
       "desc": "...",
       "features": [...],
       "tags": [...],

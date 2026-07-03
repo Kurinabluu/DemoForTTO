@@ -34,3 +34,4 @@
 - 免费信息页的网格内容优先使用后端 API。
 - 本地 `src/data/split/freeinfo.json` 负责保留完整卡片样式与补充字段。
 - `isGrid=false` 的特别活动、徒步线路、塔州露营地等内容，会以本地富数据为主，再与 API 的 `id` / 标题做合并。
+- 维护内容时先改 `src/data/split/*.json`，再执行 `npm run data:sync`，这样 `src/data/data.json` 和拆分文件会自动保持一致。

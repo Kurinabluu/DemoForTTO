@@ -5,7 +5,7 @@ import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail } from '@/utils/contentRepository'
 import { resolveDayTripSubNavName } from '@/utils/subNavKey'
-import { isApiEnabled } from '@/utils/ttoApi'
+import { fetchLocationCatalog, isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
@@ -14,14 +14,15 @@ import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchIt
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 import {
     createLocationLazyLoad,
+    buildLocationCatalogFromItems,
     getGroupingTownFromItem,
     getLocationDisplayLabel,
     getLocationSortOrder,
     getTownByLocationLabel,
     resolveLocationLabel,
+    setLocationCatalogEntries,
     SORT_MODES,
     SORT_MODE_LABELS,
-    TAS_LOCATION_POSTCODES,
     UNCATEGORIZED_LOCATION,
 } from '@/utils/tasLocationPostcodes'
 import {
@@ -240,6 +241,7 @@ function scheduleUpdateMobileScrollPage() {
     mobileScrollTicking = true
     requestAnimationFrame(() => {
         updateMobileScrollPage()
+        maybeLoadMoreOnScroll()
         mobileScrollTicking = false
     })
 }
@@ -252,6 +254,17 @@ function increaseRenderLimit() {
     const totalItems = getTotalItems()
     if (renderLimit.value >= totalItems) return
     renderLimit.value = Math.min(totalItems, renderLimit.value + RENDER_STEP_COUNT)
+    nextTick(initLoadMoreObserver)
+}
+
+function maybeLoadMoreOnScroll() {
+    if (!hasMore.value || shouldLoadAll.value || shouldShowAllLocationGridItems.value) return
+    const scrollBottom = window.scrollY + window.innerHeight
+    const pageBottom = document.documentElement.scrollHeight
+    if (scrollBottom >= pageBottom - 800) {
+        increaseRenderLimit()
+        checkHasMore()
+    }
 }
 
 function initLoadMoreObserver() {
@@ -320,16 +333,6 @@ onMounted(() => {
         initLoadMoreObserver()
     })
 })
-
-onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
-    window.removeEventListener('scroll', scheduleUpdateMobileScrollPage)
-    if (loadMoreObserver) {
-        loadMoreObserver.disconnect()
-        loadMoreObserver = null
-    }
-})
-
 // 检测是否需要自动加载所有数据（兼容老的“高亮跳转”逻辑）
 // 说明：
 // - 之前在搜索结果新窗口打开时，会带上 s + dialogItemId，通过 shouldLoadAll 一次性渲染全部结果
@@ -414,6 +417,10 @@ const handleLoadMore = () => {
 
 // 检查是否还有更多数据
 function checkHasMore() {
+    if (shouldShowAllLocationGridItems.value) {
+        hasMore.value = false
+        return
+    }
     const totalItems = getTotalItems()
     hasMore.value = renderLimit.value < totalItems
 }
@@ -433,7 +440,11 @@ function getTotalItems() {
         if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return activityFiltered.value.length
     } else {
-        if (props.subTab === '景点') return scenicMainGridItems.value.length
+        if (props.subTab === '景点') {
+            const mainCount = scenicMainGridItems.value.length
+            if (selectedLocationLabel.value) return mainCount
+            return mainCount + scenicUncategorizedDisplayItems.value.length
+        }
         if (props.subTab === '餐厅') return restaurantFiltered.value.length
         if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value.length
         if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value.length
@@ -469,6 +480,12 @@ function getPaginatedItems(items) {
         return items
     }
 
+    // 免费信息地点分区网格：已分类条目必须一次全部展示，否则 renderLimit 截断后
+    // 会直接跳到「暂未分类」区块，7112+ 等中间邮编在 DOM 中缺失。
+    if (shouldShowAllLocationGridItems.value) {
+        return Array.isArray(items) ? items : []
+    }
+
     const visibleCount = Math.max(renderLimit.value, itemsPerPage.value)
     return Array.isArray(items) ? items.slice(0, visibleCount) : []
 }
@@ -483,6 +500,29 @@ const wineWineries = computed(() => datas.value.subNav.find(subItem => subItem.s
 const spiritWineries = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "洋酒酒庄") || { items: [] })
 const hotels = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "住宿") || { items: [] })
 const activityItems = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "特别活动") || { items: [] })
+
+function getCurrentLocationItems() {
+    if (props.subTab === '景点') return places.value?.items || []
+    if (props.subTab === '餐厅') return restaurants.value?.items || []
+    if (props.subTab === '住宿') return hotels.value?.items || []
+    return []
+}
+
+async function syncLocationCatalog() {
+    const fallbackEntries = buildLocationCatalogFromItems(getCurrentLocationItems())
+    setLocationCatalogEntries(fallbackEntries)
+
+    if (!isApiEnabled()) return
+
+    try {
+        const rows = await fetchLocationCatalog(props.subTab)
+        if (Array.isArray(rows) && rows.length) {
+            setLocationCatalogEntries(rows)
+        }
+    } catch {
+        // 保留从当前内容集生成的目录
+    }
+}
 
 const SPECIAL_SECTION_FALLBACK_IMAGES = [
     new URL('@/assets/img/footer1.jpg', import.meta.url).href,
@@ -779,6 +819,15 @@ const shouldShowLocationFilter = computed(() => {
     return props.activeTag === '自助游/自驾游免费参考信息' && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
 })
 
+/** 景点/餐厅/住宿默认网格：按地点分区展示，不做 renderLimit 截断 */
+const shouldShowAllLocationGridItems = computed(() => {
+    if (props.activeTag === '一日游/多日游') return false
+    const hasSearch = (searchKw.value || searchQuery.value || '').trim().length > 0
+    if (hasSearch || isLocalSearch.value) return false
+    if (props.activeTag !== '自助游/自驾游免费参考信息') return false
+    return FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+})
+
 const shouldShowAreaFilters = computed(() => shouldShowLocationFilter.value)
 
 watch(() => shouldShowAreaFilters.value, (enabled) => {
@@ -908,6 +957,7 @@ const scenicMainGridItems = computed(() => {
     if (selectedLocationLabel.value) return scenicDisplayItems.value
     return scenicCategorizedDisplayItems.value
 })
+
 const restaurantDisplayItems = computed(() => {
     const baseItems = sortByLocation(restaurantFiltered.value)
     if (selectedDistanceLabel.value) {
@@ -1445,6 +1495,19 @@ const dayTripFiltered = computed(() => {
 
 const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
 
+watch(() => [props.subTab, places.value?.items, restaurants.value?.items, hotels.value?.items], () => {
+    void syncLocationCatalog()
+}, { immediate: true })
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+    window.removeEventListener('scroll', scheduleUpdateMobileScrollPage)
+    if (loadMoreObserver) {
+        loadMoreObserver.disconnect()
+        loadMoreObserver = null
+    }
+})
+
 </script>
 
 <template>
@@ -1509,7 +1572,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
                     <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                         <div class="custom-pagination custom-pagination--fixed">
                             <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage
-                                    }}</span> /
+                            }}</span> /
                                 {{
                                     mobileTotalPages }} 页</div>
                         </div>
@@ -2000,7 +2063,7 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
         </div>
 
 
-        <div v-if="hasMore" ref="loadMoreTriggerRef" aria-hidden="true"></div>
+        <div v-if="hasMore" ref="loadMoreTriggerRef" class="load-more-trigger" aria-hidden="true"></div>
     </div>
 </template>
 
@@ -2787,5 +2850,11 @@ const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
             }
         }
     }
+}
+
+.load-more-trigger {
+    width: 100%;
+    height: 4px;
+    pointer-events: none;
 }
 </style>

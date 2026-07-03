@@ -174,9 +174,13 @@ function mapApiItem(row) {
         : {}
 
   if (row.regionName && !tripData.region) tripData.region = row.regionName
-  if (row.townName && !tripData.town) tripData.town = row.townName
-  if (row.postcode && !tripData.postcode) tripData.postcode = row.postcode
-  if (row.locationLabel && !tripData.locationLabel) tripData.locationLabel = row.locationLabel
+  if (row.townName) tripData.town = row.townName
+  if (row.postcode) tripData.postcode = row.postcode
+  if (row.locationLabel && row.locationLabel !== '暂未分类') {
+    tripData.locationLabel = row.locationLabel
+  } else if (tripData.town && tripData.postcode && /^\d{4}$/.test(String(tripData.postcode))) {
+    tripData.locationLabel = `${tripData.town} ${tripData.postcode}`
+  }
   if (row.belongsToSpot && !tripData.belongsToSpot) tripData.belongsToSpot = row.belongsToSpot
   if (row.parentItemId != null && tripData.parentItemId == null) tripData.parentItemId = row.parentItemId
 

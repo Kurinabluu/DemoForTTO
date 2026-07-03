@@ -26,6 +26,127 @@ export const SORT_MODE_LABELS = {
   [SORT_MODES.NAME_ZH]: '按中文名排序',
 }
 
+let LOCATION_CATALOG_ENTRIES = []
+
+function isValidLocationLabel(label) {
+  if (!label || label === UNCATEGORIZED_LOCATION) return false
+  const { postcode } = splitLocationLabel(label)
+  return /^\d{4}$/.test(postcode)
+}
+
+function normalizeLocationEntry(entry) {
+  if (!entry || typeof entry !== 'object') return null
+  const label = String(entry.label || entry.locationLabel || '').trim()
+  const town = String(entry.town || entry.townName || '').trim()
+  const postcode = String(entry.postcode || '').trim()
+  if (!label && !town && !postcode) return null
+  const resolvedLabel = label || (town && postcode ? `${town} ${postcode}` : town)
+  if (!resolvedLabel || resolvedLabel === UNCATEGORIZED_LOCATION) return null
+  const resolvedPostcode = postcode || (resolvedLabel.match(/\b(\d{4})\b$/)?.[1] || '')
+  if (!/^\d{4}$/.test(resolvedPostcode)) return null
+  return {
+    label: resolvedLabel,
+    town: town || resolvedLabel.replace(/\s+\d{4}$/, ''),
+    postcode: resolvedPostcode,
+  }
+}
+
+export function setLocationCatalogEntries(entries = []) {
+  const unique = new Map()
+  ;(Array.isArray(entries) ? entries : []).forEach((entry) => {
+    const normalized = normalizeLocationEntry(entry)
+    if (normalized && !unique.has(normalized.label)) {
+      unique.set(normalized.label, normalized)
+    }
+  })
+  LOCATION_CATALOG_ENTRIES = Array.from(unique.values())
+}
+
+export function buildLocationCatalogFromItems(items = []) {
+  return collectLocationEntries(items)
+}
+
+function getCatalogEntries() {
+  return Array.isArray(LOCATION_CATALOG_ENTRIES) ? LOCATION_CATALOG_ENTRIES : []
+}
+
+function splitLocationLabel(label) {
+  const text = String(label || '').trim()
+  if (!text) return { town: '', postcode: '' }
+  const parts = text.split(/\s+/)
+  const postcode = parts.length >= 2 && /^\d{4}$/.test(parts[parts.length - 1]) ? parts[parts.length - 1] : ''
+  const town = postcode ? parts.slice(0, -1).join(' ') : text
+  return { town, postcode }
+}
+
+function buildLocationEntryFromItem(item) {
+  const tripData = getTripData(item)
+  const town = String(item?.town || tripData.town || getTownFromItem(item) || '').trim()
+  const postcode = String(
+    item?.postcode || tripData.postcode || extractPostcodeFromItem(item) || ''
+  ).trim()
+
+  if (town && postcode && /^\d{4}$/.test(postcode)) {
+    const fromFields = normalizeLocationEntry({ town, postcode })
+    if (fromFields) return fromFields
+  }
+
+  const fromDb = getLocationLabelFromDb(item)
+  if (isValidLocationLabel(fromDb)) {
+    const normalized = normalizeLocationEntry({ label: fromDb })
+    if (normalized) return normalized
+  }
+
+  if (town) {
+    const matched = getCatalogEntries().find((entry) => entry.town.toLowerCase() === town.toLowerCase())
+    if (matched) return matched
+  }
+
+  if (postcode && /^\d{4}$/.test(postcode)) {
+    const matched = getCatalogEntries().find((entry) => entry.postcode === postcode && entry.town)
+    if (matched) return matched
+  }
+
+  return null
+}
+
+function collectLocationEntries(items = []) {
+  const unique = new Map()
+
+  getCatalogEntries().forEach((entry) => {
+    const normalized = normalizeLocationEntry(entry)
+    if (normalized && !unique.has(normalized.label)) {
+      unique.set(normalized.label, normalized)
+    }
+  })
+
+  ;(Array.isArray(items) ? items : []).forEach((item) => {
+    const entry = buildLocationEntryFromItem(item)
+    if (entry && !unique.has(entry.label)) {
+      unique.set(entry.label, entry)
+    }
+  })
+
+  return Array.from(unique.values())
+}
+
+function sortLocationEntries(entries = [], mode = SORT_MODES.POSTCODE) {
+  const list = Array.isArray(entries) ? [...entries] : []
+  return list.sort((left, right) => {
+    if (mode === SORT_MODES.POSTCODE) {
+      const leftPostcode = String(left.postcode || left.label.match(/\b(\d{4})\b$/)?.[1] || '')
+      const rightPostcode = String(right.postcode || right.label.match(/\b(\d{4})\b$/)?.[1] || '')
+      const leftNum = /^\d{4}$/.test(leftPostcode) ? parseInt(leftPostcode, 10) : 9999
+      const rightNum = /^\d{4}$/.test(rightPostcode) ? parseInt(rightPostcode, 10) : 9999
+      if (leftNum !== rightNum) return leftNum - rightNum
+    }
+
+    const leftName = String(left.town || splitLocationLabel(left.label).town || left.label || '')
+    const rightName = String(right.town || splitLocationLabel(right.label).town || right.label || '')
+    return leftName.localeCompare(rightName, 'en', { sensitivity: 'base' })
+  })
+}
+
 /** @type {{ label: string, town: string, postcode: string, nameZh: string }[]} */
 export const TAS_LOCATION_POSTCODES = [
   { label: 'Hobart 7000', town: 'Hobart', postcode: '7000', nameZh: '霍巴特' },
@@ -400,22 +521,28 @@ export function isSubSpotItem(item) {
 }
 
 export function resolveLocationLabel(item) {
+  const entry = buildLocationEntryFromItem(item)
+  if (entry?.label) return entry.label
+
   const fromDb = getLocationLabelFromDb(item)
-  if (fromDb) {
-    // 验证 DB 值是否为 "地名 邮编" 格式
-    const parts = String(fromDb).trim().split(/\s+/)
-    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
-    if (/^\d{4}$/.test(postcode)) return fromDb
-  }
+  if (isValidLocationLabel(fromDb)) return fromDb
+
   return UNCATEGORIZED_LOCATION
 }
 
 export function getLocationSortOrder(item, mode = SORT_MODES.POSTCODE) {
   const label = resolveLocationLabel(item)
   if (label === UNCATEGORIZED_LOCATION) return 9999
-  const orderMap = getOrderMap(mode)
-  if (orderMap.has(label)) return orderMap.get(label)
-  return 9998
+  const { town, postcode } = splitLocationLabel(label)
+  if (mode === SORT_MODES.POSTCODE) {
+    return /^\d{4}$/.test(postcode) ? parseInt(postcode, 10) : 9998
+  }
+  const normalized = String(town || label).toLowerCase()
+  let score = 0
+  for (const char of normalized.slice(0, 6)) {
+    score = score * 100 + char.charCodeAt(0)
+  }
+  return score || 9998
 }
 
 export function getSubSpotSortOrder(item) {
@@ -423,22 +550,7 @@ export function getSubSpotSortOrder(item) {
 }
 
 export function buildLocationOptionsFromItems(items = [], mode = SORT_MODES.POSTCODE) {
-  const labels = new Set(TAS_LOCATION_POSTCODES.map((item) => item.label))
-
-  items.forEach((item) => {
-    const label = resolveLocationLabel(item)
-    if (label && label !== UNCATEGORIZED_LOCATION) {
-      labels.add(label)
-    }
-  })
-
-  const orderMap = getOrderMap(mode)
-  return Array.from(labels).sort((left, right) => {
-    const leftOrder = orderMap.has(left) ? orderMap.get(left) : 9998
-    const rightOrder = orderMap.has(right) ? orderMap.get(right) : 9998
-    if (leftOrder !== rightOrder) return leftOrder - rightOrder
-    return left.localeCompare(right, 'en')
-  })
+  return sortLocationEntries(collectLocationEntries(items), mode).map((entry) => entry.label)
 }
 
 /**
@@ -448,31 +560,15 @@ export function buildLocationOptionsFromItems(items = [], mode = SORT_MODES.POST
  * @returns {Array<{label: string, options: Array<{label: string, value: string}>}>}
  */
 export function getLocationOptionGroups(items = [], mode = SORT_MODES.POSTCODE) {
-  const labels = new Set(TAS_LOCATION_POSTCODES.map((item) => item.label))
-
-  items.forEach((item) => {
-    const label = resolveLocationLabel(item)
-    if (label && label !== UNCATEGORIZED_LOCATION) {
-      labels.add(label)
-    }
-  })
-
-  const sortedList = getOrderMap(mode)
-  const sortedLabels = Array.from(labels).sort((left, right) => {
-    const leftOrder = sortedList.has(left) ? sortedList.get(left) : 9998
-    const rightOrder = sortedList.has(right) ? sortedList.get(right) : 9998
-    if (leftOrder !== rightOrder) return leftOrder - rightOrder
-    return left.localeCompare(right, 'en')
-  })
+  const sortedEntries = sortLocationEntries(collectLocationEntries(items), mode)
 
   const groups = new Map()
-  sortedLabels.forEach((label) => {
-    const parts = String(label).trim().split(/\s+/)
-    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
+  sortedEntries.forEach((entry) => {
+    const postcode = entry.postcode || splitLocationLabel(entry.label).postcode
     if (!groups.has(postcode)) {
       groups.set(postcode, [])
     }
-    groups.get(postcode).push({ label, value: label })
+    groups.get(postcode).push({ label: entry.town || splitLocationLabel(entry.label).town || entry.label, value: entry.label })
   })
 
   return Array.from(groups.entries()).map(([postcode, options]) => ({
@@ -491,44 +587,38 @@ export function getLocationOptionGroups(items = [], mode = SORT_MODES.POSTCODE) 
  * @returns {Function} lazyLoad 回调函数 (node, resolve) => void
  */
 export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
-  const categorizedLabels = new Set()
+  const itemEntries = []
+  const entryByLabel = new Map()
   let hasUncategorized = false
 
-  // 只收集当前条目中实际出现的地名+邮编标签
-  items.forEach((item) => {
+  ;(Array.isArray(items) ? items : []).forEach((item) => {
     const label = resolveLocationLabel(item)
     if (!label) return
     if (label === UNCATEGORIZED_LOCATION) {
       hasUncategorized = true
       return
     }
-    // 此时 resolveLocationLabel 已确保返回的是 "地名 邮编" 格式
-    categorizedLabels.add(label)
+    const entry = buildLocationEntryFromItem(item)
+    if (entry && !entryByLabel.has(entry.label)) {
+      entryByLabel.set(entry.label, entry)
+      itemEntries.push(entry)
+    }
   })
 
-  const sortedList = getOrderMap(mode)
-  const sortedLabels = Array.from(categorizedLabels).sort((left, right) => {
-    const leftOrder = sortedList.has(left) ? sortedList.get(left) : 9998
-    const rightOrder = sortedList.has(right) ? sortedList.get(right) : 9998
-    if (leftOrder !== rightOrder) return leftOrder - rightOrder
-    return left.localeCompare(right, 'en')
-  })
+  const sortedEntries = sortLocationEntries(itemEntries, mode)
 
   const isPostcodeMode = mode === SORT_MODES.POSTCODE
 
   // 按第一级 key 分组
   const groupMap = new Map()
-  sortedLabels.forEach((label) => {
-    const parts = String(label).trim().split(/\s+/)
-    const postcode = parts.length >= 2 ? parts[parts.length - 1] : ''
-
+  sortedEntries.forEach((entry) => {
+    const { postcode } = splitLocationLabel(entry.label)
     let firstLevelKey
     if (isPostcodeMode) {
       firstLevelKey = postcode
     } else {
       // 名称模式：取地名首字母大写
-      const townName = parts.length >= 2 ? parts.slice(0, -1).join(' ') : label
-      firstLevelKey = townName.charAt(0).toUpperCase()
+      firstLevelKey = (entry.town || splitLocationLabel(entry.label).town || entry.label).charAt(0).toUpperCase()
     }
 
     if (!firstLevelKey) return
@@ -536,7 +626,7 @@ export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
     if (!groupMap.has(firstLevelKey)) {
       groupMap.set(firstLevelKey, [])
     }
-    groupMap.get(firstLevelKey).push(label)
+    groupMap.get(firstLevelKey).push(entry)
   })
 
   // 第一级排序：邮编模式按数字，名称模式按字母
@@ -567,8 +657,8 @@ export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
     } else {
       const locations = groupMap.get(node.value) || []
       resolve(locations.map((loc) => ({
-        value: loc,
-        label: getLocationDisplayLabel(loc, mode),
+        value: loc.label,
+        label: loc.town || splitLocationLabel(loc.label).town || loc.label,
         leaf: true,
       })))
     }
@@ -593,7 +683,8 @@ export function getLocationDisplayLabel(label, mode = SORT_MODES.POSTCODE) {
 
 export function getTownByLocationLabel(label) {
   if (label === UNCATEGORIZED_LOCATION) return ''
-  const matched = TAS_LOCATION_POSTCODES.find((item) => item.label === label)
+  const matched = getCatalogEntries().find((item) => item.label === label)
+    || TAS_LOCATION_POSTCODES.find((item) => item.label === label)
   if (matched) return matched.town
   const parts = String(label || '').trim().split(/\s+/)
   if (parts.length >= 2) {

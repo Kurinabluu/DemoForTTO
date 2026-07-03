@@ -115,6 +115,12 @@ export async function fetchItemDetail(itemId) {
   return requestJson(`/tto/items/${itemId}`)
 }
 
+export async function fetchLocationCatalog(subNavName) {
+  return requestJson('/tto/locations', {
+    params: { subNavName },
+  })
+}
+
 export async function pingApi() {
   return requestJson('/common/ping')
 }

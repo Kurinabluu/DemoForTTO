@@ -228,7 +228,11 @@ freeinfo.subNav.forEach(sn => {
       }
       if (!td.locationLabel) {
         const label = townLabelMap.get(town) || '';
-        if (label) td.locationLabel = label;
+        if (label) {
+          td.locationLabel = label;
+        } else if (td.postcode) {
+          td.locationLabel = `${town} ${td.postcode}`;
+        }
       }
       existingCount++;
     }
