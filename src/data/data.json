@@ -3540,7 +3540,9 @@
                                 }
                             ],
                             "postcode": "7301",
-                            "locationLabel": "Liffey 7301"
+                            "locationLabel": "Liffey 7301",
+                            "belongsToSpot": "Great Western Tiers",
+                            "parentItemKey": "trips/freeinfo:景点:great-western-tiers"
                         },
                         "itemKey": "trips/freeinfo:景点:liffey-falls"
                     },
@@ -3584,7 +3586,9 @@
                             ],
                             "town": "Golden Valley",
                             "postcode": "7304",
-                            "locationLabel": "Golden Valley 7304"
+                            "locationLabel": "Golden Valley 7304",
+                            "belongsToSpot": "Great Western Tiers",
+                            "parentItemKey": "trips/freeinfo:景点:great-western-tiers"
                         },
                         "itemKey": "trips/freeinfo:景点:quamby-bluff"
                     },
@@ -3639,8 +3643,8 @@
                             "town": "Strahan",
                             "postcode": "7468",
                             "locationLabel": "Strahan 7468",
-                            "belongsToSpot": "Strahan",
-                            "parentItemKey": "trips/freeinfo:景点:strahan"
+                            "belongsToSpot": "Franklin-Gordon Wild Rivers National Park",
+                            "parentItemKey": "trips/freeinfo:景点:franklin-gordon-wild-rivers-national-park"
                         },
                         "itemKey": "trips/freeinfo:景点:gordon-river"
                     },
@@ -3771,44 +3775,49 @@
                         "itemKey": "trips/freeinfo:景点:zeehan"
                     },
                     {
-                        "title": "大西部阶梯",
+                        "title": "铁石山",
                         "img": "",
-                        "enTitle": "Great Western Tiers",
+                        "enTitle": "Ironstone Mountain",
                         "tripData": {
-                            "route": "塔斯马尼亚中部高地",
-                            "desc": "构成塔斯马尼亚中部高原地势北部边缘的一系列山崖，拥有侏罗纪辉绿岩柱和碎石坡景观，属于塔斯马尼亚荒野世界遗产地的一部分。原住民将其称为“Kooparoona Niara”。",
+                            "route": "Central Plateau TAS 7304, Australia",
+                            "desc": "位于塔斯马尼亚中央高地的大西部阶梯最高峰，海拔1444米，山脊显著度194米。最高点设有三角测量标，附近有伴生湖泊铁石湖（Lake Ironstone）。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "铁石山",
-                                    "desc": "山脉中最高的山峰，海拔1444米"
+                                    "title": "大西部阶梯最高点",
+                                    "desc": "海拔1444米，是大西部阶梯山脉的最高峰，山脊显著度194米"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "布雷迪瞭望台",
-                                    "desc": "一座海拔1371米的山峰，以丛林大盗马修·布雷迪的名字命名"
+                                    "title": "铁石湖 (Lake Ironstone)",
+                                    "desc": "位于铁石山附近的伴生湖泊"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "独特的地质结构",
-                                    "desc": "可观察由侏罗纪辉绿岩构成的显著岩柱和因风化而形成的广阔碎石坡"
+                                    "title": "徒步登山",
+                                    "desc": "有两条主要步道：北线从Mole Creek经Caveside和Westrope Road至Western Creek Track，沿Western Creek沟谷东侧上行；东线从Deloraine经Meander和Smoko Road至Mount Ironstone Track，起点位于Mother Cummings Peak以南约2公里处"
                                 }
                             ],
                             "tags": [
                                 "世界遗产地",
-                                "自然保护区",
                                 "高山景观",
-                                "地质景观"
+                                "地质景观",
+                                "徒步登山"
                             ],
                             "source": [
                                 {
-                                    "title": "“Great Western Tiers”",
+                                    "title": "“Ironstone Mountain”",
                                     "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "https://en.wikipedia.org/w/index.php?title=Great_Western_Tiers&oldid=1163528272"
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Ironstone_Mountain&oldid=1356077921"
                                 }
-                            ]
+                            ],
+                            "town": "Central Plateau",
+                            "postcode": "7304",
+                            "locationLabel": "Central Plateau 7304",
+                            "belongsToSpot": "Great Western Tiers",
+                            "parentItemKey": "trips/freeinfo:景点:great-western-tiers"
                         },
-                        "itemKey": "trips/freeinfo:景点:great-western-tiers"
+                        "itemKey": "trips/freeinfo:景点:ironstone-mountain"
                     },
                     {
                         "title": "麦夸里港",
@@ -8959,36 +8968,86 @@
                         "itemKey": "trips/freeinfo:景点:beaconsfield-mine-heritage-centre"
                     },
                     {
-                        "title": "Brady's Lookout",
+                        "title": "布雷迪瞭望台",
                         "img": "",
                         "enTitle": "Brady's Lookout",
                         "tripData": {
-                            "route": "Brady's Lookout",
-                            "desc": "景点描述",
+                            "route": "1876 W Tamar Hwy, Rosevears TAS 7277, Australia",
+                            "desc": "位于塔玛河西岸的观景台，以19世纪丛林大盗马修·布雷迪命名，他曾在附近一带活动。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "历史命名",
+                                    "desc": "以丛林大盗马修·布雷迪的名字命名，传说他曾在此监视过往旅客"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "塔玛河谷景观",
+                                    "desc": "可俯瞰塔玛河及周边河谷地区"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
+                                "观景台",
+                                "历史地名",
+                                "河谷景观"
+                            ],
+                            "source": [
+                                {
+                                    "title": "“Great Western Tiers”",
+                                    "desc": "Wikipedia,The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Great_Western_Tiers&oldid=1163528272"
+                                }
+                            ],
+                            "town": "Rosevears",
+                            "postcode": "7277",
+                            "locationLabel": "Rosevears 7277"
                         },
                         "itemKey": "trips/freeinfo:景点:bradys-lookout"
+                    },
+                    {
+                        "title": "母亲卡明斯峰",
+                        "img": "",
+                        "enTitle": "Mother Cummings Peak",
+                        "tripData": {
+                            "route": "Central Plateau TAS 7304, Australia",
+                            "desc": "大西部阶梯中海拔约1260–1270米的山峰，山脊显著度180米，母峰为铁石山。山顶可享360度全景视野。",
+                            "features": [
+                                {
+                                    "icon": "#22c55e",
+                                    "title": "360度全景视野",
+                                    "desc": "登顶后可享360度全景，俯瞰中央高地及大西部阶梯周边地区"
+                                },
+                                {
+                                    "icon": "#3b82f6",
+                                    "title": "徒步登山",
+                                    "desc": "有两条步道可达山顶：北线从Mole Creek进入，南线从上米安德谷（upper Meander Valley）进入。登顶约需1–2小时，步道较陡"
+                                },
+                                {
+                                    "icon": "#f59e0b",
+                                    "title": "铁石山子峰",
+                                    "desc": "母峰为大西部阶梯最高峰铁石山（Ironstone Mountain），隔离度11.89公里"
+                                }
+                            ],
+                            "tags": [
+                                "高山景观",
+                                "360度全景",
+                                "徒步登山",
+                                "地质景观"
+                            ],
+                            "source": [
+                                {
+                                    "title": "“Mother Cummings Peak”",
+                                    "desc": "Wikipedia,The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Mother_Cummings_Peak&oldid=1356080426"
+                                }
+                            ],
+                            "town": "Central Plateau",
+                            "postcode": "7304",
+                            "locationLabel": "Central Plateau 7304",
+                            "belongsToSpot": "Ironstone Mountain",
+                            "parentItemKey": "trips/freeinfo:景点:ironstone-mountain"
+                        },
+                        "itemKey": "trips/freeinfo:景点:mother-cummings-peak"
                     },
                     {
                         "title": "Blenheim Gallery and Garden",

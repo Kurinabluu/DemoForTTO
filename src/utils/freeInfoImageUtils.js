@@ -1,5 +1,10 @@
 import { resolveDataImage } from '@/utils/dataImageResolver'
 
+const resolveDialogThumb = (path, fallback = '') =>
+  resolveDataImage(path, fallback, { variant: 'thumb' }) || resolveDataImage(path, fallback)
+
+const resolveDialogOriginal = (path, fallback = '') => resolveDataImage(path, fallback)
+
 export function findFreeInfoSourceItem(title) {
   return null
 }
@@ -21,7 +26,7 @@ export const tripTypeFromSubNavName = itemTypeFromSubNavName
 
 export function resolveOriginalImages(paths) {
   return dedupePaths(paths)
-    .map((path) => resolveDataImage(path, ''))
+    .map((path) => resolveDialogOriginal(path, ''))
     .filter(Boolean)
 }
 
@@ -212,7 +217,7 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
         ...finalSourceTripData,
         ...tripData,
       },
-      banner: resolvedImages[0] || specialFallbackImage || favoriteItem.banner || favoriteItem.image || '',
+      banner: resolveDialogThumb(imagePaths[0]) || specialFallbackImage || favoriteItem.banner || favoriteItem.image || '',
     }
   }
 
@@ -240,8 +245,8 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
 
   const gridPath = getFreeInfoGridImagePath(favoriteItem?.tripData || favoriteItem, subNavName)
   const banner =
-    resolvedImages[0] ||
-    (gridPath ? resolveDataImage(gridPath, '') : '') ||
+    resolveDialogThumb(imagePaths[0]) ||
+    (gridPath ? resolveDialogThumb(gridPath, '') : '') ||
     specialFallbackImage ||
     favoriteItem?.banner ||
     favoriteItem?.image ||

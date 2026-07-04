@@ -103,6 +103,10 @@ function mergeTripData(detailTripData, propsTripData) {
         childSpots: Array.isArray(fromProps.childSpots) && fromProps.childSpots.length
             ? fromProps.childSpots
             : (Array.isArray(fromDetail.childSpots) ? fromDetail.childSpots : []),
+        siblingSpots: Array.isArray(fromProps.siblingSpots) && fromProps.siblingSpots.length
+            ? fromProps.siblingSpots
+            : (Array.isArray(fromDetail.siblingSpots) ? fromDetail.siblingSpots : []),
+        hasChildSpots: Boolean(fromDetail.hasChildSpots ?? fromProps.hasChildSpots ?? false),
         parentSpotTitle: fromProps.parentSpotTitle || fromDetail.parentSpotTitle || '',
         parentSpotId: fromProps.parentSpotId ?? fromDetail.parentSpotId ?? null,
         parentSpotOpenPayload: fromProps.parentSpotOpenPayload || fromDetail.parentSpotOpenPayload || null,
@@ -152,11 +156,17 @@ const childSpots = computed(() => {
     return raw.filter((spot) => spot && typeof spot === 'object' && spot.title)
 })
 
+const hasChildSpots = computed(() => {
+    return Boolean(routeInfo.value?.hasChildSpots) || childSpots.value.length > 0
+})
+
 const isSubSpotDialog = computed(() => props.parentSpotTitle && props.parentSpotId)
 
 const siblingSpots = computed(() => {
     if (!isSubSpotDialog.value) return []
-    return childSpots.value.filter((spot) => spot.title !== props.title)
+    const raw = routeInfo.value?.siblingSpots
+    if (!Array.isArray(raw)) return []
+    return raw.filter((spot) => spot && typeof spot === 'object' && spot.title && spot.title !== props.title)
 })
 
 const parentSpotCard = computed(() => {
@@ -174,41 +184,47 @@ const parentSpotCard = computed(() => {
 })
 
 const childSpotsSectionTitle = computed(() => {
-    if (isSubSpotDialog.value) return ''
-    if (!childSpots.value.length) return ''
+    if (!hasChildSpots.value) return ''
     return '此地还可游览'
 })
 
-const VISIBLE_SPOT_COUNT = 5
+const MOTHER_VISIBLE_SPOT_COUNT = 5
+const SUB_VISIBLE_SPOT_COUNT = 2
 
 const childSpotsCarouselOffset = ref(0)
 const siblingSpotsCarouselOffset = ref(0)
 
-function getSpotCarouselView(items, offset) {
+function getSpotCarouselView(items, offset, visibleCount) {
     const list = Array.isArray(items) ? items : []
-    const hasOverflow = list.length > VISIBLE_SPOT_COUNT
-    const maxOffset = Math.max(0, list.length - VISIBLE_SPOT_COUNT)
+    const count = Math.max(1, Number(visibleCount) || 1)
+    const hasOverflow = list.length > count
+    const maxOffset = Math.max(0, list.length - count)
 
     return {
-        spots: hasOverflow ? list.slice(offset, offset + VISIBLE_SPOT_COUNT) : list,
+        spots: hasOverflow ? list.slice(offset, offset + count) : list,
         canGoPrev: hasOverflow && offset > 0,
         canGoNext: hasOverflow && offset < maxOffset,
         hasOverflow,
     }
 }
 
-const childSpotsCarouselView = computed(() =>
-    getSpotCarouselView(childSpots.value, childSpotsCarouselOffset.value)
+const motherChildSpotsCarouselView = computed(() =>
+    getSpotCarouselView(childSpots.value, childSpotsCarouselOffset.value, MOTHER_VISIBLE_SPOT_COUNT)
+)
+
+const subChildSpotsCarouselView = computed(() =>
+    getSpotCarouselView(childSpots.value, childSpotsCarouselOffset.value, SUB_VISIBLE_SPOT_COUNT)
 )
 
 const siblingSpotsCarouselView = computed(() =>
-    getSpotCarouselView(siblingSpots.value, siblingSpotsCarouselOffset.value)
+    getSpotCarouselView(siblingSpots.value, siblingSpotsCarouselOffset.value, SUB_VISIBLE_SPOT_COUNT)
 )
 
-function shiftSpotCarousel(offsetRef, items, direction) {
+function shiftSpotCarousel(offsetRef, items, direction, visibleCount) {
     const list = Array.isArray(items) ? items : []
-    if (list.length <= VISIBLE_SPOT_COUNT) return
-    const maxOffset = Math.max(0, list.length - VISIBLE_SPOT_COUNT)
+    const count = Math.max(1, Number(visibleCount) || 1)
+    if (list.length <= count) return
+    const maxOffset = Math.max(0, list.length - count)
     if (direction === 'prev') {
         offsetRef.value = Math.max(0, offsetRef.value - 1)
         return
@@ -216,12 +232,12 @@ function shiftSpotCarousel(offsetRef, items, direction) {
     offsetRef.value = Math.min(maxOffset, offsetRef.value + 1)
 }
 
-function shiftChildSpotsCarousel(direction) {
-    shiftSpotCarousel(childSpotsCarouselOffset, childSpots.value, direction)
+function shiftChildSpotsCarousel(direction, visibleCount = SUB_VISIBLE_SPOT_COUNT) {
+    shiftSpotCarousel(childSpotsCarouselOffset, childSpots.value, direction, visibleCount)
 }
 
 function shiftSiblingSpotsCarousel(direction) {
-    shiftSpotCarousel(siblingSpotsCarouselOffset, siblingSpots.value, direction)
+    shiftSpotCarousel(siblingSpotsCarouselOffset, siblingSpots.value, direction, SUB_VISIBLE_SPOT_COUNT)
 }
 
 const dialogZIndex = computed(() => Z_INDEX.dialog.base + (props.stackLayer || 0) * 20)
@@ -247,13 +263,71 @@ const loadDetailFromApi = async () => {
 
 const resolveChildSpotImage = (spot) => {
     const raw = spot?.img || spot?.banner || ''
-    return resolveDataImage(raw, '')
+    return resolveDataImage(raw, '', { variant: 'thumb' })
 }
 
-const openRelatedSpot = (spot) => {
+const dedupeImagePaths = (paths) => {
+    const seen = new Set()
+    const result = []
+    for (const raw of paths) {
+        const path = String(raw || '').trim()
+        if (!path || seen.has(path)) continue
+        seen.add(path)
+        result.push(path)
+    }
+    return result
+}
+
+const dialogImagePaths = computed(() => {
+    const imageGroups = isRestaurantInfo.value
+        ? [routeInfo.value?.img]
+        : [
+            routeInfo.value?.images,
+            routeInfo.value?.banners,
+            routeInfo.value?.bannerList,
+            routeInfo.value?.imgs,
+            routeInfo.value?.img,
+            routeInfo.value?.cover ? [routeInfo.value.cover] : [],
+        ]
+
+    const paths = dedupeImagePaths(
+        imageGroups.flatMap(group => {
+            if (Array.isArray(group)) return group
+            if (group) return [group]
+            return []
+        })
+    )
+
+    if (paths.length > 0) {
+        return paths
+    }
+
+    return props.banner ? [String(props.banner).trim()].filter(Boolean) : []
+})
+
+const dialogDisplayImages = computed(() =>
+    dialogImagePaths.value
+        .map(image => resolveDataImage(image, '', { variant: 'thumb' }))
+        .filter(Boolean)
+)
+
+const dialogPreviewImages = computed(() =>
+    dialogImagePaths.value
+        .map(image => resolveDataImage(image, ''))
+        .filter(Boolean)
+)
+
+const openRelatedSpot = (spot, source = 'child') => {
     if (!spot) return
 
-    const siblingList = childSpots.value
+    const parentChildren = Array.isArray(routeInfo.value?.parentSpotOpenPayload?.tripData?.childSpots)
+        ? routeInfo.value.parentSpotOpenPayload.tripData.childSpots.filter((spotItem) => spotItem && spotItem.title)
+        : []
+    const currentChildList = childSpots.value
+    const siblingList = source === 'sibling'
+        ? (parentChildren.length ? parentChildren : siblingSpots.value)
+            .filter((spotItem) => spotItem && spotItem.title && spotItem.title !== spot.title)
+        : currentChildList.filter((spotItem) => spotItem && spotItem.title && spotItem.title !== spot.title)
     const parentTitle = isSubSpotDialog.value ? props.parentSpotTitle : props.title
     const parentId = isSubSpotDialog.value ? props.parentSpotId : props.itemId
     const parentPayload = isSubSpotDialog.value
@@ -280,7 +354,8 @@ const openRelatedSpot = (spot) => {
         parentSpotId: parentId,
         tripData: {
             ...(spot.tripData || {}),
-            childSpots: siblingList,
+            childSpots: Array.isArray(spot.tripData?.childSpots) ? spot.tripData.childSpots : [],
+            siblingSpots: siblingList,
             parentSpotTitle: parentTitle,
             parentSpotId: parentId,
             parentSpotOpenPayload: parentPayload,
@@ -303,33 +378,7 @@ const openParentSpot = () => {
     })
 }
 
-const dialogImages = computed(() => {
-    const imageGroups = isRestaurantInfo.value
-        ? [routeInfo.value?.img]
-        : [
-            routeInfo.value?.images,
-            routeInfo.value?.banners,
-            routeInfo.value?.bannerList,
-            routeInfo.value?.imgs,
-            routeInfo.value?.img,
-            routeInfo.value?.cover ? [routeInfo.value.cover] : [],
-        ]
-
-    const multiImages = imageGroups
-        .flatMap(group => {
-            if (Array.isArray(group)) return group
-            if (group) return [group]
-            return []
-        })
-        .map(image => resolveDataImage(image, ''))
-        .filter(Boolean)
-
-    if (multiImages.length > 0) {
-        return multiImages
-    }
-
-    return props.banner ? [resolveDataImage(props.banner)] : []
-})
+const dialogImages = dialogDisplayImages
 
 const normalizeImageSourceEntry = (entry) => {
     if (!entry || typeof entry !== 'object') return null
@@ -400,7 +449,7 @@ watch([childSpots, siblingSpots], () => {
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
                     <span class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle
-                            }}）</span></span>
+                    }}）</span></span>
                 </div>
                 <div class="dlg-header-right">
                     <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }"
@@ -416,11 +465,11 @@ watch([childSpots, siblingSpots], () => {
             <div class="dlg-banner w100" v-if="dialogImages.length">
                 <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
                     arrow="hover" height="400px" @change="handleBannerChange">
-                    <el-carousel-item v-for="(image, index) in dialogImages" :key="index">
+                    <el-carousel-item v-for="(image, index) in dialogDisplayImages" :key="index">
                         <el-image :src="image" :alt="getImageAltText(index)" class="carousel-image pointer" fit="cover"
-                            :preview-src-list="dialogImages" :initial-index="index" :zoom-rate="1.2" :max-scale="7"
-                            :min-scale="0.2" show-progress show-close show-toolbar show-index :preview-teleported="true"
-                            :z-index="Z_INDEX.dialog.imagePreview" />
+                            :preview-src-list="dialogPreviewImages" :initial-index="index" :zoom-rate="1.2"
+                            :max-scale="7" :min-scale="0.2" :lazy="index > 0" show-progress show-close show-toolbar
+                            show-index :preview-teleported="true" :z-index="Z_INDEX.dialog.imagePreview" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -470,23 +519,23 @@ watch([childSpots, siblingSpots], () => {
                     <span class="mini-tag" v-for="(tag, index) in routeInfo.tags" :key="index">{{ tag }}</span>
                 </div>
                 <!-- 母景点弹窗：显示包含的子景点 -->
-                <div v-if="isScenicInfo && !isSubSpotDialog && childSpots.length" class="child-spots-section">
+                <div v-if="isScenicInfo && !isSubSpotDialog && hasChildSpots" class="child-spots-section">
                     <div class="child-spots-title">{{ childSpotsSectionTitle }}</div>
                     <div class="spot-carousel">
-                        <button type="button" class="spot-carousel-nav"
-                            :class="{ 'spot-carousel-nav--disabled': !childSpotsCarouselView.canGoPrev }"
-                            :disabled="!childSpotsCarouselView.canGoPrev" aria-label="查看上一组"
-                            @click="shiftChildSpotsCarousel('prev')">
+                        <button v-if="motherChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                            :class="{ 'spot-carousel-nav--disabled': !motherChildSpotsCarouselView.canGoPrev }"
+                            :disabled="!motherChildSpotsCarouselView.canGoPrev" aria-label="查看上一组"
+                            @click="shiftChildSpotsCarousel('prev', MOTHER_VISIBLE_SPOT_COUNT)">
                             <el-icon class="spot-carousel-nav-icon">
                                 <ArrowLeft />
                             </el-icon>
                         </button>
                         <div class="spot-carousel-cards">
-                            <button v-for="spot in childSpotsCarouselView.spots"
+                            <button v-for="spot in motherChildSpotsCarouselView.spots"
                                 :key="spot.itemKey || spot.id || spot.title" type="button" class="child-spot-card"
-                                :title="spot.title" @click="openRelatedSpot(spot)">
+                                :title="spot.title" @click="openRelatedSpot(spot, 'child')">
                                 <img v-if="resolveChildSpotImage(spot)" :src="resolveChildSpotImage(spot)"
-                                    :alt="spot.title" class="child-spot-thumb" />
+                                    :alt="spot.title" class="child-spot-thumb" loading="lazy" decoding="async" />
                                 <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
                                     spot.title?.slice(0, 1) || '景' }}</span>
                                 <span class="child-spot-name" :title="spot.title">{{ spot.title }}</span>
@@ -494,10 +543,10 @@ watch([childSpots, siblingSpots], () => {
                                     spot.enTitle }}</span>
                             </button>
                         </div>
-                        <button type="button" class="spot-carousel-nav"
-                            :class="{ 'spot-carousel-nav--disabled': !childSpotsCarouselView.canGoNext }"
-                            :disabled="!childSpotsCarouselView.canGoNext" aria-label="查看更多"
-                            @click="shiftChildSpotsCarousel('next')">
+                        <button v-if="motherChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                            :class="{ 'spot-carousel-nav--disabled': !motherChildSpotsCarouselView.canGoNext }"
+                            :disabled="!motherChildSpotsCarouselView.canGoNext" aria-label="查看更多"
+                            @click="shiftChildSpotsCarousel('next', MOTHER_VISIBLE_SPOT_COUNT)">
                             <el-icon class="spot-carousel-nav-icon">
                                 <ArrowRight />
                             </el-icon>
@@ -511,11 +560,10 @@ watch([childSpots, siblingSpots], () => {
                             <span class="sibling-parent-label">所属景点</span>
                             <div class="sibling-spots-grid sibling-spots-grid--single">
                                 <button v-if="parentSpotCard" type="button" class="child-spot-card"
-                                    :title="parentSpotTitle"
-                                    @click="openParentSpot">
+                                    :title="parentSpotTitle" @click="openParentSpot">
                                     <img v-if="resolveChildSpotImage(parentSpotCard)"
                                         :src="resolveChildSpotImage(parentSpotCard)" :alt="parentSpotTitle"
-                                        class="child-spot-thumb" />
+                                        class="child-spot-thumb" loading="lazy" decoding="async" />
                                     <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
                                         parentSpotTitle?.slice(0, 1) || '景' }}</span>
                                     <span class="child-spot-name" :title="parentSpotTitle">{{ parentSpotTitle }}</span>
@@ -524,11 +572,11 @@ watch([childSpots, siblingSpots], () => {
                                 </button>
                             </div>
                         </div>
-                        <span class="sibling-divider" aria-hidden="true"></span>
-                        <div class="sibling-others-block">
+                        <span v-if="siblingSpots.length" class="sibling-divider" aria-hidden="true"></span>
+                        <div v-if="siblingSpots.length" class="sibling-others-block">
                             <span class="sibling-label">同区域其他景点</span>
-                            <div v-if="siblingSpots.length" class="spot-carousel">
-                                <button type="button" class="spot-carousel-nav"
+                            <div class="spot-carousel">
+                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !siblingSpotsCarouselView.canGoPrev }"
                                     :disabled="!siblingSpotsCarouselView.canGoPrev" aria-label="查看上一组"
                                     @click="shiftSiblingSpotsCarousel('prev')">
@@ -536,12 +584,14 @@ watch([childSpots, siblingSpots], () => {
                                         <ArrowLeft />
                                     </el-icon>
                                 </button>
-                                <div class="spot-carousel-cards">
+                                <div class="spot-carousel-cards spot-carousel-cards--sub">
                                     <button v-for="spot in siblingSpotsCarouselView.spots"
                                         :key="spot.itemKey || spot.id || spot.title" type="button"
-                                        class="child-spot-card" :title="spot.title" @click="openRelatedSpot(spot)">
+                                        class="child-spot-card" :title="spot.title"
+                                        @click="openRelatedSpot(spot, 'sibling')">
                                         <img v-if="resolveChildSpotImage(spot)" :src="resolveChildSpotImage(spot)"
-                                            :alt="spot.title" class="child-spot-thumb" />
+                                            :alt="spot.title" class="child-spot-thumb" loading="lazy"
+                                            decoding="async" />
                                         <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
                                             spot.title?.slice(0, 1) || '景' }}</span>
                                         <span class="child-spot-name" :title="spot.title">{{ spot.title }}</span>
@@ -549,10 +599,47 @@ watch([childSpots, siblingSpots], () => {
                                             spot.enTitle }}</span>
                                     </button>
                                 </div>
-                                <button type="button" class="spot-carousel-nav"
+                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !siblingSpotsCarouselView.canGoNext }"
                                     :disabled="!siblingSpotsCarouselView.canGoNext" aria-label="查看更多"
                                     @click="shiftSiblingSpotsCarousel('next')">
+                                    <el-icon class="spot-carousel-nav-icon">
+                                        <ArrowRight />
+                                    </el-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <span v-if="hasChildSpots" class="sibling-divider" aria-hidden="true"></span>
+                        <div v-if="hasChildSpots" class="sibling-others-block sibling-children-block">
+                            <span class="sibling-label">{{ childSpotsSectionTitle }}</span>
+                            <div class="spot-carousel">
+                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                    :class="{ 'spot-carousel-nav--disabled': !subChildSpotsCarouselView.canGoPrev }"
+                                    :disabled="!subChildSpotsCarouselView.canGoPrev" aria-label="查看上一组"
+                                    @click="shiftChildSpotsCarousel('prev')">
+                                    <el-icon class="spot-carousel-nav-icon">
+                                        <ArrowLeft />
+                                    </el-icon>
+                                </button>
+                                <div class="spot-carousel-cards spot-carousel-cards--sub">
+                                    <button v-for="spot in subChildSpotsCarouselView.spots"
+                                        :key="spot.itemKey || spot.id || spot.title" type="button"
+                                        class="child-spot-card" :title="spot.title"
+                                        @click="openRelatedSpot(spot, 'child')">
+                                        <img v-if="resolveChildSpotImage(spot)" :src="resolveChildSpotImage(spot)"
+                                            :alt="spot.title" class="child-spot-thumb" loading="lazy"
+                                            decoding="async" />
+                                        <span v-else class="child-spot-thumb child-spot-thumb--empty">{{
+                                            spot.title?.slice(0, 1) || '景' }}</span>
+                                        <span class="child-spot-name" :title="spot.title">{{ spot.title }}</span>
+                                        <span v-if="spot.enTitle" class="child-spot-en-name" :title="spot.enTitle">{{
+                                            spot.enTitle }}</span>
+                                    </button>
+                                </div>
+                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                    :class="{ 'spot-carousel-nav--disabled': !subChildSpotsCarouselView.canGoNext }"
+                                    :disabled="!subChildSpotsCarouselView.canGoNext" aria-label="查看更多"
+                                    @click="shiftChildSpotsCarousel('next')">
                                     <el-icon class="spot-carousel-nav-icon">
                                         <ArrowRight />
                                     </el-icon>
@@ -826,12 +913,14 @@ watch([childSpots, siblingSpots], () => {
     margin-top: 18px;
     padding-top: 16px;
     border-top: 1px solid #e5efec;
+    overflow: hidden;
 }
 
 .sibling-spots-layout {
     display: flex;
     align-items: flex-start;
     gap: 14px;
+    min-width: 0;
 }
 
 .sibling-parent-block {
@@ -860,6 +949,7 @@ watch([childSpots, siblingSpots], () => {
 .sibling-others-block {
     flex: 1 1 auto;
     min-width: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -879,9 +969,9 @@ watch([childSpots, siblingSpots], () => {
 }
 
 .sibling-spots-grid--single {
-    grid-template-columns: minmax(100px, 120px);
-    width: fit-content;
+    width: 120px;
     max-width: 100%;
+    grid-template-columns: 120px;
 }
 
 .spot-carousel {
@@ -890,6 +980,7 @@ watch([childSpots, siblingSpots], () => {
     gap: 8px;
     width: 100%;
     min-width: 0;
+    overflow: hidden;
 }
 
 .spot-carousel-cards {
@@ -898,6 +989,13 @@ watch([childSpots, siblingSpots], () => {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 10px;
+    overflow: hidden;
+}
+
+.spot-carousel-cards--sub {
+    flex: 0 0 auto;
+    grid-template-columns: repeat(2, 120px);
+    min-width: calc(2 * 120px + 10px);
 }
 
 .spot-carousel-nav {
@@ -934,6 +1032,7 @@ watch([childSpots, siblingSpots], () => {
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
+    min-width: 0;
     padding: 8px;
     border: 1px solid #dcefe9;
     border-radius: 10px;
@@ -1097,11 +1196,17 @@ watch([childSpots, siblingSpots], () => {
     }
 
     .sibling-spots-grid--single {
-        grid-template-columns: repeat(auto-fill, minmax(96px, 120px));
+        width: 120px;
+        grid-template-columns: 120px;
     }
 
     .spot-carousel-cards {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .spot-carousel-cards--sub {
+        grid-template-columns: repeat(2, 120px);
+        min-width: calc(2 * 120px + 10px);
     }
 
     .spot-carousel-nav {
@@ -1111,5 +1216,6 @@ watch([childSpots, siblingSpots], () => {
     .spot-carousel-nav-icon {
         font-size: 38px;
     }
+
 }
 </style>

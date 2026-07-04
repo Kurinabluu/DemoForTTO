@@ -87,7 +87,7 @@ function getTripData(item) {
 function buildFreeInfoItemKey(sectionPath, subNavPath, item, usedKeys) {
   const existing = normalizeText(item?.itemKey)
   if (existing) {
-    return existing
+    return normalizePrefixedKey(existing, `${sectionPath}:${subNavPath}:`) || existing
   }
   const label = firstNonBlank(item?.enTitle, item?.title, item?.route, item?.place, item?.name)
   const baseKey = `${sectionPath}:${subNavPath}:${slugify(label)}`
@@ -137,6 +137,22 @@ function buildParentLookup(items) {
   return lookup
 }
 
+function normalizePrefixedKey(value, prefix) {
+  const text = normalizeText(value)
+  if (!text) {
+    return ''
+  }
+  if (!prefix) {
+    return text
+  }
+
+  let result = text
+  while (result.startsWith(`${prefix}${prefix}`)) {
+    result = result.slice(prefix.length)
+  }
+  return result
+}
+
 function resolveParentScenicItem(belongsToSpot, lookup) {
   const normalized = normalizeText(belongsToSpot)
   if (!normalized) {
@@ -178,6 +194,7 @@ function normalizeFreeInfoScenicKeys(section) {
 
     const sectionPath = normalizeText(section.path) || 'trips/freeinfo'
     const subNavPath = normalizeText(subNav.subNavPath) || normalizeText(subNav.subNavName) || '景点'
+    const parentPrefix = `${sectionPath}:${subNavPath}:`
     const usedKeys = new Map()
 
     subNav.items.forEach((item) => {
@@ -190,7 +207,14 @@ function normalizeFreeInfoScenicKeys(section) {
     const parentLookup = buildParentLookup(subNav.items)
     subNav.items.forEach((item) => {
       const tripData = getTripData(item)
-      if (!tripData || normalizeText(tripData.parentItemKey)) {
+      if (!tripData) {
+        return
+      }
+      const existingParentKey = normalizePrefixedKey(tripData.parentItemKey, parentPrefix)
+      if (existingParentKey) {
+        tripData.parentItemKey = existingParentKey
+      }
+      if (existingParentKey) {
         return
       }
       const parent = resolveParentScenicItem(tripData.belongsToSpot, parentLookup)

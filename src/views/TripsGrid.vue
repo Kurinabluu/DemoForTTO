@@ -1238,19 +1238,44 @@ function findMatchingTourItem(items, item) {
     return items.find((candidate) => tourItemMatchesDialogKey(candidate, dialogKey)) || null
 }
 
-function buildRelatedSpotDialogPayload(child) {
-    const bannerImages = normalizeImageList(child?.img)
-    const resolvedBanner = bannerImages[0] || getScenicGridImageUrl(child)
+function collectRawImagePaths(images) {
+    if (!images) return []
+    const list = Array.isArray(images) ? images : [images]
+    const seen = new Set()
+    const result = []
+    for (const raw of list) {
+        const path = String(raw || '').trim()
+        if (!path || seen.has(path)) continue
+        seen.add(path)
+        result.push(path)
+    }
+    return result
+}
+
+function buildRelatedSpotDialogPayload(child, options = {}) {
+    const { includeParentPayload = true } = options
+    const rawImg = child?.img
+    const thumbBanner = getScenicGridImageUrl(child)
+    const resolved = buildTourDialogPayload(
+        {
+            ...child,
+            img: rawImg,
+            banner: thumbBanner || child?.banner || rawImg,
+            tripData: {
+                ...(child?.tripData && typeof child.tripData === 'object' ? child.tripData : {}),
+                img: rawImg,
+            },
+        },
+        { skipParentPayload: !includeParentPayload }
+    )
     return {
-        id: child?.id ?? null,
-        itemKey: getTourItemDialogKey(child),
-        title: child?.title || '',
-        enTitle: child?.enTitle || '',
-        img: getScenicGridImageUrl(child),
-        banner: resolvedBanner,
-        tripType: '景点信息',
-        itemType: '景点信息',
-        tripData: child?.tripData && typeof child.tripData === 'object' ? { ...child.tripData } : {},
+        ...resolved,
+        img: thumbBanner || resolved.img || rawImg,
+        banner: thumbBanner || resolved.banner || rawImg,
+        tripData: {
+            ...(resolved.tripData || {}),
+            img: rawImg,
+        },
     }
 }
 
@@ -1381,8 +1406,9 @@ function buildTourDialogPayload(item, options = {}) {
         };
     }
 
-    const resolvedBannerImages = normalizeImageList(bannerImage)
-    const resolvedBanner = resolvedBannerImages[0] || getImageUrl(Array.isArray(bannerImage) ? '' : bannerImage)
+    const rawBannerPaths = collectRawImagePaths(bannerImage)
+    const resolvedBanner = getThumbImageUrl(rawBannerPaths[0] || '')
+        || getImageUrl(Array.isArray(bannerImage) ? '' : bannerImage)
 
     const normalizedTripData = tripData && typeof tripData === 'object'
         ? { ...tripData }
@@ -1391,17 +1417,26 @@ function buildTourDialogPayload(item, options = {}) {
     if (
         normalizedTripData &&
         typeof normalizedTripData === 'object' &&
-        resolvedBannerImages.length > 0 &&
+        rawBannerPaths.length > 0 &&
         (!Array.isArray(normalizedTripData.images) || normalizedTripData.images.length === 0)
     ) {
-        normalizedTripData.images = resolvedBannerImages
+        normalizedTripData.images = rawBannerPaths
+    }
+
+    if (
+        normalizedTripData &&
+        typeof normalizedTripData === 'object' &&
+        bannerImage &&
+        normalizedTripData.img == null
+    ) {
+        normalizedTripData.img = bannerImage
     }
 
     const isFreeInfoScenic =
         props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点'
 
     if (isFreeInfoScenic && places.value?.items) {
-        let childSpots = findChildSpotItems(places.value.items, item)
+        const childSpots = findChildSpotItems(places.value.items, item)
         let parentSpotTitle = ''
         let parentSpotId = null
         let parentItem = null
@@ -1409,15 +1444,13 @@ function buildTourDialogPayload(item, options = {}) {
         if (isSubSpotItemFromDb(item)) {
             parentItem = findParentSpotItemForChild(places.value.items, item)
             if (parentItem) {
-                childSpots = findChildSpotItems(places.value.items, parentItem)
                 parentSpotTitle = parentItem.title || ''
                 parentSpotId = parentItem.id ?? null
             }
         }
 
-        if (childSpots.length > 0) {
-            normalizedTripData.childSpots = childSpots.map((child) => buildRelatedSpotDialogPayload(child))
-        }
+        normalizedTripData.childSpots = childSpots.map((child) => buildRelatedSpotDialogPayload(child, { includeParentPayload: false }))
+        normalizedTripData.hasChildSpots = normalizedTripData.childSpots.length > 0
 
         if (parentSpotTitle && parentSpotId) {
             normalizedTripData.parentSpotTitle = parentSpotTitle
