@@ -35,3 +35,4 @@
 - 本地 `src/data/split/freeinfo.json` 负责保留完整卡片样式与补充字段。
 - `isGrid=false` 的特别活动、徒步线路、塔州露营地等内容，会以本地富数据为主，再与 API 的 `id` / 标题做合并。
 - 维护内容时先改 `src/data/split/*.json`，再执行 `npm run data:sync`，这样 `src/data/data.json` 和拆分文件会自动保持一致。
+- 新增或替换图片后需要手动执行 `npm run images:thumb` 生成缩略图；`npm run dev` 只会同步数据，不会自动压缩图片。

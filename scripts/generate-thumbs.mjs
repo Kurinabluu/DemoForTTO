@@ -7,8 +7,9 @@ const assetsRoot = path.join(projectRoot, 'src', 'assets')
 const optimizedRoot = path.join(assetsRoot, '.optimized')
 
 const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif'])
-const THUMB_MAX_WIDTH = 720
-const THUMB_QUALITY = 64
+// 适度压缩，优先保留纹理和边缘细节
+const THUMB_MAX_WIDTH = 1280
+const THUMB_QUALITY = 82
 
 async function walkDirectory(dirPath, collector = []) {
   const entries = await fs.readdir(dirPath, { withFileTypes: true })
