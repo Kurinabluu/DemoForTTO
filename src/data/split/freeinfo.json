@@ -5266,21 +5266,31 @@
         },
         {
           "title": "纳尔逊山",
-          "img": "",
+          "img": "../assets/img/places/MountNelson/Mount_Nelson_Signal_Station_Vista.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Mount_Nelson_Signal_Station_Vista.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/photos/199901917@N08/",
+              "photographer": "jacobharrisau",
+              "license": "CC BY-SA 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+            }
+          ],
           "enTitle": "Mount Nelson",
           "tripData": {
-            "route": "塔斯马尼亚霍巴特南部",
-            "desc": "纳尔逊山是一个二战后发展起来的居民区，同时也因纳尔逊山信号站、特鲁加尼尼保护区等景点和步道而受到游客欢迎。",
+            "route": "Mount Nelson, Tasmania 7000, Australia",
+            "desc": "纳尔逊山是一个二战后发展起来的居民区，同时也因纳尔逊山信号站 (Mount Nelson Signal Station)、特鲁加尼尼保护区 (Truganini Reserve) 等景点和步道而受到游客欢迎。",
             "features": [
               {
                 "icon": "#22c55e",
                 "title": "历史信号站",
-                "desc": "参观殖民时期用于连接霍巴特与亚瑟港的纳尔逊山信号站"
+                "desc": "参观殖民时期用于连接霍巴特与亚瑟港 (Port Arthur) 的纳尔逊山信号站 (Mount Nelson Signal Station)"
               },
               {
                 "icon": "#3b82f6",
                 "title": "特鲁加尼尼保护区",
-                "desc": "探索特鲁加尼尼保护区，这是一片原生丛林地"
+                "desc": "探索特鲁加尼尼保护区 (Truganini Reserve)，这是一片原生丛林地"
               },
               {
                 "icon": "#f59e0b",
@@ -5297,7 +5307,7 @@
             "source": [
               {
                 "title": "Mount Nelson, Tasmania",
-                "desc": "Wikipedia,The Free Encyclopedia",
+                "desc": "Wikipedia, The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Mount_Nelson,_Tasmania&oldid=1322747380"
               }
             ],
@@ -5344,29 +5354,39 @@
                 "url": "https://en.wikipedia.org/w/index.php?title=Franklin,_Tasmania&oldid=1318960628"
               }
             ],
-            "town": "Franklin",
-            "postcode": "7113",
-            "locationLabel": "Franklin 7113"
+            "town": "Mount Nelson",
+            "postcode": "7007",
+            "locationLabel": "Mount Nelson 7007"
           },
           "itemKey": "trips/freeinfo:景点:franklin"
         },
         {
           "title": "萨拉曼卡艺术中心",
-          "img": "",
+          "img": "../assets/img/places/BatteryPoint/SalamancaArtsCentre/SalamancaPlace2008.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:SalamancaPlace2008.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/people/adselwood/",
+              "photographer": "Adam Selwood",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Salamanca Arts Centre",
           "tripData": {
-            "route": "塔斯马尼亚霍巴特的萨拉曼卡广场",
-            "desc": "萨拉曼卡艺术中心成立于1976年，是一个集剧院、画廊和艺术管理机构于一体的综合艺术中心。建筑由塔斯马尼亚政府所有，包含十个视觉和表演艺术场馆。",
+            "route": "77 Salamanca Pl, Battery Point TAS 7004, Australia",
+            "desc": "萨拉曼卡艺术中心成立于1976年，位于萨拉曼卡广场 (Salamanca Place)，是一个集剧院、画廊和艺术管理机构于一体的综合艺术中心。建筑由塔斯马尼亚政府所有，包含十个视觉和表演艺术场馆。配图为2008年拍摄，场馆现状可能略有变化。",
             "features": [
               {
                 "icon": "#22c55e",
                 "title": "多样化的艺术场馆",
-                "desc": "在中心内的多个场馆（如孔雀剧院、长画廊、侧边空间画廊）参观艺术展览或观看表演"
+                "desc": "在中心内的多个场馆（如孔雀剧院 Peacock Theatre、长画廊 Long Gallery、侧边空间画廊 Side Space Gallery）参观艺术展览或观看表演"
               },
               {
                 "icon": "#3b82f6",
                 "title": "历史建筑中的艺术空间",
-                "desc": "探索位于历史乔治亚式仓库建筑内部的现代艺术空间与工作室"
+                "desc": "探索位于历史乔治亚式仓库建筑 (Georgian warehouse buildings) 内部的现代艺术空间与工作室"
               },
               {
                 "icon": "#f59e0b",
@@ -5385,50 +5405,73 @@
             "source": [
               {
                 "title": "Salamanca Arts Centre",
-                "desc": "Wikipedia,The Free Encyclopedia",
+                "desc": "Wikipedia, The Free Encyclopedia",
                 "url": "https://en.wikipedia.org/w/index.php?title=Salamanca_Arts_Centre&oldid=1298052444"
               }
             ],
-            "town": "Hobart",
-            "postcode": "7000",
-            "locationLabel": "Hobart 7000"
+            "town": "Battery Point",
+            "postcode": "7004",
+            "locationLabel": "Battery Point 7004"
           },
           "itemKey": "trips/freeinfo:景点:salamanca-arts-centre"
         },
         {
           "title": "塔斯马泽亚及小人国村",
-          "img": "",
-          "enTitle": "The Village of Lower Crackpot",
+          "img": [
+            "../assets/img/places/Sheffield/tasmaziaAndLowerCrackpot/1.jpg",
+            "../assets/img/places/Sheffield/tasmaziaAndLowerCrackpot/2.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Lower_crackpot_-_7308.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Peripitus",
+              "photographer": "Peripitus",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Tasmazia_and_Lower_Crackpot.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Mx._Granger",
+              "photographer": "Mx. Granger",
+              "license": "CC0",
+              "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+            }
+          ],
+          "enTitle": "Tasmazia and The Village of Lower Crackpot",
           "tripData": {
-            "route": "塔斯马尼亚Promised Land",
-            "desc": "塔斯马泽亚及小人国村是一个位于澳大利亚塔斯马尼亚州（具体地址在Promised Land）的、集大型迷宫、趣味模型村和薰衣草农场于一体的主题公园式景点。",
+            "route": "500 Staverton Rd, Promised Land TAS 7306, Australia",
+            "desc": "塔斯马泽亚及小人国村 (Tasmazia and The Village of Lower Crackpot) 是一个位于塔斯马尼亚州承诺之地 (Promised Land) 的、集大型迷宫、趣味模型村和薰衣草农场于一体的主题公园式景点。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "大型迷宫群",
+                "desc": "园区内设有多个主题迷宫，包括世界最大的迷宫之一，适合各年龄段游客探索体验"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "小人国模型村 (Lower Crackpot)",
+                "desc": "以幽默风格呈现的微型村庄，包含各式缩小版建筑与趣味场景，充满童趣与创意"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "薰衣草农场与咖啡厅",
+                "desc": "园内设有薰衣草农场，季节性开放观赏，并配有咖啡厅供游客休憩"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "主题公园",
+              "迷宫",
+              "模型村",
+              "薰衣草农场",
+              "家庭友好"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Brian Inder",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Brian_Inder&oldid=1234567890"
               }
             ],
             "town": "Sheffield",
@@ -5439,38 +5482,50 @@
         },
         {
           "title": "伊丽莎白街购物中心",
-          "img": "",
+          "img": "../assets/img/places/Hobart/elizabethStreetMall/Elizabeth_Street_Mall_Hobart.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Elizabeth_Street_Mall_Hobart.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "",
+              "photographer": "Gazza23",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            }
+          ],
           "enTitle": "Elizabeth Street Mall",
           "tripData": {
-            "route": "塔斯马尼亚霍巴特",
-            "desc": "伊丽莎白街购物中心是位于澳大利亚塔斯马尼亚州霍巴特市中心的一条步行街。该步行街位于伊丽莎白街的一个街区，南北介于柯林斯街（Collins Street）与利物浦街（Liverpool Street）之间。",
+            "route": "50 Elizabeth St, Hobart TAS 7000, Australia",
+            "desc": "伊丽莎白街购物中心 (Elizabeth Street Mall) 是位于霍巴特市中心的一条步行街，南北介于柯林斯街 (Collins Street) 与利物浦街 (Liverpool Street) 之间。该步行街是霍巴特市中心最大的购物区域，同时也是一处繁忙的市民聚集和街头表演场所，其历史可追溯至1970年代的步行化改造。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "历史地标与城市记忆",
+                "desc": "步行街上保留着惠灵顿桥 (Wellington Bridge) 等历史地标，以及建于1915年的柯达大楼 (Kodak Building)，展现了霍巴特的城市发展印记"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "购物与商业中心",
+                "desc": "作为霍巴特市中心最大的购物区域，步行街连接惠灵顿中心 (Wellington Centre)、猫与提琴拱廊 (Cat and Fiddle Arcade) 等多个购物中心，汇聚各类精品商店"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "公共空间与街头文化",
+                "desc": "步行街是市民日常聚集的热门场所，常年有街头艺人在此表演，也是霍巴特的城市文化活动空间之一"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "步行街",
+              "购物区",
+              "城市公共空间",
+              "历史地标",
+              "街头表演"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Elizabeth Street Mall",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Elizabeth_Street_Mall&oldid=1354490319"
               }
             ],
             "town": "Hobart",
@@ -5481,38 +5536,61 @@
         },
         {
           "title": "南港",
-          "img": "",
+          "img": [
+            "../assets/img/places/Southport/Southport,_Tasmania.jpg",
+            "../assets/img/places/Southport/Living_Rocks_in_Southport,_Tasmania.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Southport,_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/photos/julienalley/",
+              "photographer": "Kazo",
+              "license": "CC BY 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Living_Rocks_in_Southport,_Tasmania.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/photos/89165847@N00/",
+              "photographer": "Michael Coghlan",
+              "license": "CC BY-SA 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+            }
+          ],
           "enTitle": "Southport",
           "tripData": {
-            "route": "塔斯马尼亚南端",
-            "desc": "南港是一个位于塔斯马尼亚最南端的一个小型城镇。 Street）与利物浦街（Liverpool Street）之间。",
+            "route": "Southport, Tasmania 7109, Australia",
+            "desc": "南港 是位于塔斯马尼亚最南部的一个小型城镇，于1837年建立，曾发展为霍巴特以南最大的城镇，后因航运业衰退和火灾而人口缩减。2021年人口为149人。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "历史小镇与早期定居",
+                "desc": "南港是塔斯马尼亚南部早期的定居点之一，19世纪曾是重要的航运和捕鲸基地，保留着早期殖民时期的历史印记"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "沿海风光与渔业历史",
+                "desc": "小镇坐拥南端海岸风光，19世纪曾开展岸基捕鲸活动，至今仍保留着与海洋相关的历史遗迹"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "宁静的南端小镇",
+                "desc": "作为塔斯马尼亚最南端的城镇之一，南港拥有宁静的滨海氛围"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "历史小镇",
+              "沿海风光",
+              "宁静小镇",
+              "塔斯马尼亚南部",
+              "自驾可达"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Southport, Tasmania",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Southport,_Tasmania&oldid=1277617533"
               }
             ],
             "town": "Southport",
@@ -5523,82 +5601,118 @@
         },
         {
           "title": "豪伊角",
-          "img": "",
+          "img": "../assets/img/places/TasmanNationalPark/capeHauy/Cape_Hauy_(35150907921).jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Cape_Hauy_(35150907921).jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.flickr.com/photos/40883175@N06/",
+              "photographer": "Ed Dunens",
+              "license": "CC BY 2.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+            }
+          ],
           "enTitle": "Cape Hauy",
           "tripData": {
-            "route": "塔斯马尼亚塔斯曼国家公园",
-            "desc": "位于塔斯曼国家公园（Tasman National Park）内，步道起点始于福蒂斯丘湾（Fortescue Bay）。",
+            "route": "Cape Hauy Track, Fortescue TAS 7182, Australia",
+            "desc": "豪伊角位于塔斯曼国家公园 (Tasman National Park) 内，是三海角步道 (Three Capes Track) 的三大海角之一。该步道全长48公里，通常以4天3晚的行程完成，需提前预订。步道起点位于福蒂斯丘湾 (Fortescue Bay)，以壮观的柱状玄武岩海崖和海岸风光而闻名。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "步道设计与难度",
+                "desc": "三海角步道由多种材料（木材、石材、砾石）铺设，路面宽度可供两人并行。步道包含木板路和台阶，部分路段有短而陡的上坡，属于中等难度 (Grade 3)"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "沿途景观",
+                "desc": "步道穿越高耸的桉树林、沿海荒原，沿途可欣赏澳大利亚最高的海崖。豪伊角是步道途经的三大海角之一，拥有典型的柱状玄武岩地貌"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "行程安排与住宿",
+                "desc": "行程从亚瑟港 (Port Arthur) 出发，乘船约75分钟抵达丹曼斯湾 (Denmans Cove) 的步道起点。全程设有三个环保小屋（Surveyors、Munro、Retakunna），供步行者在途中过夜"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "海崖",
+              "徒步步道",
+              "国家公园",
+              "观景点",
+              "野生动物"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Tasman National Park",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Tasman_National_Park&oldid=1362940414"
               }
             ],
-            "town": "Tasman Peninsula",
+            "town": "Fortescue",
             "postcode": "7182",
-            "locationLabel": "Tasman Peninsula 7182",
-            "belongsToSpot": "Tasman Peninsula",
-            "parentItemKey": "trips/freeinfo:景点:turrakana-tasman-peninsula"
+            "locationLabel": "Fortescue 7182",
+            "belongsToSpot": "Tasman National Park",
+            "parentItemKey": "trips/freeinfo:景点:tasman-national-park"
           },
           "itemKey": "trips/freeinfo:景点:cape-hauy"
         },
         {
           "title": "蜜月湾",
-          "img": "",
+          "img": [
+            "../assets/img/places/FreycinetNationalPark/honeymoonBay/Honeymoon_Bay_Sunset_2.jpg",
+            "../assets/img/places/FreycinetNationalPark/honeymoonBay/Honeymoon_Bay_Sunset.jpg"
+          ],
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Honeymoon_Bay_Sunset_2.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.jjharrison.com.au/",
+              "photographer": "JJ Harrison",
+              "license": "CC BY-SA 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+            },
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Honeymoon_Bay_Sunset.jpg",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://www.jjharrison.com.au/",
+              "photographer": "JJ Harrison",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Honeymoon Bay",
           "tripData": {
-            "route": "塔斯马尼亚菲欣纳半岛上",
-            "desc": "该海湾是科尔斯湾（Coles Bay）内部的一个小海湾，构成“海湾中的海湾”的地理形态。",
+            "route": "Freycinet TAS 7215, Australia",
+            "desc": "蜜月湾 (Honeymoon Bay) 位于塔斯马尼亚东海岸的菲欣纳半岛 (Freycinet Peninsula) 上，是菲欣纳国家公园 (Freycinet National Park) 内的一处海湾。它属于科尔斯湾 (Coles Bay) 内部的一个小海湾，构成“海湾中的海湾”的地理形态。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "海湾中的海湾",
+                "desc": "蜜月湾是科尔斯湾 (Coles Bay) 内部的一个小型海湾，形成了独特的内湾景观"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "日落与摄影",
+                "desc": "蜜月湾以日落景观闻名，是菲欣纳半岛上拍摄日落的热门地点之一"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "野餐、观鸟和浮潜",
+                "desc": "海湾适合野餐、观鸟和浮潜等活动，是菲欣纳国家公园内的一处休闲目的地"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "海湾",
+              "海滩",
+              "野餐",
+              "观鸟",
+              "浮潜",
+              "日落观景点"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Honeymoon Bay (Tasmania)",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Honeymoon_Bay_(Tasmania)&oldid=1307717865"
               }
             ],
             "town": "Coles Bay",
@@ -5611,38 +5725,52 @@
         },
         {
           "title": "维多利亚女王博物馆与艺术画廊",
-          "img": "",
+          "img": "../assets/img/places/Launceston/queenVictoriaMuseumAndArtGallery/Launceston_Queen_Victoria_Museum_&_Art_Gallery_001.jpg",
+          "imgSource": [
+            {
+              "source": "https://commons.wikimedia.org/wiki/File:Launceston_Queen_Victoria_Museum_%26_Art_Gallery_001.JPG",
+              "sourceName": "Wikimedia Commons",
+              "photographerLink": "https://commons.wikimedia.org/wiki/User:Mattinbgn",
+              "photographer": "Mattinbgn",
+              "license": "CC BY 3.0",
+              "licenseLink": "https://creativecommons.org/licenses/by/3.0/"
+            }
+          ],
           "enTitle": "Queen Victoria Museum and Art Gallery",
           "tripData": {
-            "route": "塔斯马尼亚威灵顿街2号（2 Wellington Street, Royal Park）/因弗梅路2号（2 Invermay Road, Inveresk）",
-            "desc": "维多利亚女王博物馆与艺术画廊是位于朗塞斯顿的一个主要文化机构。",
+            "route": "2 Wellington St, Launceston TAS 7250, Australia / 2 Invermay Rd, Launceston TAS 7250, Australia",
+            "desc": "维多利亚女王博物馆与艺术画廊是位于朗塞斯顿 (Launceston) 的一个主要文化机构，是澳大利亚最大的非首府城市博物馆。该馆成立于1891年，拥有两个场馆：皇家公园 (Royal Park) 的艺术画廊和因弗雷斯克 (Inveresk) 的博物馆。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "两处场馆",
+                "desc": "博物馆设有两个场馆：皇家公园 (Royal Park) 场馆展示艺术收藏品，因弗雷斯克 (Inveresk) 场馆展示自然历史和工业遗产，两个场馆均为免费开放"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "丰富的馆藏",
+                "desc": "馆藏包括殖民地艺术、当代工艺与设计、塔斯马尼亚历史和自然科学的展品，并设有展示19世纪华人锡矿工使用的中国寺庙展厅"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "天文馆",
+                "desc": "馆内设有天文馆 (planetarium)，定期举办天文相关的展示活动"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "博物馆",
+              "艺术画廊",
+              "美术馆",
+              "自然科学",
+              "天文馆",
+              "殖民地艺术",
+              "历史博物馆"
             ],
             "source": [
               {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
+                "title": "Queen Victoria Museum & Art Gallery",
+                "desc": "Wikipedia, The Free Encyclopedia",
+                "url": "https://en.wikipedia.org/w/index.php?title=Queen_Victoria_Museum_%26_Art_Gallery&oldid=1360689004"
               }
             ],
             "town": "Launceston",
@@ -5654,39 +5782,36 @@
         {
           "title": "瑞士村",
           "img": "",
+          "imgSource": [],
           "enTitle": "Grindelwald Swiss Village",
           "tripData": {
-            "route": "塔斯马尼亚塔玛谷",
-            "desc": "瑞士村的灵感来源于瑞士村庄，并于1980年开始围绕一个人工湖进行建设。整个村镇的建筑均采用瑞士风格设计，旨在营造类似瑞士的景观与环境氛围。",
+            "route": "Grindelwald, Tasmania 7277, Australia",
+            "desc": "瑞士村位于塔斯马尼亚塔玛谷(Tamar Valley)，距离朗塞斯顿(Launceston)约15公里。该村落的建设始于1980年，围绕人工湖展开，建筑采用瑞士风格设计，旨在营造类似瑞士的景观与环境氛围。村内设有塔玛谷度假村(Tamar Valley Resort)，提供住宿和多种休闲设施。",
             "features": [
               {
                 "icon": "#22c55e",
-                "title": "文本1",
-                "desc": "描述1"
+                "title": "瑞士风格建筑与人工湖景观",
+                "desc": "村庄建筑采用瑞士木屋风格设计，围绕人工湖而建，营造出独特的瑞士小镇氛围"
               },
               {
                 "icon": "#3b82f6",
-                "title": "文本2",
-                "desc": "描述2"
+                "title": "塔玛谷度假村",
+                "desc": "村内设有塔玛谷度假村 (Tamar Valley Resort)，提供住宿、餐饮和高尔夫等休闲设施"
               },
               {
                 "icon": "#f59e0b",
-                "title": "文本3",
-                "desc": "描述3"
+                "title": "休闲活动",
+                "desc": "村内及周边提供迷你高尔夫、网球、水上活动、自行车租赁等多种娱乐项目"
               }
             ],
             "tags": [
-              "tag1",
-              "tag2",
-              "tag3"
+              "瑞士风格",
+              "人工湖",
+              "度假村",
+              "高尔夫",
+              "家庭友好"
             ],
-            "source": [
-              {
-                "title": "title",
-                "desc": "Wikipedia,The Free Encyclopedia",
-                "url": "url"
-              }
-            ],
+            "source": [],
             "town": "Grindelwald",
             "postcode": "7277",
             "locationLabel": "Grindelwald 7277"
