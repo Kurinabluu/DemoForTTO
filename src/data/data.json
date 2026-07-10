@@ -5820,351 +5820,309 @@
                         "itemKey": "trips/freeinfo:景点:grindelwald-swiss-village"
                     },
                     {
-                        "title": "马维斯塔自然步道",
+                        "title": "弗诺博物馆",
                         "img": "",
-                        "enTitle": "Mavista Nature Walk",
-                        "tripData": {
-                            "route": "塔斯马尼亚布鲁尼岛",
-                            "desc": "位于澳大利亚塔斯马尼亚州的南布鲁尼，具体在冒险湾（Adventure Bay）附近的布鲁尼岛上。步道起始于马维斯塔野餐区（Mavista Picnic Site）。",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
-                            "town": "Bruny Island",
-                            "postcode": "7150",
-                            "locationLabel": "Bruny Island 7150",
-                            "belongsToSpot": "Bruny Island",
-                            "parentItemKey": "trips/freeinfo:景点:bruny-island"
-                        },
-                        "itemKey": "trips/freeinfo:景点:mavista-nature-walk"
-                    },
-                    {
-                        "title": "Furneaux Museum",
-                        "img": "",
+                        "imgSource": [],
                         "enTitle": "Furneaux Museum",
                         "tripData": {
-                            "route": "Furneaux Museum",
-                            "desc": "景点描述",
+                            "route": "8 Fowlers Rd, Emita TAS 7255, Australia",
+                            "desc": "弗诺博物馆位于弗林德斯岛 (Flinders Island) 的埃米塔 (Emita)，是一座由社区非营利组织弗诺历史研究协会 (Furneaux Historical Research Association, FHRA) 运营的博物馆。博物馆于1965年在旧校舍德莱亚泽尔 (Dryazell) 开办，后在1974至1992年间新增了五栋建筑，包括尼森小屋 (Nissen Hut)、警察牢房等。1996年通电后改善了展览环境，2006年新建了临时展览楼。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "社区运营与历史起源",
+                                    "desc": "博物馆由弗诺历史研究协会 (FHRA) 运营，最初在作家 Richard Fowler 所有的旧校舍 Dryazell 开办，Fowler 去世后将私人历史收藏捐赠给协会"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "建筑群与扩建历程",
+                                    "desc": "博物馆由五座历史建筑组成，包括原校舍 Dryazell、尼森小屋 (Nissen Hut)、警察牢房等，2006年新建了临时展览楼，并改善了档案存储环境"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "馆藏与展览",
+                                    "desc": "馆藏超过8000件文物、照片和文献，涵盖开拓者生活、海鸟捕猎传统、怀巴伦纳 (Wybalenna) 原住民定居点、沉船与航空事故、战后士兵定居等主题"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
+                                "博物馆",
+                                "历史博物馆",
+                                "社区博物馆",
+                                "原住民历史",
+                                "岛屿历史",
+                                "历史建筑"
+                            ],
+                            "source": [],
+                            "town": "Emita",
+                            "postcode": "7255",
+                            "locationLabel": "Emita 7255"
                         },
                         "itemKey": "trips/freeinfo:景点:furneaux-museum"
                     },
                     {
-                        "title": "Allports Beach",
+                        "title": "奥尔波特海滩",
                         "img": "",
+                        "imgSource": [],
                         "enTitle": "Allports Beach",
                         "tripData": {
-                            "route": "Allports Beach",
-                            "desc": "景点描述",
+                            "route": "Allports Beach, Tasmania, Australia",
+                            "desc": "奥尔波特海滩 (Allports Beach) 是位于塔斯马尼亚的一处海滩，有着自然风光和宁静的海岸环境。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "海滩风光",
+                                    "desc": "奥尔波特海滩拥有自然海岸景观"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "休闲与放松",
+                                    "desc": "海滩环境宁静"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "自然观察",
+                                    "desc": "可在海滩及周边区域进行自然观察，感受海岸生态"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
+                                "海滩",
+                                "海岸风光",
+                                "观景",
+                                "散步",
+                                "自然观察"
+                            ],
+                            "source": [],
+                            "postcode": "",
+                            "locationLabel": ""
                         },
                         "itemKey": "trips/freeinfo:景点:allports-beach"
                     },
                     {
-                        "title": "Settlement Point",
+                        "title": "Settlement Point Mutton-bird Viewing",
                         "img": "",
-                        "enTitle": "Settlement Point",
+                        "imgSource": [],
+                        "enTitle": "Settlement Point Mutton-bird Viewing",
                         "tripData": {
-                            "route": "Settlement Point",
-                            "desc": "景点描述",
+                            "route": "Port Davies Rd, Emita TAS 7255, Australia",
+                            "desc": "Settlement Point Mutton-bird Viewing位于弗林德斯岛 (Flinders Island) 的埃米塔 (Emita)，是一处海岸观鸟点和船坡道，以观赏短尾鹱 (muttonbird) 而闻名。该地点全天开放，可通往海岸区域。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "短尾鹱观赏",
+                                    "desc": "该地点是观赏短尾鹱 (muttonbird) 的观鸟点，短尾鹱是该地区的特色海鸟"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "船坡道",
+                                    "desc": "设有船坡道 (boat ramp)，可供船只下水，方便出海活动"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "海岸自然体验",
+                                    "desc": "位于海岸区域，全天开放，适合欣赏沿海风光和自然观察"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ]
+                                "观鸟点",
+                                "短尾鹱",
+                                "船坡道",
+                                "海岸风光",
+                                "自然观察"
+                            ],
+                            "source": [],
+                            "town": "Emita",
+                            "postcode": "7255",
+                            "locationLabel": "Emita 7255"
                         },
                         "itemKey": "trips/freeinfo:景点:settlement-point"
                     },
                     {
-                        "title": "两棵树角步道",
-                        "img": "",
-                        "enTitle": "Two Tree Point",
-                        "tripData": {
-                            "route": "塔斯马尼亚布鲁尼岛",
-                            "desc": "该步道长度1.6公里，耗时约30分钟。",
-                            "features": [
-                                {
-                                    "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
-                                },
-                                {
-                                    "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
-                                },
-                                {
-                                    "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
-                                }
-                            ],
-                            "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
-                            ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
-                            "town": "Bruny Island",
-                            "postcode": "7150",
-                            "locationLabel": "Bruny Island 7150",
-                            "belongsToSpot": "Bruny Island",
-                            "parentItemKey": "trips/freeinfo:景点:bruny-island"
-                        },
-                        "itemKey": "trips/freeinfo:景点:two-tree-point"
-                    },
-                    {
                         "title": "东海岸自然世界野生动物园",
-                        "img": "",
+                        "img": "../assets/img/places/Bicheno/eastCoastNatureworld/david-clode-UYVf3_ZaFDw-unsplash.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://unsplash.com/photos/a-close-up-of-a-kangaroo-with-trees-in-the-background-UYVf3_ZaFDw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "sourceName": "Unsplash",
+                                "photographerLink": "https://unsplash.com/@davidclode?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText",
+                                "photographer": "David Clode"
+                            }
+                        ],
                         "enTitle": "East Coast Natureworld",
                         "tripData": {
-                            "route": "塔斯马尼亚比切诺",
-                            "desc": "一个位于比舍诺的野生动物园，提供动物导览、观看塔斯马尼亚恶魔的夜间活动，并可以喂食袋鼠。",
+                            "route": "18356A Tasman Hwy, Bicheno TAS 7215, Australia",
+                            "desc": "东海岸自然世界野生动物园位于比舍诺(Bicheno)，坐落在150英亩的自然沿海林地和泻湖之间。园内以塔斯马尼亚恶魔(Tasmanian Devil)展示和喂食体验而闻名，游客可近距离观察袋鼠、袋熊、针鼹等澳大利亚本土动物。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "塔斯马尼亚恶魔喂食与“暗黑恶魔”体验",
+                                    "desc": "每日上午10时和下午1时进行塔斯马尼亚恶魔喂食展示。晚间可参加“暗黑恶魔(Devils in the Dark)”体验，在品尝塔斯马尼亚葡萄酒和奶酪的同时近距离观察恶魔进食"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "野生动物邂逅与互动",
+                                    "desc": "园内袋鼠、沙袋鼠和小袋鼠可近距离接触和喂食（饲料可在前台购买），还可预约私人饲养员带领的动物邂逅体验（15分钟），与袋熊、蜜袋鼯或针鼹互动拍照"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "自然丛林与湿地环境",
+                                    "desc": "公园地处天然沿海林地和潮汐泻湖之间，设有轮椅和婴儿车友好通道，游客可在此放松漫步、野餐，感受塔斯马尼亚东海岸的自然生态"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "野生动物园",
+                                "塔斯马尼亚恶魔",
+                                "动物喂食",
+                                "袋鼠",
+                                "家庭友好",
+                                "自然体验"
                             ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
-                            "town": "Coles Bay",
+                            "source": [],
+                            "town": "Bicheno",
                             "postcode": "7215",
-                            "locationLabel": "Coles Bay 7215"
+                            "locationLabel": "Bicheno 7215",
+                            "belongsToSpot": "Bicheno",
+                            "parentItemKey": "trips/freeinfo:景点:bicheno"
                         },
                         "itemKey": "trips/freeinfo:景点:east-coast-natureworld"
                     },
                     {
-                        "title": "塔卡伊纳/塔金雨林",
+                        "title": "拉皮德河",
                         "img": "",
-                        "enTitle": "Takayna/Tarkine Rainforest",
+                        "imgSource": [],
+                        "enTitle": "Rapid River",
                         "tripData": {
-                            "route": "塔斯马尼亚西北部",
-                            "desc": "位于塔斯马尼亚西北部一片名为Takayna / Tarkine的广阔荒野，包含澳大利亚最大的凉爽温带雨林、河流与崎岖海岸线。面积约45万公顷。",
+                            "route": "Rapid River Rd, West Coast TAS 7469, Australia",
+                            "desc": "拉皮德河 (Rapid River) 位于塔斯马尼亚西北部的塔金 (Tarkine) 地区，是塔金自驾路线 (Tarkine Drive) 上的一个停靠点。该地点有着急流景观和横跨河流的桥梁。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "急流与桥景观",
+                                    "desc": "拉皮德河以湍急的水流而得名，河上设有一座桥，是观赏急流景观和拍照的理想位置"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "塔金自驾路线停靠点",
+                                    "desc": "该地点位于塔金自驾路线 (Tarkine Drive) 沿线，是探索塔金荒野地区时的一个中途停靠点"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "适合短暂停留，基本无设施",
+                                    "desc": "地点适合短暂停留、野餐和露营，但现场没有厕所、烧烤等设施，游客需自备必需品"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "急流",
+                                "桥",
+                                "塔金",
+                                "自驾路线",
+                                "观景点",
+                                "露营"
                             ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
-                            "town": "Cradle Mountain",
-                            "postcode": "7306",
-                            "locationLabel": "Cradle Mountain 7306"
+                            "source": [],
+                            "town": "West Coast",
+                            "postcode": "7469",
+                            "locationLabel": "West Coast 7469"
                         },
                         "itemKey": "trips/freeinfo:景点:takayna-tarkine-rainforest"
                     },
                     {
                         "title": "皮曼河",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Corinna/piemanRiver/Pieman_River.jpg",
+                            "../assets/img/places/Corinna/piemanRiver/Pieman_River,_Tasmania._(32941587431).jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Pieman_River.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/photos/chrisjrn/",
+                                "photographer": "Christopher Neugebauer",
+                                "license": "CC BY-SA 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/2.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Pieman_River,_Tasmania._(32941587431).jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://www.flickr.com/photos/136315829@N03/",
+                                "photographer": "Steven Penton",
+                                "license": "CC BY 2.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by/2.0/"
+                            }
+                        ],
                         "enTitle": "Pieman River",
                         "tripData": {
-                            "route": "塔斯马尼亚西北部",
-                            "desc": "皮曼河全长98公里，上游建有水力发电站，并具有采矿和工业历史遗产",
+                            "route": "Corinna TAS 7316, Australia",
+                            "desc": "皮曼河位于塔斯马尼亚西海岸(West Coast)地区，全长约98公里。该河由麦金托什河(Mackintosh River)和默奇森河(Murchison River)交汇形成，流经科尔里纳(Corinna)后注入南大洋。河上建有巴斯蒂安大坝(Bastyan Dam)和里斯大坝(Reece Dam)及配套水力发电站，是塔斯马尼亚水力发电系统的重要组成部分。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "河流概况与地理位置",
+                                    "desc": "皮曼河发源于塔斯马尼亚西海岸地区，由麦金托什河和默奇森河交汇形成，全长约98公里，最终注入南大洋"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "水力发电工程",
+                                    "desc": "河上建有巴斯蒂安大坝和里斯大坝，形成罗斯伯里湖(Lake Rosebury)和皮曼湖(Lake Pieman)，是塔斯马尼亚水力发电系统的一部分"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "工业历史与伐木、采矿遗产",
+                                    "desc": "河流沿岸拥有丰富的伐木和采矿工业历史，该地区的铁路遗产部分已被水库淹没，现存遗址可供历史爱好者探访"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "河流",
+                                "工业历史",
+                                "水力发电",
+                                "塔金",
+                                "自驾可达"
                             ],
                             "source": [
                                 {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
+                                    "title": "Pieman River",
+                                    "desc": "Wikipedia, The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Pieman_River&oldid=1362940414"
                                 }
                             ],
-                            "town": "Cradle Mountain",
-                            "postcode": "7306",
-                            "locationLabel": "Cradle Mountain 7306"
+                            "town": "Corinna",
+                            "postcode": "7316",
+                            "locationLabel": "Corinna 7316"
                         },
                         "itemKey": "trips/freeinfo:景点:pieman-river"
                     },
                     {
                         "title": "加德纳角",
                         "img": "",
+                        "imgSource": [],
                         "enTitle": "Gardiner Point/Edge of the World",
                         "tripData": {
-                            "route": "塔斯马尼亚亚瑟河（Arthur River）南侧",
-                            "desc": "加德纳角是塔斯马尼亚官方认可的“世界边缘”。设有一块牌匾。",
+                            "route": "Arthur River TAS 7330, Australia",
+                            "desc": "加德纳角，也被称为“世界边缘(Edge of the World)”，位于塔斯马尼亚西北部的亚瑟河(Arthur River)南侧，属于亚瑟-皮曼保护区(Arthur-Pieman Conservation Area) 的一部分。该地点是塔斯马尼亚官方认可的“世界边缘”观景点，设有一块标识牌匾，以狂野的南大洋(Southern Ocean) 海岸风光和咆哮的西风带而闻名。该地区也是西北部原住民的传统家园，拥有超过35,000年的历史。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "“世界边缘”观景点与牌匾",
+                                    "desc": "加德纳角是塔斯马尼亚官方认可的“世界边缘(Edge of the World)”所在地，设有一块纪念牌匾，是游客感受天涯海角意境的热门打卡地"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "狂野海岸与自然力量",
+                                    "desc": "该地点以咆哮的海浪、被风沙吹拂的沙丘和漂木遍布的海滩而著称，展示了南大洋强大的自然力量"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "亚瑟-皮曼保护区探索",
+                                    "desc": "作为亚瑟-皮曼保护区(Arthur-Pieman Conservation Area) 的一部分，该区域适合四驱越野、露营、钓鱼和冲浪等活动"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "观景点",
+                                "世界边缘",
+                                "亚瑟-皮曼保护区",
+                                "海岸风光",
+                                "自驾可达"
                             ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
+                            "source": [],
                             "town": "Arthur River",
                             "postcode": "7330",
                             "locationLabel": "Arthur River 7330"
@@ -6172,81 +6130,90 @@
                         "itemKey": "trips/freeinfo:景点:gardiner-point-edge-of-the-world"
                     },
                     {
-                        "title": "唐纳森山",
+                        "title": "世界边缘海湾",
                         "img": "",
-                        "enTitle": "Mount Donaldson",
+                        "imgSource": [],
+                        "enTitle": "Edge Of the World Cove",
                         "tripData": {
-                            "route": "塔斯马尼亚塔金（Tarkine）地区科里纳（Corinna）附近",
-                            "desc": "一座山峰徒步路线，名为Mount Donaldson（唐纳森山），路线将穿越雨林、桉树林和纽扣草平原，天气多变。",
+                            "route": "Arthur River TAS 7330, Australia",
+                            "desc": "世界边缘海湾位于塔斯马尼亚西北部的亚瑟河(Arthur River)地区，是一处海湾观景点。该地点以海岸风光和自然景观为特色，与邻近的“世界边缘”观景点同属一个区域。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "海湾风光",
+                                    "desc": "世界边缘海湾拥有海岸景观，可欣赏亚瑟河河口与南大洋交汇的景色"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "观景与散步",
+                                    "desc": "该地点适合观景和散步，可感受西北部海岸的原始自然氛围"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "世界边缘主题",
+                                    "desc": "与附近的世界边缘(Edge of the World)观景点同属一个区域，共享“天涯海角”的景观主题"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海湾",
+                                "观景点",
+                                "海岸风光",
+                                "亚瑟河"
                             ],
-                            "source": [
-                                {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
-                                }
-                            ],
-                            "town": "Corinna",
-                            "postcode": "7467",
-                            "locationLabel": "Corinna 7467"
+                            "source": [],
+                            "town": "Arthur River",
+                            "postcode": "7330",
+                            "locationLabel": "Arthur River 7330"
                         },
-                        "itemKey": "trips/freeinfo:景点:mount-donaldson"
+                        "itemKey": "trips/freeinfo:景点:edge-of-the-world-cove"
                     },
                     {
                         "title": "亚瑟河",
-                        "img": "",
+                        "img": "../assets/img/places/ArthurRiver/Arthur_River_mouth.jpg",
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:Arthur_River_mouth.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Tirin",
+                                "photographer": "Tirin",
+                                "license": "CC BY-SA 3.0",
+                                "licenseLink": "https://creativecommons.org/licenses/by-sa/3.0/"
+                            }
+                        ],
                         "enTitle": "Arthur River",
                         "tripData": {
-                            "route": "塔斯马尼亚西北部",
-                            "desc": "该地方是位于塔斯马尼亚西北海岸的一个小型定居点，名为Arthur River（亚瑟河），是进入takayna / Tarkine荒野和Arthur-Pieman Conservation Area的入口，也是穿越该保护区的Western Explorer未铺装公路的北端起点。",
+                            "route": "Arthur River TAS 7330, Australia",
+                            "desc": "亚瑟河是位于塔斯马尼亚西北海岸的一个小型定居点，同时也是亚瑟河的入海口所在地。该地是进入塔金(takayna/Tarkine)荒野和亚瑟-皮曼保护区(Arthur-Pieman Conservation Area) 的门户，也是穿越该保护区的 Western Explorer 未铺装公路的北端起点。该地区因咆哮的西风带(Roaring Forties) 而经常受到强风海浪的冲击。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "塔金荒野与保护区入口",
+                                    "desc": "亚瑟河是进入塔金(takayna/Tarkine)荒野地区和亚瑟-皮曼保护区(Arthur-Pieman Conservation Area)的主要入口，也是 Western Explorer 公路的北端起点"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "河流与海岸景观",
+                                    "desc": "亚瑟河全长172公里，发源于Magnet Range，在亚瑟河定居点处注入南大洋(Southern Ocean)。河口区域可观赏河流与海洋交汇的景观"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "“世界边缘”诗歌与牌匾",
+                                    "desc": "在河口附近设有一块牌匾，刻有旅游先驱 Brian Inder 创作的诗歌《世界边缘 (The Edge of the World)》，该诗描述了亚瑟河海岸线常受咆哮的西风带(Roaring Forties)侵袭的景象"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "河流",
+                                "入海口",
+                                "塔金",
+                                "亚瑟-皮曼保护区",
+                                "自驾可达",
+                                "观景点"
                             ],
                             "source": [
                                 {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
+                                    "title": "Arthur River (Tasmania)",
+                                    "desc": "Wikipedia, The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Arthur_River_(Tasmania)&oldid=1080615060"
                                 }
                             ],
                             "town": "Arthur River",
@@ -6257,38 +6224,61 @@
                     },
                     {
                         "title": "伯尼",
-                        "img": "",
+                        "img": [
+                            "../assets/img/places/Burnie/View_of_Burnie_from_Upper_Burnie_lookout_in_Wilfred_Campbell_Memorial_Reserve.jpg",
+                            "../assets/img/places/Burnie/West_Beach_UTAS_Burnie_20250904-001.jpg"
+                        ],
+                        "imgSource": [
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:View_of_Burnie_from_Upper_Burnie_lookout_in_Wilfred_Campbell_Memorial_Reserve.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Psypherium",
+                                "photographer": "Psypherium",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            },
+                            {
+                                "source": "https://commons.wikimedia.org/wiki/File:West_Beach_UTAS_Burnie_20250904-001.jpg",
+                                "sourceName": "Wikimedia Commons",
+                                "photographerLink": "https://commons.wikimedia.org/wiki/User:Ghouston",
+                                "photographer": "Gary Houston",
+                                "license": "CC0",
+                                "licenseLink": "https://creativecommons.org/publicdomain/zero/1.0/"
+                            }
+                        ],
                         "enTitle": "Burnie",
                         "tripData": {
-                            "route": "塔斯马尼亚西北海岸",
-                            "desc": "伯尼是一个位于塔斯马尼亚西北部的一个海港小镇。",
+                            "route": "Burnie TAS 7320, Australia",
+                            "desc": "伯尼是位于塔斯马尼亚西北海岸的一座海港城市，1827年以“鸸鹋湾 (Emu Bay)”之名建立，后以范迪门斯地公司董事 William Burnie 命名，1988年正式获得城市地位。该市历史上以深水港、造纸和木材工业闻名，如今正经历经济转型，融合了工业遗产、文化场馆和海岸景观。",
                             "features": [
                                 {
                                     "icon": "#22c55e",
-                                    "title": "文本1",
-                                    "desc": "描述1"
+                                    "title": "港口与工业历史",
+                                    "desc": "伯尼港是塔斯马尼亚最大的杂货港口，历史上是西海岸矿物的主要出口门户。市区可见木材堆场和历史工业建筑，反映了该市作为工业中心的过往"
                                 },
                                 {
                                     "icon": "#3b82f6",
-                                    "title": "文本2",
-                                    "desc": "描述2"
+                                    "title": "文化场馆与博物馆",
+                                    "desc": "伯尼艺术与活动中心 (Burnie Arts & Function Centre) 内设区域美术馆和博物馆，其中联邦街 (Federation Street) 室内历史街景是澳大利亚首创的文化展陈"
                                 },
                                 {
                                     "icon": "#f59e0b",
-                                    "title": "文本3",
-                                    "desc": "描述3"
+                                    "title": "观景台与海岸风光",
+                                    "desc": "上伯尼观景台 (Upper Burnie Lookout) 位于威尔弗雷德·坎贝尔纪念保护区 (Wilfred Campbell Memorial Reserve) 内，可俯瞰城市全貌与海岸线"
                                 }
                             ],
                             "tags": [
-                                "tag1",
-                                "tag2",
-                                "tag3"
+                                "海港城市",
+                                "工业历史",
+                                "艺术中心",
+                                "博物馆",
+                                "观景台"
                             ],
                             "source": [
                                 {
-                                    "title": "title",
-                                    "desc": "Wikipedia,The Free Encyclopedia",
-                                    "url": "url"
+                                    "title": "Burnie",
+                                    "desc": "Wikipedia, The Free Encyclopedia",
+                                    "url": "https://en.wikipedia.org/w/index.php?title=Burnie&oldid=1355946815"
                                 }
                             ],
                             "town": "Burnie",
@@ -38841,6 +38831,88 @@
                             {
                                 "label": "提示",
                                 "value": "出发前请查询最新路况与天气"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🥾",
+                                "text": "徒步"
+                            },
+                            {
+                                "icon": "🌿",
+                                "text": "自然风景"
+                            },
+                            {
+                                "icon": "📍",
+                                "text": "塔斯马尼亚"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "马维斯塔自然步道",
+                        "sub": "Mavista Nature Walk",
+                        "location": "塔斯马尼亚",
+                        "tags": [
+                            "徒步",
+                            "自然风景",
+                            "塔斯马尼亚"
+                        ],
+                        "badge": "徒步信息",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "路线",
+                                "value": "Spray Tunnel"
+                            },
+                            {
+                                "label": "区域",
+                                "value": "塔斯马尼亚"
+                            },
+                            {
+                                "label": "提示",
+                                "value": "位于澳大利亚塔斯马尼亚州的南布鲁尼，具体在冒险湾（Adventure Bay）附近的布鲁尼岛上。步道起始于马维斯塔野餐区（Mavista Picnic Site）。"
+                            }
+                        ],
+                        "tagItems": [
+                            {
+                                "icon": "🥾",
+                                "text": "徒步"
+                            },
+                            {
+                                "icon": "🌿",
+                                "text": "自然风景"
+                            },
+                            {
+                                "icon": "📍",
+                                "text": "塔斯马尼亚"
+                            }
+                        ]
+                    },
+                    {
+                        "title": "两棵树角步道",
+                        "sub": "Two Tree Point",
+                        "location": "塔斯马尼亚",
+                        "tags": [
+                            "徒步",
+                            "自然风景",
+                            "塔斯马尼亚"
+                        ],
+                        "badge": "徒步信息",
+                        "cardClass": "aurora-card",
+                        "badgeClass": "aurora-badge",
+                        "info": [
+                            {
+                                "label": "路线",
+                                "value": "Spray Tunnel"
+                            },
+                            {
+                                "label": "区域",
+                                "value": "塔斯马尼亚"
+                            },
+                            {
+                                "label": "提示",
+                                "value": "该步道长度1.6公里，耗时约30分钟。"
                             }
                         ],
                         "tagItems": [
