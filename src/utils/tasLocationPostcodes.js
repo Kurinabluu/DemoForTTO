@@ -353,8 +353,8 @@ function collectTextFields(item) {
     item?.route,
     tripData.route,
     tripData.desc,
-    item?.region,
-    tripData.region,
+    tripData.locationLabel,
+    tripData.town,
     ...featureTexts,
   ]
 }

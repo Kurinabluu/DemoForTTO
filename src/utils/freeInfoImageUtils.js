@@ -13,8 +13,6 @@ const SUB_NAV_ITEM_TYPE_MAP = {
   景点: '景点信息',
   餐厅: '餐厅信息',
   住宿: '住宿信息',
-  葡萄酒酒庄: '葡萄酒酒庄信息',
-  洋酒酒庄: '洋酒酒庄信息',
 }
 
 export function itemTypeFromSubNavName(subNavName) {

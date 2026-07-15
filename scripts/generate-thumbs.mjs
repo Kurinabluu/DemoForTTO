@@ -56,6 +56,7 @@ async function generateThumb(sourcePath) {
 
   await ensureDir(path.dirname(outputPath))
   await sharp(sourcePath)
+    .rotate()
     .resize({ width: THUMB_MAX_WIDTH, fit: 'inside', withoutEnlargement: true })
     .webp({ quality: THUMB_QUALITY })
     .toFile(outputPath)

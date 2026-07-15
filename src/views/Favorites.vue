@@ -8,6 +8,7 @@ import {
   prepareMigrationTestLocalFavorites,
   switchToLocalFavorites,
   refreshRemoteFavorites,
+  fetchRemoteFavoritesPage,
   getPostLoginSyncPromise,
   isRemoteFavoritesLoaded,
   isPostLoginSyncing,
@@ -170,10 +171,16 @@ const sortedFavoriteItems = computed(() => {
 const filteredFavoriteSourceItems = computed(() => {
   let data = [...sortedFavoriteItems.value];
   const activeSource = sourceFilter.value || ALL_SOURCE_VALUE;
+  if (useRemoteFavorites.value) {
+    if (activeSource !== ALL_SOURCE_VALUE) {
+      data = data.filter((item) => getSourceName(item) === activeSource);
+    }
+    return data;
+  }
   if (searchKeyword.value.trim()) {
     const keyword = searchKeyword.value.toLowerCase();
     data = data.filter(item => item.title.toLowerCase().includes(keyword) ||
-      (item.locationLabel || item.region || '').toLowerCase().includes(keyword) ||
+      (item.locationLabel || '').toLowerCase().includes(keyword) ||
       (item.town && item.town.toLowerCase().includes(keyword)));
   }
   if (activeSource !== ALL_SOURCE_VALUE) {
@@ -385,17 +392,29 @@ async function handleMigrationTestPrep() {
 }
 
 function applyRemoteFavoritesView() {
-  const all = localCurrentFavorites.value;
-  remoteFavoritesTotal.value = all.length;
-
-  const totalPageCount = Math.max(1, Math.ceil(remoteFavoritesTotal.value / itemsPerPage.value));
-  if (currentPage.value > totalPageCount) {
-    currentPage.value = totalPageCount;
+  if (!useRemoteFavorites.value) {
+    return Promise.resolve();
   }
 
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  remoteFavorites.value = all.slice(start, start + itemsPerPage.value);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const source = sourceFilter.value === ALL_SOURCE_VALUE ? '' : (sourceFilter.value || '');
+  return fetchRemoteFavoritesPage({
+    pageNum: currentPage.value,
+    pageSize: itemsPerPage.value,
+    keyword: searchKeyword.value.trim(),
+    source,
+  }).then(({ list, total }) => {
+    remoteFavorites.value = list.map((item) => buildFreeInfoDialogPayload(item));
+    remoteFavoritesTotal.value = total;
+
+    const totalPageCount = Math.max(1, Math.ceil(remoteFavoritesTotal.value / itemsPerPage.value));
+    if (currentPage.value > totalPageCount) {
+      currentPage.value = totalPageCount;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }).catch((error) => {
+    remoteLoadError.value = getApiErrorMessage(error);
+    notifyApiError(error, { action: '加载收藏', dedupeKey: 'favorites:list-page' });
+  });
 }
 
 async function syncRemoteFavoritesView({ showLoading = false, forceRefresh = false } = {}) {
@@ -539,7 +558,7 @@ onUnmounted(() => {
               {{ item.locationLabel || item.tripData?.locationLabel || (item.tripData?.town && item.tripData?.postcode ? item.tripData.town + ' ' + item.tripData.postcode : '') || '暂未分类' }}
             </template>
             <template v-else>
-              {{ item.locationLabel || item.tripData?.locationLabel || item.region || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}
+              {{ item.locationLabel || item.tripData?.locationLabel || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}
             </template>
           </p>
           <div class="card-actions">

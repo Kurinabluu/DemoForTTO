@@ -103,8 +103,13 @@ export function isApiEnabled() {
   return String(import.meta.env.VITE_USE_API || '').toLowerCase() === 'true'
 }
 
-export async function fetchItemsBySubNavKey(subNavKey) {
-  return requestJson('/tto/items', { params: { subNavKey } })
+export async function fetchItemsBySubNavKey(subNavKey, { keyword } = {}) {
+  return requestJson('/tto/items', {
+    params: {
+      subNavKey,
+      q: keyword,
+    },
+  })
 }
 
 export async function fetchNavTree() {
@@ -115,9 +120,29 @@ export async function fetchItemDetail(itemId) {
   return requestJson(`/tto/items/${itemId}`)
 }
 
-export async function fetchLocationCatalog(subNavName) {
+export async function fetchLocationCatalog(subNavName, { sortMode } = {}) {
   return requestJson('/tto/locations', {
-    params: { subNavName },
+    params: {
+      subNavName,
+      sortMode,
+    },
+  })
+}
+
+export async function fetchLocationSections(subNavName, {
+  sortMode,
+  locationLabel,
+  distanceFromLabel,
+  keyword,
+} = {}) {
+  return requestJson('/tto/location-sections', {
+    params: {
+      subNavName,
+      sortMode,
+      locationLabel,
+      distanceFromLabel,
+      keyword,
+    },
   })
 }
 

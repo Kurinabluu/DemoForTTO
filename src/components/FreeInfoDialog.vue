@@ -46,7 +46,6 @@ const handleToggleFavorite = async () => {
         subNavName: props.tripData?.displaySubNav || props.tripData?.subNavName || props.itemType || '',
         image: props.banner,
         banner: props.banner,
-        region: props.tripData?.region || '',
         town: props.tripData?.town || '',
         locationLabel: props.tripData?.locationLabel || '',
         postcode: props.tripData?.postcode || '',

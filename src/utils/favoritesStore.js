@@ -87,7 +87,6 @@ function mapRemoteFavorite(row) {
     img: row?.img ?? tripData.img,
     image: row?.image || row?.banner || '',
     banner: row?.banner || row?.image || '',
-    region: row?.region || tripData.region || '',
     town: row?.town || tripData.town || '',
     locationLabel: row?.locationLabel || tripData.locationLabel || '',
     postcode: row?.postcode || tripData.postcode || '',
@@ -141,6 +140,27 @@ export function isRemoteFavoritesLoaded() {
 
 export function getPostLoginSyncPromise() {
   return postLoginSyncPromise
+}
+
+export async function fetchRemoteFavoritesPage({
+  pageNum = 1,
+  pageSize = 12,
+  keyword = '',
+  source = '',
+} = {}) {
+  if (!shouldUseRemoteFavorites()) {
+    return { list: [], total: 0 }
+  }
+  const data = await fetchFavorites(getAuthToken(), {
+    pageNum,
+    pageSize,
+    keyword,
+    source,
+  })
+  return {
+    list: (Array.isArray(data?.list) ? data.list : []).map(mapRemoteFavorite),
+    total: Number(data?.total || 0),
+  }
 }
 
 export async function refreshRemoteFavorites(force = false, pageSize = 50) {

@@ -2,35 +2,12 @@ import { buildSubNavKey } from '@/utils/subNavKey'
 import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled } from '@/utils/ttoApi'
 import { notifyApiWarning } from '@/utils/apiFeedback'
 
-/**
- * ============================================================
- * [临时开发功能] 本地 JSON 兜底数据
- * ============================================================
- * 用途：在开发阶段没有可用数据库时，使用本地 JSON 文件作为数据兜底
- * 
- * 使用场景：
- * - 数据库不可用（如本地开发环境未配置数据库）
- * - API 接口调用失败且 isApiEnabled = false
- * - 后端服务未启动
- * 
- * 使用方式：
- * 1. 确认 `VITE_USE_LOCAL_JSON_FALLBACK=true` 在 .env.development 中
- * 2. 确保 `src/data/fallback/freeinfo_fallback.json` 文件存在且数据完整
- * 3. 系统会在 API 失败时自动回退到本地 JSON 数据
- * 
- * 删除计划：
- * - 当后端数据库正式上线且功能稳定后删除此功能
- * - 删除步骤：
- *   1. 删除 src/data/fallback/freeinfo_fallback.json 文件
- *   2. 删除本文件中的 LOCAL_JSON_FALLBACK 相关代码
- *   3. 删除 .env.development 中的 VITE_USE_LOCAL_JSON_FALLBACK 配置
- * ============================================================
- */
 import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'
 import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'
 
-// 是否启用本地 JSON 兜底（可通过环境变量控制）
-const USE_LOCAL_JSON_FALLBACK = import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK === 'true'
+// 仅在生产 gh-pages 允许本地 JSON 兜底；开发环境强制走数据库，避免掩盖 API 问题
+const USE_LOCAL_JSON_FALLBACK = import.meta.env.PROD
+  && import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK === 'true'
 
 /**
  * [临时开发功能] 从本地 JSON 文件获取数据
@@ -115,7 +92,6 @@ export function buildTripDataFromDetailDto(dto, extra = {}) {
 
   if (dto?.routeText) tripData.route = dto.routeText
   if (dto?.description) tripData.desc = dto.description
-  if (dto?.regionName) tripData.region = dto.regionName
   if (dto?.townName) tripData.town = dto.townName
   if (dto?.postcode) tripData.postcode = dto.postcode
   if (dto?.locationLabel) tripData.locationLabel = dto.locationLabel
@@ -173,7 +149,6 @@ function mapApiItem(row) {
         ? { ...row.tripData }
         : {}
 
-  if (row.regionName && !tripData.region) tripData.region = row.regionName
   if (row.townName) tripData.town = row.townName
   if (row.postcode) tripData.postcode = row.postcode
   if (row.locationLabel && row.locationLabel !== '暂未分类') {
@@ -225,10 +200,12 @@ export async function loadItemDetailById(itemId) {
   return loadCatalogItemDetail(itemId)
 }
 
-async function fetchSubNavItems(sectionPath, subNavMeta) {
+async function fetchSubNavItems(sectionPath, subNavMeta, keyword = '') {
   const subNavKey = buildSubNavKey(sectionPath, subNavMeta.subNavName)
   try {
-    const rows = await fetchItemsBySubNavKey(subNavKey)
+    const rows = await fetchItemsBySubNavKey(subNavKey, {
+      keyword: String(keyword || '').trim() || undefined,
+    })
     return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
   } catch {
     if (isApiEnabled()) {
@@ -238,6 +215,14 @@ async function fetchSubNavItems(sectionPath, subNavMeta) {
     }
   }
   return []
+}
+
+export async function searchItemsInSubNav(sectionPath, subNavName, keyword) {
+  const safeKeyword = String(keyword || '').trim()
+  if (!isApiEnabled() || !safeKeyword || !sectionPath || !subNavName) {
+    return []
+  }
+  return fetchSubNavItems(sectionPath, { subNavName }, safeKeyword)
 }
 
 export async function loadItemsBySubNav(sectionPath, subNavName) {

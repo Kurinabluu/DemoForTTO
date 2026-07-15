@@ -3,9 +3,9 @@ import { computed, ref, shallowRef, onMounted, onUnmounted, watch, nextTick } fr
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail } from '@/utils/contentRepository'
+import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail, searchItemsInSubNav } from '@/utils/contentRepository'
 import { resolveDayTripSubNavName } from '@/utils/subNavKey'
-import { fetchLocationCatalog, isApiEnabled } from '@/utils/ttoApi'
+import { fetchLocationCatalog, fetchLocationSections, isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
@@ -85,7 +85,6 @@ const selectedDistanceLabel = computed(() => {
     return Array.isArray(arr) && arr.length ? arr[arr.length - 1] : ''
 })
 const sortMode = ref(SORT_MODES.POSTCODE)
-const loadingState = computed(() => isSearching.value)
 
 const FREE_INFO_FILTER_SUBTABS = ['景点', '餐厅', '住宿']
 
@@ -103,6 +102,7 @@ const executeSearch = async () => {
         await waitRandomDelay(180, 480)
         searchQuery.value = keyword
         currentPage.value = 1 // 重置到第一页
+        await syncSubNavKeywordSearch()
     } finally {
         isSearching.value = false
     }
@@ -117,6 +117,8 @@ const handleSearchEnter = () => {
 const handleSearchClear = () => {
     localSearchKeyword.value = ''
     searchQuery.value = ''
+    subNavKeywordItems.value = []
+    subNavKeywordSynced.value = false
 }
 
 // 懒加载相关状态
@@ -135,6 +137,53 @@ const resolvedImagePathCache = new Map()
 const scenicCardImageCache = new WeakMap()
 const restaurantCardImageCache = new WeakMap()
 const hotelCardImageCache = new WeakMap()
+const scenicBackendSections = shallowRef([])
+const backendLocationSections = scenicBackendSections
+const backendSectionsSynced = ref(false)
+const backendSectionsLoading = ref(false)
+let backendSectionsRequestSeq = 0
+
+const prefersBackendLocationGrid = computed(() => {
+    return isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+})
+
+function buildLocationSectionQuery() {
+    return {
+        sortMode: sortMode.value,
+        locationLabel: selectedLocationLabel.value || undefined,
+        distanceFromLabel: selectedDistanceLabel.value || undefined,
+        keyword: (searchKw.value || searchQuery.value || '').trim() || undefined,
+    }
+}
+
+function flattenBackendSections(sections) {
+    const rows = []
+    for (const section of Array.isArray(sections) ? sections : []) {
+        const items = Array.isArray(section?.items) ? section.items : []
+        rows.push(...items)
+    }
+    return dedupeItemsByIdentity(rows)
+}
+
+const useBackendLocationSections = computed(() => {
+    if (!prefersBackendLocationGrid.value) return false
+    return (
+        backendSectionsSynced.value
+        || backendLocationSections.value.length > 0
+        || backendSectionsLoading.value
+    )
+})
+
+const loadingState = computed(() => {
+    if (isSearching.value) return true
+    if (prefersBackendLocationGrid.value) {
+        const awaitingFirstSections = !backendSectionsSynced.value && backendLocationSections.value.length === 0
+        if (awaitingFirstSections) {
+            return backendSectionsLoading.value || !backendSectionsSynced.value
+        }
+    }
+    return false
+})
 
 function getImageLoading(index) {
     return index < FIRST_SCREEN_PRIORITY_COUNT ? 'eager' : 'lazy'
@@ -363,12 +412,6 @@ function getFullListForLocate() {
     if (props.subTab === '景点') return scenicDisplayItems.value || []
     if (props.subTab === '餐厅') return restaurantDisplayItems.value || []
     if (props.subTab === '住宿') return hotelDisplayItems.value || []
-    if (props.subTab === '葡萄酒酒庄') {
-        return searchKw.value ? (wineFiltered.value || []) : (displayWineWineries.value || [])
-    }
-    if (props.subTab === '洋酒酒庄') {
-        return searchKw.value ? (spiritFiltered.value || []) : (displaySpiritWineries.value || [])
-    }
     if (isSpecialSection.value) {
         return searchKw.value ? (activityFiltered.value || []) : (currentSpecialItems.value || [])
     }
@@ -435,8 +478,6 @@ function getTotalItems() {
     } else if (hasSearch) {
         if (props.subTab === '景点') return scenicFiltered.value.length
         if (props.subTab === '餐厅') return restaurantFiltered.value.length
-        if (props.subTab === '葡萄酒酒庄') return wineFiltered.value.length
-        if (props.subTab === '洋酒酒庄') return spiritFiltered.value.length
         if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return activityFiltered.value.length
     } else {
@@ -446,8 +487,6 @@ function getTotalItems() {
             return mainCount + scenicUncategorizedDisplayItems.value.length
         }
         if (props.subTab === '餐厅') return restaurantFiltered.value.length
-        if (props.subTab === '葡萄酒酒庄') return displayWineWineries.value.length
-        if (props.subTab === '洋酒酒庄') return displaySpiritWineries.value.length
         if (props.subTab === '住宿') return hotelFiltered.value.length
         if (isSpecialSection.value) return currentSpecialItems.value.length
     }
@@ -496,10 +535,7 @@ const dayTripNavs = shallowRef([])
 
 const places = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "景点") || { items: [] })
 const restaurants = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "餐厅") || { items: [] })
-const wineWineries = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "葡萄酒酒庄") || { items: [] })
-const spiritWineries = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "洋酒酒庄") || { items: [] })
 const hotels = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "住宿") || { items: [] })
-const activityItems = computed(() => datas.value.subNav.find(subItem => subItem.subNavName == "特别活动") || { items: [] })
 
 function getCurrentLocationItems() {
     if (props.subTab === '景点') return places.value?.items || []
@@ -508,20 +544,51 @@ function getCurrentLocationItems() {
     return []
 }
 
+async function syncBackendLocationSections() {
+    if (!isApiEnabled() || !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        return
+    }
+
+    const requestId = ++backendSectionsRequestSeq
+    backendSectionsLoading.value = true
+
+    try {
+        const sections = await fetchLocationSections(props.subTab, buildLocationSectionQuery())
+        if (requestId !== backendSectionsRequestSeq) return
+        backendLocationSections.value = Array.isArray(sections) ? sections : []
+        backendSectionsSynced.value = true
+    } catch {
+        if (requestId !== backendSectionsRequestSeq) return
+        if (backendLocationSections.value.length === 0) {
+            backendSectionsSynced.value = false
+        }
+    } finally {
+        if (requestId === backendSectionsRequestSeq) {
+            backendSectionsLoading.value = false
+        }
+    }
+}
+
 async function syncLocationCatalog() {
     const fallbackEntries = buildLocationCatalogFromItems(getCurrentLocationItems())
     setLocationCatalogEntries(fallbackEntries)
 
-    if (!isApiEnabled()) return
+    if (!isApiEnabled()) {
+        backendLocationSections.value = []
+        backendSectionsSynced.value = false
+        return
+    }
 
     try {
-        const rows = await fetchLocationCatalog(props.subTab)
+        const rows = await fetchLocationCatalog(props.subTab, { sortMode: sortMode.value })
         if (Array.isArray(rows) && rows.length) {
             setLocationCatalogEntries(rows)
         }
     } catch {
         // 保留从当前内容集生成的目录
     }
+
+    await syncBackendLocationSections()
 }
 
 const SPECIAL_SECTION_FALLBACK_IMAGES = [
@@ -731,7 +798,7 @@ function getDayTripGridImageUrl(item) {
     return resolvedUrl || getImageUrl('')
 }
 
-// 免费信息：当前子项（如 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/住宿/塔州露营地）数据
+// 免费信息：当前子项（如 特别活动/徒步线路/塔州露营地）数据
 const currentFreeInfoSection = computed(() => {
     try {
         if (!datas.value?.subNav || !props.subTab) return null
@@ -755,6 +822,43 @@ const currentSpecialItems = computed(() => currentFreeInfoSection?.value?.items 
 const currentSpecialTitle = computed(() => currentFreeInfoSection?.value?.activitiesTitle || '塔斯马尼亚特别内容')
 const currentSpecialSubtitle = computed(() => currentFreeInfoSection?.value?.activitiesSubtitle || '')
 
+const subNavKeywordItems = shallowRef([])
+const subNavKeywordSynced = ref(false)
+
+const useSubNavKeywordSearch = computed(() => {
+    const kw = (searchKw.value || searchQuery.value || '').trim()
+    return isApiEnabled() && subNavKeywordSynced.value && kw.length > 0
+})
+
+async function syncSubNavKeywordSearch() {
+    const kw = (searchKw.value || searchQuery.value || '').trim()
+    subNavKeywordItems.value = []
+    subNavKeywordSynced.value = false
+    if (!isApiEnabled() || !kw) {
+        return
+    }
+
+    let sectionPath = ''
+    let subNavName = ''
+    if (props.activeTag === '一日游/多日游') {
+        sectionPath = 'trips/routes'
+        subNavName = resolveDayTripSubNavName(props.dayTripTab, dayTripNavs.value)
+    } else if (isSpecialSection.value) {
+        sectionPath = 'trips/freeinfo'
+        subNavName = props.subTab
+    }
+    if (!sectionPath || !subNavName) {
+        return
+    }
+
+    try {
+        subNavKeywordItems.value = await searchItemsInSubNav(sectionPath, subNavName, kw)
+        subNavKeywordSynced.value = true
+    } catch {
+        subNavKeywordSynced.value = false
+    }
+}
+
 // 监听props变化，重置分页
 watch(() => [props.activeTag, props.subTab, searchKw.value, props.dayTripTab], () => {
     currentPage.value = 1
@@ -762,6 +866,7 @@ watch(() => [props.activeTag, props.subTab, searchKw.value, props.dayTripTab], (
     resetRenderLimit()
     hasMore.value = true
     checkHasMore()
+    void syncSubNavKeywordSearch()
 
     // 如果需要自动加载所有数据，立即加载
     if (shouldLoadAll.value) {
@@ -790,26 +895,45 @@ watch(
     () => route.query.s,
     () => {
         syncLocalSearchFromRoute()
+        void syncSubNavKeywordSearch()
     }
 )
 
-watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.value], () => {
+watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.value, searchKw.value, searchQuery.value, props.subTab], () => {
     currentPage.value = 1
     mobileScrollPage.value = 1
     resetRenderLimit()
     hasMore.value = true
     checkHasMore()
     nextTick(updateMobileScrollPage)
+    if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        void syncBackendLocationSections()
+    }
 })
 
 watch(() => props.subTab, () => {
     selectedLocationKey.value = []
     selectedDistance.value = []
+    backendSectionsRequestSeq += 1
+    backendLocationSections.value = []
+    backendSectionsSynced.value = false
+    backendSectionsLoading.value = false
 })
 
-watch(() => sortMode.value, () => {
+watch(() => sortMode.value, async () => {
     selectedLocationKey.value = []
     selectedDistance.value = []
+    if (!isApiEnabled() || !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        return
+    }
+    try {
+        const rows = await fetchLocationCatalog(props.subTab, { sortMode: sortMode.value })
+        if (Array.isArray(rows) && rows.length) {
+            setLocationCatalogEntries(rows)
+        }
+    } catch {
+        // 保留当前目录
+    }
 })
 
 watch(() => loadMoreTriggerRef.value, () => {
@@ -938,6 +1062,10 @@ function shouldShowLocationTitle(list, index) {
 }
 
 const scenicDisplayItems = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return scenicFiltered.value
+    }
     const baseItems = sortByLocation(scenicFiltered.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
@@ -958,7 +1086,63 @@ const scenicMainGridItems = computed(() => {
     return scenicCategorizedDisplayItems.value
 })
 
+function buildScenicSectionsFromItems(items) {
+    const sections = []
+    const sectionByLabel = new Map()
+    let startIndex = 0
+
+    for (const item of Array.isArray(items) ? items : []) {
+        const label = resolveLocationLabel(item)
+        if (!label) continue
+
+        if (!sectionByLabel.has(label)) {
+            const section = {
+                label,
+                title: getLocationDisplayName(item),
+                items: [],
+                startIndex,
+            }
+            sectionByLabel.set(label, section)
+            sections.push(section)
+        }
+
+        sectionByLabel.get(label).items.push(item)
+        startIndex += 1
+    }
+
+    return sections
+}
+
+function normalizeBackendScenicSections(sections) {
+    const rows = []
+    let startIndex = 0
+    for (const section of Array.isArray(sections) ? sections : []) {
+        const items = Array.isArray(section?.items) ? section.items : []
+        const label = String(section?.label || section?.locationLabel || section?.title || '').trim() || UNCATEGORIZED_LOCATION
+        rows.push({
+            label,
+            title: String(section?.title || label).trim() || label,
+            items,
+            startIndex,
+        })
+        startIndex += items.length
+    }
+    return rows
+}
+
+const scenicMainGridSections = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return normalizeBackendScenicSections(backendLocationSections.value)
+    }
+    return buildScenicSectionsFromItems(scenicMainGridItems.value || [])
+})
+
 const restaurantDisplayItems = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return flattenBackendSections(backendLocationSections.value)
+    }
     const baseItems = sortByLocation(restaurantFiltered.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
@@ -966,6 +1150,10 @@ const restaurantDisplayItems = computed(() => {
     return baseItems
 })
 const hotelDisplayItems = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return flattenBackendSections(backendLocationSections.value)
+    }
     const baseItems = sortByLocation(hotelFiltered.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
@@ -1112,17 +1300,52 @@ function getHighlightSegments(text, kw) {
     return segments.length > 0 ? segments : [{ text: raw, highlight: false }]
 }
 
+function getItemIdentityKey(item) {
+    const tripData = item?.tripData && typeof item.tripData === 'object' ? item.tripData : {}
+    const itemKey = String(item?.itemKey || tripData.itemKey || '').trim()
+    if (itemKey) return `key:${itemKey}`
+
+    const id = item?.id ?? tripData.id
+    if (id != null && id !== '') return `id:${String(id)}`
+
+    return [
+        String(item?.title || '').trim(),
+        String(item?.enTitle || '').trim(),
+        String(resolveLocationLabel(item) || '').trim(),
+    ].filter(Boolean).join('|')
+}
+
+function dedupeItemsByIdentity(items) {
+    const seen = new Set()
+    const result = []
+    for (const item of Array.isArray(items) ? items : []) {
+        const key = getItemIdentityKey(item)
+        if (!key || seen.has(key)) continue
+        seen.add(key)
+        result.push(item)
+    }
+    return result
+}
+
 const scenicFiltered = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return flattenBackendSections(backendLocationSections.value)
+    }
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByLocation(places.value?.items || [])
+    const baseItems = dedupeItemsByIdentity(filterByLocation(places.value?.items || []))
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 // 直接处理餐厅数据，与其他数据结构保持一致
 const restaurantFiltered = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return flattenBackendSections(backendLocationSections.value)
+    }
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByLocation(restaurants.value?.items || [])
+    const baseItems = dedupeItemsByIdentity(filterByLocation(restaurants.value?.items || []))
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
@@ -1132,41 +1355,24 @@ const displayRestaurants = computed(() => {
     return filterByLocation(restaurants.value?.items || [])
 })
 
-// 葡萄酒酒庄数据过滤
-const wineFiltered = computed(() => {
-    const kw = (searchKw.value || searchQuery.value || '').trim()
-    if (!kw) return wineWineries.value?.items || []
-    return (wineWineries.value?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
-})
-
-// 用于显示的葡萄酒酒庄列表
-const displayWineWineries = computed(() => {
-    return wineWineries.value?.items || []
-})
-
-// 洋酒酒庄数据过滤
-const spiritFiltered = computed(() => {
-    const kw = (searchKw.value || searchQuery.value || '').trim()
-    if (!kw) return spiritWineries.value?.items || []
-    return (spiritWineries.value?.items || []).filter((item) => tourItemMatchesKeyword(item, kw))
-})
-
-// 用于显示的洋酒酒庄列表
-const displaySpiritWineries = computed(() => {
-    return spiritWineries.value?.items || []
-})
-
 const hotelFiltered = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        if (!useBackendLocationSections.value) return []
+        return flattenBackendSections(backendLocationSections.value)
+    }
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const baseItems = filterByLocation(hotels.value?.items || [])
+    const baseItems = dedupeItemsByIdentity(filterByLocation(hotels.value?.items || []))
     if (!kw) return baseItems
     return baseItems.filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 const activityFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
-    const base = currentSpecialItems.value || []
-    if (!kw) return base
+    if (!kw) return dedupeItemsByIdentity(currentSpecialItems.value || [])
+    if (useSubNavKeywordSearch.value) {
+        return dedupeItemsByIdentity(subNavKeywordItems.value)
+    }
+    const base = dedupeItemsByIdentity(currentSpecialItems.value || [])
     return base.filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
@@ -1335,10 +1541,6 @@ function buildTourDialogPayload(item, options = {}) {
             tripType = '景点信息';
         } else if (props.subTab === '餐厅') {
             tripType = '餐厅信息';
-        } else if (props.subTab === '葡萄酒酒庄') {
-            tripType = '葡萄酒酒庄信息';
-        } else if (props.subTab === '洋酒酒庄') {
-            tripType = '洋酒酒庄信息';
         } else if (props.subTab === '住宿') {
             tripType = '住宿信息';
         } else if (isSpecialContentSection) {
@@ -1361,22 +1563,6 @@ function buildTourDialogPayload(item, options = {}) {
         if (restaurantItem) {
             tripData = restaurantItem.tripData;
             bannerImage = restaurantItem.img;
-        }
-    }
-
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '葡萄酒酒庄' && wineWineries.value?.items) {
-        const wineryItem = findMatchingTourItem(wineWineries.value.items, item);
-        if (wineryItem) {
-            tripData = wineryItem.tripData;
-            bannerImage = wineryItem.img;
-        }
-    }
-
-    if (props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '洋酒酒庄' && spiritWineries.value?.items) {
-        const wineryItem = findMatchingTourItem(spiritWineries.value.items, item);
-        if (wineryItem) {
-            tripData = wineryItem.tripData;
-            bannerImage = wineryItem.img;
         }
     }
 
@@ -1523,10 +1709,17 @@ const currentDayTripItems = computed(() => {
 const dayTripFiltered = computed(() => {
     const kw = (searchKw.value || searchQuery.value || '').trim()
     if (!kw) return currentDayTripItems.value
+    if (useSubNavKeywordSearch.value) {
+        return dedupeItemsByIdentity(subNavKeywordItems.value)
+    }
     return currentDayTripItems.value.filter((item) => tourItemMatchesKeyword(item, kw))
 })
 
 const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
+
+watch(() => [searchQuery.value, searchKw.value], () => {
+    void syncSubNavKeywordSearch()
+})
 
 watch(() => [props.subTab, places.value?.items, restaurants.value?.items, hotels.value?.items], () => {
     void syncLocationCatalog()
@@ -1714,66 +1907,6 @@ onUnmounted(() => {
             <div v-else class="empty-tip">没有搜索结果</div>
         </template>
 
-        <!-- 搜索结果区：葡萄酒酒庄 -->
-        <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '葡萄酒酒庄'">
-            <template v-if="wineFiltered.length">
-                <h1 class="region-title center">Hobart</h1>
-                <div ref="gridRef" class="coming-grid">
-                    <div v-for="(item, i) in getPaginatedItems(wineFiltered)" :key="'wine-search-' + i"
-                        class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                        <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
-                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
-                        <div class="card-title" :title="item.title">
-                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
-                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
-                                <span v-else>{{ seg.text }}</span>
-                            </span>
-                        </div>
-                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                    </div>
-                </div>
-                <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
-                <div v-if="wineFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                    <div class="custom-pagination custom-pagination--fixed">
-                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
-                            {{
-                                mobileTotalPages }} 页</div>
-                    </div>
-                </div>
-            </template>
-            <div v-else class="empty-tip">没有搜索结果</div>
-        </template>
-
-        <!-- 搜索结果区：洋酒酒庄 -->
-        <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '洋酒酒庄'">
-            <template v-if="spiritFiltered.length">
-                <h1 class="region-title center">Hobart</h1>
-                <div ref="gridRef" class="coming-grid">
-                    <div v-for="(item, i) in getPaginatedItems(spiritFiltered)" :key="'spirit-search-' + i"
-                        class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                        <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
-                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
-                        <div class="card-title" :title="item.title">
-                            <span v-for="(seg, idx) in getHighlightSegments(item.title, highlightKw)" :key="idx">
-                                <span v-if="seg.highlight" class="search-highlight">{{ seg.text }}</span>
-                                <span v-else>{{ seg.text }}</span>
-                            </span>
-                        </div>
-                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                    </div>
-                </div>
-                <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
-                <div v-if="spiritFiltered.length > 0" class="pagination-section pagination-section--scenic">
-                    <div class="custom-pagination custom-pagination--fixed">
-                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
-                            {{
-                                mobileTotalPages }} 页</div>
-                    </div>
-                </div>
-            </template>
-            <div v-else class="empty-tip">没有搜索结果</div>
-        </template>
-
         <!-- 搜索结果区：住宿 -->
         <template v-else-if="(s?.trim() || isLocalSearch) && subTab === '住宿'">
             <template v-if="hotelFiltered.length">
@@ -1810,7 +1943,7 @@ onUnmounted(() => {
             <div v-else class="empty-tip">没有搜索结果</div>
         </template>
 
-        <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
+        <!-- 免费信息（isGrid=false）：关键词搜索结果（适配 特别活动/徒步线路/塔州露营地 等）-->
         <div class="special-activities-section" v-else-if="(s?.trim() || isLocalSearch) && isSpecialSection">
             <template v-if="activityFiltered.length">
                 <div class="activities-header">
@@ -1864,31 +1997,32 @@ onUnmounted(() => {
 
         <!-- 底部网格：景点（无关键词） -->
         <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-            <template v-if="scenicMainGridItems.length || scenicUncategorizedDisplayItems.length">
+            <template v-if="scenicFiltered.length">
                 <div ref="gridRef" class="coming-grid coming-grid--scenic">
-                    <template v-for="(item, i) in getPaginatedItems(scenicMainGridItems)" :key="'rt-bottom-' + i">
-                        <h1 v-if="shouldShowLocationTitle(getPaginatedItems(scenicMainGridItems), i)"
-                            class="region-title center">
-                            {{ getLocationDisplayName(item) }}
+                    <template v-for="section in scenicMainGridSections" :key="section.label">
+                        <h1 class="region-title center">
+                            {{ section.title }}
                         </h1>
-                        <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
-                            @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                            <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
-                                :loading="getImageLoading(i)" decoding="async"
-                                :fetchpriority="getImageFetchPriority(i)">
-                            <div class="card-title" :title="item.title">{{ item.title }}</div>
-                            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
-                                <span class="card-belong-tag">所在景点</span>
-                                <button type="button" class="card-belong-spot" :title="scenicParentDisplayName(item)"
-                                    @click.stop="onOpenParentSpot(item)">
-                                    {{ scenicParentDisplayName(item) }}
-                                </button>
+                        <template v-for="(item, i) in section.items" :key="getTourItemDialogKey(item) || `${section.label}-${i}`">
+                            <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
+                                @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                                <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                                    :loading="getImageLoading(section.startIndex + i)" decoding="async"
+                                    :fetchpriority="getImageFetchPriority(section.startIndex + i)">
+                                <div class="card-title" :title="item.title">{{ item.title }}</div>
+                                <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                                <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
+                                    <span class="card-belong-tag">所在景点</span>
+                                    <button type="button" class="card-belong-spot" :title="scenicParentDisplayName(item)"
+                                        @click.stop="onOpenParentSpot(item)">
+                                        {{ scenicParentDisplayName(item) }}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </template>
                     </template>
                 </div>
-                <div v-if="!selectedLocationLabel && scenicUncategorizedDisplayItems.length"
+                <div v-if="!selectedLocationLabel && !useBackendLocationSections && scenicUncategorizedDisplayItems.length"
                     class="coming-grid coming-grid--scenic">
                     <h1 class="region-title center">{{ UNCATEGORIZED_LOCATION }}</h1>
                     <template v-for="(item, i) in scenicUncategorizedDisplayItems" :key="'rt-uncategorized-' + i">
@@ -1960,61 +2094,6 @@ onUnmounted(() => {
             </div>
         </template>
 
-        <!-- 底部网格：葡萄酒酒庄（无关键词） -->
-        <template v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-            <div ref="gridRef" class="coming-grid">
-                <template v-for="(item, i) in getPaginatedItems(displayWineWineries)" :key="'wine-' + i">
-                    <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
-                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                        <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
-                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
-                        <div class="card-title" :title="item.title">{{ item.title }}</div>
-                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                    </div>
-                </template>
-            </div>
-        </template>
-
-        <!-- <div v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
-        加载中...
-    </div> -->
-        <template
-            v-if="subTab === '葡萄酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displayWineWineries.length > 0">
-            <div class="pagination-section pagination-section--scenic">
-                <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
-                        mobileTotalPages }} 页</div>
-                </div>
-            </div>
-        </template>
-
-        <!-- 底部网格：洋酒酒庄（无关键词） -->
-        <template v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
-            <div ref="gridRef" class="coming-grid">
-                <template v-for="(item, i) in getPaginatedItems(displaySpiritWineries)" :key="'spirit-' + i">
-                    <h1 v-if="i % 16 === 0" class="region-title center">Hobart</h1>
-                    <div class="coming-card" @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                        <img :src="getThumbImageUrl(item.img)" :alt="item.title" class="w100"
-                            :loading="getImageLoading(i)" decoding="async" :fetchpriority="getImageFetchPriority(i)">
-                        <div class="card-title" :title="item.title">{{ item.title }}</div>
-                        <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                    </div>
-                </template>
-            </div>
-        </template>
-        <!-- <div v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
-        加载中...
-    </div> -->
-        <template
-            v-if="subTab === '洋酒酒庄' && !isLocalSearch && !(s?.trim()) && !showDayTrip && displaySpiritWineries.length > 0">
-            <div class="pagination-section pagination-section--scenic">
-                <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
-                        mobileTotalPages }} 页</div>
-                </div>
-            </div>
-        </template>
-
         <!-- 底部网格：住宿（无关键词） -->
         <template v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
             <template v-if="hotelDisplayItems.length">
@@ -2048,7 +2127,7 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步线路/葡萄酒酒庄/洋酒酒庄/塔州露营地 等）-->
+        <!-- 免费信息（isGrid=false）：信息展示区域（无关键词，适配 特别活动/徒步线路/塔州露营地 等）-->
         <div v-if="isSpecialSection && !(s?.trim())" class="special-activities-section">
             <div class="activities-header">
                 <h2 class="activities-title">{{ currentSpecialTitle }}</h2>

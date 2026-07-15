@@ -74,8 +74,9 @@ export function tourItemMatchesKeyword(item, keyword) {
     item.name,
     item.sub,
     item.town,
-    item.region,
     item.location,
+    item.locationLabel,
+    item.postcode,
     item.desc,
     item.route
   ]
