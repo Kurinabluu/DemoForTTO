@@ -142,6 +142,7 @@ const backendLocationSections = scenicBackendSections
 const backendSectionsSynced = ref(false)
 const backendSectionsLoading = ref(false)
 let backendSectionsRequestSeq = 0
+const locationCatalogRevision = ref(0)
 
 const prefersBackendLocationGrid = computed(() => {
     return isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
@@ -544,6 +545,21 @@ function getCurrentLocationItems() {
     return []
 }
 
+async function syncLocationCatalogRows() {
+    if (!isApiEnabled()) {
+        setLocationCatalogEntries(buildLocationCatalogFromItems(getCurrentLocationItems()))
+        locationCatalogRevision.value += 1
+        return
+    }
+    if (!FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        return
+    }
+
+    const rows = await fetchLocationCatalog(props.subTab, { sortMode: sortMode.value })
+    setLocationCatalogEntries(Array.isArray(rows) ? rows : [])
+    locationCatalogRevision.value += 1
+}
+
 async function syncBackendLocationSections() {
     if (!isApiEnabled() || !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
         return
@@ -557,8 +573,9 @@ async function syncBackendLocationSections() {
         if (requestId !== backendSectionsRequestSeq) return
         backendLocationSections.value = Array.isArray(sections) ? sections : []
         backendSectionsSynced.value = true
-    } catch {
+    } catch (error) {
         if (requestId !== backendSectionsRequestSeq) return
+        notifyApiError(error, { action: '加载地点分组', dedupeKey: 'trips:location-sections' })
         if (backendLocationSections.value.length === 0) {
             backendSectionsSynced.value = false
         }
@@ -570,25 +587,24 @@ async function syncBackendLocationSections() {
 }
 
 async function syncLocationCatalog() {
-    const fallbackEntries = buildLocationCatalogFromItems(getCurrentLocationItems())
-    setLocationCatalogEntries(fallbackEntries)
-
     if (!isApiEnabled()) {
         backendLocationSections.value = []
         backendSectionsSynced.value = false
-        return
     }
 
     try {
-        const rows = await fetchLocationCatalog(props.subTab, { sortMode: sortMode.value })
-        if (Array.isArray(rows) && rows.length) {
-            setLocationCatalogEntries(rows)
+        await syncLocationCatalogRows()
+    } catch (error) {
+        notifyApiError(error, { action: '加载地点目录', dedupeKey: 'trips:location-catalog' })
+        if (isApiEnabled()) {
+            setLocationCatalogEntries([])
+            locationCatalogRevision.value += 1
         }
-    } catch {
-        // 保留从当前内容集生成的目录
     }
 
-    await syncBackendLocationSections()
+    if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        await syncBackendLocationSections()
+    }
 }
 
 const SPECIAL_SECTION_FALLBACK_IMAGES = [
@@ -854,8 +870,10 @@ async function syncSubNavKeywordSearch() {
     try {
         subNavKeywordItems.value = await searchItemsInSubNav(sectionPath, subNavName, kw)
         subNavKeywordSynced.value = true
-    } catch {
+    } catch (error) {
         subNavKeywordSynced.value = false
+        subNavKeywordItems.value = []
+        notifyApiError(error, { action: '搜索', dedupeKey: 'trips:subnav-search' })
     }
 }
 
@@ -918,6 +936,7 @@ watch(() => props.subTab, () => {
     backendLocationSections.value = []
     backendSectionsSynced.value = false
     backendSectionsLoading.value = false
+    locationCatalogRevision.value += 1
 })
 
 watch(() => sortMode.value, async () => {
@@ -927,12 +946,11 @@ watch(() => sortMode.value, async () => {
         return
     }
     try {
-        const rows = await fetchLocationCatalog(props.subTab, { sortMode: sortMode.value })
-        if (Array.isArray(rows) && rows.length) {
-            setLocationCatalogEntries(rows)
-        }
-    } catch {
-        // 保留当前目录
+        await syncLocationCatalogRows()
+    } catch (error) {
+        notifyApiError(error, { action: '加载地点目录', dedupeKey: 'trips:location-catalog-sort' })
+        setLocationCatalogEntries([])
+        locationCatalogRevision.value += 1
     }
 })
 
@@ -968,34 +986,28 @@ function filterByLocation(items) {
     return sourceItems.filter(item => resolveLocationLabel(item) === selectedLocationLabel.value)
 }
 
-const locationCascaderProps = computed(() => {
-    const currentItems = props.subTab === '景点'
-        ? places.value?.items || []
-        : props.subTab === '餐厅'
-            ? restaurants.value?.items || []
-            : props.subTab === '住宿'
-                ? hotels.value?.items || []
-                : []
+const locationFilterSourceItems = computed(() => {
+    if (prefersBackendLocationGrid.value) {
+        return []
+    }
+    if (props.subTab === '景点') return places.value?.items || []
+    if (props.subTab === '餐厅') return restaurants.value?.items || []
+    if (props.subTab === '住宿') return hotels.value?.items || []
+    return []
+})
 
+const locationCascaderProps = computed(() => {
     return {
         lazy: true,
-        lazyLoad: createLocationLazyLoad(currentItems, sortMode.value),
+        lazyLoad: createLocationLazyLoad(locationFilterSourceItems.value, sortMode.value),
         showAllLevels: false,
     }
 })
 
 const distanceCascaderProps = computed(() => {
-    const currentItems = props.subTab === '景点'
-        ? places.value?.items || []
-        : props.subTab === '餐厅'
-            ? restaurants.value?.items || []
-            : props.subTab === '住宿'
-                ? hotels.value?.items || []
-                : []
-
     return {
         lazy: true,
-        lazyLoad: createLocationLazyLoad(currentItems, sortMode.value),
+        lazyLoad: createLocationLazyLoad(locationFilterSourceItems.value, sortMode.value),
         showAllLevels: false,
     }
 })
@@ -1754,9 +1766,11 @@ onUnmounted(() => {
         </el-input>
         <template v-if="shouldShowAreaFilters">
             <el-cascader v-model="selectedLocationKey" :props="locationCascaderProps" clearable filterable
-                placeholder="地点（邮编）" class="area-select" size="large" :key="'loc-' + sortMode" />
+                placeholder="地点（邮编）" class="area-select" size="large"
+                :key="'loc-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
             <el-cascader v-model="selectedDistance" :props="distanceCascaderProps" clearable filterable
-                placeholder="按距离排序" class="distance-select" size="large" :key="'dist-' + sortMode" />
+                placeholder="按距离排序" class="distance-select" size="large"
+                :key="'dist-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
             <el-select v-model="sortMode" class="sort-select" size="large">
                 <el-option v-for="(label, value) in SORT_MODE_LABELS" :key="value" :label="label" :value="value" />
             </el-select>
@@ -2003,7 +2017,8 @@ onUnmounted(() => {
                         <h1 class="region-title center">
                             {{ section.title }}
                         </h1>
-                        <template v-for="(item, i) in section.items" :key="getTourItemDialogKey(item) || `${section.label}-${i}`">
+                        <template v-for="(item, i) in section.items"
+                            :key="getTourItemDialogKey(item) || `${section.label}-${i}`">
                             <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
                                 @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
                                 <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
@@ -2013,8 +2028,8 @@ onUnmounted(() => {
                                 <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                                 <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
                                     <span class="card-belong-tag">所在景点</span>
-                                    <button type="button" class="card-belong-spot" :title="scenicParentDisplayName(item)"
-                                        @click.stop="onOpenParentSpot(item)">
+                                    <button type="button" class="card-belong-spot"
+                                        :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
                                         {{ scenicParentDisplayName(item) }}
                                     </button>
                                 </div>

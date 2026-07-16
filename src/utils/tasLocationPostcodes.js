@@ -34,13 +34,31 @@ function isValidLocationLabel(label) {
   return /^\d{4}$/.test(postcode)
 }
 
+export function formatLocationLabel(town, postcode) {
+  const townText = String(town || '').trim()
+  const pc = String(postcode || '').trim()
+  if (!townText || !/^\d{4}$/.test(pc)) return ''
+  return `${townText} ${pc}`
+}
+
+function resolveLocationLabelFromFields(town, postcode, legacyLabel = '') {
+  const derived = formatLocationLabel(town, postcode)
+  if (derived) return derived
+  const legacy = String(legacyLabel || '').trim()
+  if (isValidLocationLabel(legacy)) return legacy
+  const fromCatalog = TAS_LOCATION_POSTCODES.find(
+    (entry) => entry.town === town && entry.postcode === postcode
+  )
+  if (fromCatalog?.label) return fromCatalog.label
+  return ''
+}
+
 function normalizeLocationEntry(entry) {
   if (!entry || typeof entry !== 'object') return null
-  const label = String(entry.label || entry.locationLabel || '').trim()
   const town = String(entry.town || entry.townName || '').trim()
   const postcode = String(entry.postcode || '').trim()
-  if (!label && !town && !postcode) return null
-  const resolvedLabel = label || (town && postcode ? `${town} ${postcode}` : town)
+  const legacyLabel = String(entry.label || entry.locationLabel || '').trim()
+  const resolvedLabel = resolveLocationLabelFromFields(town, postcode, legacyLabel)
   if (!resolvedLabel || resolvedLabel === UNCATEGORIZED_LOCATION) return null
   const resolvedPostcode = postcode || (resolvedLabel.match(/\b(\d{4})\b$/)?.[1] || '')
   if (!/^\d{4}$/.test(resolvedPostcode)) return null
@@ -60,6 +78,11 @@ export function setLocationCatalogEntries(entries = []) {
     }
   })
   LOCATION_CATALOG_ENTRIES = Array.from(unique.values())
+  return LOCATION_CATALOG_ENTRIES.length
+}
+
+export function getLocationCatalogEntryCount() {
+  return getCatalogEntries().length
 }
 
 export function buildLocationCatalogFromItems(items = []) {
@@ -93,7 +116,7 @@ function buildLocationEntryFromItem(item) {
 
   const fromDb = getLocationLabelFromDb(item)
   if (isValidLocationLabel(fromDb)) {
-    const normalized = normalizeLocationEntry({ label: fromDb })
+    const normalized = normalizeLocationEntry({ label: fromDb, town, postcode })
     if (normalized) return normalized
   }
 
@@ -510,7 +533,14 @@ export function getGroupingTownFromItem(item) {
 
 export function getLocationLabelFromDb(item) {
   const tripData = item?.tripData && typeof item.tripData === 'object' ? item.tripData : {}
-  return String(item?.locationLabel || tripData.locationLabel || '').trim()
+  const town = String(item?.town || tripData.town || '').trim()
+  const postcode = String(item?.postcode || tripData.postcode || '').trim()
+  const derived = resolveLocationLabelFromFields(
+    town,
+    postcode,
+    item?.locationLabel || tripData.locationLabel || ''
+  )
+  return derived
 }
 
 export function isSubSpotItem(item) {
@@ -577,47 +607,19 @@ export function getLocationOptionGroups(items = [], mode = SORT_MODES.POSTCODE) 
   }))
 }
 
-/**
- * 构建 Cascader 懒加载数据
- * 供 el-cascader 的 lazyLoad 回调使用
- * 仅包含当前条目中实际使用的地名+邮编标签，不含全量 TAS_LOCATION_POSTCODES
- * 未分类的条目统一归入"暂未分类"组
- * @param {Array} items - 当前子标签下的条目列表
- * @param {string} mode - 排序模式
- * @returns {Function} lazyLoad 回调函数 (node, resolve) => void
- */
-export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
-  const itemEntries = []
-  const entryByLabel = new Map()
-  let hasUncategorized = false
-
-  ;(Array.isArray(items) ? items : []).forEach((item) => {
-    const label = resolveLocationLabel(item)
-    if (!label) return
-    if (label === UNCATEGORIZED_LOCATION) {
-      hasUncategorized = true
-      return
-    }
-    const entry = buildLocationEntryFromItem(item)
-    if (entry && !entryByLabel.has(entry.label)) {
-      entryByLabel.set(entry.label, entry)
-      itemEntries.push(entry)
-    }
-  })
-
-  const sortedEntries = sortLocationEntries(itemEntries, mode)
-
+function buildLocationLazyGroups(items = [], mode = SORT_MODES.POSTCODE) {
+  const sortedEntries = sortLocationEntries(collectLocationEntries(items), mode)
+  const hasUncategorized = sortedEntries.some((entry) => entry.label === UNCATEGORIZED_LOCATION)
+    || (Array.isArray(items) ? items : []).some((item) => resolveLocationLabel(item) === UNCATEGORIZED_LOCATION)
   const isPostcodeMode = mode === SORT_MODES.POSTCODE
-
-  // 按第一级 key 分组
   const groupMap = new Map()
+
   sortedEntries.forEach((entry) => {
     const { postcode } = splitLocationLabel(entry.label)
     let firstLevelKey
     if (isPostcodeMode) {
       firstLevelKey = postcode
     } else {
-      // 名称模式：取地名首字母大写
       firstLevelKey = (entry.town || splitLocationLabel(entry.label).town || entry.label).charAt(0).toUpperCase()
     }
 
@@ -629,7 +631,6 @@ export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
     groupMap.get(firstLevelKey).push(entry)
   })
 
-  // 第一级排序：邮编模式按数字，名称模式按字母
   const firstLevelKeys = Array.from(groupMap.keys()).sort((a, b) => {
     if (isPostcodeMode) {
       const numA = parseInt(a, 10)
@@ -639,12 +640,25 @@ export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
     return a.localeCompare(b, 'en')
   })
 
-  // 未分类条目放在最后
   if (hasUncategorized) {
     firstLevelKeys.push(UNCATEGORIZED_LOCATION)
   }
 
+  return { firstLevelKeys, groupMap }
+}
+
+/**
+ * 构建 Cascader 懒加载数据
+ * 供 el-cascader 的 lazyLoad 回调使用
+ * API 模式下目录来自 setLocationCatalogEntries（/tto/locations），在每次展开时重新读取最新目录
+ * @param {Array} items - 当前子标签下的条目列表（API 模式传空数组）
+ * @param {string} mode - 排序模式
+ * @returns {Function} lazyLoad 回调函数 (node, resolve) => void
+ */
+export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
   return function lazyLoad(node, resolve) {
+    const { firstLevelKeys, groupMap } = buildLocationLazyGroups(items, mode)
+
     if (node.level === 0) {
       resolve(firstLevelKeys.map((key) => {
         const isUncategorized = key === UNCATEGORIZED_LOCATION
@@ -654,14 +668,15 @@ export function createLocationLazyLoad(items = [], mode = SORT_MODES.POSTCODE) {
           leaf: isUncategorized,
         }
       }))
-    } else {
-      const locations = groupMap.get(node.value) || []
-      resolve(locations.map((loc) => ({
-        value: loc.label,
-        label: loc.town || splitLocationLabel(loc.label).town || loc.label,
-        leaf: true,
-      })))
+      return
     }
+
+    const locations = groupMap.get(node.value) || []
+    resolve(locations.map((loc) => ({
+      value: loc.label,
+      label: loc.town || splitLocationLabel(loc.label).town || loc.label,
+      leaf: true,
+    })))
   }
 }
 

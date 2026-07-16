@@ -149,6 +149,16 @@ const sourceEntryName = computed(() => {
 const isScenicInfo = computed(() => resolvedItemType.value === '景点信息')
 const isRestaurantInfo = computed(() => resolvedItemType.value === '餐厅信息')
 
+const scenicAddressText = computed(() => {
+    if (!isScenicInfo.value) return ''
+    const route = String(routeInfo.value?.route || '').trim()
+    if (!route) return ''
+    const title = String(dialogTitle.value || props.title || '').trim()
+    const defaultRoute = title ? `${title}信息` : '未知信息信息'
+    if (route === defaultRoute) return ''
+    return route
+})
+
 const childSpots = computed(() => {
     const raw = routeInfo.value?.childSpots
     if (!Array.isArray(raw)) return []
@@ -504,6 +514,10 @@ watch([childSpots, siblingSpots], () => {
                 <div class="section-title" v-if="!isScenicInfo && routeInfo.route">
                     {{ routeInfo.route }}
                 </div>
+                <div v-if="scenicAddressText" class="scenic-address">
+                    <span class="scenic-address-label">地址</span>
+                    <span class="scenic-address-text">{{ scenicAddressText }}</span>
+                </div>
                 <div class="section-desc">
                     {{ routeInfo.desc }}
                 </div>
@@ -827,6 +841,33 @@ watch([childSpots, siblingSpots], () => {
     font-weight: 600;
     color: #111827;
     margin-bottom: 12px;
+}
+
+.scenic-address {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: #f0faf8;
+    border-left: 3px solid #279486;
+    border-radius: 0 8px 8px 0;
+}
+
+.scenic-address-label {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #279486;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+.scenic-address-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+    font-weight: 500;
 }
 
 .section-desc {

@@ -103,6 +103,12 @@ export function isApiEnabled() {
   return String(import.meta.env.VITE_USE_API || '').toLowerCase() === 'true'
 }
 
+/** 仅 gh-pages 等生产过渡环境在 API 不可用时回退本地 JSON */
+export function isLocalJsonFallbackEnabled() {
+  return import.meta.env.PROD
+    && String(import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK || '').toLowerCase() === 'true'
+}
+
 export async function fetchItemsBySubNavKey(subNavKey, { keyword } = {}) {
   return requestJson('/tto/items', {
     params: {

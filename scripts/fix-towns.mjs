@@ -8,7 +8,6 @@ const freeinfo = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'src/data
 
 // Build lookup maps
 const townPostcodeMap = new Map(TAS_LOCATION_POSTCODES.map(e => [e.town, e.postcode]));
-const townLabelMap = new Map(TAS_LOCATION_POSTCODES.map(e => [e.town, e.label]));
 
 function escapeRegExp(str) {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -220,19 +219,14 @@ freeinfo.subNav.forEach(sn => {
       }
     }
 
-    // Add postcode and locationLabel if missing
+    // 方案 B：JSON 只持久化 town + postcode
     if (town) {
       if (!td.postcode) {
         const pc = townPostcodeMap.get(town) || '';
         if (pc) td.postcode = pc;
       }
-      if (!td.locationLabel) {
-        const label = townLabelMap.get(town) || '';
-        if (label) {
-          td.locationLabel = label;
-        } else if (td.postcode) {
-          td.locationLabel = `${town} ${td.postcode}`;
-        }
+      if (td.locationLabel) {
+        delete td.locationLabel;
       }
       existingCount++;
     }
@@ -278,7 +272,7 @@ if (dataSection) {
             if (!dataItem.tripData.town || dataItem.tripData.town !== fd.town) {
               dataItem.tripData.town = fd.town;
               dataItem.tripData.postcode = fd.postcode || '';
-              dataItem.tripData.locationLabel = fd.locationLabel || '';
+              delete dataItem.tripData.locationLabel;
               dataSynced++;
             }
           }

@@ -1,13 +1,13 @@
 import { buildSubNavKey } from '@/utils/subNavKey'
-import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled } from '@/utils/ttoApi'
+import { formatLocationLabel } from '@/utils/tasLocationPostcodes'
+import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled, isLocalJsonFallbackEnabled } from '@/utils/ttoApi'
 import { notifyApiWarning } from '@/utils/apiFeedback'
 
 import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'
 import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'
 
-// 仅在生产 gh-pages 允许本地 JSON 兜底；开发环境强制走数据库，避免掩盖 API 问题
-const USE_LOCAL_JSON_FALLBACK = import.meta.env.PROD
-  && import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK === 'true'
+// 仅在 gh-pages 生产过渡环境允许本地 JSON 兜底；开发环境强制走数据库
+const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
 
 /**
  * [临时开发功能] 从本地 JSON 文件获取数据
@@ -30,13 +30,19 @@ function loadLocalFallbackData(dataKey) {
   return null
 }
 
-/**
- * [临时开发功能] 检查子导航数据是否有效
- * 用于判断是否需要使用兜底数据
- */
-function hasValidSubNavData(data) {
-  if (!data || typeof data !== 'object') return false
-  return Array.isArray(data.subNav) && data.subNav.length > 0
+function loadLocalFallbackBundle(sectionPath) {
+  if (!USE_LOCAL_JSON_FALLBACK) {
+    return null
+  }
+  const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
+  const fallbackData = loadLocalFallbackData(fallbackKey)
+  if (!fallbackData) {
+    return null
+  }
+  return {
+    path: sectionPath,
+    subNav: fallbackData.subNav || [],
+  }
 }
 
 function parseCardExtraJson(row) {
@@ -94,7 +100,8 @@ export function buildTripDataFromDetailDto(dto, extra = {}) {
   if (dto?.description) tripData.desc = dto.description
   if (dto?.townName) tripData.town = dto.townName
   if (dto?.postcode) tripData.postcode = dto.postcode
-  if (dto?.locationLabel) tripData.locationLabel = dto.locationLabel
+  const derivedLabel = formatLocationLabel(dto?.townName, dto?.postcode) || dto?.locationLabel
+  if (derivedLabel) tripData.locationLabel = derivedLabel
   if (dto?.subNavName === '景点' && dto?.belongsToSpot) tripData.belongsToSpot = dto.belongsToSpot
   if (dto?.subNavName === '景点' && dto?.parentItemId != null) tripData.parentItemId = dto.parentItemId
   if (dto?.website) tripData.website = dto.website
@@ -151,8 +158,10 @@ function mapApiItem(row) {
 
   if (row.townName) tripData.town = row.townName
   if (row.postcode) tripData.postcode = row.postcode
-  if (row.locationLabel && row.locationLabel !== '暂未分类') {
-    tripData.locationLabel = row.locationLabel
+  const derivedLabel = formatLocationLabel(row.townName, row.postcode)
+    || (row.locationLabel && row.locationLabel !== '暂未分类' ? row.locationLabel : '')
+  if (derivedLabel) {
+    tripData.locationLabel = derivedLabel
   } else if (tripData.town && tripData.postcode && /^\d{4}$/.test(String(tripData.postcode))) {
     tripData.locationLabel = `${tripData.town} ${tripData.postcode}`
   }
@@ -202,19 +211,10 @@ export async function loadItemDetailById(itemId) {
 
 async function fetchSubNavItems(sectionPath, subNavMeta, keyword = '') {
   const subNavKey = buildSubNavKey(sectionPath, subNavMeta.subNavName)
-  try {
-    const rows = await fetchItemsBySubNavKey(subNavKey, {
-      keyword: String(keyword || '').trim() || undefined,
-    })
-    return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
-  } catch {
-    if (isApiEnabled()) {
-      notifyApiWarning('后端服务暂不可用，请稍后再试', {
-        dedupeKey: 'content:api-failed',
-      })
-    }
-  }
-  return []
+  const rows = await fetchItemsBySubNavKey(subNavKey, {
+    keyword: String(keyword || '').trim() || undefined,
+  })
+  return Array.isArray(rows) ? rows.map(mapApiItem).filter(Boolean) : []
 }
 
 export async function searchItemsInSubNav(sectionPath, subNavName, keyword) {
@@ -236,16 +236,7 @@ export async function loadItemsBySubNav(sectionPath, subNavName) {
 
 async function loadSectionBundle(sectionPath) {
   if (!isApiEnabled()) {
-    // [临时开发功能] API 未启用时，尝试使用本地 JSON 兜底
-    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
-    const fallbackData = loadLocalFallbackData(fallbackKey)
-    if (fallbackData) {
-      return {
-        path: sectionPath,
-        subNav: fallbackData.subNav || [],
-      }
-    }
-    return { path: sectionPath, subNav: [] }
+    return loadLocalFallbackBundle(sectionPath) || { path: sectionPath, subNav: [] }
   }
 
   let sectionNav = null
@@ -254,29 +245,26 @@ async function loadSectionBundle(sectionPath) {
     sectionNav = Array.isArray(navTree)
       ? navTree.find((item) => item.path === sectionPath)
       : null
-  } catch {
-    // [临时开发功能] API 调用失败时，尝试使用本地 JSON 兜底
-    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
-    const fallbackData = loadLocalFallbackData(fallbackKey)
-    if (fallbackData) {
-      return {
-        path: sectionPath,
-        subNav: fallbackData.subNav || [],
-      }
+  } catch (error) {
+    const fallbackBundle = loadLocalFallbackBundle(sectionPath)
+    if (fallbackBundle) {
+      notifyApiWarning('后端暂不可用，已使用本地数据展示', {
+        dedupeKey: 'content:api-fallback',
+      })
+      return fallbackBundle
     }
+    throw error
   }
 
   if (!sectionNav?.subNav?.length) {
-    // [临时开发功能] API 返回空数据时，尝试使用本地 JSON 兜底
-    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
-    const fallbackData = loadLocalFallbackData(fallbackKey)
-    if (fallbackData) {
-      return {
-        path: sectionPath,
-        subNav: fallbackData.subNav || [],
-      }
+    const fallbackBundle = loadLocalFallbackBundle(sectionPath)
+    if (fallbackBundle) {
+      notifyApiWarning('后端暂无数据，已使用本地数据展示', {
+        dedupeKey: 'content:api-empty-fallback',
+      })
+      return fallbackBundle
     }
-    return { path: sectionPath, subNav: [] }
+    throw new Error('后端导航数据为空')
   }
 
   const subNav = await Promise.all(
@@ -289,16 +277,14 @@ async function loadSectionBundle(sectionPath) {
     })
   )
 
-  // [临时开发功能] 检查是否所有子导航的items都为空，如果是则使用兜底数据
   const allItemsEmpty = subNav.every(sub => !Array.isArray(sub.items) || sub.items.length === 0)
   if (allItemsEmpty) {
-    const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
-    const fallbackData = loadLocalFallbackData(fallbackKey)
-    if (fallbackData) {
-      return {
-        path: sectionPath,
-        subNav: fallbackData.subNav || [],
-      }
+    const fallbackBundle = loadLocalFallbackBundle(sectionPath)
+    if (fallbackBundle) {
+      notifyApiWarning('后端暂无内容，已使用本地数据展示', {
+        dedupeKey: 'content:api-items-empty-fallback',
+      })
+      return fallbackBundle
     }
   }
 
