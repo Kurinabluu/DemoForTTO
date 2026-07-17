@@ -51,30 +51,86 @@ const getOptimizedAssetPath = (normalizedAssetPath, variant = 'thumb') => {
 
 const DEFAULT_FALLBACK = defaultThumb || defaultImg
 
-const resolveDataImage = (inputPath, fallback = DEFAULT_FALLBACK, options = {}) => {
+const resolveDataImageCore = (inputPath, fallback, options = {}) => {
   const raw = String(inputPath || '').trim()
-  if (!raw) return fallback
+  if (!raw) return { src: fallback, resolvedFromModule: false, remote: false }
 
-  if (/^(https?:|data:|blob:)/i.test(raw)) return raw
+  if (/^(https?:|data:|blob:)/i.test(raw)) {
+    return { src: raw, resolvedFromModule: false, remote: true }
+  }
 
   const variant = String(options?.variant || 'original').trim().toLowerCase()
   const normalized = normalizeAssetPath(raw)
   if (normalized && variant !== 'original') {
     const optimizedPath = getOptimizedAssetPath(normalized, variant)
     const optimizedUrl = resolveAssetModule(optimizedPath)
-    if (optimizedUrl) return optimizedUrl
+    if (optimizedUrl) {
+      return { src: optimizedUrl, resolvedFromModule: true, remote: false }
+    }
   }
 
   const moduleUrl = resolveAssetModule(raw)
-  if (moduleUrl) return moduleUrl
+  if (moduleUrl) {
+    return { src: moduleUrl, resolvedFromModule: true, remote: false }
+  }
 
   // gh-pages 子路径部署兼容：/assets/... 需要补上 BASE_URL
   if (raw.startsWith('/assets/')) {
-    return `${import.meta.env.BASE_URL}${raw.slice(1)}`
+    return {
+      src: `${import.meta.env.BASE_URL}${raw.slice(1)}`,
+      resolvedFromModule: false,
+      remote: false,
+    }
   }
-  if (raw.startsWith('/')) return raw
+  if (raw.startsWith('/')) {
+    return { src: raw, resolvedFromModule: false, remote: false }
+  }
 
-  return fallback
+  return { src: fallback, resolvedFromModule: false, remote: false }
 }
 
-export { resolveDataImage, resolveAssetModule }
+const resolveDataImage = (inputPath, fallback = DEFAULT_FALLBACK, options = {}) => {
+  return resolveDataImageCore(inputPath, fallback, options).src
+}
+
+/**
+ * 解析图片并返回是否使用了兜底图，供弹窗等场景展示「路径错误」提示。
+ */
+const resolveDataImageWithStatus = (inputPath, options = {}) => {
+  const fallback = options.fallback ?? DEFAULT_FALLBACK
+  const raw = String(inputPath || '').trim()
+  if (!raw) {
+    return {
+      src: fallback,
+      originalPath: '',
+      usedFallback: false,
+      isEmptyInput: true,
+      errorReason: '',
+    }
+  }
+
+  const { src, resolvedFromModule, remote } = resolveDataImageCore(raw, fallback, options)
+  if (resolvedFromModule) {
+    return { src, originalPath: raw, usedFallback: false, errorReason: '' }
+  }
+  if (remote) {
+    return { src, originalPath: raw, usedFallback: false, errorReason: '', remote: true }
+  }
+  if (src !== fallback) {
+    return { src, originalPath: raw, usedFallback: false, errorReason: '', remote: false }
+  }
+
+  return {
+    src: fallback,
+    originalPath: raw,
+    usedFallback: true,
+    errorReason: '图片路径无法解析',
+  }
+}
+
+export {
+  DEFAULT_FALLBACK as DEFAULT_DATA_IMAGE,
+  resolveDataImage,
+  resolveAssetModule,
+  resolveDataImageWithStatus,
+}

@@ -1,11 +1,12 @@
 <script setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import InfoSourceDialog from './InfoSourceDialog.vue'
 import { ArrowLeft, ArrowRight, InfoFilled } from '@element-plus/icons-vue'
-import { resolveDataImage } from '@/utils/dataImageResolver'
+import { resolveDataImageWithStatus, DEFAULT_DATA_IMAGE } from '@/utils/dataImageResolver'
 import { isFavorite as checkFavorite, toggleFavorite } from '@/utils/favoritesStore'
 import { notifyFavoriteResult } from '@/utils/favoriteMessages'
 import { notifyApiError } from '@/utils/apiFeedback'
+import { ElMessage } from 'element-plus'
 import { loadCatalogItemDetail } from '@/utils/contentRepository'
 import { Z_INDEX } from '@/constants/zIndex'
 
@@ -70,6 +71,9 @@ const dialogVisible = computed({
 const resolvedDetailItem = ref(null)
 const infoDialogVisible = ref(false)
 const bannerCarouselRef = ref(null)
+const failedDialogImageIndexes = ref(new Set())
+const imagePathWarningShownForOpen = ref(false)
+const initialRawImagePaths = ref([])
 const activeBannerIndex = ref(0)
 
 const openInfoDialog = () => {
@@ -265,6 +269,8 @@ const loadDetailFromApi = async () => {
             ...detail,
             tripData: mergeTripData(detail.tripData, props.tripData),
         }
+        await nextTick()
+        scheduleNotifyImagePathIssues()
     } catch (error) {
         notifyApiError(error, { action: '加载详情', dedupeKey: 'free-info:detail' })
     }
@@ -272,7 +278,7 @@ const loadDetailFromApi = async () => {
 
 const resolveChildSpotImage = (spot) => {
     const raw = spot?.img || spot?.banner || ''
-    return resolveDataImage(raw, '', { variant: 'thumb' })
+    return resolveDataImageWithStatus(raw, { variant: 'thumb' }).src
 }
 
 const dedupeImagePaths = (paths) => {
@@ -287,44 +293,137 @@ const dedupeImagePaths = (paths) => {
     return result
 }
 
-const dialogImagePaths = computed(() => {
+function isLikelyResolvedAssetUrl(path) {
+    const value = String(path || '').trim()
+    if (!value) return false
+    return /^(https?:|data:|blob:)/i.test(value)
+        || value.includes('/node_modules/.vite/')
+        || value.includes('.thumb.webp')
+        || value.includes('.original.webp')
+        || /^\/src\/assets\//.test(value)
+}
+
+function extractRawImagePathsFrom(source) {
+    if (!source || typeof source !== 'object') return []
+
     const imageGroups = isRestaurantInfo.value
-        ? [routeInfo.value?.img]
+        ? [source.img]
         : [
-            routeInfo.value?.images,
-            routeInfo.value?.banners,
-            routeInfo.value?.bannerList,
-            routeInfo.value?.imgs,
-            routeInfo.value?.img,
-            routeInfo.value?.cover ? [routeInfo.value.cover] : [],
+            source.images,
+            source.banners,
+            source.bannerList,
+            source.imgs,
+            source.img,
+            source.cover ? [source.cover] : [],
         ]
 
-    const paths = dedupeImagePaths(
-        imageGroups.flatMap(group => {
+    return dedupeImagePaths(
+        imageGroups.flatMap((group) => {
             if (Array.isArray(group)) return group
             if (group) return [group]
             return []
-        })
+        }).filter((path) => !isLikelyResolvedAssetUrl(path))
     )
+}
 
-    if (paths.length > 0) {
-        return paths
-    }
+function captureInitialRawImagePaths() {
+    initialRawImagePaths.value = extractRawImagePathsFrom(props.tripData)
+}
 
-    return props.banner ? [String(props.banner).trim()].filter(Boolean) : []
+const dialogImagePaths = computed(() => {
+    return dedupeImagePaths([
+        ...extractRawImagePathsFrom(routeInfo.value),
+        ...initialRawImagePaths.value,
+    ])
 })
 
-const dialogDisplayImages = computed(() =>
-    dialogImagePaths.value
-        .map(image => resolveDataImage(image, '', { variant: 'thumb' }))
-        .filter(Boolean)
+const dialogImageSlides = computed(() => {
+    const paths = dialogImagePaths.value
+    if (paths.length === 0) {
+        return [{
+            originalPath: '',
+            displaySrc: DEFAULT_DATA_IMAGE,
+            previewSrc: DEFAULT_DATA_IMAGE,
+            usedFallback: false,
+            isIntentionalDefault: true,
+            errorReason: '',
+        }]
+    }
+
+    return paths.map((path) => {
+        const thumb = resolveDataImageWithStatus(path, { variant: 'thumb' })
+        const original = resolveDataImageWithStatus(path, { variant: 'original' })
+        return {
+            originalPath: path,
+            displaySrc: thumb.src,
+            previewSrc: original.src,
+            usedFallback: thumb.usedFallback,
+            isIntentionalDefault: false,
+            errorReason: thumb.errorReason,
+        }
+    })
+})
+
+function getDialogImageDisplaySrc(index) {
+    if (failedDialogImageIndexes.value.has(index)) {
+        return DEFAULT_DATA_IMAGE
+    }
+    return dialogImageSlides.value[index]?.displaySrc || DEFAULT_DATA_IMAGE
+}
+
+function getDialogImagePreviewSrc(index) {
+    if (failedDialogImageIndexes.value.has(index)) {
+        return DEFAULT_DATA_IMAGE
+    }
+    return dialogImageSlides.value[index]?.previewSrc || DEFAULT_DATA_IMAGE
+}
+
+const dialogPreviewSrcList = computed(() =>
+    dialogImageSlides.value.map((_, index) => getDialogImagePreviewSrc(index))
 )
 
-const dialogPreviewImages = computed(() =>
-    dialogImagePaths.value
-        .map(image => resolveDataImage(image, ''))
-        .filter(Boolean)
-)
+function handleDialogImageError(index) {
+    const slide = dialogImageSlides.value[index]
+    if (!slide?.originalPath || slide.isIntentionalDefault) return
+    if (failedDialogImageIndexes.value.has(index)) return
+    failedDialogImageIndexes.value = new Set([...failedDialogImageIndexes.value, index])
+    scheduleNotifyImagePathIssues()
+}
+
+function scheduleNotifyImagePathIssues() {
+    nextTick(() => {
+        notifyImagePathIssues()
+        window.setTimeout(() => notifyImagePathIssues(), 450)
+    })
+}
+
+function notifyImagePathIssues() {
+    if (!dialogVisible.value || imagePathWarningShownForOpen.value) return
+
+    const hasImageIssue = dialogImageSlides.value.some((slide, index) => {
+        if (slide.isIntentionalDefault || !slide.originalPath) return false
+        if (slide.usedFallback) return true
+        if (failedDialogImageIndexes.value.has(index)) return true
+        return Boolean(
+            !isLikelyResolvedAssetUrl(slide.originalPath)
+            && getDialogImageDisplaySrc(index) === DEFAULT_DATA_IMAGE
+        )
+    })
+
+    if (!hasImageIssue) return
+
+    ElMessage.warning({
+        message: '部分图片无法加载，已显示默认图',
+        duration: 4500,
+        showClose: true,
+        appendTo: typeof document !== 'undefined' ? document.body : undefined,
+        customClass: 'free-info-image-path-message',
+        zIndex: Z_INDEX.dialog.high + 100,
+    })
+    imagePathWarningShownForOpen.value = true
+}
+
+const failedDialogImageIndexesKey = computed(() => [...failedDialogImageIndexes.value].sort().join(','))
 
 const openRelatedSpot = (spot, source = 'child') => {
     if (!spot) return
@@ -387,8 +486,6 @@ const openParentSpot = () => {
     })
 }
 
-const dialogImages = dialogDisplayImages
-
 const normalizeImageSourceEntry = (entry) => {
     if (!entry || typeof entry !== 'object') return null
     const source = String(entry.source || '').trim()
@@ -432,23 +529,42 @@ watch(dialogVisible, (visible) => {
         resolvedDetailItem.value = null
         childSpotsCarouselOffset.value = 0
         siblingSpotsCarouselOffset.value = 0
+        failedDialogImageIndexes.value = new Set()
+        initialRawImagePaths.value = []
+        imagePathWarningShownForOpen.value = false
         return
     }
+    captureInitialRawImagePaths()
     childSpotsCarouselOffset.value = 0
     siblingSpotsCarouselOffset.value = 0
     activeBannerIndex.value = 0
+    failedDialogImageIndexes.value = new Set()
+    imagePathWarningShownForOpen.value = false
     void loadDetailFromApi()
+    scheduleNotifyImagePathIssues()
     nextTick(() => {
         if (bannerCarouselRef.value?.setActiveItem) {
             bannerCarouselRef.value.setActiveItem(0)
         }
     })
+}, { immediate: true })
+
+onMounted(() => {
+    if (dialogVisible.value) {
+        captureInitialRawImagePaths()
+        scheduleNotifyImagePathIssues()
+    }
 })
 
 watch([childSpots, siblingSpots], () => {
     childSpotsCarouselOffset.value = 0
     siblingSpotsCarouselOffset.value = 0
 })
+
+watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
+    if (!dialogVisible.value) return
+    scheduleNotifyImagePathIssues()
+}, { deep: true })
 </script>
 
 <template>
@@ -471,14 +587,17 @@ watch([childSpots, siblingSpots], () => {
         </template>
 
         <div class="dlg-section">
-            <div class="dlg-banner w100" v-if="dialogImages.length">
+            <div class="dlg-banner w100" v-if="dialogImageSlides.length">
                 <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
                     arrow="hover" height="400px" @change="handleBannerChange">
-                    <el-carousel-item v-for="(image, index) in dialogDisplayImages" :key="index">
-                        <el-image :src="image" :alt="getImageAltText(index)" class="carousel-image pointer" fit="cover"
-                            :preview-src-list="dialogPreviewImages" :initial-index="index" :zoom-rate="1.2"
-                            :max-scale="7" :min-scale="0.2" :lazy="index > 0" show-progress show-close show-toolbar
-                            show-index :preview-teleported="true" :z-index="Z_INDEX.dialog.imagePreview" />
+                    <el-carousel-item v-for="(slide, index) in dialogImageSlides" :key="`${slide.originalPath}-${index}`">
+                        <el-image :src="getDialogImageDisplaySrc(index)" :alt="getImageAltText(index)"
+                            class="carousel-image pointer" fit="cover"
+                            :preview-src-list="dialogPreviewSrcList"
+                            :initial-index="index" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
+                            :lazy="index > 0" show-progress show-close show-toolbar show-index
+                            :preview-teleported="true" :z-index="Z_INDEX.dialog.imagePreview"
+                            @error="handleDialogImageError(index)" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -1257,5 +1376,9 @@ watch([childSpots, siblingSpots], () => {
         font-size: 38px;
     }
 
+}
+
+:global(.free-info-image-path-message) {
+    z-index: 13000 !important;
 }
 </style>

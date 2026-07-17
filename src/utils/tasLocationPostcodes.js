@@ -648,6 +648,62 @@ function buildLocationLazyGroups(items = [], mode = SORT_MODES.POSTCODE) {
 }
 
 /**
+ * 构建 Cascader 完整选项树（非 lazy），供 filterable 搜索使用。
+ * API 模式下目录来自 setLocationCatalogEntries（/tto/locations）。
+ */
+export function buildLocationCascaderOptions(items = [], mode = SORT_MODES.POSTCODE) {
+  const { firstLevelKeys, groupMap } = buildLocationLazyGroups(items, mode)
+  return firstLevelKeys.map((key) => {
+    if (key === UNCATEGORIZED_LOCATION) {
+      return { value: key, label: key }
+    }
+    const locations = groupMap.get(key) || []
+    return {
+      value: key,
+      label: key,
+      children: locations.map((loc) => ({
+        value: loc.label,
+        label: getLocationDisplayLabel(
+          loc.label,
+          mode,
+        ) || loc.town || splitLocationLabel(loc.label).town || loc.label,
+      })),
+    }
+  })
+}
+
+/** el-cascader filter-method：支持英文名、中文名、邮编、完整 locationLabel */
+export function locationCascaderFilterMethod(node, keyword) {
+  const kw = String(keyword || '').trim().toLowerCase()
+  if (!kw) return true
+
+  const label = String(node?.label || node?.text || '').toLowerCase()
+  if (label.includes(kw)) return true
+
+  const value = String(node?.value || '')
+  if (value.toLowerCase().includes(kw)) return true
+
+  const catalogEntry = TAS_LOCATION_POSTCODES.find((entry) => entry.label === value)
+  if (catalogEntry) {
+    if (String(catalogEntry.town || '').toLowerCase().includes(kw)) return true
+    if (String(catalogEntry.nameZh || '').toLowerCase().includes(kw)) return true
+    if (String(catalogEntry.postcode || '').includes(kw)) return true
+  }
+
+  const fromCatalog = getCatalogEntries().find((entry) => entry.label === value)
+  if (fromCatalog) {
+    if (String(fromCatalog.town || '').toLowerCase().includes(kw)) return true
+    if (String(fromCatalog.postcode || '').includes(kw)) return true
+  }
+
+  const { town, postcode } = splitLocationLabel(value)
+  if (town.toLowerCase().includes(kw)) return true
+  if (postcode.includes(kw)) return true
+
+  return false
+}
+
+/**
  * 构建 Cascader 懒加载数据
  * 供 el-cascader 的 lazyLoad 回调使用
  * API 模式下目录来自 setLocationCatalogEntries（/tto/locations），在每次展开时重新读取最新目录

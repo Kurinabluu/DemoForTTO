@@ -13,12 +13,13 @@ import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
 import {
-    createLocationLazyLoad,
     buildLocationCatalogFromItems,
+    buildLocationCascaderOptions,
     getGroupingTownFromItem,
     getLocationDisplayLabel,
     getLocationSortOrder,
     getTownByLocationLabel,
+    locationCascaderFilterMethod,
     resolveLocationLabel,
     setLocationCatalogEntries,
     SORT_MODES,
@@ -996,21 +997,15 @@ const locationFilterSourceItems = computed(() => {
     return []
 })
 
-const locationCascaderProps = computed(() => {
-    return {
-        lazy: true,
-        lazyLoad: createLocationLazyLoad(locationFilterSourceItems.value, sortMode.value),
-        showAllLevels: false,
-    }
+const locationCascaderOptions = computed(() => {
+    void locationCatalogRevision.value
+    return buildLocationCascaderOptions(locationFilterSourceItems.value, sortMode.value)
 })
 
-const distanceCascaderProps = computed(() => {
-    return {
-        lazy: true,
-        lazyLoad: createLocationLazyLoad(locationFilterSourceItems.value, sortMode.value),
-        showAllLevels: false,
-    }
-})
+const locationCascaderFieldProps = {
+    expandTrigger: 'click',
+    showAllLevels: false,
+}
 
 function getDistanceReferenceTown() {
     if (!selectedDistanceLabel.value) return ''
@@ -1765,11 +1760,13 @@ onUnmounted(() => {
             </template>
         </el-input>
         <template v-if="shouldShowAreaFilters">
-            <el-cascader v-model="selectedLocationKey" :props="locationCascaderProps" clearable filterable
-                placeholder="地点（邮编）" class="area-select" size="large"
+            <el-cascader v-model="selectedLocationKey" :options="locationCascaderOptions"
+                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable
+                filterable placeholder="地点（邮编）" class="area-select" size="large"
                 :key="'loc-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
-            <el-cascader v-model="selectedDistance" :props="distanceCascaderProps" clearable filterable
-                placeholder="按距离排序" class="distance-select" size="large"
+            <el-cascader v-model="selectedDistance" :options="locationCascaderOptions"
+                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable
+                filterable placeholder="按距离排序" class="distance-select" size="large"
                 :key="'dist-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
             <el-select v-model="sortMode" class="sort-select" size="large">
                 <el-option v-for="(label, value) in SORT_MODE_LABELS" :key="value" :label="label" :value="value" />
