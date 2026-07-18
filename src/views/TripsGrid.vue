@@ -1054,8 +1054,17 @@ function getLocationDisplayName(item) {
 function sortByLocation(items) {
     const list = Array.isArray(items) ? [...items] : []
     return list.sort((a, b) => {
-        const orderDiff = getLocationSortOrder(a, sortMode.value) - getLocationSortOrder(b, sortMode.value)
-        if (orderDiff !== 0) return orderDiff
+        const leftLabel = resolveLocationLabel(a)
+        const rightLabel = resolveLocationLabel(b)
+        const leftOrder = getLocationSortOrder(a, sortMode.value)
+        const rightOrder = getLocationSortOrder(b, sortMode.value)
+        if (leftOrder !== rightOrder) return leftOrder - rightOrder
+
+        const leftTown = getTownByLocationLabel(leftLabel) || leftLabel
+        const rightTown = getTownByLocationLabel(rightLabel) || rightLabel
+        const townDiff = String(leftTown || '').localeCompare(String(rightTown || ''), 'en', { sensitivity: 'base' })
+        if (townDiff !== 0) return townDiff
+
         const subSpotDiff = getSubSpotSortOrderFromDb(a) - getSubSpotSortOrderFromDb(b)
         if (subSpotDiff !== 0) return subSpotDiff
         return String(a?.title || '').localeCompare(String(b?.title || ''), 'zh-Hans-CN')

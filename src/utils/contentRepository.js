@@ -194,6 +194,7 @@ function mapApiItem(row) {
 
 export async function loadCatalogItemDetail(itemId) {
   if (itemId == null || itemId === '') return null
+  if (!isApiEnabled()) return null
   try {
     const dto = await fetchItemDetail(itemId)
     return mapApiDetailToItem(dto)

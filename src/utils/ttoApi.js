@@ -99,14 +99,22 @@ export function registerTokenRefreshHandler(handler) {
   tokenRefreshHandler = typeof handler === 'function' ? handler : null
 }
 
-export function isApiEnabled() {
-  return String(import.meta.env.VITE_USE_API || '').toLowerCase() === 'true'
-}
-
-/** 仅 gh-pages 等生产过渡环境在 API 不可用时回退本地 JSON */
+/** 仅 gh-pages 等生产过渡环境使用本地 JSON 展示内容 */
 export function isLocalJsonFallbackEnabled() {
   return import.meta.env.PROD
     && String(import.meta.env.VITE_USE_LOCAL_JSON_FALLBACK || '').toLowerCase() === 'true'
+}
+
+/**
+ * 是否走后端内容 API。
+ * 开发环境：VITE_USE_API=true 且未启用 JSON 兜底 → 走 API。
+ * gh-pages：启用 JSON 兜底时不发内容 API（避免 /api/tto/* 404）。
+ */
+export function isApiEnabled() {
+  if (isLocalJsonFallbackEnabled()) {
+    return false
+  }
+  return String(import.meta.env.VITE_USE_API || '').toLowerCase() === 'true'
 }
 
 export async function fetchItemsBySubNavKey(subNavKey, { keyword } = {}) {
