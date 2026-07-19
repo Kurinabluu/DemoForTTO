@@ -13,34 +13,22 @@ app.use(router)
 app.use(pinia)
 app.use(ElementPlus)
 
-const detectReloadNavigation = () => {
-    try {
-        if (typeof window === 'undefined') return false
-        if (typeof performance?.getEntriesByType === 'function') {
-            const entries = performance.getEntriesByType('navigation')
-            if (entries && entries.length > 0) {
-                return entries[0].type === 'reload'
-            }
-        }
-        if (performance && 'navigation' in performance) {
-            return performance.navigation.type === 1 // TYPE_RELOAD
-        }
-    } catch (e) {
-        // ignore
-    }
-    return false
-}
-
 // 全局滚动记录（节流）
 if (typeof window !== 'undefined') {
     const nav = useNavStore()
     const getScrollY = () => (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0)
+
+    const getRoutePath = () => {
+        const route = router.currentRoute.value
+        return route?.fullPath || route?.path || ''
+    }
+
     let ticking = false
     const onScroll = () => {
         if (!ticking) {
             ticking = true
             requestAnimationFrame(() => {
-                nav.saveScroll(getScrollY())
+                nav.saveScroll(getScrollY(), getRoutePath())
                 ticking = false
             })
         }
@@ -48,38 +36,99 @@ if (typeof window !== 'undefined') {
     window.addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('scroll', onScroll, { passive: true })
 
-    const persist = () => nav.saveScroll(getScrollY())
+    const persist = () => nav.saveScroll(getScrollY(), getRoutePath())
     document.addEventListener('visibilitychange', persist)
     window.addEventListener('beforeunload', persist)
 
-    let skipNextAfterEach = detectReloadNavigation()
+    let restoreFrameId = 0
+    const cancelScrollRestore = () => {
+        if (restoreFrameId) {
+            cancelAnimationFrame(restoreFrameId)
+            restoreFrameId = 0
+        }
+        nav.setRestoringScroll(false)
+    }
 
-    // 路由变更时记录最后路径和恢复滚动位置
-    router.afterEach((to) => {
-        if (skipNextAfterEach) {
-            skipNextAfterEach = false
+    const restoreScrollPosition = (targetY, pathKey) => {
+        cancelScrollRestore()
+
+        const target = Math.max(0, Number(targetY) || 0)
+        const path = pathKey || getRoutePath()
+
+        if (target <= 0) {
+            window.scrollTo({ top: 0, behavior: 'auto' })
             return
         }
 
-        // 保存路径前移除#top锚点，避免影响URL
+        nav.setRestoringScroll(true)
+        let attempts = 0
+        let lastMaxScroll = -1
+        const maxAttempts = 600
+
+        const finishRestore = (reachedTarget) => {
+            if (!reachedTarget) {
+                nav.preserveScrollForPath(path, target)
+            }
+            cancelScrollRestore()
+        }
+
+        const tryRestore = () => {
+            const maxScroll = Math.max(
+                0,
+                document.documentElement.scrollHeight - window.innerHeight
+            )
+            const currentY = getScrollY()
+            const reachedTarget = Math.abs(currentY - target) <= 2
+
+            if (reachedTarget) {
+                finishRestore(true)
+                return
+            }
+
+            // 仅在页面高度增加或首次尝试时滚动，避免反复 scrollTo 干扰懒加载
+            if (attempts === 0 || maxScroll > lastMaxScroll + 1) {
+                window.scrollTo({ top: Math.min(target, maxScroll), behavior: 'auto' })
+                lastMaxScroll = maxScroll
+            }
+
+            if (attempts >= maxAttempts) {
+                finishRestore(false)
+                return
+            }
+
+            attempts += 1
+            restoreFrameId = requestAnimationFrame(tryRestore)
+        }
+
+        restoreFrameId = requestAnimationFrame(tryRestore)
+    }
+
+    const restoreScrollForRoute = (routeLike) => {
+        const path = routeLike?.fullPath || routeLike?.path || ''
+        if (routeLike?.query?.s) {
+            cancelScrollRestore()
+            window.scrollTo({ top: 0, behavior: 'auto' })
+            return
+        }
+        if (nav.consumeScrollResetForPath(path)) {
+            cancelScrollRestore()
+            window.scrollTo({ top: 0, behavior: 'auto' })
+            return
+        }
+        restoreScrollPosition(nav.getScrollForPath(path), path)
+    }
+
+    window.addEventListener('tto:content-ready', () => {
+        restoreScrollForRoute(router.currentRoute.value)
+    })
+
+    // 路由变更时记录最后路径和恢复滚动位置
+    router.afterEach((to) => {
         const path = to.fullPath || to.path
         nav.savePath(path)
 
-        // 在下一次渲染后处理滚动位置
         requestAnimationFrame(() => {
-            // 检查是否有搜索关键词，如果有则滚动到顶部
-            if (to.query.s) {
-                // 有搜索关键词，滚动到顶部
-                window.scrollTo({ top: 0, behavior: 'auto' })
-            } else {
-                // 否则恢复到之前保存的滚动位置
-                const savedScrollY = nav.lastScrollY
-                if (savedScrollY > 0) {
-                    window.scrollTo({ top: savedScrollY, behavior: 'auto' })
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'auto' })
-                }
-            }
+            restoreScrollForRoute(to)
         })
     })
 }

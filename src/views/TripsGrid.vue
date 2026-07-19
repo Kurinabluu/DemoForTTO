@@ -142,8 +142,33 @@ const scenicBackendSections = shallowRef([])
 const backendLocationSections = scenicBackendSections
 const backendSectionsSynced = ref(false)
 const backendSectionsLoading = ref(false)
+/** 首次分区请求已结束（成功/失败/超时），避免失败后 loadingState 因 !synced 一直为 true */
+const backendSectionsLoadSettled = ref(false)
+const BACKEND_GRID_LOAD_TIMEOUT_MS = 15000
 let backendSectionsRequestSeq = 0
 const locationCatalogRevision = ref(0)
+
+function withRequestTimeout(promise, ms = BACKEND_GRID_LOAD_TIMEOUT_MS, message = '加载超时，请检查后端服务是否已启动') {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error(message))
+        }, ms)
+        Promise.resolve(promise)
+            .then((value) => {
+                clearTimeout(timer)
+                resolve(value)
+            })
+            .catch((error) => {
+                clearTimeout(timer)
+                reject(error)
+            })
+    })
+}
+
+function markBackendSectionsLoadSettled() {
+    backendSectionsLoadSettled.value = true
+    backendSectionsLoading.value = false
+}
 
 const prefersBackendLocationGrid = computed(() => {
     return isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
@@ -180,9 +205,9 @@ const loadingState = computed(() => {
     if (isSearching.value) return true
     if (prefersBackendLocationGrid.value) {
         const awaitingFirstSections = !backendSectionsSynced.value && backendLocationSections.value.length === 0
-        if (awaitingFirstSections) {
-            return backendSectionsLoading.value || !backendSectionsSynced.value
-        }
+        if (!awaitingFirstSections) return false
+        if (backendSectionsLoadSettled.value) return false
+        return backendSectionsLoading.value
     }
     return false
 })
@@ -568,9 +593,15 @@ async function syncBackendLocationSections() {
 
     const requestId = ++backendSectionsRequestSeq
     backendSectionsLoading.value = true
+    if (!backendSectionsSynced.value) {
+        backendSectionsLoadSettled.value = false
+    }
 
     try {
-        const sections = await fetchLocationSections(props.subTab, buildLocationSectionQuery())
+        const sections = await withRequestTimeout(
+            fetchLocationSections(props.subTab, buildLocationSectionQuery()),
+            BACKEND_GRID_LOAD_TIMEOUT_MS,
+        )
         if (requestId !== backendSectionsRequestSeq) return
         backendLocationSections.value = Array.isArray(sections) ? sections : []
         backendSectionsSynced.value = true
@@ -582,7 +613,7 @@ async function syncBackendLocationSections() {
         }
     } finally {
         if (requestId === backendSectionsRequestSeq) {
-            backendSectionsLoading.value = false
+            markBackendSectionsLoadSettled()
         }
     }
 }
@@ -591,10 +622,19 @@ async function syncLocationCatalog() {
     if (!isApiEnabled()) {
         backendLocationSections.value = []
         backendSectionsSynced.value = false
+        backendSectionsLoadSettled.value = true
+    }
+
+    if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        backendSectionsLoadSettled.value = false
     }
 
     try {
-        await syncLocationCatalogRows()
+        await withRequestTimeout(
+            syncLocationCatalogRows(),
+            BACKEND_GRID_LOAD_TIMEOUT_MS,
+            '加载地点目录超时，请检查后端服务是否已启动',
+        )
     } catch (error) {
         notifyApiError(error, { action: '加载地点目录', dedupeKey: 'trips:location-catalog' })
         if (isApiEnabled()) {
@@ -605,6 +645,8 @@ async function syncLocationCatalog() {
 
     if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
         await syncBackendLocationSections()
+    } else if (isApiEnabled()) {
+        markBackendSectionsLoadSettled()
     }
 }
 
@@ -936,6 +978,7 @@ watch(() => props.subTab, () => {
     backendSectionsRequestSeq += 1
     backendLocationSections.value = []
     backendSectionsSynced.value = false
+    backendSectionsLoadSettled.value = false
     backendSectionsLoading.value = false
     locationCatalogRevision.value += 1
 })

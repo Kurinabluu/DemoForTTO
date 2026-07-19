@@ -195,27 +195,20 @@ const rejectDisclaimer = () => {
 
 // 滚动到页面顶部
 function scrollToTop() {
-    // 使用window.scrollTo({ behavior: 'smooth' })实现平滑滚动到顶部
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
     })
 
-    // 临时禁用路由跳转后的滚动恢复
-    // 1. 保存当前滚动位置为0（顶部）
-    try {
-        localStorage.setItem('tto_last_scroll_y', '0');
-    } catch (e) {
-        // ignore
-    }
+    // 下一次路由进入时强制从顶部开始，并覆盖该路由已保存的滚动位置
+    navStore.markScrollResetOnNextRoute()
 
-    // 2. 使用setTimeout确保在路由跳转完成后再次滚动到顶部
     setTimeout(() => {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
-        });
-    }, 100); // 延迟100ms执行
+        })
+    }, 100)
 }
 
 // 显示ComingSoonDialog

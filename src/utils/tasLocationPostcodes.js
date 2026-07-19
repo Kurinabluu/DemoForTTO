@@ -62,10 +62,12 @@ function normalizeLocationEntry(entry) {
   if (!resolvedLabel || resolvedLabel === UNCATEGORIZED_LOCATION) return null
   const resolvedPostcode = postcode || (resolvedLabel.match(/\b(\d{4})\b$/)?.[1] || '')
   if (!/^\d{4}$/.test(resolvedPostcode)) return null
+  const nameZh = String(entry.nameZh || entry.name_zh || '').trim()
   return {
     label: resolvedLabel,
     town: town || resolvedLabel.replace(/\s+\d{4}$/, ''),
     postcode: resolvedPostcode,
+    ...(nameZh ? { nameZh } : {}),
   }
 }
 
@@ -770,10 +772,18 @@ export function getLocationDisplayLabel(label, mode = SORT_MODES.POSTCODE) {
   if (mode !== SORT_MODES.NAME_ZH) return label
   const entry = getCatalogEntries().find((e) => e.label === label)
     || TAS_LOCATION_POSTCODES.find((e) => e.label === label)
-  if (entry && entry.nameZh) {
+  if (entry?.nameZh) {
     return `${entry.nameZh} ${label}`
   }
   return label
+}
+
+export function getLocationTitleFromSection(section, mode = SORT_MODES.POSTCODE) {
+  const title = String(section?.title || '').trim()
+  if (title) return title
+  const label = String(section?.label || section?.locationLabel || '').trim()
+  if (!label) return ''
+  return getLocationDisplayLabel(label, mode)
 }
 
 export function getTownByLocationLabel(label) {

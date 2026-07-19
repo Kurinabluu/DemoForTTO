@@ -104,8 +104,7 @@ onMounted(() => {
   // 添加滚动事件监听器
   const onScroll = () => {
     handleScroll()
-    // 保存滚动位置
-    navStore.saveScroll(window.scrollY)
+    navStore.saveScroll(window.scrollY, router.currentRoute.value.fullPath || router.currentRoute.value.path)
   }
   window.addEventListener('scroll', onScroll)
   // 添加窗口大小变化监听器
