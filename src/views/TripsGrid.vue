@@ -1548,6 +1548,14 @@ function scenicParentDisplayName(item) {
     return getSpotParentDisplayNameFromDb(item, places.value?.items || [])
 }
 
+function shouldShowBelongSpot(item) {
+    return isSubSpotItemFromDb(item)
+}
+
+function isParentSpotClickable(item) {
+    return Boolean(findParentSpotItemForChild(places.value?.items || [], item))
+}
+
 async function onOpenParentSpot(item) {
     const allItems = places.value?.items || []
     const parentItem = findParentSpotItemForChild(allItems, item)
@@ -1686,7 +1694,7 @@ function buildTourDialogPayload(item, options = {}) {
         let parentSpotId = null
         let parentItem = null
 
-        if (isSubSpotItemFromDb(item)) {
+        if (shouldShowBelongSpot(item)) {
             parentItem = findParentSpotItemForChild(places.value.items, item)
             if (parentItem) {
                 parentSpotTitle = parentItem.title || ''
@@ -1900,7 +1908,7 @@ onUnmounted(() => {
                             class="region-title center">
                             {{ getLocationDisplayName(item) }}
                         </h1>
-                        <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
+                        <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                             @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
@@ -1912,12 +1920,16 @@ onUnmounted(() => {
                                 </span>
                             </div>
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
                                 <span class="card-belong-tag">所在景点</span>
-                                <button type="button" class="card-belong-spot" :title="scenicParentDisplayName(item)"
-                                    @click.stop="onOpenParentSpot(item)">
+                                <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
+                                    :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
                                     {{ scenicParentDisplayName(item) }}
                                 </button>
+                                <span v-else class="card-belong-spot card-belong-spot--static"
+                                    :title="scenicParentDisplayName(item)">
+                                    {{ scenicParentDisplayName(item) }}
+                                </span>
                             </div>
                         </div>
                     </template>
@@ -2068,19 +2080,23 @@ onUnmounted(() => {
                         </h1>
                         <template v-for="(item, i) in section.items"
                             :key="getTourItemDialogKey(item) || `${section.label}-${i}`">
-                            <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
+                            <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                                 @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
                                 <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                     :loading="getImageLoading(section.startIndex + i)" decoding="async"
                                     :fetchpriority="getImageFetchPriority(section.startIndex + i)">
                                 <div class="card-title" :title="item.title">{{ item.title }}</div>
                                 <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                                <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
+                                <div v-if="shouldShowBelongSpot(item)" class="card-belong">
                                     <span class="card-belong-tag">所在景点</span>
-                                    <button type="button" class="card-belong-spot"
+                                    <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
                                         :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
                                         {{ scenicParentDisplayName(item) }}
                                     </button>
+                                    <span v-else class="card-belong-spot card-belong-spot--static"
+                                        :title="scenicParentDisplayName(item)">
+                                        {{ scenicParentDisplayName(item) }}
+                                    </span>
                                 </div>
                             </div>
                         </template>
@@ -2090,19 +2106,23 @@ onUnmounted(() => {
                     class="coming-grid coming-grid--scenic">
                     <h1 class="region-title center">{{ UNCATEGORIZED_LOCATION }}</h1>
                     <template v-for="(item, i) in scenicUncategorizedDisplayItems" :key="'rt-uncategorized-' + i">
-                        <div class="coming-card" :class="{ 'coming-card--with-belong': isSubSpotItemFromDb(item) }"
+                        <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                             @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">{{ item.title }}</div>
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="isSubSpotItemFromDb(item)" class="card-belong">
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
                                 <span class="card-belong-tag">所在景点</span>
-                                <button type="button" class="card-belong-spot" :title="scenicParentDisplayName(item)"
-                                    @click.stop="onOpenParentSpot(item)">
+                                <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
+                                    :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
                                     {{ scenicParentDisplayName(item) }}
                                 </button>
+                                <span v-else class="card-belong-spot card-belong-spot--static"
+                                    :title="scenicParentDisplayName(item)">
+                                    {{ scenicParentDisplayName(item) }}
+                                </span>
                             </div>
                         </div>
                     </template>
@@ -2413,6 +2433,15 @@ onUnmounted(() => {
             color: #279486;
             text-decoration: underline;
             text-underline-offset: 2px;
+        }
+
+        &--static {
+            cursor: default;
+
+            &:hover {
+                color: #1a7a6f;
+                text-decoration: none;
+            }
         }
     }
 

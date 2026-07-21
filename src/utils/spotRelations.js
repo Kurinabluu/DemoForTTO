@@ -1,4 +1,5 @@
 import { getTourItemDialogKey } from './searchItemKey.js'
+import { inferItemLocation, resolveBelongsToSpotDisplayName } from './tasLocationPostcodes.js'
 
 function normalizeEnTitle(value) {
   return String(value || '').trim()
@@ -24,7 +25,7 @@ export function getBelongsToSpotFromDb(item) {
 
 export function isSubSpotItemFromDb(item) {
   if (getParentItemIdFromDb(item) != null) return true
-  return Boolean(getBelongsToSpotFromDb(item))
+  return Boolean(inferItemLocation(item).belongsToSpot)
 }
 
 export function getSubSpotSortOrderFromDb(item) {
@@ -41,16 +42,17 @@ export function findParentSpotItemForChild(items, child) {
   const byId = findParentSpotItemById(items, getParentItemIdFromDb(child))
   if (byId) return byId
 
-  const spotKey = getBelongsToSpotFromDb(child).toLowerCase()
+  const spotKey = inferItemLocation(child).belongsToSpot.toLowerCase()
   if (!spotKey || !Array.isArray(items)) return null
   return items.find((row) => normalizeEnTitle(row?.enTitle).toLowerCase() === spotKey) || null
 }
 
-/** 母景点展示名 */
+/** 母景点展示名（含区域型 belongsToSpot，如 Hobart → 霍巴特） */
 export function getSpotParentDisplayNameFromDb(item, items = []) {
   const parent = findParentSpotItemForChild(items, item)
   if (parent?.title) return parent.title
-  return getBelongsToSpotFromDb(item)
+  const key = inferItemLocation(item).belongsToSpot
+  return resolveBelongsToSpotDisplayName(key)
 }
 
 /** 查找某主景区下的子景点（parentItemId 或 belongsToSpot 匹配母卡片 enTitle） */
@@ -68,7 +70,7 @@ export function findChildSpotItems(items, parentItem) {
     const childParentId = getParentItemIdFromDb(child)
     if (parentId && childParentId != null && String(childParentId) === parentId) return true
 
-    const belongs = getBelongsToSpotFromDb(child).toLowerCase()
+    const belongs = inferItemLocation(child).belongsToSpot.toLowerCase()
     if (!belongs || !parentEn) return false
     return belongs === parentEn
   })

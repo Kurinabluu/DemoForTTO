@@ -1,7 +1,8 @@
 # tto 前端功能测试报告
 
-> 测试日期：2026-06-18  
-> 测试环境：本地开发服务器（localhost:5174）
+> **快照日期**：2026-06-18  
+> **说明**：本文为历史测试记录。当前环境行为以 [README.md](../README.md)、[temp-dev-features.md](./temp-dev-features.md)、[location-catalog.md](./location-catalog.md) 为准。  
+> **重要变更（2026-07 起）**：生产 gh-pages 使用 `VITE_USE_API=false`；开发环境 API 失败**不**回退 JSON；地点目录改为 `tas-location-postcodes.json` 单源。
 
 ---
 
@@ -16,13 +17,13 @@ VITE_APP_BASE=/DemoForTTO/
 VITE_USE_LOCAL_JSON_FALLBACK=false  # 本地有数据库，不需要兜底
 ```
 
-### 生产环境配置（.env.production）
+### 生产环境配置（`.env.production`，gh-pages）
 
 ```bash
-VITE_USE_API=true
+VITE_USE_API=false
 VITE_API_BASE_URL=/api
 VITE_APP_BASE=/DemoForTTO/
-VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
+VITE_USE_LOCAL_JSON_FALLBACK=true
 ```
 
 ---
@@ -230,11 +231,17 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
 - `src/data/fallback/freeinfo_fallback.json`
 - `src/data/fallback/daytrip_fallback.json`
 
-#### 触发条件
-1. ✅ API未启用时（`isApiEnabled() === false`）
-2. ✅ API调用失败时（网络错误、服务不可用）
-3. ✅ API返回空数据时（导航树为空）
-4. ✅ 所有子导航的items都为空时
+#### 触发条件（2026-07 更新后）
+
+1. ✅ gh-pages 生产构建且 `isApiEnabled() === false`（刻意关闭内容 API，直接读 fallback JSON）
+
+**以下在现行代码中已不再触发兜底：**
+
+- ~~API 调用失败~~
+- ~~API 返回空数据~~
+- ~~items 全空~~
+
+开发环境（`VITE_USE_LOCAL_JSON_FALLBACK=false`）API 失败时会 **throw**，页面报错或超时提示。
 
 #### 配置控制
 - ✅ 开发环境：`VITE_USE_LOCAL_JSON_FALLBACK=false`
@@ -408,10 +415,7 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
    - URL格式正确
    - 支持多类型搜索
 
-4. **兜底功能**：✅ 通过（代码审查）
-   - 触发条件完整
-   - 配置控制正确
-   - 日志输出规范
+4. **兜底功能**：✅ 通过（gh-pages 路径；非 API 失败降级）
 
 5. **样式适配**：✅ 通过
    - PC端适配正确
@@ -458,10 +462,9 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 启用兜底
 
 ### 2. 生产环境部署后
 
-1. **生产环境配置验证**
-   - 验证API地址正确性
-   - 验证兜底功能正常触发
-   - 验证数据完整性
+1. **gh-pages 部署后**
+   - 验证 fallback JSON 内容加载（非内容 API）
+   - 验证数据完整性（`data:sync` 后 rebuild）
 
 2. **跨浏览器测试**
    - Chrome

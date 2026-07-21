@@ -1,123 +1,74 @@
-# 临时开发功能 - 本地 JSON 兜底
+# 临时功能：gh-pages 本地 JSON 内容兜底
 
 ## 功能说明
 
-这是一个**临时开发功能**，用于在没有可用数据库的后端时，提供本地 JSON 文件作为数据兜底。
+在 **gh-pages 静态部署**（无可用内容 API）时，前端直接使用打包进 bundle 的 fallback JSON 展示景点/行程列表，避免请求 `/api/tto/*` 导致 404。
 
-**重要说明**：
-- **本地开发环境**：有数据库，**不启用**兜底功能（`.env.development` 中 `VITE_USE_LOCAL_JSON_FALLBACK=false`）
-- **生产环境（gh-pages）**：无数据库，**启用**兜底功能（`.env.production` 中 `VITE_USE_LOCAL_JSON_FALLBACK=true`）
+**这不是「API 调用失败后的自动降级」**——开发环境 API 失败只会报错，不会读 JSON。
 
-## 使用场景
+## 环境区分
 
-- **仅用于生产环境（gh-pages）**：在没有数据库的后端部署时提供数据兜底
-- API 接口调用失败且 `isApiEnabled = false`
-- 后端服务未启动
-- 需要快速演示前端功能
+| 环境 | 配置文件 | 行为 |
+| --- | --- | --- |
+| **本地开发** | `.env.development` | `VITE_USE_API=true`，`VITE_USE_LOCAL_JSON_FALLBACK=false` → 内容只走后端 API |
+| **gh-pages 生产构建** | `.env.production` | `VITE_USE_API=false`，`VITE_USE_LOCAL_JSON_FALLBACK=true` → 内容读 fallback JSON |
 
-## 启用方式
+判断逻辑（`src/utils/ttoApi.js`）：
 
-### 1. 环境变量配置
+- `isLocalJsonFallbackEnabled()` = `import.meta.env.PROD` **且** `VITE_USE_LOCAL_JSON_FALLBACK=true`
+- `isApiEnabled()` = 未启用 fallback **且** `VITE_USE_API=true`
 
-**生产环境（`.env.production`）**：
-```bash
-VITE_USE_LOCAL_JSON_FALLBACK=true
-```
+## 数据文件
 
-**本地开发环境（`.env.development`）**：
-```bash
-VITE_USE_LOCAL_JSON_FALLBACK=false
-```
+- `src/data/fallback/freeinfo_fallback.json` — 自助游/自驾游免费参考信息
+- `src/data/fallback/daytrip_fallback.json` — 一日游/多日游
 
-### 2. 数据文件
+由 `npm run data:sync` 末尾的 `scripts/sync-fallback.mjs` 从 `src/data/split/` 同步生成。条目数随 `data.json` 变化，**不要写死**在文档里。
 
-确保以下文件存在且数据完整：
-
-- `src/data/fallback/freeinfo_fallback.json` - 自助游/自驾游免费参考信息数据（878 条）
-- `src/data/fallback/daytrip_fallback.json` - 一日游/多日游数据
-
-这些文件应与 `src/data/split/` 目录下的正式数据文件保持同步。运行 `scripts/fix-towns.mjs` 时会自动同步 fallback 文件。
+可选维护脚本：`scripts/fix-towns.mjs`（从文本推断 town，独立运行，非主流程）。
 
 ## 工作原理
 
-当系统检测到以下情况时，会自动使用本地 JSON 兜底数据：
+`src/utils/contentRepository.js` 中 `loadSectionBundle()`：
 
-1. API 未启用（`isApiEnabled = false`）
-2. API 调用失败（网络错误、服务不可用等）
-3. API 返回空数据（导航树为空等）
-4. 所有子导航的 items 都为空
+```text
+isApiEnabled() === false  →  loadLocalFallbackBundle(sectionPath)
+isApiEnabled() === true   →  fetchNavTree + fetchItemsBySubNavKey；失败 throw，不回退 JSON
+```
 
-兜底逻辑位于：`src/utils/contentRepository.js`
+触发 fallback 的**唯一条件**：gh-pages 生产构建下内容 API 被刻意关闭（见上表）。
 
-## 删除计划
+以下情况**不会**触发 JSON 兜底：
 
-当后端数据库正式上线且功能稳定后，**必须删除此临时功能**。
+- 开发环境后端未启动 / 网络错误
+- API 返回空导航或空 items 列表（当前实现会 **throw**）
 
-### 删除步骤
+登录、收藏、咨询等接口在 `isApiEnabled() === false` 时同样不走远程内容 API；是否可用取决于 gh-pages 是否部署了可访问的后端（通常 gh-pages 仅演示静态内容）。
 
-1. **删除数据文件**
-   ```bash
-   rm src/data/fallback/freeinfo_fallback.json
-   rm src/data/fallback/daytrip_fallback.json
-   rm -rf src/data/fallback/
-   ```
+## 与正式环境的关系
 
-2. **删除配置**
-   
-   从 `.env.production` 中删除以下内容：
-   ```bash
-   # [临时开发功能] 本地 JSON 兜底配置
-   # ... (相关注释)
-   VITE_USE_LOCAL_JSON_FALLBACK=true
-   ```
-   
-   从 `.env.development` 中删除以下内容：
-   ```bash
-   # [临时开发功能] 本地 JSON 兜底配置
-   # ... (相关注释)
-   VITE_USE_LOCAL_JSON_FALLBACK=false
-   ```
+后端数据库正式上线且 gh-pages 不再需要静态演示后，可删除此功能。删除前务必在**带后端的正式部署**上验证 API 模式。
 
-3. **删除代码**
-   
-   从 `src/utils/contentRepository.js` 中删除：
-   - 顶部的注释块（[临时开发功能] 部分）
-   - `import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'`
-   - `import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'`
-   - `USE_LOCAL_JSON_FALLBACK` 常量
-   - `loadLocalFallbackData()` 函数
-   - `hasValidSubNavData()` 函数
-   - `loadSectionBundle()` 函数中所有 `[临时开发功能]` 标记的代码块
+### 删除步骤（概要）
 
-4. **恢复原有代码**
-   
-   将 `loadSectionBundle()` 函数恢复为原始版本（移除兜底逻辑）。
+1. 删除 `src/data/fallback/` 及 `.env.production` 中 `VITE_USE_LOCAL_JSON_FALLBACK`
+2. 将 `.env.production` 的 `VITE_USE_API` 改为 `true`（或按正式部署策略配置）
+3. 从 `contentRepository.js` 移除 `loadLocalFallbackData` / `loadLocalFallbackBundle` 及相关 import
+4. 从 `ttoApi.js` 移除 `isLocalJsonFallbackEnabled()` 分支（或简化为始终走 API）
+5. 删除本文档
 
-5. **删除文档**
-   
-   删除 `docs/temp-dev-features.md`
+## 相关文件
 
-6. **测试验证**
-   
-   确保在正常 API 环境下功能正常工作。
-
-## 注意事项
-
-- 此功能仅用于**生产环境（gh-pages）**，本地开发环境**不启用**
-- 兜底数据文件应定期与正式数据文件保持同步
-- 删除功能前务必在测试环境充分验证
-- 删除后应删除相关文档
-
-## 相关文件清单
-
-- `src/utils/contentRepository.js` - 兜底逻辑实现
-- `src/data/fallback/freeinfo_fallback.json` - 免费信息兜底数据
-- `src/data/fallback/daytrip_fallback.json` - 一日游兜底数据
-- `.env.production` - 生产环境配置（启用兜底）
-- `.env.development` - 开发环境配置（不启用兜底）
-- `docs/temp-dev-features.md` - 本文档
+| 文件 | 说明 |
+| --- | --- |
+| `src/utils/contentRepository.js` | fallback 读取与 API 分支 |
+| `src/utils/ttoApi.js` | `isApiEnabled` / `isLocalJsonFallbackEnabled` |
+| `scripts/sync-fallback.mjs` | split → fallback 同步 |
+| `.env.development` / `.env.production` | 环境开关 |
+| [location-catalog.md](./location-catalog.md) | 内容数据与地点目录维护 |
+| [README.md](../README.md) | 环境总览 |
 
 ---
 
-**创建日期**: 2026-06-18  
-**预计删除日期**: 后端数据库正式上线后
+**创建日期**：2026-06-18  
+**最后修订**：2026-07-21

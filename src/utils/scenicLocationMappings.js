@@ -1,6 +1,7 @@
 /**
- * 地点 town 与「隶属于主景点」belongsToSpot 映射。
- * belongsToSpot 仅用于「位于某主景点内部」的子点位，不用于城镇归属（如 Hobart 城内 POI）。
+ * 地点 town 与 belongsToSpot 映射。
+ * belongsToSpot 可用于：① 位于某主景点内部的子点位（值 = 主卡片 enTitle）；
+ * ② 区域归属（如 Hobart），表示广义上属于该区域的景点。
  */
 
 /** 子景点 enTitle → 所属主景点标识（与主卡片 enTitle 一致） */
@@ -118,6 +119,18 @@ export const SPOT_PARENT_EN_TITLE_ALIASES = {
 }
 
 export const VALID_SPOT_PARENT_KEYS = new Set(Object.keys(SPOT_PARENT_TOWN_MAP))
+
+/** 区域型 belongsToSpot → 展示用中文名（无对应主卡片时使用） */
+export const REGIONAL_BELONGS_TO_SPOT_DISPLAY_NAMES = {
+  Hobart: '霍巴特',
+  Launceston: '朗塞斯顿',
+  Burnie: '伯尼',
+  Devonport: '德文港',
+  Richmond: '里士满',
+  Ross: '罗斯',
+  Strahan: '斯特拉恩',
+  'Cradle Mountain': '摇篮山',
+}
 
 export const TOWN_BY_EN_TITLE_ALIAS = {
   Franklin: 'Huonville',

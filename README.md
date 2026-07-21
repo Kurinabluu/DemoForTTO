@@ -4,11 +4,18 @@
 
 ## 运行配置
 
-开发或生产环境常用配置见 `.env.development` / `.env.production`：
+环境变量见 `.env.development`（本地）与 `.env.production`（gh-pages 构建）。
 
-- `VITE_USE_API=true`：启用后端 API
-- `VITE_API_BASE_URL=/api`：API 基础路径
-- `VITE_APP_BASE=/DemoForTTO/`：gh-pages 子路径部署前缀
+| 变量 | 本地开发 | gh-pages 构建 | 说明 |
+| --- | --- | --- | --- |
+| `VITE_USE_API` | `true` | `false` | 是否请求内容 API（`/api/tto/items` 等） |
+| `VITE_USE_LOCAL_JSON_FALLBACK` | `false` | `true` | 生产构建下是否用 fallback JSON（需 `PROD`） |
+| `VITE_API_BASE_URL` | `/api` | `/api` | API 前缀（登录/收藏等仍可能使用） |
+| `VITE_APP_BASE` | `/DemoForTTO/` | `/DemoForTTO/` | gh-pages 子路径部署前缀 |
+
+**本地开发**：内容只走后端 API；后端不可用时报错或超时提示，**不会**静默回退 JSON。
+
+**gh-pages**：内容读 `src/data/fallback/*.json`，不请求内容 API。详见 [docs/temp-dev-features.md](docs/temp-dev-features.md)。
 
 ## 登录与收藏
 
@@ -31,7 +38,19 @@
 
 ## 数据说明
 
-- **本地开发**：`VITE_USE_API=true`，网格与排序走后端 API；后端不可用时会报错或页面提示，**不会**静默切换到 fallback JSON。
-- **gh-pages 过渡部署**：`VITE_USE_LOCAL_JSON_FALLBACK=true` 且 `VITE_USE_API=false`，直接使用 `src/data/fallback/` 下 JSON，不请求 `/api/tto/*`。
-- 维护内容时先改 `src/data/data.json`，再执行 `npm run data:sync`，并同步 fallback（见 `scripts/sync-fallback.mjs`）。
-- 本地 `src/data/split/freeinfo.json` 仍用于卡片样式与 `isGrid=false` 区块富数据合并。
+- 维护内容：改 `src/data/data.json` → `npm run data:sync`（`dev` / `prebuild` 会自动执行）。
+- 地点邮编目录：`src/data/tas-location-postcodes.json` 为唯一源；批量命令见 [docs/location-catalog.md](docs/location-catalog.md)。
+- gh-pages 部署：推送 `main`/`master` 触发 [`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml)（`data:sync` → `build` → 发布 `dist`）。
+- `src/data/split/freeinfo.json` 仍用于卡片样式与 `isGrid=false` 区块富数据合并。
+
+## 文档索引
+
+| 文档 | 内容 |
+| --- | --- |
+| [docs/location-catalog.md](docs/location-catalog.md) | 地点目录、`catalog:*` 命令、数据同步流程 |
+| [docs/scroll-session.md](docs/scroll-session.md) | 路由与滚动位置恢复 |
+| [docs/temp-dev-features.md](docs/temp-dev-features.md) | gh-pages JSON 兜底说明 |
+| [docs/pre-launch-checklist.md](docs/pre-launch-checklist.md) | 上线前检查清单 |
+| [docs/inquiry-data-spec.md](docs/inquiry-data-spec.md) | 咨询表单字段规范 |
+
+完整索引见 [docs/README.md](docs/README.md)。

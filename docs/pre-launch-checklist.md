@@ -32,10 +32,17 @@
 - ✅ 登录失败限流已加入
 - ✅ 前端 `lint` 已接入
 
-#### 数据兜底
-- ✅ 本地JSON兜底功能（仅生产环境启用）
-- ✅ API失败时自动回退
-- ✅ 完整的fallback数据文件
+#### 数据兜底（gh-pages 静态内容）
+
+- ✅ gh-pages 生产构建使用 fallback JSON（**非** API 失败触发）
+- ✅ `npm run data:sync` + GitHub Actions 自动同步 fallback
+- ✅ 开发环境 API 失败不回退 JSON
+
+#### 地点与排序
+
+- ✅ 地点目录单源：`src/data/tas-location-postcodes.json`
+- ✅ API 模式：`/api/tto/locations`、`/api/tto/location-sections` + `sortMode`
+- ✅ `belongsToSpot` 支持母子景点与区域归属（如 Hobart → 霍巴特）
 
 #### 样式适配
 - ✅ PC端适配
@@ -51,40 +58,33 @@
 
 #### 1. 生产环境配置验证
 
-**问题**：需要验证生产环境API调用是否正常
+**说明**：gh-pages **内容**不走 API（`VITE_USE_API=false`）；登录/收藏/咨询若需可用，须部署带后端的正式环境。
 
 **必须完成**：
-- [ ] 验证`.env.production`中的API地址是否正确
-- [ ] 验证gh-pages部署后的API调用路径
-- [ ] 测试生产环境的收藏功能是否正常
-- [ ] 测试生产环境的咨询功能是否正常
-- [ ] 测试生产环境的登录功能是否正常
+- [ ] 验证 `.env.production`：`VITE_USE_API=false`，`VITE_USE_LOCAL_JSON_FALLBACK=true`
+- [ ] gh-pages：验证 fallback JSON 内容加载、页内搜索、样式
+- [ ] 正式环境（有后端）：验证 API、登录、收藏、咨询
 
 **优先级**：🔴 最高
 
-#### 2. API连接测试
+#### 2. API 连接测试（本地开发 / 正式部署）
 
-**问题**：需要确认前端能正确连接后端API
-
-**必须完成**：
-- [ ] 测试景点列表API调用
-- [ ] 测试景点详情API调用
-- [ ] 测试搜索API调用
-- [ ] 测试收藏API调用（增删查）
-- [ ] 测试咨询API调用
-- [ ] 测试登录API调用
+**必须完成**（`VITE_USE_API=true` 的环境）：
+- [ ] 景点列表与 `location-sections` API
+- [ ] 景点详情 API
+- [ ] 全站搜索 API（`/api/tto/search`）
+- [ ] 收藏、咨询、登录 API
 
 **优先级**：🔴 最高
 
-#### 3. 兜底功能验证
-
-**问题**：需要确认兜底功能在生产环境正常工作
+#### 3. gh-pages fallback 验证
 
 **必须完成**：
-- [ ] 验证兜底数据文件完整性
-- [ ] 验证兜底逻辑触发条件
-- [ ] 测试API失败时的兜底效果
-- [ ] 验证兜底数据显示是否正常
+- [ ] 执行 `npm run build` 后 fallback JSON 已打入 bundle
+- [ ] gh-pages 站点不请求 `/api/tto/items` 等内容 API
+- [ ] 列表、详情、页内搜索正常
+
+**不要**在开发环境验证「API 失败自动回退 JSON」——该行为已移除。
 
 **优先级**：🔴 最高
 
@@ -203,13 +203,12 @@
 - [ ] **登录功能**：登录能成功，会话能自动续期
 - [ ] **收藏功能**：收藏能落库，换设备不丢失
 - [ ] **咨询功能**：咨询能提交，后台能查看
-- [ ] **母子景点**：子景点能正确关联母景点
-- [ ] **地点筛选**：地点筛选能正确工作
-  - 已修复：无结果时显示"暂无匹配结果"而非"服务暂不可用"
-  - 已同步：tasLocationPostcodes.js 和 distanceCalculator.js 新增 70+ 个地点
-  - 地点筛选器覆盖 140+ 个塔斯马尼亚地点
-  - 已实现：三种地区排序模式（按邮编/按英文名/按中文名），默认按邮编排序
-  - 排序切换控件仅在景点/餐厅/住宿子标签下显示
+- [ ] **母子景点**：子景点能关联并打开母卡片详情
+- [ ] **区域归属**：`belongsToSpot: Hobart` 等显示「霍巴特」，无母卡片时为文本不可点
+- [ ] **地点筛选**：地点筛选与三种排序（邮编/英文/中文）正常
+  - API 模式排序由后端 `sortMode` 提供
+  - gh-pages 模式由前端目录 JSON + fallback 数据本地处理
+  - TripsGrid 后端加载超时 15s 后应停止 loading 并提示
 
 #### 应该通过的测试
 
@@ -228,35 +227,37 @@
 
 ## 五、部署流程
 
-### gh-pages部署流程
+### gh-pages 部署流程
 
-1. **构建生产版本**
+1. **推送 main 或 master**（推荐）
+   - GitHub Actions [`.github/workflows/gh-pages.yml`](../.github/workflows/gh-pages.yml) 自动执行：
+     - `npm run data:sync`
+     - `npm run catalog:scan`（仅报告，不阻断）
+     - `npm run build`
+     - 发布 `dist/` 到 `gh-pages` 分支
+
+2. **本地手动构建**（调试）
    ```bash
+   npm run data:sync
    npm run build
    ```
 
-2. **部署到gh-pages**
-   ```bash
-   npm run deploy
-   ```
-
-3. **验证部署结果**
-   - 访问gh-pages地址
-   - 检查页面是否正常显示
-   - 检查API调用是否正常
-   - 检查收藏、咨询功能是否正常
+3. **验证**
+   - 访问 gh-pages 地址
+   - 内容列表来自 fallback JSON（非内容 API）
+   - 样式与页内搜索正常
 
 ---
 
 ## 六、环境配置说明
 
-### 生产环境配置（`.env.production`）
+### 生产环境配置（`.env.production`，gh-pages）
 
 ```bash
-VITE_USE_API=true
+VITE_USE_API=false
 VITE_API_BASE_URL=/api
 VITE_APP_BASE=/DemoForTTO/
-VITE_USE_LOCAL_JSON_FALLBACK=true  # 临时兜底功能
+VITE_USE_LOCAL_JSON_FALLBACK=true
 ```
 
 ### 开发环境配置（`.env.development`）
@@ -265,7 +266,7 @@ VITE_USE_LOCAL_JSON_FALLBACK=true  # 临时兜底功能
 VITE_USE_API=true
 VITE_API_BASE_URL=/api
 VITE_APP_BASE=/DemoForTTO/
-VITE_USE_LOCAL_JSON_FALLBACK=false  # 本地有数据库，不需要兜底
+VITE_USE_LOCAL_JSON_FALLBACK=false
 ```
 
 ---

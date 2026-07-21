@@ -1,6 +1,6 @@
 # 会话恢复：路由与滚动位置
 
-本文说明 tto 前端如何记住用户上次访问的页面与滚动位置，以及与懒加载的协作方式。
+本文说明 tto 前端如何记住用户上次访问的页面与滚动位置，以及与列表加载的协作方式。
 
 ## 存储键（localStorage）
 
@@ -31,29 +31,28 @@ tto_scroll_by_path["/DemoForTTO/trips/freeinfo?subNavName=景点"] = 4820
 
 1. `router.beforeEach` / `App.vue` 根据 `tto_last_path` 跳转到上次页面
 2. `router.afterEach` 读取**当前路由**在 `tto_scroll_by_path` 中的值并恢复
-3. 若页面内容异步加载（如 `TripsGrid`），会等待内容就绪后再恢复
+3. 若页面内容异步加载（如 `TripsGrid`），恢复逻辑会通过 rAF 循环等待 DOM 高度增长
 
-### 3. 与懒加载的隔离
+### 3. 与列表渲染 / 懒加载
 
 **默认景点 / 餐厅 / 住宿列表（无搜索）**
 
-- 按地点分区一次渲染全部条目，不使用 `renderLimit` 截断
-- 恢复滚动仅依赖数据/API 分区加载完成
+- 按地点分区一次渲染全部条目（`shouldShowAllLocationGridItems`），不使用 `renderLimit` 截断
+- API 模式下分区数据来自 `/api/tto/location-sections`；gh-pages 模式来自 fallback JSON 本地分组
 
-**搜索、一日游、特别活动等使用 `renderLimit` 的页面**
+**搜索、一日游、特别活动等仍使用 `renderLimit` 的页面**
 
-- 日常浏览：仍通过滚动触底 / `IntersectionObserver` 增量加载
-- **仅在恢复会话时**：`TripsGrid` 会根据该路由已保存的 `scrollY` **预估并临时抬高** `renderLimit`，以便页面高度足够
-- `main.js` 恢复滚动时：**只在页面总高度增加时**才执行 `scrollTo`，避免每帧反复滚动干扰懒加载
+- 日常浏览：通过滚动触底 / `IntersectionObserver` 增量加载
+- 恢复滚动：`main.js` 中最多 **600 帧 rAF**（约 10 秒）重试；**仅在页面总高度增加时**才执行 `scrollTo`，避免每帧反复滚动干扰懒加载
+- 带 `dialogItemId` 且无 `?s=` 时，`TripsGrid` 会通过 `loadAllItems()` / `locateTargetPageForDialogItem()` 扩展可见条目以定位弹窗目标
 
-### 4. 内容就绪事件
+**说明**：当前实现**不会**在恢复前主动抬高 `renderLimit`；依赖上述 rAF 重试与懒加载自然增高页面。
 
-`TripsGrid` 在以下时机会派发 `tto:content-ready`：
+### 4. `tto:content-ready` 事件（预留）
 
-- 免费信息/一日游数据加载完成
-- 后端地点分区（`location-sections`）加载完成
+`main.js` 监听了 `tto:content-ready`，收到后会再次尝试恢复当前路由滚动。
 
-全局监听该事件后会**再次**尝试恢复当前路由的滚动位置（此时 DOM 高度通常已足够）。
+当前 **`TripsGrid` 尚未派发**该事件；恢复主要依赖 `router.afterEach` + rAF 循环。若后续在数据/分区加载完成时派发该事件，可进一步改善深位置恢复。
 
 ### 5. 强制回顶部
 
@@ -62,26 +61,46 @@ Header / 导航中调用 `scrollToTop()` 时：
 - 会设置 `resetScrollOnNextRoute`
 - 下一次路由 `afterEach` 将目标路由的滚动记录写为 `0`，并滚到顶部
 
-带搜索参数 `?s=` 的路由始终滚到顶部，不参与恢复。
+以下路由**始终滚到顶部**，不参与恢复：
 
-## 地点排序（邮编 / 英文 / 中文）
+- 带搜索参数 `?s=` 的路由
+- 消费了 `resetScrollOnNextRoute` 的路由
+
+## 地点排序与网格加载
 
 | 环境 | 行为 |
 | --- | --- |
-| **本地开发**（`VITE_USE_API=true`） | 景点/餐厅/住宿由后端 API 排序；API 失败直接报错，不静默回退 JSON |
-| **gh-pages**（`VITE_USE_LOCAL_JSON_FALLBACK=true`，`VITE_USE_API=false`） | 使用 `src/data/fallback/*.json`，前端本地排序与搜索 |
+| **本地开发**（`VITE_USE_API=true`，`VITE_USE_LOCAL_JSON_FALLBACK=false`） | 景点/餐厅/住宿列表与排序走后端 API；API 失败直接报错，**不**静默回退 JSON |
+| **gh-pages**（`VITE_USE_API=false`，`VITE_USE_LOCAL_JSON_FALLBACK=true`） | 使用 `src/data/fallback/*.json`；列表页内搜索为前端本地匹配 |
 
 | sortMode | 说明 |
 | --- | --- |
-| `postcode` | 按邮编 |
+| `postcode` | 按邮编（默认） |
 | `nameEn` | 按英文地名 |
-| `nameZh` | 按中文地名；API 模式下分区标题为「中文名 + 英文标签」 |
+| `nameZh` | 按中文地名 |
 
-中文名（API 模式）：`tto_location.name_zh` + JSON 种子。gh-pages 兜底数据以 fallback JSON 中的 `nameZh` 为准。
+**API 模式**：分区标题由后端 `/api/tto/location-sections` 返回的 `section.title` 决定（含 `nameZh` 排序时的中文展示）。
 
-### 6. 恢复失败时的保护
+**gh-pages 模式**：由前端 `getLocationDisplayLabel()` + `src/data/tas-location-postcodes.json` 拼接展示。
 
-若在约 10 秒内仍无法滚到目标位置（例如网络慢、内容未加载完）：
+中文名来源：后端 `tto_location.name_zh`（由 `tas-location-postcodes.json` 种子同步）；gh-pages 以目录 JSON 中的 `nameZh` 为准。
+
+### TripsGrid 后端加载超时
+
+API 模式下请求地点目录与 `location-sections` 时，单次超时 **15 秒**（`BACKEND_GRID_LOAD_TIMEOUT_MS`）。超时后会结束 loading 并提示检查后端，避免页面无限「加载中…」。
+
+## `belongsToSpot` 与「所在景点」展示
+
+`belongsToSpot` 可用于：
+
+1. **母子景点**：值为父卡片 `enTitle`（如 `Cradle Mountain`），可点击打开父卡片详情
+2. **区域归属**：值为区域标识（如 `Hobart`），展示为「霍巴特」，**无对应主卡片时为纯文本、不可点击**
+
+展示名经 `resolveBelongsToSpotDisplayName()` 解析（主景点中文名 → 区域映射 → 目录 `nameZh` → 原值）。
+
+## 恢复失败时的保护
+
+若在约 10 秒（600 帧 rAF）内仍无法滚到目标位置（例如网络慢、内容未加载完）：
 
 - **不会**用错误的中间位置覆盖 `tto_scroll_by_path` 中已保存的值
 - 用户下次进入仍保留原目标位置
@@ -92,11 +111,11 @@ Header / 导航中调用 `scrollToTop()` 时：
 
 | 文件 | 职责 |
 | --- | --- |
-| `src/stores/nav.js` | 路径/滚动读写、`resetScrollOnNextRoute` |
-| `src/main.js` | 全局滚动监听、路由后恢复、`tto:content-ready` 监听 |
+| `src/stores/nav.js` | 路径/滚动读写、`resetScrollOnNextRoute`、`isRestoringScroll` |
+| `src/main.js` | 全局滚动监听、路由后 rAF 恢复、`tto:content-ready` 监听（预留） |
 | `src/App.vue` | 电梯导航滚动监听（附带保存） |
 | `src/layouts/Layout.vue` | 导航点击时 `scrollToTop` + 重置下一页滚动 |
-| `src/views/TripsGrid.vue` | 恢复前扩展 `renderLimit`、`tto:content-ready` |
+| `src/views/TripsGrid.vue` | 地点分区网格、后端 15s 超时、`shouldShowAllLocationGridItems` |
 
 ## 调试建议
 
