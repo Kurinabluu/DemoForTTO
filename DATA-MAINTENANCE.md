@@ -1,14 +1,58 @@
 # TTO 内容数据维护指南（无后台管理系统）
 
-适用：`src/data/data.json` 及关联 split / fallback / 云数据库。
+适用：`src/data/data.json`、split / fallback、以及 **Aiven 云数据库**。
+
+---
+
+## 0. 谁才是「唯一真相」？（上线后必看）
+
+**云上演示（gh-pages + Render）运行时，只有数据库是数据源。**  
+前端 `VITE_USE_API=true` 且关闭 JSON fallback 时，页面内容 **全部来自 API → MySQL**，**不会**读仓库里的 `data.json`。
+
+| 角色 | JSON（`data.json`） | 数据库（Aiven） |
+| --- | --- | --- |
+| 线上用户看到的 | ❌ 不参与 | ✅ **唯一来源** |
+| 你的编辑草稿 / 批量工具 | ✅ 方便改、可版本管理 | 可选直接 SQL |
+| 灌库 / 初次上线 | ✅ 导入种子 | 接收导入 |
+| 日常运维默认 | 备份与 Git 历史 | **以库为准** |
+
+因此 **不是**「两个数据源同时生效」，而是：
+
+```
+JSON  ──(仅在你主动 import 时)──▶  数据库  ──API──▶  网站
+         平时不自动同步
+```
+
+### ⚠️ TTO 批量导入的真实行为（重要）
+
+Render 上请保持 **`TTO_IMPORT_ENABLED=false`**（默认已是 false）。  
+**不要**在内容已在线后，用旧 JSON 再跑一遍全量导入，因为导入器会：
+
+1. **同 `itemKey` 的记录**：用 JSON 里的 title、desc、features 等 **整段覆盖** 数据库；
+2. **JSON 里没有的条目**：可能被 **prune 删掉**（`clear-before-import=false` 时也会删「本次导入未出现的 item」）。
+
+只有在你要 **刻意用 JSON 全量对齐数据库** 时才手动开 import，且务必确认 JSON 已包含库里应有的一切。
+
+**绝不要**在生产环境开 `TTO_IMPORT_CLEAR_BEFORE_IMPORT=true` / `import` profile，除非要清库重建。
+
+### 推荐工作流（已有云库之后）
+
+| 你要做的事 | 推荐做法 |
+| --- | --- |
+| 改几条景点文案上云 | **直接改 Aiven**（SQL / 以后的管理后台），或改 JSON 后 **一次性、有 conscious 地 import** |
+| 只在本地/Git 留底 | 改 `data.json` → `npm run data:sync` → commit（**不必**每次推代码都 import） |
+| 库里有新数据、JSON 落后 | **以库为准**；需要时再 export 回 JSON，不要 import 覆盖 |
+| 新增一批条目 | 改 JSON → 确认 itemKey → **手动 import 一次**（新 key 会插入；同 key 会覆盖） |
+
+---
 
 ## 1. 黄金规则
 
 1. **只改源文件**：日常编辑 `src/data/data.json`（不要直接改 `split/` 或 `fallback/`，它们由脚本生成）。
 2. **改完必同步**：`npm run data:sync`（`dev` / `prebuild` / CI 也会自动跑）。
 3. **改完必提交**：未提交的 `data.json` 不要用 `git restore` 覆盖；清理仓库前先 `git add` / commit。
-4. **稳定主键**：每条景点尽量保留 `itemKey`（如 `trips/freeinfo:景点:crater-lake-lookout`），后端导入靠它 upsert，改标题不会变新记录。
-5. **要上云数据库**：前端 commit 后，在 `tto-backend` 用导入任务把最新 `data.json` 灌进 Aiven（见下文 §6）。
+4. **稳定主键**：每条景点保留 `itemKey`；导入时同 key **会覆盖** 库中同条记录（见 §0）。
+5. **上云灌库**：仅首次或 **你确认要 JSON→DB 对齐时** 才开 import；日常 Render **`TTO_IMPORT_ENABLED=false`**。
 
 ## 2. 一条命令搞定的同步链
 
@@ -133,21 +177,25 @@ jq '.. | objects | select(.itemKey=="trips/freeinfo:景点:empire-art-box")' src
 - [ ] `npm run data:sync` 无报错
 - [ ] 本地或 gh-pages 搜索能命中
 
-## 6. 同步到云数据库（Render + Aiven）
+## 6. 同步到云数据库（仅在有需要时手动执行）
 
-1. `tto-demo`：`npm run data:sync` 并 commit `data.json`
-2. `tto-backend` 设置环境变量（见 `private-docs/cloud-config.md`，勿提交密钥）：
+**前提**：Render 生产环境 **`TTO_IMPORT_ENABLED=false`**，避免每次重启误导入。
+
+仅在「JSON 已改完、且你确认要用 JSON 覆盖/补齐数据库」时：
+
+1. `tto-demo`：`npm run data:sync`，确认 `data.json` 含所有应保留的 itemKey
+2. 临时设置（本地连 Aiven 或 Render 一次性 Job）：
 
 ```powershell
-$env:TTO_IMPORT_SOURCE_PATH = "V:/WebForZanChen/tto-demo/src/data/data.json"
 $env:TTO_IMPORT_ENABLED = "true"
 $env:TTO_IMPORT_CLEAR_BEFORE_IMPORT = "false"
+$env:TTO_IMPORT_SOURCE_PATH = "V:/WebForZanChen/tto-demo/src/data/data.json"
 ```
 
-3. 用 `import` profile 或临时启用导入启动一次后端，完成后 **`TTO_IMPORT_ENABLED=false`**
-4. 验证：`SELECT COUNT(*) FROM tto_content_item;`，前端 gh-pages 刷新
+3. 启动 import 一次，完成后 **`TTO_IMPORT_ENABLED=false`**
+4. 验证：`SELECT item_key, title FROM tto_content_item ORDER BY id DESC LIMIT 10;`
 
-测试连通性可执行 `tto-backend/sql/tto_hobart7000_test_data.sql` 插入单条测试记录。
+**若数据库已是权威、JSON 只是个人编辑习惯**：改库即可，**不要** import；需要时再把库 export 回 JSON 做备份。
 
 ## 7. 常见错误
 
