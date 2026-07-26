@@ -1,56 +1,74 @@
-# tto demo
+# TTO Demo
 
-这是 tto 项目的前端 Demo。
+塔斯马尼亚旅游内容演示站前端。支持本地联调、GitHub Pages 云部署（连接 Render + Aiven）。
 
-## 运行配置
+## 线上地址
 
-环境变量见 `.env.development`（本地）与 `.env.production`（gh-pages 构建）。
+| 环境 | URL |
+| --- | --- |
+| gh-pages 演示 | https://kurinabluu.github.io/DemoForTTO/ |
+| 发布分支 | 推 `viewDemo` → Actions 构建 → 发布到 `vue-pages` |
+
+## 快速开始
+
+```bash
+npm install
+npm run dev          # 自动 data:sync + 启动 Vite（默认走 /api 代理）
+npm run build        # 生产构建
+npm run lint         # ESLint
+```
+
+本地需同时启动 `tto-backend`（默认 `http://127.0.0.1:8080`），Vite 会把 `/api` 代理到后端。
+
+## 环境变量
 
 | 变量 | 本地开发 | gh-pages 构建 | 说明 |
 | --- | --- | --- | --- |
-| `VITE_USE_API` | `true` | `false` | 是否请求内容 API（`/api/tto/items` 等） |
-| `VITE_USE_LOCAL_JSON_FALLBACK` | `false` | `true` | 生产构建下是否用 fallback JSON（需 `PROD`） |
-| `VITE_API_BASE_URL` | `/api` | `/api` | API 前缀（登录/收藏等仍可能使用） |
-| `VITE_APP_BASE` | `/DemoForTTO/` | `/DemoForTTO/` | gh-pages 子路径部署前缀 |
+| `VITE_USE_API` | `true` | `true`（Actions 注入） | 是否请求内容 API |
+| `VITE_USE_LOCAL_JSON_FALLBACK` | `false` | `false` | 关闭静态 JSON 兜底，走云 API |
+| `VITE_API_BASE_URL` | `/api` | GitHub 变量 `TTO_API_BASE_URL` | 须为完整 URL 且含 `/api` |
+| `VITE_APP_BASE` | `/DemoForTTO/` | `/DemoForTTO/` | gh-pages 子路径 |
 
-**本地开发**：内容只走后端 API；后端不可用时报错或超时提示，**不会**静默回退 JSON。
+GitHub 仓库 Settings → Variables：`TTO_API_BASE_URL=https://<render-host>.onrender.com/api`
 
-**gh-pages**：内容读 `src/data/fallback/*.json`，不请求内容 API。详见 [docs/temp-dev-features.md](docs/temp-dev-features.md)。
+## 登录与收藏（2026-07 云部署）
 
-## 登录与收藏
+- gh-pages 与 Render 跨域：登录后 JWT 存 `localStorage`（`tto_auth_token`），请求头带 `token`；后端同时返回 `X-Auth-Token` 供续期。
+- 多标签页通过 `BroadcastChannel` 同步登录态。
+- 未登录收藏存本地；登录后可迁移到账号收藏。
+- 收藏页需先 `bootstrapAuthSession` 再拉远程列表；列表加载失败且本地已有数据时不会清空。
 
-- 登录态由后端 `HttpOnly Cookie` 维护，前端不再持久化 token。
-- 其他打开的标签页会通过 `BroadcastChannel` 同步登录/退出状态。
-- 未登录时的收藏只保存在 `localStorage`，这部分不包含 token 这类敏感信息。
-- 登录后只迁移本地收藏到账号收藏，不会把账号收藏反向写回本地。
-- 退出登录后会切回本地收藏视图，账号收藏仍留在服务端。
-- 请求后端时会自动携带 Cookie，并在服务端完成会话校验与续期。
-- 收藏页会根据当前收藏项自动补全特别活动、景点、餐厅、住宿等内容。
+## 数据维护（无后台时）
 
-## 用户感知
+**唯一源文件**：`src/data/data.json`
 
-- 登录更安全，token 不再暴露给前端脚本。
-- 浏览器长时间不关时的会话也更可控。
-- 密码传输后的存储方式更规范，账号被撞库的风险更低。
-- 异常不会再把堆栈直接暴露给前端，出错时体验更稳定。
-- 登录失败过多会被临时限制，减少暴力尝试。
-- 前端和后端都补了 `lint`，后续改动更容易保持一致。
+改完后执行：
 
-## 数据说明
+```bash
+npm run data:sync
+```
 
-- 维护内容：改 `src/data/data.json` → `npm run data:sync`（`dev` / `prebuild` 会自动执行）。
-- 地点邮编目录：`src/data/tas-location-postcodes.json` 为唯一源；批量命令见 [docs/location-catalog.md](docs/location-catalog.md)。
-- gh-pages 部署：推送 `main`/`master` 触发 [`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml)（`data:sync` → `build` → 发布 `dist`）。
-- `src/data/split/freeinfo.json` 仍用于卡片样式与 `isGrid=false` 区块富数据合并。
+会拆分 `split/*.json`、更新 `fallback/`、搜索索引等。详细批量维护方法见 **[DATA-MAINTENANCE.md](./DATA-MAINTENANCE.md)**。
+
+地点邮编目录：`src/data/tas-location-postcodes.json`，命令见 `npm run catalog:*`。
+
+## 部署流程
+
+1. 修改代码 / 数据并 commit
+2. 推送到 `viewDemo`
+3. [`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml) 自动：`data:sync` → 校验 `TTO_API_BASE_URL` → `build` → 发布 `dist` 到 `vue-pages`
 
 ## 文档索引
 
 | 文档 | 内容 |
 | --- | --- |
-| [docs/location-catalog.md](docs/location-catalog.md) | 地点目录、`catalog:*` 命令、数据同步流程 |
-| [docs/scroll-session.md](docs/scroll-session.md) | 路由与滚动位置恢复 |
-| [docs/temp-dev-features.md](docs/temp-dev-features.md) | gh-pages JSON 兜底说明 |
-| [docs/pre-launch-checklist.md](docs/pre-launch-checklist.md) | 上线前检查清单 |
-| [docs/inquiry-data-spec.md](docs/inquiry-data-spec.md) | 咨询表单字段规范 |
+| [DATA-MAINTENANCE.md](./DATA-MAINTENANCE.md) | **JSON 批量改数据、同步、导入数据库** |
+| [tto-backend/README.md](../tto-backend/README.md) | 后端启动、导入、云环境变量 |
+| 本机 `docs/`（已 gitignore） | 可选本地扩展文档 |
 
-完整索引见 [docs/README.md](docs/README.md)。
+## 近期功能要点（2026-07）
+
+- gh-pages 全面切换云 API，不再依赖静态 fallback 读内容
+- 全站搜索：结果页统一加载态，去掉搜索按钮双重等待
+- 景点子搜索：清除关键字时显示加载中，避免误报「服务暂不可用」
+- 收藏页导航与加载修复；网格区与子搜索均有 loading 反馈
