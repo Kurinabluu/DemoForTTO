@@ -12,6 +12,7 @@ import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
 import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
+import { useLoadingStore } from '@/stores/loadingStore'
 import {
     buildLocationCatalogFromItems,
     buildLocationCascaderOptions,
@@ -35,6 +36,7 @@ import {
 } from '@/utils/spotRelations'
 
 const route = useRoute()
+const loadingStore = useLoadingStore()
 
 const props = defineProps({
     activeTag: { type: String, required: true },
@@ -211,6 +213,8 @@ const loadingState = computed(() => {
     }
     return false
 })
+
+const gridLoadingState = computed(() => loadingState.value && !loadingStore.fullscreenLoading)
 
 function getImageLoading(index) {
     return index < FIRST_SCREEN_PRIORITY_COUNT ? 'eager' : 'lazy'
@@ -1838,7 +1842,7 @@ onUnmounted(() => {
     <div v-loading.fullscreen="loadingState" element-loading-spinner-color="#279486"
         element-loading-background="rgba(255, 255, 255, 0.8)"></div> -->
 
-    <div class="grid-content-loading" v-loading="loadingState" element-loading-text="加载中..."
+    <div class="grid-content-loading" v-loading="gridLoadingState" element-loading-text="加载中..."
         element-loading-spinner-color="#279486" element-loading-background="rgba(255, 255, 255, 0.65)">
         <!-- 主内容区 -->
         <!-- 一日游：根据传入的 dayTripTab 渲染对应数据 -->
@@ -2316,7 +2320,7 @@ onUnmounted(() => {
     .coming-grid {
         width: 90%;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 16px;
         padding: 28px 0 40px;
 
@@ -2355,6 +2359,7 @@ onUnmounted(() => {
 
         .coming-card {
             display: flex;
+            min-width: 0;
             border-radius: 12px;
             flex-direction: column;
             justify-content: flex-start;
@@ -2373,8 +2378,10 @@ onUnmounted(() => {
         font-weight: 600;
         letter-spacing: 2px;
         color: #1f2937;
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        line-height: 1.45;
+        min-height: calc(1.45em * 2);
     }
 
     .card-sub {
@@ -2449,8 +2456,12 @@ onUnmounted(() => {
     .card-sub {
         display: -webkit-box;
         -webkit-box-orient: vertical;
+        max-width: 100%;
+        min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
+        overflow-wrap: anywhere;
+        word-break: break-word;
     }
 
     .search-highlight {

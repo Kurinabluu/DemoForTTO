@@ -164,8 +164,10 @@ export async function pingApi() {
   return requestJson('/common/ping')
 }
 
-export async function fetchAuthSession() {
-  return requestJson('/auth/session')
+export async function fetchAuthSession(token) {
+  return requestJson('/auth/session', {
+    token: token || undefined,
+  })
 }
 
 export async function login(username, password) {

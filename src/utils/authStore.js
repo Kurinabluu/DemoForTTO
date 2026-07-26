@@ -4,21 +4,48 @@ import {
   isApiEnabled,
   login as apiLogin,
   logoutAccount as apiLogout,
+  registerTokenRefreshHandler,
   registerAccount as apiRegister,
 } from '@/utils/ttoApi'
 
 const AUTH_SYNC_CHANNEL = 'tto-auth-sync'
+const AUTH_TOKEN_STORAGE_KEY = 'tto_auth_token'
 const authSyncChannel = typeof BroadcastChannel === 'function' ? new BroadcastChannel(AUTH_SYNC_CHANNEL) : null
 
 export const isLoggedIn = ref(false)
 const username = ref('')
 const userId = ref(null)
+const authToken = ref(loadStoredToken())
 let bootstrapPromise = null
+
+function loadStoredToken() {
+  if (typeof localStorage === 'undefined') return ''
+  try {
+    return localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || ''
+  } catch {
+    return ''
+  }
+}
+
+function persistToken(token) {
+  authToken.value = token || ''
+  if (typeof localStorage === 'undefined') return
+  try {
+    if (authToken.value) {
+      localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authToken.value)
+    } else {
+      localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
 
 function getCurrentSession() {
   return {
     username: username.value || '',
     userId: userId.value,
+    token: authToken.value,
   }
 }
 
@@ -32,10 +59,12 @@ function applyAuthSession(session, { broadcast = false } = {}) {
   const nextUserId = session?.userId != null && session.userId !== ''
     ? Number(session.userId)
     : null
+  const nextToken = session?.token ? String(session.token).trim() : authToken.value
 
   isLoggedIn.value = Boolean(nextUsername || Number.isFinite(nextUserId))
   username.value = nextUsername
   userId.value = Number.isFinite(nextUserId) ? nextUserId : null
+  persistToken(isLoggedIn.value ? nextToken : '')
 
   if (broadcast) {
     broadcastAuthSession(isLoggedIn.value ? 'auth-session' : 'auth-clear', isLoggedIn.value ? getCurrentSession() : null)
@@ -50,7 +79,7 @@ export async function bootstrapAuthSession() {
       if (!isApiEnabled()) {
         return null
       }
-      const session = await fetchAuthSession()
+      const session = await fetchAuthSession(getAuthToken())
       applyAuthSession(session, { broadcast: Boolean(session) })
       return session
     } catch {
@@ -65,7 +94,7 @@ export async function bootstrapAuthSession() {
 }
 
 export function getAuthToken() {
-  return ''
+  return authToken.value || ''
 }
 
 export function getAuthUsername() {
@@ -107,6 +136,7 @@ export async function authenticateRegister(usernameInput, passwordInput, { displ
 export async function login(usernameInput, passwordInput) {
   const data = await authenticateLogin(usernameInput, passwordInput)
   setAuthSession({
+    token: data?.token,
     username: data?.username,
     userId: data?.userId,
   })
@@ -116,6 +146,7 @@ export async function login(usernameInput, passwordInput) {
 export async function register(usernameInput, passwordInput, { displayName, email } = {}) {
   const data = await authenticateRegister(usernameInput, passwordInput, { displayName, email })
   setAuthSession({
+    token: data?.token,
     username: data?.username,
     userId: data?.userId,
   })
@@ -154,5 +185,11 @@ if (authSyncChannel) {
     broadcastAuthSession('auth-request')
   })
 }
+
+registerTokenRefreshHandler((token) => {
+  if (token) {
+    persistToken(String(token).trim())
+  }
+})
 
 void bootstrapAuthSession()

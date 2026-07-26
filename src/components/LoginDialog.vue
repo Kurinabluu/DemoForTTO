@@ -7,7 +7,7 @@ import {
   createLoginRules,
   createRegisterRules,
 } from '@/utils/authFormValidation'
-import { User, Lock, Star, Monitor, Message } from '@element-plus/icons-vue'
+import { User, Lock, Star, Monitor, Message, Loading } from '@element-plus/icons-vue'
 import { authenticateLogin, authenticateRegister, setAuthSession, isLoggedIn, getAuthUsername, logout } from '@/utils/authStore'
 import {
   switchToLocalFavorites,
@@ -400,14 +400,20 @@ function handleLogout() {
         </el-button>
         <template v-else-if="migrationWarningVisible">
           <el-button class="footer-btn migration-action-btn" :disabled="loading" @click="handleMigrationLater">稍后操作</el-button>
-          <el-button type="danger" class="footer-btn migration-action-btn force-login-btn" :loading="loading" @click="handleMigrationForce">
-            继续登录
+          <el-button type="danger" class="footer-btn migration-action-btn force-login-btn" :disabled="loading" @click="handleMigrationForce">
+            <span class="auth-button-content">
+              <span>继续登录</span>
+              <el-icon v-if="loading" class="auth-button-loading-icon"><Loading /></el-icon>
+            </span>
           </el-button>
         </template>
         <template v-else>
           <el-button class="footer-btn" @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" class="footer-btn primary" :loading="loading" @click="handleSubmit">
-            {{ authMode === 'register' ? '注册并登录' : '登录' }}
+          <el-button type="primary" class="footer-btn primary" :disabled="loading" @click="handleSubmit">
+            <span class="auth-button-content">
+              <span>{{ authMode === 'register' ? '注册并登录' : '登录' }}</span>
+              <el-icon v-if="loading" class="auth-button-loading-icon"><Loading /></el-icon>
+            </span>
           </el-button>
         </template>
       </div>
@@ -633,6 +639,28 @@ function handleLogout() {
 .footer-btn {
   min-width: 88px;
   border-radius: 8px;
+}
+
+.auth-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.auth-button-loading-icon {
+  font-size: 14px;
+  animation: auth-button-spin 1s linear infinite;
+}
+
+@keyframes auth-button-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .footer-btn.primary {
