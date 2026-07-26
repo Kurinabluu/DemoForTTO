@@ -433,6 +433,28 @@ const targetItemTitle = computed(() => {
     }
 })
 
+function findTargetDialogCard(dialogKey) {
+    if (!dialogKey || typeof document === 'undefined') return null
+    const cards = document.querySelectorAll('[data-tour-title]')
+    return Array.from(cards).find((card) => card?.dataset?.tourTitle === dialogKey) || null
+}
+
+function scrollToTargetDialogCard(dialogKey) {
+    if (!dialogKey || typeof window === 'undefined') return
+    nextTick(() => {
+        window.requestAnimationFrame(() => {
+            const target = findTargetDialogCard(dialogKey)
+            if (!target) return
+            const offsetTop = target.getBoundingClientRect().top + window.pageYOffset
+            window.scrollTo({ top: Math.max(0, offsetTop - 180), behavior: 'smooth' })
+            target.classList.add('tour-target-highlight')
+            window.setTimeout(() => {
+                target.classList.remove('tour-target-highlight')
+            }, 1800)
+        })
+    })
+}
+
 // 根据当前上下文获取“完整列表”（与网格展示顺序一致），用于计算目标条目所在页
 function getFullListForLocate() {
     // 一日游场景
@@ -469,6 +491,7 @@ function locateTargetPageForDialogItem() {
     const targetVisibleCount = Math.max(INITIAL_RENDER_COUNT, targetPage * pageSize)
     renderLimit.value = Math.min(list.length, targetVisibleCount)
     hasMore.value = renderLimit.value < list.length
+    scrollToTargetDialogCard(title)
 }
 
 
@@ -609,6 +632,9 @@ async function syncBackendLocationSections() {
         if (requestId !== backendSectionsRequestSeq) return
         backendLocationSections.value = Array.isArray(sections) ? sections : []
         backendSectionsSynced.value = true
+        if (route.query.dialogItemId) {
+            nextTick(locateTargetPageForDialogItem)
+        }
     } catch (error) {
         if (requestId !== backendSectionsRequestSeq) return
         notifyApiError(error, { action: '加载地点分组', dedupeKey: 'trips:location-sections' })
@@ -948,7 +974,7 @@ watch(() => [props.activeTag, props.subTab, searchKw.value, props.dayTripTab], (
 
 // 当 URL 中的 dialogItemId / 搜索词 / 子标签 或每页数量变化时，尝试重新定位目标页
 watch(
-    () => [targetItemTitle.value, searchKw.value, props.subTab, itemsPerPage.value, datas.value],
+    () => [targetItemTitle.value, searchKw.value, props.subTab, itemsPerPage.value, datas.value, backendSectionsSynced.value, backendLocationSections.value],
     () => {
         if (!route.query.dialogItemId) return
         locateTargetPageForDialogItem()
@@ -2366,6 +2392,13 @@ onUnmounted(() => {
             cursor: pointer;
             gap: 5px;
             border: 2px solid transparent;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+
+            &.tour-target-highlight {
+                border-color: #33b1a3;
+                box-shadow: 0 0 0 4px rgba(51, 177, 163, 0.18), 0 10px 28px rgba(17, 24, 39, 0.16);
+                transform: translateY(-2px);
+            }
 
             img {
                 object-fit: cover;

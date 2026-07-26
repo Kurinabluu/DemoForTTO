@@ -106,7 +106,7 @@ export function getAuthUserId() {
 }
 
 export function shouldUseRemoteFavorites() {
-  return isApiEnabled() && isLoggedIn.value
+  return isApiEnabled() && isLoggedIn.value && Boolean(getAuthToken())
 }
 
 export function setAuthSession(session) {
