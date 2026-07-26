@@ -12,7 +12,6 @@ import {
   SEARCH_PAGE_SIZE
 } from '@/utils/searchService'
 import { consumeSearchNavigationIntent } from '@/utils/searchNavigation'
-import { withLoading } from '@/utils/loadingUtils'
 import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback'
 
 const route = useRoute()
@@ -213,10 +212,7 @@ const performSearch = async ({ page = currentPage.value, force = false } = {}) =
   isLoading.value = true
   loadError.value = ''
   try {
-    const payload = await withLoading(
-      () => searchAllContent(query, normalizedPage, pageSize, { force }),
-      { text: '正在搜索，请稍候...' }
-    )
+    const payload = await searchAllContent(query, normalizedPage, pageSize, { force })
     if (requestId !== searchRequestSeq) {
       return
     }

@@ -6,7 +6,6 @@ import Layout from './layouts/Layout.vue'
 import { useNavStore } from '@/stores/nav'
 import { useRouter } from 'vue-router'
 import { useLoadingStore } from '@/stores/loadingStore'
-import { withLoading } from '@/utils/loadingUtils'
 import { Z_INDEX } from '@/constants/zIndex'
 
 // 电梯导航相关
@@ -58,9 +57,12 @@ const togglePosition = () => {
 }
 
 const goToFavorites = () => {
-  void withLoading(undefined, { text: '正在打开收藏夹...' })
-  const href = router.resolve({ name: 'Favorites' }).href
-  window.open(href, '_blank', 'noopener,noreferrer')
+  const resolved = router.resolve({ name: 'Favorites' })
+  const absoluteUrl = new URL(resolved.href, window.location.href).href
+  const opened = window.open(absoluteUrl, '_blank', 'noopener,noreferrer')
+  if (!opened) {
+    router.push({ name: 'Favorites' })
+  }
 }
 
 const showTipsModal = ref(false)

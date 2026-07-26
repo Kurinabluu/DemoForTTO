@@ -25,7 +25,7 @@ import {
 } from '@/utils/freeInfoImageUtils';
 import { loadCatalogItemDetail } from '@/utils/contentRepository';
 import { isApiEnabled } from '@/utils/ttoApi';
-import { shouldUseRemoteFavorites, logout } from '@/utils/authStore';
+import { shouldUseRemoteFavorites, logout, bootstrapAuthSession } from '@/utils/authStore';
 import { withLoading } from '@/utils/loadingUtils';
 import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback';
 
@@ -438,11 +438,7 @@ async function syncRemoteFavoritesView({ showLoading = false, forceRefresh = fal
         return;
       }
     } else if (!isRemoteFavoritesLoaded() || forceRefresh) {
-      if (showLoading) {
-        await withLoading(() => refreshRemoteFavorites(true), { text: '正在同步收藏...' });
-      } else {
-        await refreshRemoteFavorites(true);
-      }
+      await refreshRemoteFavorites(true)
     }
     if (useRemoteFavorites.value) {
       applyRemoteFavoritesView();
@@ -476,6 +472,9 @@ async function retryLoadFavorites() {
 
 onMounted(async () => {
   window.addEventListener('resize', handleResize);
+  if (isApiEnabled()) {
+    await bootstrapAuthSession();
+  }
   await syncFavorites();
 });
 
@@ -513,7 +512,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="favorites-page" :class="{ 'is-syncing': isFavoritesSyncing }">
+  <div class="favorites-page" :class="{ 'is-syncing': isFavoritesSyncing }" v-loading="remoteFavoritesLoading || isFavoritesSyncing"
+    element-loading-text="正在加载收藏...">
     <!-- 页面标题 -->
     <div class="page-header">
       <div class="page-title-row">

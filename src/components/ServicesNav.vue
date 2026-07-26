@@ -27,7 +27,6 @@ const searchInput = ref('')
 const searchKeyword = ref('')
 const committedSearchKeyword = ref('')
 const searchKeywordEdited = ref(false)
-const isSearching = ref(false)
 
 const localActiveTag = ref('')
 
@@ -278,9 +277,8 @@ watch(() => router.currentRoute.value.path, () => {
 // 搜索：未改词且未编辑输入框时，第 1 页不请求；其他页只回到第 1 页并用缓存
 async function onSearch() {
   const keyword = (searchKeyword.value || '').trim()
-  if (!keyword || isSearching.value) return
+  if (!keyword) return
 
-  isSearching.value = true
   try {
     const onSearchPage = route.path.endsWith('/search')
     const currentPage = Number(route.query.page) || 1
@@ -305,8 +303,6 @@ async function onSearch() {
     })
   } catch (error) {
     notifyApiError(error, { action: '搜索', dedupeKey: 'search:nav' })
-  } finally {
-    isSearching.value = false
   }
 }
 </script>
@@ -343,8 +339,7 @@ async function onSearch() {
               </el-icon>
             </template>
           </el-input>
-          <el-button type="primary" size="large" class="search-btn fs14" :loading="isSearching" :disabled="isSearching"
-            @click="onSearch">
+          <el-button type="primary" size="large" class="search-btn fs14" @click="onSearch">
             <el-icon>
               <Search />
             </el-icon>

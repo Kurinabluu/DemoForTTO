@@ -117,11 +117,14 @@ const handleSearchEnter = () => {
 }
 
 // 处理清除搜索
-const handleSearchClear = () => {
+const handleSearchClear = async () => {
     localSearchKeyword.value = ''
     searchQuery.value = ''
     subNavKeywordItems.value = []
     subNavKeywordSynced.value = false
+    if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
+        await syncBackendLocationSections()
+    }
 }
 
 // 懒加载相关状态
@@ -204,8 +207,8 @@ const useBackendLocationSections = computed(() => {
 })
 
 const loadingState = computed(() => {
-    if (isSearching.value) return true
     if (prefersBackendLocationGrid.value) {
+        if (backendSectionsLoading.value) return true
         const awaitingFirstSections = !backendSectionsSynced.value && backendLocationSections.value.length === 0
         if (!awaitingFirstSections) return false
         if (backendSectionsLoadSettled.value) return false
@@ -214,7 +217,14 @@ const loadingState = computed(() => {
     return false
 })
 
-const gridLoadingState = computed(() => loadingState.value && !loadingStore.fullscreenLoading)
+const gridLoadingState = computed(() => {
+    if (isSearching.value) return true
+    if (loadingState.value && !loadingStore.fullscreenLoading) return true
+    if (prefersBackendLocationGrid.value && backendSectionsLoading.value && backendLocationSections.value.length > 0) {
+        return true
+    }
+    return false
+})
 
 function getImageLoading(index) {
     return index < FIRST_SCREEN_PRIORITY_COUNT ? 'eager' : 'lazy'
@@ -263,6 +273,9 @@ const shouldShowApiErrorTip = computed(() => {
 
 // 获取空状态提示文案
 function getEmptyTipText() {
+    if (backendSectionsLoading.value || isSearching.value) {
+        return '加载中...'
+    }
     if (selectedLocationLabel.value || selectedDistanceLabel.value) {
         return '暂无匹配结果'
     }
@@ -1844,8 +1857,8 @@ onUnmounted(() => {
                 </el-icon>
             </template>
             <template #append>
-                <el-button :loading="isSearching" @click="executeSearch">
-                    <span v-if="!isSearching">搜索</span>
+                <el-button @click="executeSearch">
+                    <span>搜索</span>
                 </el-button>
             </template>
         </el-input>

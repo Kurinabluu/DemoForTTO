@@ -176,13 +176,13 @@ export async function refreshRemoteFavorites(force = false, pageSize = 50) {
   }
 
   const runRefresh = async () => {
+    let merged = []
     try {
       const requestedPageSize = Number.isFinite(Number(pageSize)) && Number(pageSize) > 0
         ? Math.floor(Number(pageSize))
         : MAX_REMOTE_PAGE_SIZE
       const safePageSize = Math.min(requestedPageSize, MAX_REMOTE_PAGE_SIZE)
       const token = getAuthToken()
-      const merged = []
       let pageNum = 1
       let total = 0
 
@@ -203,7 +203,9 @@ export async function refreshRemoteFavorites(force = false, pageSize = 50) {
       remoteLoaded = true
     } catch (error) {
       remoteLoaded = false
-      favorites.value = []
+      if (merged.length === 0) {
+        favorites.value = []
+      }
       throw error
     }
     return favorites.value
