@@ -3,6 +3,7 @@ name: Deploy gh-pages
 on:
   push:
     branches:
+      - viewDemo
       - main
       - master
   workflow_dispatch:
@@ -37,12 +38,26 @@ jobs:
         run: npm run catalog:scan
         continue-on-error: true
 
+      - name: Verify cloud API variable
+        env:
+          CLOUD_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
+        run: |
+          if [ -z "$CLOUD_API_BASE_URL" ]; then
+            echo "Missing GitHub repository variable or secret: TTO_API_BASE_URL"
+            exit 1
+          fi
+
       - name: Build production bundle
         run: npm run build
+        env:
+          VITE_USE_API: 'true'
+          VITE_USE_LOCAL_JSON_FALLBACK: 'false'
+          VITE_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
+          VITE_APP_BASE: /DemoForTTO/
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: gh-pages
+          publish_branch: vue-pages
