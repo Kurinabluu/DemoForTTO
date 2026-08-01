@@ -92,6 +92,39 @@ function resolveItemType(row, extra = {}) {
   return row?.itemType || row?.tripType || extra.itemType || extra.tripType || 'scenic'
 }
 
+function normalizeText(value) {
+  return String(value || '').trim()
+}
+
+function resolveTown(row = {}, extra = {}, tripData = {}) {
+  return normalizeText(
+    row?.townName
+      || row?.town
+      || extra?.townName
+      || extra?.town
+      || tripData?.townName
+      || tripData?.town
+      || ''
+  )
+}
+
+function resolvePostcode(row = {}, extra = {}, tripData = {}) {
+  return normalizeText(
+    row?.postcode
+      || extra?.postcode
+      || tripData?.postcode
+      || ''
+  )
+}
+
+function resolveLocationLabelFromParts(town, postcode, legacyLabel = '') {
+  const derived = formatLocationLabel(town, postcode)
+  if (derived) return derived
+  const legacy = normalizeText(legacyLabel)
+  if (legacy && legacy !== '暂未分类') return legacy
+  return ''
+}
+
 /** 将详情 API 的结构化字段合并为前端 tripData 形状 */
 export function buildTripDataFromDetailDto(dto, extra = {}) {
   const baseTripData =
@@ -104,10 +137,12 @@ export function buildTripDataFromDetailDto(dto, extra = {}) {
   const tripData = { ...baseTripData }
 
   if (dto?.routeText) tripData.route = dto.routeText
+  if (extra?.location) tripData.location = extra.location
   if (dto?.description) tripData.desc = dto.description
   if (dto?.townName) tripData.town = dto.townName
+  if (dto?.townName) tripData.townName = dto.townName
   if (dto?.postcode) tripData.postcode = dto.postcode
-  const derivedLabel = formatLocationLabel(dto?.townName, dto?.postcode) || dto?.locationLabel
+  const derivedLabel = resolveLocationLabelFromParts(dto?.townName, dto?.postcode, dto?.locationLabel || extra?.locationLabel)
   if (derivedLabel) tripData.locationLabel = derivedLabel
   if (dto?.subNavName === '景点' && dto?.belongsToSpot) tripData.belongsToSpot = dto.belongsToSpot
   if (dto?.subNavName === '景点' && dto?.parentItemId != null) tripData.parentItemId = dto.parentItemId
@@ -134,6 +169,9 @@ export function mapApiDetailToItem(dto) {
 
   const extra = parseCardExtraJson(dto)
   const tripData = buildTripDataFromDetailDto(dto, extra)
+  const town = resolveTown(dto, extra, tripData)
+  const postcode = resolvePostcode(dto, extra, tripData)
+  const locationLabel = resolveLocationLabelFromParts(town, postcode, dto?.locationLabel || extra?.locationLabel || tripData.locationLabel)
   const img = extra.img ?? dto.img ?? dto.cover ?? (Array.isArray(dto.images) ? dto.images[0] : undefined)
   const itemType = resolveItemType(dto, extra)
 
@@ -148,6 +186,10 @@ export function mapApiDetailToItem(dto) {
     tripType: itemType,
     itemType,
     subNavName: dto.subNavName || extra.subNavName || tripData.displaySubNav || '',
+    town,
+    townName: town,
+    postcode,
+    locationLabel,
     tripData,
   }
 }
@@ -163,10 +205,27 @@ function mapApiItem(row) {
         ? { ...row.tripData }
         : {}
 
-  if (row.townName) tripData.town = row.townName
-  if (row.postcode) tripData.postcode = row.postcode
-  const derivedLabel = formatLocationLabel(row.townName, row.postcode)
-    || (row.locationLabel && row.locationLabel !== '暂未分类' ? row.locationLabel : '')
+  const town = resolveTown(row, extra, tripData)
+  const postcode = resolvePostcode(row, extra, tripData)
+  if (town) tripData.town = town
+  if (town) tripData.townName = town
+  if (postcode) tripData.postcode = postcode
+  const locationLabel = resolveLocationLabelFromParts(
+    town,
+    postcode,
+    row.locationLabel || extra.locationLabel || tripData.locationLabel
+  )
+  if (locationLabel) {
+    tripData.locationLabel = locationLabel
+  }
+  if (row?.location) tripData.location = row.location
+  if (extra?.location) tripData.location = extra.location
+  if (row?.townName && !tripData.townName) tripData.townName = row.townName
+  if (row?.postcode && !tripData.postcode) tripData.postcode = row.postcode
+  if (row?.locationLabel && row.locationLabel !== '暂未分类' && !tripData.locationLabel) {
+    tripData.locationLabel = row.locationLabel
+  }
+  const derivedLabel = locationLabel
   if (derivedLabel) {
     tripData.locationLabel = derivedLabel
   } else if (tripData.town && tripData.postcode && /^\d{4}$/.test(String(tripData.postcode))) {
@@ -187,6 +246,10 @@ function mapApiItem(row) {
     img: extra.img ?? row?.img ?? row?.cover ?? row?.thumbnail,
     tripType: itemType,
     itemType,
+    town,
+    townName: town,
+    postcode,
+    locationLabel: tripData.locationLabel || locationLabel || '',
     tripData,
     badge: row?.badge ?? extra.badge ?? extra.badgeText ?? '',
     badgeClass: row?.badgeClass ?? extra.badgeClass ?? extra.badge_class ?? '',

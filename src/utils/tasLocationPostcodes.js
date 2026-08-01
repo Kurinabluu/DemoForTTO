@@ -108,9 +108,19 @@ function splitLocationLabel(label) {
 
 function buildLocationEntryFromItem(item) {
   const tripData = getTripData(item)
-  const town = String(item?.town || tripData.town || getTownFromItem(item) || '').trim()
+  const town = String(
+    item?.town
+      || item?.townName
+      || tripData.town
+      || tripData.townName
+      || getTownFromItem(item)
+      || ''
+  ).trim()
   const postcode = String(
-    item?.postcode || tripData.postcode || extractPostcodeFromItem(item) || ''
+    item?.postcode
+      || tripData.postcode
+      || extractPostcodeFromItem(item)
+      || ''
   ).trim()
 
   if (town && postcode && /^\d{4}$/.test(postcode)) {
@@ -265,12 +275,17 @@ function collectTextFields(item) {
     item?.title,
     item?.enTitle,
     item?.location,
+    item?.locationLabel,
+    item?.townName,
+    item?.postcode,
     item?.route,
     tripData.route,
     tripData.location,
+    tripData.townName,
     tripData.desc,
     tripData.locationLabel,
     tripData.town,
+    tripData.postcode,
     ...featureTexts,
   ]
 }
@@ -426,7 +441,7 @@ export function getGroupingTownFromItem(item) {
 
 export function getLocationLabelFromDb(item) {
   const tripData = item?.tripData && typeof item.tripData === 'object' ? item.tripData : {}
-  const town = String(item?.town || tripData.town || '').trim()
+  const town = String(item?.town || item?.townName || tripData.town || tripData.townName || '').trim()
   const postcode = String(item?.postcode || tripData.postcode || '').trim()
   const derived = resolveLocationLabelFromFields(
     town,
