@@ -1,6 +1,24 @@
-# TTO 内容数据维护指南（无后台管理系统）
+# TTO 内容数据维护指南
 
-适用：`src/data/data.json`、split / fallback、以及 **Aiven 云数据库**。
+适用：`src/data/data.json`、split / fallback、**Aiven 云数据库**。
+
+**管理后台已独立**：见旁目录 [`tto-admin`](../tto-admin/README.md)（勿再往本游客站塞 `/admin`）。
+
+管理端本地默认：`http://127.0.0.1:5174`  
+种子账号：`tto-backend/sql/seed_tto_admin.sql`（`tto_admin` / `TtoAdmin@2026!`，上线改密）  
+API 说明：[`tto-backend/docs/admin-api.md`](../tto-backend/docs/admin-api.md)
+
+### 管理端能改什么（日常运维）
+
+| 场景 | 管理端页面 | 说明 |
+| --- | --- | --- |
+| 改标题/描述/地点/亮点/标签 | 内容详情 | 直接写库，游客站 API 即时生效 |
+| 上下架 | 内容列表 / 详情 | `status` 0/1 |
+| 六大商业服务文案与结构 | 商业服务 | 编辑 `serviceConfig` JSON |
+| 咨询跟进 | 咨询列表 / 详情 | 状态 + 内部备注 |
+| 管理员账号 | 账号管理 | 勿与游客用户混用 |
+
+**仍需 import 的场景**：大批量从 `data.json` 初灌、整库重建、JSON 与库差异很大的一次性同步。
 
 ---
 
@@ -15,6 +33,7 @@
 | 你的编辑草稿 / 批量工具 | ✅ 方便改、可版本管理 | 可选直接 SQL |
 | 灌库 / 初次上线 | ✅ 导入种子 | 接收导入 |
 | 日常运维默认 | 备份与 Git 历史 | **以库为准** |
+| 商业服务页（包车/定制等） | 导入时写入 `service_config_json` | ✅ API `/tto/services/*` |
 
 因此 **不是**「两个数据源同时生效」，而是：
 
@@ -25,15 +44,28 @@ JSON  ──(仅在你主动 import 时)──▶  数据库  ──API──▶
 
 ### ⚠️ TTO 批量导入的真实行为（重要）
 
-Render 上请保持 **`TTO_IMPORT_ENABLED=false`**（默认已是 false）。  
-**不要**在内容已在线后，用旧 JSON 再跑一遍全量导入，因为导入器会：
+Render 上请保持 **`TTO_IMPORT_ENABLED=false`**（默认已是 false）。
 
-1. **同 `itemKey` 的记录**：用 JSON 里的 title、desc、features 等 **整段覆盖** 数据库；
-2. **JSON 里没有的条目**：可能被 **prune 删掉**（`clear-before-import=false` 时也会删「本次导入未出现的 item」）。
+导入安全开关（`application.yml` / 环境变量）：
 
-只有在你要 **刻意用 JSON 全量对齐数据库** 时才手动开 import，且务必确认 JSON 已包含库里应有的一切。
+| 变量 | 默认 | 含义 |
+| --- | --- | --- |
+| `TTO_IMPORT_PRUNE_MISSING` | **false** | true 时会删除 JSON 未出现的 section/subNav/item |
+| `TTO_IMPORT_OVERWRITE_EXISTING` | true | false 时已存在的 itemKey **不覆盖**（仅插入新条目） |
+| `TTO_IMPORT_CLEAR_BEFORE_IMPORT` | false | true 时清表重建（生产严禁） |
+
+**不要**在内容已在线后，用旧 JSON 再跑一遍全量覆盖导入，除非你确认 JSON 是完整真相。
 
 **绝不要**在生产环境开 `TTO_IMPORT_CLEAR_BEFORE_IMPORT=true` / `import` profile，除非要清库重建。
+
+### 云库增量：商业服务配置
+
+已有库请依次执行：
+
+1. `tto-backend/sql/migrations/20260727_tto_section_service_config.sql`
+2. `tto-backend/sql/migrations/20260727_tto_section_service_config_backfill.sql`
+
+（或临时开启 import，让 `serviceConfig` 写入 `tto_section.service_config_json`）
 
 ### 推荐工作流（已有云库之后）
 

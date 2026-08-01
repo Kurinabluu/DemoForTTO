@@ -234,3 +234,22 @@ export async function searchContentRemote(keyword, { pageNum = 1, pageSize = 10 
     },
   })
 }
+
+/** 商业服务列表（含 serviceConfig） */
+export async function fetchServices() {
+  return requestJson('/tto/services')
+}
+
+/** 按板块名称取商业服务（如「包车服务」） */
+export async function fetchServiceByName(name) {
+  return requestJson('/tto/services/by-name', {
+    params: { name },
+  })
+}
+
+/** 按 path 取商业服务（如 service/car） */
+export async function fetchServiceByPath(path) {
+  return requestJson('/tto/services/by-path', {
+    params: { path },
+  })
+}

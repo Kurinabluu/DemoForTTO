@@ -1,9 +1,17 @@
 import { buildSubNavKey } from '@/utils/subNavKey'
 import { formatLocationLabel } from '@/utils/tasLocationPostcodes'
-import { fetchItemDetail, fetchItemsBySubNavKey, fetchNavTree, isApiEnabled, isLocalJsonFallbackEnabled } from '@/utils/ttoApi'
+import {
+  fetchItemDetail,
+  fetchItemsBySubNavKey,
+  fetchNavTree,
+  fetchServiceByName,
+  isApiEnabled,
+  isLocalJsonFallbackEnabled,
+} from '@/utils/ttoApi'
 
 import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'
 import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'
+import servicesFallbackData from '@/data/split/services.json'
 
 // 仅在 gh-pages 生产过渡环境允许本地 JSON 兜底；本地开发（VITE_USE_API=true）不走 JSON
 const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
@@ -301,4 +309,32 @@ export async function loadDayTripData() {
 export async function loadDayTripDataFresh() {
   const bundle = await loadSectionBundle('trips/routes')
   return Array.isArray(bundle?.subNav) ? bundle.subNav : []
+}
+
+/**
+ * 加载商业服务板块（形状：{ tagName, path, serviceConfig, ... }）
+ * API 模式下走数据库；否则读本地 services.json。
+ */
+export async function loadServiceByName(serviceName) {
+  const name = String(serviceName || '').trim()
+  if (!name) return null
+
+  if (!isApiEnabled()) {
+    const local = Array.isArray(servicesFallbackData)
+      ? servicesFallbackData.find((item) => item?.tagName === name)
+      : null
+    return local || null
+  }
+
+  const dto = await fetchServiceByName(name)
+  if (!dto) return null
+  return {
+    id: dto.id,
+    tagName: dto.sectionName || name,
+    path: dto.path,
+    available: dto.status !== 0,
+    hasSubNav: Boolean(dto.hasSubNav),
+    isTrip: Boolean(dto.isTrip),
+    serviceConfig: dto.serviceConfig || null,
+  }
 }

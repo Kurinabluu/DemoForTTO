@@ -5,7 +5,8 @@ import { ElIcon } from 'element-plus'
 import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
 import ContactDialog from '@/components/ContactDialog.vue'
 import TripDialog from '@/components/TripDialog.vue'
-import servicesData from '@/data/split/services.json'
+import { loadServiceByName } from '@/utils/contentRepository'
+import { isApiEnabled } from '@/utils/ttoApi'
 // 直接使用静态导入，这是Vue 3 + Vite中最可靠的方式
 // 导入所有需要的图片，使用@别名
 import car1FrontRight from '@/assets/img/carService/car1_front_right.jpg';
@@ -45,10 +46,6 @@ import { Z_INDEX } from '@/constants/zIndex'
 
 import AboutUsDialog from '@/components/AboutUsDialog.vue';
 
-// 从data.json中获取专属定制服务的数据
-const privateCustomService = servicesData.find(item => item.tagName === '专属定制')
-const showcaseDataFromJson = privateCustomService?.serviceConfig?.showcaseData || []
-
 // 接收配置（保持向后兼容）
 const props = defineProps({
     config: { type: Object, default: null },
@@ -60,6 +57,8 @@ const screenWidth = ref(window.innerWidth)
 const isPhone = computed(() => screenWidth.value <= 767)
 const isMobile = computed(() => screenWidth.value <= 820)
 const isTablet = computed(() => screenWidth.value <= 1024)
+const serviceLoading = ref(false)
+const serviceLoadError = ref('')
 
 // 监听窗口大小变化
 const handleResize = () => {
@@ -78,26 +77,8 @@ onUnmounted(() => {
 let serviceData = ref(null)
 let currentServiceName = ref('')
 
-// 从data.json获取isTrip为false的服务数据
-const getServiceData = () => {
-    try {
-        if (!servicesData) return null
-        const services = servicesData.filter(item => item.isTrip === false)
-        return services || []
-    } catch (error) {
-        return []
-    }
-}
+const resolveServiceName = () => props.serviceName || props.config?.serviceName || ''
 
-// 根据服务名称获取特定服务数据
-const getServiceByName = (serviceName) => {
-    const services = getServiceData()
-    return services.find(service => service.tagName === serviceName)
-}
-
-// 注释掉之前的动态导入函数，使用require方式替代
-
-// 创建图片映射表
 const carImagesMap = {
     'car1_front_right.jpg': car1FrontRight,
     'car1_right.jpg': car1Right,
@@ -180,11 +161,11 @@ const scrollDirection = ref(1) // 1 表示向右滚动，-1 表示向左滚动
 const canScrollLeft = ref(false)
 const canScrollRight = ref(false)
 
-// 使用从data.json获取的数据，如果没有则使用默认的mock数据
-const mockShowcaseData = showcaseDataFromJson.length > 0 ? showcaseDataFromJson : [
+// 默认展示兜底（专属定制无 API 数据时）
+const mockShowcaseData = [
     {
         id: 1,
-        title: '家庭亲子定制游111',
+        title: '家庭亲子定制游',
         description: '专为家庭设计的亲子行程，包含适合各年龄段儿童的互动体验和安全活动。',
         image: 'https://picsum.photos/seed/family/400/300',
         features: ['儿童活动', '安全第一', '教育体验'],
@@ -428,14 +409,28 @@ const heroDescLines = computed(() => {
     return Array.isArray(desc) ? desc : [desc]
 })
 
-// 获取服务数据的函数
-const loadServiceData = (serviceName) => {
-    if (serviceName) {
-        const data = getServiceByName(serviceName)
+// 获取服务数据的函数（API 优先）
+const loadServiceData = async (serviceName) => {
+    if (!serviceName) return
+    serviceLoading.value = true
+    serviceLoadError.value = ''
+    try {
+        const data = await loadServiceByName(serviceName)
         if (data) {
             serviceData.value = data
-            currentServiceName.value = data.tagName
+            currentServiceName.value = data.tagName || serviceName
+            initShowcaseData()
+        } else {
+            serviceData.value = null
+            serviceLoadError.value = isApiEnabled()
+                ? '暂时无法加载该服务，请稍后再试'
+                : '未找到该服务配置'
         }
+    } catch (error) {
+        serviceData.value = null
+        serviceLoadError.value = error?.message || '加载服务失败'
+    } finally {
+        serviceLoading.value = false
     }
 }
 
@@ -449,15 +444,7 @@ function showAboutUsDialog() {
 // 组件挂载时获取数据
 onMounted(() => {
     // 优先使用传入的serviceName
-    if (props.serviceName) {
-        loadServiceData(props.serviceName)
-    } else if (props.config?.serviceName) {
-        // 如果有传入的config，尝试根据serviceName获取对应数据
-        loadServiceData(props.config.serviceName)
-    }
-
-    // 初始化展示数据
-    initShowcaseData()
+    void loadServiceData(resolveServiceName())
 
     // 延迟启动自动滚动，确保DOM已经渲染
     setTimeout(() => {
@@ -487,7 +474,7 @@ onUnmounted(() => {
 // 监听serviceName变化，重新加载数据
 watch(() => props.serviceName, (newServiceName) => {
     if (newServiceName) {
-        loadServiceData(newServiceName)
+        void loadServiceData(newServiceName)
     }
 })
 
@@ -640,6 +627,8 @@ const openOrderableDialog = (item) => {
 
 <template>
     <div class="service-showcase">
+        <div v-if="serviceLoading" class="service-load-state">正在加载服务内容…</div>
+        <div v-else-if="serviceLoadError" class="service-load-state service-load-error">{{ serviceLoadError }}</div>
         <!-- 包车服务介绍 -->
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
@@ -997,6 +986,17 @@ const openOrderableDialog = (item) => {
     color: #333;
     letter-spacing: 0;
     /* 全局去除字距 */
+
+    .service-load-state {
+        padding: 48px 16px;
+        text-align: center;
+        color: #666;
+        font-size: 15px;
+    }
+
+    .service-load-error {
+        color: #a94442;
+    }
 
     .service-title {
         font-size: 28px;

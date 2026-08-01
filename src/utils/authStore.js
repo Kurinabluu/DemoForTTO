@@ -15,6 +15,7 @@ const authSyncChannel = typeof BroadcastChannel === 'function' ? new BroadcastCh
 export const isLoggedIn = ref(false)
 const username = ref('')
 const userId = ref(null)
+const userType = ref('')
 const authToken = ref(loadStoredToken())
 let bootstrapPromise = null
 
@@ -45,6 +46,7 @@ function getCurrentSession() {
   return {
     username: username.value || '',
     userId: userId.value,
+    userType: userType.value || '',
     token: authToken.value,
   }
 }
@@ -59,11 +61,13 @@ function applyAuthSession(session, { broadcast = false } = {}) {
   const nextUserId = session?.userId != null && session.userId !== ''
     ? Number(session.userId)
     : null
+  const nextUserType = session?.userType ? String(session.userType).trim() : ''
   const nextToken = session?.token ? String(session.token).trim() : authToken.value
 
   isLoggedIn.value = Boolean(nextUsername || Number.isFinite(nextUserId))
   username.value = nextUsername
   userId.value = Number.isFinite(nextUserId) ? nextUserId : null
+  userType.value = isLoggedIn.value ? nextUserType : ''
   persistToken(isLoggedIn.value ? nextToken : '')
 
   if (broadcast) {
@@ -80,7 +84,14 @@ export async function bootstrapAuthSession() {
         return null
       }
       const session = await fetchAuthSession(getAuthToken())
-      applyAuthSession(session, { broadcast: Boolean(session) })
+      if (session) {
+        applyAuthSession({
+          ...session,
+          token: getAuthToken(),
+        }, { broadcast: true })
+      } else {
+        applyAuthSession(null, { broadcast: false })
+      }
       return session
     } catch {
       applyAuthSession(null, { broadcast: false })
@@ -139,6 +150,7 @@ export async function login(usernameInput, passwordInput) {
     token: data?.token,
     username: data?.username,
     userId: data?.userId,
+    userType: data?.userType,
   })
   return data
 }
@@ -149,6 +161,7 @@ export async function register(usernameInput, passwordInput, { displayName, emai
     token: data?.token,
     username: data?.username,
     userId: data?.userId,
+    userType: data?.userType,
   })
   return data
 }

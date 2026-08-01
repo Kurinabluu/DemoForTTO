@@ -264,8 +264,10 @@ function collectTextFields(item) {
   return [
     item?.title,
     item?.enTitle,
+    item?.location,
     item?.route,
     tripData.route,
+    tripData.location,
     tripData.desc,
     tripData.locationLabel,
     tripData.town,
