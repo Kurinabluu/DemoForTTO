@@ -190,6 +190,21 @@ function collectItemTextJoined(item) {
     .map(raw => String(raw || '').trim()).filter(Boolean).join(' | ');
 }
 
+function buildStableItemFingerprint(item, subNavName) {
+  const td = item.tripData || {};
+  return [
+    String(subNavName || '').trim(),
+    String(item.title || '').trim(),
+    String(item.enTitle || '').trim(),
+    String(td.route || item.route || '').trim(),
+    String(td.desc || '').trim(),
+    String(item.img || '').trim(),
+  ]
+    .filter(Boolean)
+    .join('::')
+    .toLowerCase();
+}
+
 // ===== FIX DATA =====
 const targetSubNavs = ['景点', '餐厅', '住宿'];
 let fixCount = 0;
@@ -261,23 +276,43 @@ const dataJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'src/data
 const dataSection = dataJson.find(s => s.tagName === '自助游/自驾游免费参考信息');
 if (dataSection) {
   let dataSynced = 0;
+  const dataItemByItemKey = new Map();
+  const dataItemByFingerprint = new Map();
+  const dataItemByTitle = new Map();
+  dataSection.subNav.forEach(ds => {
+    ds.items.forEach(dataItem => {
+      const itemKey = String(dataItem.itemKey || '').trim();
+      if (itemKey) {
+        dataItemByItemKey.set(ds.subNavName + '::' + itemKey, dataItem);
+      }
+      const fingerprint = buildStableItemFingerprint(dataItem, ds.subNavName);
+      if (fingerprint && !dataItemByFingerprint.has(fingerprint)) {
+        dataItemByFingerprint.set(fingerprint, dataItem);
+      }
+      const titleKey = ds.subNavName + '::' + String(dataItem.title || '').trim();
+      if (!dataItemByTitle.has(titleKey)) {
+        dataItemByTitle.set(titleKey, dataItem);
+      }
+    });
+  });
   freeinfo.subNav.forEach(sn => {
     sn.items.forEach(freeItem => {
       const fd = freeItem.tripData || {};
       if (!fd.town) return;
-      dataSection.subNav.forEach(ds => {
-        ds.items.forEach(dataItem => {
-          if (dataItem.title === freeItem.title && ds.subNavName === sn.subNavName) {
-            if (!dataItem.tripData) dataItem.tripData = {};
-            if (!dataItem.tripData.town || dataItem.tripData.town !== fd.town) {
-              dataItem.tripData.town = fd.town;
-              dataItem.tripData.postcode = fd.postcode || '';
-              delete dataItem.tripData.locationLabel;
-              dataSynced++;
-            }
-          }
-        });
-      });
+      const itemKey = String(freeItem.itemKey || '').trim();
+      const fingerprint = buildStableItemFingerprint(freeItem, sn.subNavName);
+      const titleKey = sn.subNavName + '::' + String(freeItem.title || '').trim();
+      const dataItem = itemKey
+        ? dataItemByItemKey.get(sn.subNavName + '::' + itemKey)
+        : (dataItemByFingerprint.get(fingerprint) || dataItemByTitle.get(titleKey));
+      if (!dataItem) return;
+      if (!dataItem.tripData) dataItem.tripData = {};
+      if (!dataItem.tripData.town || dataItem.tripData.town !== fd.town) {
+        dataItem.tripData.town = fd.town;
+        dataItem.tripData.postcode = fd.postcode || '';
+        delete dataItem.tripData.locationLabel;
+        dataSynced++;
+      }
     });
   });
   fs.writeFileSync(path.join(__dirname, '..', 'src/data/data.json'), JSON.stringify(dataJson, null, 2), 'utf8');

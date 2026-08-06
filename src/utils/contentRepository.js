@@ -9,9 +9,31 @@ import {
   isLocalJsonFallbackEnabled,
 } from '@/utils/ttoApi'
 
-import freeinfoFallbackData from '@/data/fallback/freeinfo_fallback.json'
-import daytripFallbackData from '@/data/fallback/daytrip_fallback.json'
-import servicesFallbackData from '@/data/split/services.json'
+// 仅在 gh-pages fallback 模式下动态加载，避免 API 模式把 ~1MB JSON 打进主包
+let freeinfoFallbackPromise = null
+let daytripFallbackPromise = null
+let servicesFallbackPromise = null
+
+async function loadFreeinfoFallbackData() {
+  if (!freeinfoFallbackPromise) {
+    freeinfoFallbackPromise = import('@/data/fallback/freeinfo_fallback.json').then((mod) => mod.default)
+  }
+  return freeinfoFallbackPromise
+}
+
+async function loadDaytripFallbackData() {
+  if (!daytripFallbackPromise) {
+    daytripFallbackPromise = import('@/data/fallback/daytrip_fallback.json').then((mod) => mod.default)
+  }
+  return daytripFallbackPromise
+}
+
+async function loadServicesFallbackData() {
+  if (!servicesFallbackPromise) {
+    servicesFallbackPromise = import('@/data/split/services.json').then((mod) => mod.default)
+  }
+  return servicesFallbackPromise
+}
 
 // 仅在 gh-pages 生产过渡环境允许本地 JSON 兜底；本地开发（VITE_USE_API=true）不走 JSON
 const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
@@ -20,16 +42,16 @@ const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
  * [临时开发功能] 从本地 JSON 文件获取数据
  * 用于开发阶段数据库不可用时的兜底
  */
-function loadLocalFallbackData(dataKey) {
+async function loadLocalFallbackData(dataKey) {
   if (!USE_LOCAL_JSON_FALLBACK) {
     return null
   }
 
   try {
     if (dataKey === 'freeinfo') {
-      return freeinfoFallbackData
+      return await loadFreeinfoFallbackData()
     } else if (dataKey === 'daytrip') {
-      return daytripFallbackData
+      return await loadDaytripFallbackData()
     }
   } catch {
   }
@@ -37,12 +59,12 @@ function loadLocalFallbackData(dataKey) {
   return null
 }
 
-function loadLocalFallbackBundle(sectionPath) {
+async function loadLocalFallbackBundle(sectionPath) {
   if (!USE_LOCAL_JSON_FALLBACK) {
     return null
   }
   const fallbackKey = sectionPath === 'trips/freeinfo' ? 'freeinfo' : 'daytrip'
-  const fallbackData = loadLocalFallbackData(fallbackKey)
+  const fallbackData = await loadLocalFallbackData(fallbackKey)
   if (!fallbackData) {
     return null
   }
@@ -298,10 +320,11 @@ export async function loadItemsBySubNav(sectionPath, subNavName) {
   return fetchSubNavItems(sectionPath, subNavMeta)
 }
 
-async function loadSectionBundle(sectionPath) {
+async function loadSectionBundle(sectionPath, { excludeSubNavNames = [] } = {}) {
   // gh-pages：不请求 API，直接使用 fallback JSON
   if (!isApiEnabled()) {
-    return loadLocalFallbackBundle(sectionPath) || { path: sectionPath, subNav: [] }
+    const bundle = await loadLocalFallbackBundle(sectionPath)
+    return bundle || { path: sectionPath, subNav: [] }
   }
 
   // 本地开发（VITE_USE_API=true）：只走后端，失败即抛出，不静默回退 JSON
@@ -314,8 +337,11 @@ async function loadSectionBundle(sectionPath) {
     throw new Error('后端导航数据为空')
   }
 
+  const excludeSet = new Set(Array.isArray(excludeSubNavNames) ? excludeSubNavNames : [])
+  const subNavMetas = sectionNav.subNav.filter((meta) => !excludeSet.has(meta?.subNavName))
+
   const subNav = await Promise.all(
-    sectionNav.subNav.map(async (subNavMeta) => {
+    subNavMetas.map(async (subNavMeta) => {
       const items = await fetchSubNavItems(sectionPath, subNavMeta)
       return {
         ...subNavMeta,
@@ -324,7 +350,7 @@ async function loadSectionBundle(sectionPath) {
     })
   )
 
-  const allItemsEmpty = subNav.every(sub => !Array.isArray(sub.items) || sub.items.length === 0)
+  const allItemsEmpty = subNav.length > 0 && subNav.every(sub => !Array.isArray(sub.items) || sub.items.length === 0)
   if (allItemsEmpty) {
     throw new Error('后端暂无内容')
   }
@@ -333,6 +359,41 @@ async function loadSectionBundle(sectionPath) {
     path: sectionPath,
     subNav,
   }
+}
+
+const subNavLoadPromises = new Map()
+
+async function loadSingleSubNav(sectionPath, subNavMeta) {
+  const cacheKey = `${sectionPath}:${subNavMeta?.subNavName || ''}`
+  if (!subNavLoadPromises.has(cacheKey)) {
+    subNavLoadPromises.set(
+      cacheKey,
+      fetchSubNavItems(sectionPath, subNavMeta).then((items) => ({
+        ...subNavMeta,
+        items,
+      })),
+    )
+  }
+  return subNavLoadPromises.get(cacheKey)
+}
+
+/** 按需加载单个 freeinfo 子分类（切换 tab 时调用） */
+export async function ensureFreeInfoSubNavLoaded(subNavName) {
+  const name = String(subNavName || '').trim()
+  if (!name) return null
+
+  if (!isApiEnabled()) {
+    const bundle = await loadFreeInfoData()
+    return bundle?.subNav?.find((sub) => sub.subNavName === name) || null
+  }
+
+  const navTree = await loadNavTree()
+  const sectionNav = Array.isArray(navTree)
+    ? navTree.find((item) => item.path === 'trips/freeinfo')
+    : null
+  const meta = sectionNav?.subNav?.find((sub) => sub.subNavName === name)
+  if (!meta) return null
+  return loadSingleSubNav('trips/freeinfo', meta)
 }
 
 let freeInfoPromise = null
@@ -349,15 +410,16 @@ async function loadNavTree() {
   return navTreePromise
 }
 
-export async function loadFreeInfoData() {
+export async function loadFreeInfoData(options = {}) {
+  const { excludeSubNavNames = [] } = options
   if (!freeInfoPromise) {
-    freeInfoPromise = loadSectionBundle('trips/freeinfo')
+    freeInfoPromise = loadSectionBundle('trips/freeinfo', { excludeSubNavNames })
   }
   return freeInfoPromise
 }
 
-export async function loadFreeInfoDataFresh() {
-  return loadSectionBundle('trips/freeinfo')
+export async function loadFreeInfoDataFresh(options = {}) {
+  return loadSectionBundle('trips/freeinfo', options)
 }
 
 export async function loadDayTripData() {
@@ -383,8 +445,9 @@ export async function loadServiceByName(serviceName) {
   if (!name) return null
 
   if (!isApiEnabled()) {
-    const local = Array.isArray(servicesFallbackData)
-      ? servicesFallbackData.find((item) => item?.tagName === name)
+    const servicesData = await loadServicesFallbackData()
+    const local = Array.isArray(servicesData)
+      ? servicesData.find((item) => item?.tagName === name)
       : null
     return local || null
   }

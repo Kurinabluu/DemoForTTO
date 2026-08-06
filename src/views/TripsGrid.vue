@@ -3,7 +3,7 @@ import { computed, ref, shallowRef, onMounted, onUnmounted, watch, nextTick } fr
 import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import { loadFreeInfoData, loadDayTripDataFresh, loadCatalogItemDetail, searchItemsInSubNav } from '@/utils/contentRepository'
+import { loadFreeInfoData, loadDayTripData, loadCatalogItemDetail, searchItemsInSubNav, ensureFreeInfoSubNavLoaded } from '@/utils/contentRepository'
 import { resolveDayTripSubNavName } from '@/utils/subNavKey'
 import { fetchLocationCatalog, fetchLocationSections, isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
@@ -382,22 +382,70 @@ function initLoadMoreObserver() {
     loadMoreObserver.observe(loadMoreTriggerRef.value)
 }
 
+function shouldSkipFullFreeInfoLoad() {
+    return isApiEnabled()
+        && props.activeTag === '自助游/自驾游免费参考信息'
+        && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+}
+
+function mergeFreeInfoSubNav(subNav) {
+    if (!subNav?.subNavName) return
+    const existing = Array.isArray(datas.value?.subNav) ? [...datas.value.subNav] : []
+    const index = existing.findIndex((row) => row.subNavName === subNav.subNavName)
+    if (index >= 0) {
+        existing[index] = subNav
+    } else {
+        existing.push(subNav)
+    }
+    datas.value = {
+        path: 'trips/freeinfo',
+        subNav: existing,
+    }
+}
+
 onMounted(() => {
     void withLoading(async () => {
-        const [loaded, dayTrips] = await Promise.all([
-            loadFreeInfoData(),
-            loadDayTripDataFresh(),
-        ])
-        if (loaded?.subNav?.length) {
-            datas.value = loaded
+        const tasks = []
+
+        if (props.activeTag === '一日游/多日游') {
+            tasks.push(
+                loadDayTripData().then((dayTrips) => {
+                    if (Array.isArray(dayTrips) && dayTrips.length) {
+                        dayTripNavs.value = dayTrips
+                    } else if (isApiEnabled()) {
+                        notifyApiWarning('暂时无法加载，请稍后再试', {
+                            dedupeKey: 'trips:daytrip-empty',
+                        })
+                    }
+                }),
+            )
         }
-        if (Array.isArray(dayTrips) && dayTrips.length) {
-            dayTripNavs.value = dayTrips
-        } else if (isApiEnabled()) {
-            notifyApiWarning('暂时无法加载，请稍后再试', {
-                dedupeKey: 'trips:daytrip-empty',
-            })
+
+        if (props.activeTag === '自助游/自驾游免费参考信息' && !shouldSkipFullFreeInfoLoad()) {
+            tasks.push(
+                loadFreeInfoData({
+                    excludeSubNavNames: isApiEnabled() ? FREE_INFO_FILTER_SUBTABS : [],
+                }).then((loaded) => {
+                    if (loaded?.subNav?.length) {
+                        datas.value = loaded
+                    }
+                }),
+            )
+        } else if (
+            props.activeTag === '自助游/自驾游免费参考信息'
+            && shouldSkipFullFreeInfoLoad()
+        ) {
+            // 一日游 tab 仍可能在同页预载
+            tasks.push(
+                loadDayTripData().then((dayTrips) => {
+                    if (Array.isArray(dayTrips) && dayTrips.length) {
+                        dayTripNavs.value = dayTrips
+                    }
+                }).catch(() => {}),
+            )
         }
+
+        await Promise.all(tasks)
     }, { text: '正在加载内容...' }).catch((error) => {
         if (isApiEnabled()) {
             notifyApiError(error, { action: '加载内容', dedupeKey: 'trips:load' })
@@ -1024,6 +1072,18 @@ watch(() => props.subTab, () => {
     backendSectionsLoadSettled.value = false
     backendSectionsLoading.value = false
     locationCatalogRevision.value += 1
+
+    if (
+        isApiEnabled()
+        && props.activeTag === '自助游/自驾游免费参考信息'
+        && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+    ) {
+        void ensureFreeInfoSubNavLoaded(props.subTab).then((subNav) => {
+            if (subNav) mergeFreeInfoSubNav(subNav)
+        }).catch((error) => {
+            notifyApiError(error, { action: '加载分类内容', dedupeKey: `trips:subnav:${props.subTab}` })
+        })
+    }
 })
 
 watch(() => sortMode.value, async () => {

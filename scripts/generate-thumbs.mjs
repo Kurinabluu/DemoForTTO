@@ -69,6 +69,7 @@ async function main() {
   const files = await walkDirectory(assetsRoot)
   let generated = 0
   let skipped = 0
+  const failed = []
 
   for (const filePath of files) {
     try {
@@ -76,11 +77,22 @@ async function main() {
       if (result.status === 'generated') generated += 1
       if (result.status === 'skipped') skipped += 1
     } catch (error) {
-      console.warn(`[thumb] failed: ${path.relative(projectRoot, filePath)} -> ${error.message}`)
+      const relative = path.relative(projectRoot, filePath)
+      console.warn(`[thumb] failed: ${relative} -> ${error.message}`)
+      failed.push(relative)
     }
   }
 
-  console.log(`[thumb] done. generated=${generated}, skipped=${skipped}, total=${files.length}`)
+  console.log(`[thumb] done. generated=${generated}, skipped=${skipped}, failed=${failed.length}, total=${files.length}`)
+  if (failed.length > 0) {
+    console.warn('[thumb] failed files:')
+    for (const file of failed) {
+      console.warn(`  - ${file}`)
+    }
+    if (String(process.env.TTO_THUMBS_STRICT || '').toLowerCase() === 'true') {
+      process.exitCode = 1
+    }
+  }
 }
 
 main().catch((error) => {
