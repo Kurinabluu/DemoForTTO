@@ -222,11 +222,12 @@ const loadingState = computed(() => {
 })
 
 const gridLoadingState = computed(() => {
+    // 全屏 loading 已覆盖时，不再叠加网格内 loading
+    if (loadingStore.fullscreenLoading) return false
     if (isSearching.value) return true
     if (prefersBackendLocationGrid.value) {
         return !backendSectionsLoadSettled.value || backendSectionsLoading.value
     }
-    if (loadingStore.fullscreenLoading) return true
     return false
 })
 
@@ -419,14 +420,18 @@ function mergeFreeInfoSubNav(subNav) {
 
 async function runInitialPageLoad() {
     try {
-        if (shouldSkipFullFreeInfoLoad()) {
-            await syncLocationCatalog({ silentCatalogError: true })
-            void loadDayTripData().catch(() => {})
-            return
-        }
+        await withLoading(async () => {
+            if (shouldSkipFullFreeInfoLoad()) {
+                await syncLocationCatalog({
+                    silentCatalogError: true,
+                    silentSectionError: true,
+                    sectionRetries: 2,
+                })
+                void loadDayTripData().catch(() => {})
+                return
+            }
 
-        if (props.activeTag === '一日游/多日游') {
-            await withLoading(async () => {
+            if (props.activeTag === '一日游/多日游') {
                 const dayTrips = await loadDayTripData()
                 if (Array.isArray(dayTrips) && dayTrips.length) {
                     dayTripNavs.value = dayTrips
@@ -435,20 +440,20 @@ async function runInitialPageLoad() {
                         dedupeKey: 'trips:daytrip-empty',
                     })
                 }
-            }, { text: '正在加载内容...' })
-            dispatchContentReady()
-            return
-        }
+                return
+            }
 
-        if (props.activeTag === '自助游/自驾游免费参考信息') {
-            await withLoading(async () => {
+            if (props.activeTag === '自助游/自驾游免费参考信息') {
                 const loaded = await loadFreeInfoData({
                     excludeSubNavNames: isApiEnabled() ? FREE_INFO_FILTER_SUBTABS : [],
                 })
                 if (loaded?.subNav?.length) {
                     datas.value = loaded
                 }
-            }, { text: '正在加载内容...' })
+            }
+        }, { text: '正在加载内容...' })
+
+        if (shouldSkipFullFreeInfoLoad() || props.activeTag === '一日游/多日游' || props.activeTag === '自助游/自驾游免费参考信息') {
             dispatchContentReady()
         }
     } catch (error) {
@@ -684,7 +689,30 @@ async function syncLocationCatalogRows() {
     locationCatalogRevision.value += 1
 }
 
-async function syncBackendLocationSections() {
+async function fetchBackendLocationSectionsWithRetry(retries = 0) {
+    let lastError = null
+    const maxAttempts = Math.max(1, retries + 1)
+
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        if (attempt > 0) {
+            await new Promise((resolve) => setTimeout(resolve, 600 + attempt * 400))
+        }
+        try {
+            return await withRequestTimeout(
+                fetchLocationSections(props.subTab, buildLocationSectionQuery()),
+                BACKEND_GRID_LOAD_TIMEOUT_MS,
+            )
+        } catch (error) {
+            lastError = error
+        }
+    }
+
+    throw lastError || new Error('加载地点分组失败')
+}
+
+async function syncBackendLocationSections(options = {}) {
+    const { silentError = false, retries = 0 } = options
+
     if (!isApiEnabled() || !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
         return
     }
@@ -696,10 +724,7 @@ async function syncBackendLocationSections() {
     }
 
     try {
-        const sections = await withRequestTimeout(
-            fetchLocationSections(props.subTab, buildLocationSectionQuery()),
-            BACKEND_GRID_LOAD_TIMEOUT_MS,
-        )
+        const sections = await fetchBackendLocationSectionsWithRetry(retries)
         if (requestId !== backendSectionsRequestSeq) return
         backendLocationSections.value = Array.isArray(sections) ? sections : []
         backendSectionsSynced.value = true
@@ -708,7 +733,9 @@ async function syncBackendLocationSections() {
         }
     } catch (error) {
         if (requestId !== backendSectionsRequestSeq) return
-        notifyApiError(error, { action: '加载地点分组', dedupeKey: 'trips:location-sections' })
+        if (!silentError) {
+            notifyApiError(error, { action: '加载地点分组', dedupeKey: 'trips:location-sections' })
+        }
         if (backendLocationSections.value.length === 0) {
             backendSectionsSynced.value = false
         }
@@ -720,7 +747,11 @@ async function syncBackendLocationSections() {
 }
 
 async function syncLocationCatalog(options = {}) {
-    const { silentCatalogError = false } = options
+    const {
+        silentCatalogError = false,
+        silentSectionError = false,
+        sectionRetries = 0,
+    } = options
 
     if (!isApiEnabled()) {
         backendLocationSections.value = []
@@ -748,7 +779,10 @@ async function syncLocationCatalog(options = {}) {
             }
         })
 
-        await Promise.all([catalogTask, syncBackendLocationSections()])
+        await Promise.all([
+            catalogTask,
+            syncBackendLocationSections({ silentError: silentSectionError, retries: sectionRetries }),
+        ])
         if (backendSectionsSynced.value) {
             dispatchContentReady()
         }
@@ -1085,6 +1119,7 @@ watch(
 )
 
 watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.value, searchKw.value, searchQuery.value, props.subTab], () => {
+    if (!initialLoadSettled.value) return
     currentPage.value = 1
     mobileScrollPage.value = 1
     resetRenderLimit()
@@ -1096,7 +1131,12 @@ watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.
     }
 })
 
-watch(() => props.subTab, () => {
+watch(() => props.subTab, (newTab, oldTab) => {
+    // 首屏加载进行中时不重置网格状态，避免打断 runInitialPageLoad 导致误报错
+    if (!initialLoadSettled.value) {
+        return
+    }
+
     selectedLocationKey.value = []
     selectedDistance.value = []
     backendSectionsRequestSeq += 1
@@ -1106,12 +1146,12 @@ watch(() => props.subTab, () => {
     backendSectionsLoading.value = false
     locationCatalogRevision.value += 1
 
-    if (!initialLoadSettled.value) {
-        return
-    }
-
     if (isApiEnabled() && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
-        void syncLocationCatalog({ silentCatalogError: true })
+        void syncLocationCatalog({
+            silentCatalogError: true,
+            silentSectionError: !oldTab,
+            sectionRetries: 2,
+        })
     }
 
     if (

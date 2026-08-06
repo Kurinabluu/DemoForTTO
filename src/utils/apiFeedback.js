@@ -12,6 +12,8 @@ const USER_MESSAGES = {
   generic: '加载失败，请稍后再试',
 }
 
+const BACKEND_GENERIC_FAIL = '操作失败，请稍后重试'
+
 const KNOWN_USER_MESSAGES = new Set([
   ...Object.values(USER_MESSAGES),
   '加载失败，请稍后再试',
@@ -54,6 +56,9 @@ export function getApiErrorMessage(error) {
   }
 
   const raw = String(error.message || '').trim()
+  if (raw === BACKEND_GENERIC_FAIL || /^操作失败/.test(raw)) {
+    return USER_MESSAGES.generic
+  }
   if (KNOWN_USER_MESSAGES.has(raw)) {
     return raw
   }
