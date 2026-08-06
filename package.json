@@ -21,6 +21,7 @@
     "test:p0": "node scripts/p0-integration-test.mjs"
   },
   "dependencies": {
+    "@tanstack/vue-virtual": "^3.13.35",
     "element-plus": "^2.10.6",
     "pinia": "^3.0.3",
     "sass-embedded": "^1.97.3",
