@@ -1,6 +1,7 @@
 import { buildSubNavKey } from '@/utils/subNavKey'
 import { formatLocationLabel } from '@/utils/tasLocationPostcodes'
 import { mergeImageSourceIntoTripData } from '@/utils/freeInfoImageUtils'
+import { getDataJson } from '@/utils/dataRepository'
 import {
   fetchItemDetail,
   fetchItemDetailByKey,
@@ -11,10 +12,20 @@ import {
   isLocalJsonFallbackEnabled,
 } from '@/utils/ttoApi'
 
+let servicesFallbackPromise = null
+
+async function loadServicesFallbackData() {
+  if (!servicesFallbackPromise) {
+    servicesFallbackPromise = import('@/data/split/services.json').then((mod) => mod.default)
+  }
+  return servicesFallbackPromise
+}
+
+/*
+旧版 gh-pages 本地兜底（保留作历史参考，不启用）：
 // 仅在 gh-pages fallback 模式下动态加载，避免 API 模式把 ~1MB JSON 打进主包
 let freeinfoFallbackPromise = null
 let daytripFallbackPromise = null
-let servicesFallbackPromise = null
 
 async function loadFreeinfoFallbackData() {
   if (!freeinfoFallbackPromise) {
@@ -30,20 +41,8 @@ async function loadDaytripFallbackData() {
   return daytripFallbackPromise
 }
 
-async function loadServicesFallbackData() {
-  if (!servicesFallbackPromise) {
-    servicesFallbackPromise = import('@/data/split/services.json').then((mod) => mod.default)
-  }
-  return servicesFallbackPromise
-}
-
-// 仅在 gh-pages 生产过渡环境允许本地 JSON 兜底；本地开发（VITE_USE_API=true）不走 JSON
-const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
-
-/**
- * [临时开发功能] 从本地 JSON 文件获取数据
- * 用于开发阶段数据库不可用时的兜底
- */
+// [临时开发功能] 从本地 JSON 文件获取数据
+// 用于开发阶段数据库不可用时的兜底
 async function loadLocalFallbackData(dataKey) {
   if (!USE_LOCAL_JSON_FALLBACK) {
     return null
@@ -73,6 +72,53 @@ async function loadLocalFallbackBundle(sectionPath) {
   return {
     path: sectionPath,
     subNav: fallbackData.subNav || [],
+  }
+}
+*/
+
+// 原始备注保留：
+// 仅在 gh-pages 生产过渡环境允许本地 JSON 兜底；本地开发（VITE_USE_API=true）不走 JSON
+// [临时开发功能] 从本地 JSON 文件获取数据
+// 用于开发阶段数据库不可用时的兜底
+// 现在只是临时演示：实际读取的是当前 `src/data/data.json`，原来的 fallback 文件保留作历史参考
+const USE_LOCAL_JSON_FALLBACK = isLocalJsonFallbackEnabled()
+
+async function loadLocalDataRoot() {
+  if (!USE_LOCAL_JSON_FALLBACK) {
+    return []
+  }
+
+  try {
+    return await getDataJson()
+  } catch {
+    return []
+  }
+}
+
+async function loadLocalFallbackBundle(sectionPath, { excludeSubNavNames = [] } = {}) {
+  if (!USE_LOCAL_JSON_FALLBACK) {
+    return null
+  }
+  const root = await loadLocalDataRoot()
+  const sectionNode = Array.isArray(root)
+    ? root.find((item) => item?.path === sectionPath)
+    : null
+  if (!sectionNode) {
+    return null
+  }
+
+  const excludeSet = new Set(Array.isArray(excludeSubNavNames) ? excludeSubNavNames : [])
+  return {
+    path: sectionPath,
+    dataSource: 'local-json',
+    subNav: Array.isArray(sectionNode.subNav)
+      ? sectionNode.subNav
+          .filter((subNav) => !excludeSet.has(subNav?.subNavName))
+          .map((subNav) => ({
+            ...subNav,
+            items: Array.isArray(subNav?.items) ? subNav.items : [],
+          }))
+      : [],
   }
 }
 
@@ -365,9 +411,9 @@ export async function loadItemsBySubNav(sectionPath, subNavName) {
 }
 
 async function loadSectionBundle(sectionPath, { excludeSubNavNames = [] } = {}) {
-  // gh-pages：不请求 API，直接使用 fallback JSON
+  // gh-pages：不请求 API，直接使用本地 data.json 兜底
   if (!isApiEnabled()) {
-    const bundle = await loadLocalFallbackBundle(sectionPath)
+    const bundle = await loadLocalFallbackBundle(sectionPath, { excludeSubNavNames })
     return bundle || { path: sectionPath, subNav: [] }
   }
 

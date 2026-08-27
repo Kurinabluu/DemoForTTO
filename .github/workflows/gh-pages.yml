@@ -38,21 +38,23 @@ jobs:
         run: npm run catalog:scan
         continue-on-error: true
 
-      - name: Verify cloud API variable
-        env:
-          CLOUD_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
-        run: |
-          if [ -z "$CLOUD_API_BASE_URL" ]; then
-            echo "Missing GitHub repository variable or secret: TTO_API_BASE_URL"
-            exit 1
-          fi
+      # 临时演示：启用本地 data.json 兜底时，不再强依赖 Render/Aiven 的 API 变量
+      # - name: Verify cloud API variable
+      #   env:
+      #     CLOUD_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
+      #   run: |
+      #     if [ -z "$CLOUD_API_BASE_URL" ]; then
+      #       echo "Missing GitHub repository variable or secret: TTO_API_BASE_URL"
+      #       exit 1
+      #     fi
 
       - name: Build production bundle
         run: npm run build
         env:
           VITE_USE_API: 'true'
-          VITE_USE_LOCAL_JSON_FALLBACK: 'false'
-          VITE_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
+          # 临时演示：这次发布启用本地 data.json 兜底，原云 API 逻辑保留但不作为内容入口
+          VITE_USE_LOCAL_JSON_FALLBACK: 'true'
+          # VITE_API_BASE_URL: ${{ vars.TTO_API_BASE_URL || secrets.TTO_API_BASE_URL }}
           VITE_APP_BASE: /DemoForTTO/
 
       - name: Deploy to gh-pages branch
