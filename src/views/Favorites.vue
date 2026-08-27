@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted, onActivated } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, onActivated, nextTick } from 'vue';
 import { ElPagination, ElInput, ElButton, ElSelect, ElOption, ElMessage } from 'element-plus';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import {
@@ -16,20 +16,25 @@ import {
 } from '@/utils/favoritesStore';
 import { notifyFavoriteResult } from '@/utils/favoriteMessages';
 import { resolveDataImage } from '@/utils/dataImageResolver';
-import FreeInfoDialog from '@/components/FreeInfoDialog.vue';
-import TripDialog from '@/components/TripDialog.vue';
-import {
-  buildFreeInfoDialogPayload,
-  resolveOriginalImages,
-  getFreeInfoDialogImagePaths,
-} from '@/utils/freeInfoImageUtils';
-import { loadCatalogItemDetail } from '@/utils/contentRepository';
+import { buildFreeInfoDialogPayload } from '@/utils/freeInfoImageUtils';
 import { isApiEnabled } from '@/utils/ttoApi';
 import { shouldUseRemoteFavorites, logout, bootstrapAuthSession } from '@/utils/authStore';
 import { withLoading } from '@/utils/loadingUtils';
 import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback';
+import { useRoute, useRouter } from 'vue-router';
+import { useNavStore } from '@/stores/nav';
+import { openContentDetailWindow } from '@/utils/openContentDetail';
 
-const ALL_SOURCE_VALUE = '__all__';
+const ALL_SOURCE_VALUE = '__all__'
+
+const router = useRouter();
+const route = useRoute();
+const navStore = useNavStore();
+
+function pinPageToTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  navStore.saveScroll(0, route.fullPath);
+}
 
 const FAVORITE_DEFAULT_IMAGE =
   resolveDataImage('@/assets/img/default.png', '', { variant: 'thumb' })
@@ -80,35 +85,6 @@ const getCoverImageUrl = (item) => {
   return FAVORITE_DEFAULT_IMAGE;
 };
 
-const getOriginalDialogImageUrl = (item) => {
-  const subNavName = item?.subNavName || item?.tripData?.displaySubNav || '';
-  const imagePaths = getFreeInfoDialogImagePaths(
-    {
-      cover: item?.tripData?.cover || item?.cover || item?.banner || '',
-      img: item?.tripData?.img ?? item?.img ?? item?.banner ?? item?.image,
-    },
-    subNavName,
-    item?.tripData || {},
-  );
-  const resolved = resolveOriginalImages(imagePaths);
-  if (resolved.length) return resolved[0];
-
-  const fallbackPaths = [
-    item?.tripData?.cover,
-    item?.banner,
-    item?.image,
-    item?.banner,
-    item?.img,
-  ].flatMap((group) => (Array.isArray(group) ? group : group ? [group] : []));
-
-  for (const imagePath of fallbackPaths) {
-    const resolvedImage = resolveDataImage(imagePath, '');
-    if (resolvedImage) return resolvedImage;
-  }
-
-  return FAVORITE_DEFAULT_IMAGE;
-};
-
 // 搜索相关
 const searchInput = ref('');
 const searchKeyword = ref('');
@@ -123,10 +99,6 @@ const migrationTestLoading = ref(false);
 const useRemoteFavorites = computed(() => shouldUseRemoteFavorites());
 const isFavoritesSyncing = computed(() => isPostLoginSyncing.value);
 const isPageInteractionDisabled = computed(() => isFavoritesSyncing.value || remoteFavoritesLoading.value);
-// 弹窗相关
-const dialogVisible = ref(false);
-const currentItem = ref(null);
-// 根据屏幕尺寸动态计算每页显示数量
 const itemsPerPage = computed(() => {
   if (windowWidth.value <= 768) {
     return 3;
@@ -227,10 +199,6 @@ const isFreeInfoFavorite = (item) => {
   return type === '景点信息' || type === '餐厅信息' || type === '住宿信息' || type === 'scenic';
 };
 
-const currentDialogBanner = computed(() => {
-  if (!currentItem.value) return '';
-  return getOriginalDialogImageUrl(currentItem.value);
-});
 // 总页数
 const totalPages = computed(() => {
   const total = useRemoteFavorites.value ? remoteFavoritesTotal.value : localCurrentFavorites.value.length;
@@ -281,59 +249,9 @@ const handleSourceChange = async () => {
 };
 // 打开弹窗
 const openDialog = async (item) => {
-  if (isFavoritesSyncing.value) return;
-  let enriched = item
-  if (isApiEnabled() && item?.id != null) {
-    try {
-      const detail = await withLoading(
-        () => loadCatalogItemDetail(item.id),
-        { text: '正在加载详情...' }
-      )
-      if (detail) {
-        enriched = {
-          ...item,
-          ...detail,
-          title: detail.title || item.title,
-          enTitle: detail.enTitle ?? item.enTitle,
-          itemType: item.itemType || item.type || detail.itemType || detail.tripType,
-          tripData: {
-            ...(item.tripData && typeof item.tripData === 'object' ? item.tripData : {}),
-            ...(detail.tripData && typeof detail.tripData === 'object' ? detail.tripData : {}),
-          },
-        }
-      }
-    } catch (error) {
-      notifyApiError(error, { action: '详情', dedupeKey: 'favorites:detail' })
-    }
-  }
-  currentItem.value = buildFreeInfoDialogPayload(enriched)
-  dialogVisible.value = true
-};
-// 关闭弹窗
-const closeDialog = () => {
-  dialogVisible.value = false;
-  currentItem.value = null;
-};
-
-const onOpenRelatedSpot = async (spot) => {
-  if (!spot) return
-  await openDialog({
-    ...spot,
-    itemType: spot.itemType || spot.tripType || '景点信息',
-    type: spot.itemType || spot.tripType || '景点信息',
-  })
-};
-
-const onOpenParentSpot = async (parentInfo) => {
-  if (!parentInfo?.id) return
-  dialogVisible.value = false
-  await openDialog({
-    id: parentInfo.id,
-    title: parentInfo.title,
-    itemType: '景点信息',
-    type: '景点信息',
-  })
-};
+  if (isFavoritesSyncing.value) return
+  openContentDetailWindow(router, item)
+}
 
 // 取消收藏
 const handleRemoveFavorite = async (item, event) => {
@@ -354,19 +272,6 @@ const handleRemoveFavorite = async (item, event) => {
   }
   if (currentPage.value > totalPages.value) {
     currentPage.value = Math.max(1, totalPages.value);
-  }
-};
-// 监听收藏变化（弹窗内取消收藏时关闭弹窗）
-const handleFavoriteChange = (result) => {
-  if (result === 'removed') {
-    closeDialog();
-    if (useRemoteFavorites.value) {
-      applyRemoteFavoritesView();
-      return;
-    }
-    if (currentPage.value > totalPages.value) {
-      currentPage.value = Math.max(1, totalPages.value);
-    }
   }
 };
 
@@ -471,11 +376,17 @@ async function retryLoadFavorites() {
 }
 
 onMounted(async () => {
+  if (typeof history !== 'undefined' && 'scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  pinPageToTop();
   window.addEventListener('resize', handleResize);
   if (isApiEnabled()) {
     await bootstrapAuthSession();
   }
   await syncFavorites();
+  await nextTick();
+  pinPageToTop();
 });
 
 onActivated(async () => {
@@ -588,21 +499,6 @@ onUnmounted(() => {
         layout="prev, pager, next, jumper" :disabled="favoriteTotalCount === 0 || isPageInteractionDisabled"
         @current-change="handlePageChange" />
     </div>
-
-    <!-- 详情弹窗 -->
-    <TripDialog v-if="dialogVisible && isDayTripFavorite(currentItem)" v-model:visible="dialogVisible"
-      :title="currentItem?.title || ''" :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner"
-      :trip-data="currentItem?.tripData || {}" :trip-type="currentItem?.itemType || currentItem?.type || '一日游'"
-      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''"
-      :item-type="currentItem?.itemType || currentItem?.type || '一日游'" @update:visible="closeDialog"
-      @favorite-change="handleFavoriteChange" />
-    <FreeInfoDialog v-else-if="dialogVisible" v-model:visible="dialogVisible" :title="currentItem?.title || ''"
-      :en-title="currentItem?.enTitle || ''" :banner="currentDialogBanner" :trip-data="currentItem?.tripData || {}"
-      :item-id="currentItem?.id || null" :item-key="currentItem?.itemKey || ''"
-      :item-type="currentItem?.itemType || currentItem?.type || 'scenic'"
-      :parent-spot-title="currentItem?.parentSpotTitle || ''" :parent-spot-id="currentItem?.parentSpotId || null"
-      @update:visible="closeDialog" @favorite-change="handleFavoriteChange" @open-related-spot="onOpenRelatedSpot"
-      @open-parent-spot="onOpenParentSpot" />
   </div>
 </template>
 

@@ -111,29 +111,6 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll)
   // 添加窗口大小变化监听器
   window.addEventListener('resize', handleResize)
-
-  // 非首次进入时，恢复用户上次选择的服务、子导航和滚动位置
-  if (!navStore.isFirstVisit()) {
-    const restoreLastSession = async () => {
-      await router.isReady()
-
-      const currentFullPath = router.currentRoute.value.fullPath || router.currentRoute.value.path || ''
-      const lastPath = navStore.lastPath
-      const isRootPath = !currentFullPath || currentFullPath === '/' || currentFullPath === '/DemoForTTO'
-
-      if (!isRootPath && currentFullPath.startsWith('/DemoForTTO/')) {
-        return
-      }
-
-      if (lastPath && lastPath !== '/DemoForTTO') {
-        router.replace(lastPath)
-      } else {
-        router.replace({ path: '/DemoForTTO/service/car' })
-      }
-    }
-
-    restoreLastSession()
-  }
 })
 
 // 组件卸载时清理事件监听器

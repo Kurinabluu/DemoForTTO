@@ -8,9 +8,10 @@ import { Search } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { buildDayTripTabQuery, resolveDayTripSubNavName } from '@/utils/subNavKey'
 import { MAX_FAVORITES } from '@/utils/favoritesStore'
+import { normalizeAppPath } from '@/utils/appPath'
+import { openContentDetailWindow } from '@/utils/openContentDetail'
+import { applyBreadcrumbJsonLd, applyJsonLd, applyPageSeo, removeFaqJsonLd, removeJsonLd, SITE_JSONLD_ID, SITE_NAME, toAbsoluteUrl } from '@/utils/pageSeo'
 
-const FreeInfoDialog = defineAsyncComponent(() => import('@/components/FreeInfoDialog.vue'))
-const TripDialog = defineAsyncComponent(() => import('@/components/TripDialog.vue'))
 const PlaceListDialog = defineAsyncComponent(() => import('@/components/PlaceListDialog.vue'))
 
 const navStore = useNavStore()
@@ -29,8 +30,10 @@ const handleFavoriteMessage = (event) => {
     }
 }
 
-// 当前选中的子导航
-const currentSubNavTab = ref('')
+// 当前选中的子导航（空字符串不要传给列表，否则会盖掉路由默认的「景点」）
+const currentSubNavTab = ref(
+    typeof route.query.subNavName === 'string' ? route.query.subNavName : ''
+)
 
 // 监听路由变化，当路由改变时自动设置默认子导航
 // watch(() => route.path, (newPath) => {
@@ -68,7 +71,10 @@ const itemsWithSubNav = computed(() => {
 
 // 获取当前路由对应的数据对象
 const currentRouteData = computed(() => {
-    const currentPath = route.path
+    const currentPath = normalizeAppPath(route.path) || route.path
+    if (currentPath === '/info' || currentPath.startsWith('/info/')) {
+        return undefined
+    }
     return navData.find(item => {
         if (item.path) {
             return currentPath.includes(item.path)
@@ -87,6 +93,21 @@ const currentSubNav = computed(() => {
 // 显示子导航的条件
 const showSubNav = computed(() => {
     return currentRouteData.value && currentRouteData.value.hasSubNav && currentSubNavTab.value
+})
+
+const isContentDetailPage = computed(() => {
+    const currentPath = normalizeAppPath(route.path) || route.path
+    return currentPath === '/info' || currentPath.startsWith('/info/')
+})
+
+const listPageHeading = computed(() => {
+    const path = normalizeAppPath(route.path) || route.path
+    if (path === '/trips/routes') return '一日游 / 多日游'
+    if (path === '/trips/freeinfo') {
+        const sub = String(route.query.subNavName || '景点').trim() || '景点'
+        return `自助游参考信息 · ${sub}`
+    }
+    return ''
 })
 
 const hiddenFreeInfoSubNav = new Set(['葡萄酒酒庄', '洋酒酒庄'])
@@ -108,16 +129,16 @@ function onClickSubTab(tab) {
         if (isValidTab) {
             // 根据当前路径决定使用哪个query参数
             const currentPath = route.path
-            if (currentPath.includes('/DemoForTTO/trips/routes')) {
+            if (currentPath.includes('/trips/routes')) {
                 // 一日游/多日游页面使用 dayTripTab 数字键（如 1、16）
                 router.push({
-                    path: '/DemoForTTO/trips/routes',
+                    path: '/trips/routes',
                     query: { dayTripTab: buildDayTripTabQuery(tab) }
                 })
-            } else if (currentPath.includes('/DemoForTTO/trips/freeinfo')) {
+            } else if (currentPath.includes('/trips/freeinfo')) {
                 // 免费信息页面使用subNavName参数
                 router.push({
-                    path: '/DemoForTTO/trips/freeinfo',
+                    path: '/trips/freeinfo',
                     query: { subNavName: tab }
                 })
             }
@@ -160,20 +181,6 @@ function doSubSearch() {
     }
     committedKeyword.value = kw
 }
-
-// 只保留弹窗相关的状态
-const freeInfoDialogStack = ref([])
-const isTripDialogVisible = ref(false)
-const dialogEnTitle = ref('')
-const dialogTitle = ref('大堡礁单日游')
-const dialogBanner = ref(new URL('@/assets/img/footer2.jpg', import.meta.url).href)
-const dialogTripData = ref({})
-const dialogTripType = ref('一日游')
-const dialogItemId = ref(null)
-const dialogItemKey = ref('')
-const dialogItemType = ref('scenic')
-
-const defaultDialogBanner = new URL('@/assets/img/footer2.jpg', import.meta.url).href
 
 const isPlaceListVisible = ref(false)
 const listPlaceName = ref('')
@@ -344,82 +351,74 @@ function openPlaceList({ placeName, itemType, items = [] }) {
 }
 
 function onSelectPlaceItem(item) {
-    dialogTitle.value = `${listPlaceName.value} · ${item.title}`
-    dialogBanner.value = item.img || (listItemType.value === '餐厅'
-        ? new URL('@/assets/img/footer2.jpg', import.meta.url).href
-        : new URL('@/assets/img/footer3.jpg', import.meta.url).href)
-    dialogTripData.value = item.tripData || {}
-    dialogTripType.value = listItemType.value === '餐厅' ? '餐厅信息' : '住宿信息'
-    isTourDialogVisible.value = true
+    if (!item) return
+    openContentDetailWindow(router, {
+        ...item,
+        tripType: item.tripType || item.itemType || (listItemType.value === '餐厅' ? '餐厅信息' : '住宿信息'),
+        itemType: item.itemType || item.tripType || (listItemType.value === '餐厅' ? '餐厅信息' : '住宿信息'),
+    })
 }
 
 // 标签点击逻辑已移至ServicesNav组件内部实现
 
 // 弹窗控制
 // 弹窗相关方法
-function createFreeInfoDialogEntry(item) {
-    return {
-        stackKey: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        title: item?.title || '',
-        enTitle: item?.enTitle || '',
-        banner: item?.banner || defaultDialogBanner,
-        tripData: item?.tripData || {},
-        tripType: item?.tripType || '景点信息',
-        itemId: item?.id ?? item?.tripData?.id ?? null,
-        itemKey: item?.itemKey || item?.tripData?.itemKey || '',
-        itemType: item?.itemType || item?.tripType || '景点信息',
-        parentSpotTitle: item?.parentSpotTitle || item?.tripData?.parentSpotTitle || '',
-        parentSpotId: item?.parentSpotId ?? item?.tripData?.parentSpotId ?? null,
-    }
+function openTourDialog(item) {
+    openContentDetailWindow(router, item)
 }
 
-function isDayTripDialogType(tripType) {
-    const normalized = String(tripType || '').trim()
-    return normalized === '一日游' || normalized === '多日游' || normalized.includes('日行程')
-}
-
-function closeFreeInfoStackItem(stackKey) {
-    freeInfoDialogStack.value = freeInfoDialogStack.value.filter((entry) => entry.stackKey !== stackKey)
-}
-
-function openTourDialog(item, { stack = false } = {}) {
-    const tripType = item?.tripType || item?.itemType || '一日游'
-
-    if (isDayTripDialogType(tripType)) {
-        freeInfoDialogStack.value = []
-        dialogTitle.value = item?.title || '大堡礁单日游'
-        dialogEnTitle.value = item?.enTitle || ''
-        dialogBanner.value = item?.banner || defaultDialogBanner
-        dialogTripData.value = item?.tripData || {}
-        dialogTripType.value = tripType
-        dialogItemId.value = item?.id ?? item?.tripData?.id ?? null
-        dialogItemKey.value = item?.itemKey || item?.tripData?.itemKey || ''
-        dialogItemType.value = item?.itemType || tripType
-        isTripDialogVisible.value = true
+function applyListPageSeo() {
+    const path = normalizeAppPath(route.path) || route.path
+    if (path === '/info' || path.startsWith('/info/') || path.startsWith('/service/')) {
         return
     }
-
-    const entry = createFreeInfoDialogEntry(item)
-    if (stack && freeInfoDialogStack.value.length > 0) {
-        freeInfoDialogStack.value.push(entry)
+    if (path === '/trips/routes') {
+        applyPageSeo({
+            title: '一日游 / 多日游',
+            description: '塔斯马尼亚一日游与多日游行程，可按天数查看并咨询出发地、时长和包含项目。由 TASMANIA TRIPS PTY LTD 提供，服务区域为塔斯马尼亚。',
+        })
+        applyBreadcrumbJsonLd([
+            { name: '首页', path: '/trips/freeinfo' },
+            { name: '一日游 / 多日游', path: '/trips/routes' },
+        ])
         return
     }
-    freeInfoDialogStack.value = [entry]
-}
-
-function onOpenRelatedSpot(spot) {
-    if (!spot) return
-    openTourDialog({
-        ...spot,
-        tripType: spot.tripType || '景点信息',
-        itemType: spot.itemType || '景点信息',
-        tripData: spot.tripData || {},
-    }, { stack: true })
-}
-
-function onOpenParentSpot(parentInfo) {
-    if (!parentInfo) return
-    openTourDialog(parentInfo, { stack: true })
+    if (path === '/trips/freeinfo') {
+        const sub = String(route.query.subNavName || '景点').trim() || '景点'
+        applyPageSeo({
+            title: `自助游参考信息 · ${sub}`,
+            description: `塔斯马尼亚${sub}等公开资料整理，供自助游和自驾游规划参考。本页不是售票或订房系统。`,
+        })
+        removeFaqJsonLd()
+        applyBreadcrumbJsonLd([
+            { name: '首页', path: '/trips/freeinfo' },
+            { name: `自助游参考信息 · ${sub}`, path: '/trips/freeinfo' },
+        ])
+        return
+    }
+    if (path === '/search') {
+        applyPageSeo({
+            title: '搜索',
+            description: '搜索 TasTrips.Online 行程、景点、餐厅、住宿等参考信息。',
+        })
+        removeFaqJsonLd()
+        applyBreadcrumbJsonLd([
+            { name: '首页', path: '/trips/freeinfo' },
+            { name: '搜索', path: '/search' },
+        ])
+        return
+    }
+    if (path === '/favorites') {
+        applyPageSeo({
+            title: '我的收藏',
+            description: '查看已收藏的行程与参考信息。',
+        })
+        removeFaqJsonLd()
+        applyBreadcrumbJsonLd([
+            { name: '首页', path: '/trips/freeinfo' },
+            { name: '我的收藏', path: '/favorites' },
+        ])
+    }
 }
 
 // 响应式选择轮播图（<=1024 为手机/平板）与高度
@@ -601,7 +600,13 @@ watch(
     }
 )
 
-// 组件挂载时执行
+watch(
+    () => [route.path, route.query.subNavName, route.query.dayTripTab],
+    () => {
+        applyListPageSeo()
+    },
+)
+
 onMounted(() => {
     selectSlides()
     if (typeof window !== 'undefined') {
@@ -611,6 +616,22 @@ onMounted(() => {
     initializeSubNav()
     syncSearchFromRoute()
     runTourDialogLocate()
+    applyListPageSeo()
+    applyJsonLd(SITE_JSONLD_ID, {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: toAbsoluteUrl('/trips/freeinfo'),
+        potentialAction: {
+            '@type': 'SearchAction',
+            target: toAbsoluteUrl('/search?q={search_term_string}'),
+            'query-input': 'required name=search_term_string',
+        },
+    })
+})
+
+onUnmounted(() => {
+    removeJsonLd(SITE_JSONLD_ID)
 })
 </script>
 
@@ -636,12 +657,11 @@ onMounted(() => {
             </el-carousel>
         </div> -->
 
-        <!-- 固定搜索框 -->
-        <!-- <ServicesNav @clear-search="clearSearch" /> -->
-        <ServicesNav />
+        <h1 v-if="listPageHeading" class="page-seo-title">{{ listPageHeading }}</h1>
+        <ServicesNav v-if="!isContentDetailPage" />
 
         <!-- 内容区域 - 使用router-view来渲染子路由 -->
-        <div class="content-box">
+        <div class="content-box" :class="{ 'content-box--detail': isContentDetailPage }">
             <!-- 动态子导航（根据data.json中hasSubNav为true的对象渲染） -->
             <div v-if="showSubNav" class="free-trip-subnav center">
                 <!-- 横向Tab列表 -->
@@ -654,32 +674,9 @@ onMounted(() => {
                 </ul>
             </div>
             <router-view @open-tour-dialog="openTourDialog" @open-place-list="openPlaceList"
-                :sub-tab="currentSubNavTab" :s="committedKeyword" />
+                :sub-tab="currentSubNavTab || undefined" :s="committedKeyword" />
         </div>
 
-        <!-- 弹窗组件 -->
-        <FreeInfoDialog
-            v-for="(dlg, index) in freeInfoDialogStack"
-            :key="dlg.stackKey"
-            :visible="true"
-            :title="dlg.title"
-            :en-title="dlg.enTitle"
-            :banner="dlg.banner"
-            :trip-data="dlg.tripData"
-            :trip-type="dlg.tripType"
-            :item-id="dlg.itemId"
-            :item-key="dlg.itemKey"
-            :item-type="dlg.itemType"
-            :parent-spot-title="dlg.parentSpotTitle"
-            :parent-spot-id="dlg.parentSpotId"
-            :stack-layer="index"
-            @update:visible="(visible) => { if (!visible) closeFreeInfoStackItem(dlg.stackKey) }"
-            @open-related-spot="onOpenRelatedSpot"
-            @open-parent-spot="onOpenParentSpot"
-        />
-        <TripDialog v-if="isTripDialogVisible" v-model:visible="isTripDialogVisible" :title="dialogTitle"
-            :en-title="dialogEnTitle" :banner="dialogBanner" :trip-data="dialogTripData" :trip-type="dialogTripType"
-            :item-id="dialogItemId" :item-key="dialogItemKey" :item-type="dialogItemType" />
         <PlaceListDialog v-if="isPlaceListVisible" v-model="isPlaceListVisible" :place-name="listPlaceName"
             :item-type="listItemType" :items="listItems" @select="onSelectPlaceItem" />
     </el-main>
@@ -690,6 +687,7 @@ onMounted(() => {
     // background-color: pink;
     color: #333;
     padding: 0;
+    overflow: visible;
     // height: auto;
 
     .carousel-container {
@@ -820,6 +818,10 @@ onMounted(() => {
         gap: 20px;
         // letter-spacing: 15px;
         margin-top: 90px;
+
+        &.content-box--detail {
+            margin-top: 24px;
+        }
 
 
         .service-title {
@@ -1424,6 +1426,18 @@ onMounted(() => {
     }
 }
 
+
+.page-seo-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 
 .no-result-body {
     color: #374151;

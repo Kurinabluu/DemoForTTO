@@ -1,0 +1,6 @@
+# 演示站默认 noindex，请勿向 Search Console 提交此 sitemap。
+User-agent: *
+Allow: /
+Disallow: /favorites
+Disallow: /search
+Sitemap: https://kurinabluu.github.io/DemoForTTO/sitemap.xml

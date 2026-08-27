@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 // Element Plus已在main.js中全局注册
 import { ElIcon } from 'element-plus'
 import { Back, Right, ZoomOut, ZoomIn, RefreshRight, RefreshLeft, Refresh } from '@element-plus/icons-vue'
@@ -41,16 +42,25 @@ import car2Back from '@/assets/img/carService/car2_back.jpg';
 import hiaceFront from '@/assets/img/carService/hiace_front.jpg';
 import hiaceLeftFront from '@/assets/img/carService/hiace_left_front.jpg';
 import { Z_INDEX } from '@/constants/zIndex'
-
-
-
-import AboutUsDialog from '@/components/AboutUsDialog.vue';
+import { COMPANY, getServiceFaqs } from '@/data/companyProfile'
+import {
+    applyBreadcrumbJsonLd,
+    applyFaqJsonLd,
+    applyJsonLd,
+    applyPageSeo,
+    ENTITY_JSONLD_ID,
+    removeFaqJsonLd,
+    resetPageSeo,
+} from '@/utils/pageSeo'
 
 // 接收配置（保持向后兼容）
 const props = defineProps({
     config: { type: Object, default: null },
     serviceName: { type: String, default: '热门项目' }
 })
+const route = useRoute()
+
+const serviceFaqOpen = ref('0')
 
 // 响应式检测屏幕宽度，用于移动端适配
 const screenWidth = ref(window.innerWidth)
@@ -409,6 +419,36 @@ const heroDescLines = computed(() => {
     return Array.isArray(desc) ? desc : [desc]
 })
 
+const serviceFaqs = computed(() => getServiceFaqs(resolveServiceName() || currentServiceName.value))
+
+function applyServiceSeo() {
+    const name = resolveServiceName() || currentServiceName.value || '服务'
+    const desc = heroDescLines.value.filter(Boolean).join(' ').replace(/\s+/g, ' ').slice(0, 180)
+    applyPageSeo({
+        title: name,
+        description: desc || `${name}由 TASMANIA TRIPS PTY LTD 提供，服务区域为塔斯马尼亚。`,
+    })
+    applyFaqJsonLd(serviceFaqs.value)
+    applyJsonLd(ENTITY_JSONLD_ID, {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name,
+        description: desc || `${name}由 ${COMPANY.legalName} 提供，服务区域为${COMPANY.region}。`,
+        areaServed: COMPANY.region,
+        provider: {
+            '@type': 'TravelAgency',
+            name: COMPANY.brand,
+            legalName: COMPANY.legalName,
+            email: COMPANY.email,
+            telephone: COMPANY.phone,
+        },
+    })
+    applyBreadcrumbJsonLd([
+        { name: '首页', path: '/trips/freeinfo' },
+        { name, path: route.path },
+    ])
+}
+
 // 获取服务数据的函数（API 优先）
 const loadServiceData = async (serviceName) => {
     if (!serviceName) return
@@ -431,13 +471,7 @@ const loadServiceData = async (serviceName) => {
         serviceLoadError.value = error?.message || '加载服务失败'
     } finally {
         serviceLoading.value = false
-    }
-}
-
-const aboutUsDialogRef = ref(null);
-function showAboutUsDialog() {
-    if (aboutUsDialogRef.value) {
-        aboutUsDialogRef.value.showAboutUsDialog = true;
+        applyServiceSeo()
     }
 }
 
@@ -465,10 +499,11 @@ onMounted(() => {
 // 组件卸载时清理定时器
 onUnmounted(() => {
     stopAutoScroll()
-    // 移除滚动事件监听器
     if (scrollContainerRef.value) {
         scrollContainerRef.value.removeEventListener('scroll', onScroll)
     }
+    resetPageSeo()
+    removeFaqJsonLd()
 })
 
 // 监听serviceName变化，重新加载数据
@@ -632,13 +667,13 @@ const openOrderableDialog = (item) => {
         <!-- 包车服务介绍 -->
         <div class="charter-intro w100" v-if="currentConfig?.packagesTitle === '包车服务'">
             <div class="charter-content">
-                <p class="section-title">我们提供如下车型的包车服务：</p>
+                <h1 class="section-title">我们提供如下车型的包车服务：</h1>
                 <template v-for="advantage in (currentConfig?.advantages || [])" :key="advantage?.id">
                     <div class="carousel-container w100">
                         <el-carousel trigger="click" :height="isTablet ? '400px' : '600px'" :interval="5000" type="card"
                             indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
                             <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
-                                <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
+                                <el-image :src="getImageUrl(url, advantage)" :alt="advantage?.title || '车辆详情'"
                                     class="carousel-img w100 h100 pointer" :fit="isTablet ? 'scale-down' : 'contain'"
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
@@ -688,7 +723,7 @@ const openOrderableDialog = (item) => {
 
                 <div class="hero-text w100">
                     <!-- <h2 class="subtitle center">{{ currentConfig?.heroTitle }}</h2> -->
-                    <h2 class="section-title">{{ currentConfig?.heroTitle }}</h2>
+                    <h1 class="section-title">{{ currentConfig?.heroTitle }}</h1>
                     <p class="description center" v-for="(desc, idx) in heroDescLines" :key="idx">{{ desc }}</p>
 
 
@@ -874,7 +909,7 @@ const openOrderableDialog = (item) => {
                         <el-carousel trigger="click" :height="isTablet ? '300px' : '500px'" :interval="5000" type="card"
                             indicator-position="outside" :direction="isMobile ? 'vertical' : 'horizontal'">
                             <el-carousel-item v-for="(url, index) in (advantage.urls || [])" :key="index">
-                                <el-image :src="getImageUrl(url, advantage)" alt="车辆详情"
+                                <el-image :src="getImageUrl(url, advantage)" :alt="advantage?.title || '车辆详情'"
                                     class="carousel-img w100 h100 pointer" :fit="isTablet ? 'scale-down' : 'contain'"
                                     :preview-src-list="advantage.urls?.map(imgUrl => getImageUrl(imgUrl, advantage))"
                                     :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" show-progress
@@ -933,6 +968,25 @@ const openOrderableDialog = (item) => {
             </div>
         </div> -->
 
+        <section v-if="serviceFaqs.length" class="service-faq">
+            <h2 class="section-title">常见问题</h2>
+            <el-collapse v-model="serviceFaqOpen" accordion>
+                <el-collapse-item v-for="(faq, index) in serviceFaqs" :key="faq.q" :name="String(index)">
+                    <template #title>
+                        <span class="service-faq-q">{{ faq.q }}</span>
+                    </template>
+                    <p class="service-faq-a">{{ faq.a }}</p>
+                </el-collapse-item>
+            </el-collapse>
+            <p class="service-faq-links">
+                <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }">免费参考信息</RouterLink>
+                ·
+                <RouterLink to="/refund">退款政策</RouterLink>
+                ·
+                <RouterLink to="/about">关于我们</RouterLink>
+            </p>
+        </section>
+
         <!-- 联系方式区域 -->
         <div class="contact-section" v-if="currentConfig?.packagesTitle !== '包车服务' && currentConfig?.contactTitle">
             <h2 class="section-title">{{ currentConfig.contactTitle }}</h2>
@@ -958,9 +1012,6 @@ const openOrderableDialog = (item) => {
             :title="orderableDialogData.title" :en-title="orderableDialogData.enTitle"
             :banner="orderableDialogData.banner" :trip-type="orderableDialogData.tripType"
             :trip-data="orderableDialogData.tripData" />
-
-        <!-- 关于我们弹窗 -->
-        <AboutUsDialog ref="aboutUsDialogRef" />
     </div>
 </template>
 <style lang="scss">
@@ -1461,6 +1512,55 @@ const openOrderableDialog = (item) => {
         padding: 20px;
         margin-bottom: 60px;
         border-radius: 5px;
+    }
+
+    .service-faq {
+        width: 100%;
+        margin: 0 0 60px;
+        padding: 8px 0 0;
+    }
+
+    .service-faq :deep(.el-collapse) {
+        border: none;
+    }
+
+    .service-faq :deep(.el-collapse-item) {
+        border-bottom: 1px solid #e5efec;
+    }
+
+    .service-faq :deep(.el-collapse-item:last-child) {
+        border-bottom: none;
+    }
+
+    .service-faq :deep(.el-collapse-item__header),
+    .service-faq :deep(.el-collapse-item__wrap) {
+        border-bottom: none;
+    }
+
+    .service-faq-q {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111;
+        white-space: normal;
+        line-height: 1.5;
+    }
+
+    .service-faq-a {
+        margin: 0;
+        color: #374151;
+        line-height: 1.7;
+    }
+
+    .service-faq-links {
+        margin: 16px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .service-faq-links a {
+        color: #1a7a6f;
+        font-weight: 700;
+        text-decoration: none;
     }
 
     .section-title {

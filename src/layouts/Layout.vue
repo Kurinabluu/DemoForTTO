@@ -5,10 +5,6 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNavStore } from '@/stores/nav';
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
-import RefundPolicy from '@/components/RefundPolicy.vue';
-import PrivacyPolicy from '@/components/PrivacyPolicy.vue';
-import TermsandConditionsDialog from '@/components/TermsandConditionsDialog.vue';
-import AboutUsDialog from '@/components/AboutUsDialog.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import FavoritesSyncOverlay from '@/components/FavoritesSyncOverlay.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
@@ -18,15 +14,12 @@ import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
 import { registerLoginDialogOpener } from '@/utils/loginDialogBridge';
 import { ElMessage } from 'element-plus';
 import { getApiErrorMessage } from '@/utils/apiFeedback';
+import { COMPANY_NAV_ENTRY } from '@/data/companyProfile';
 
 const navStore = useNavStore();
 const router = useRouter();
 
 const comingSoonDialogRef = ref(null);
-const refundPolicyRef = ref(null);
-const privacyPolicyRef = ref(null);
-const termsandConditionsDialogRef = ref(null);
-const aboutUsDialogRef = ref(null);
 const loginDialogVisible = ref(false);
 
 const headerUserLabel = computed(() => {
@@ -43,8 +36,8 @@ const activeNavItem = computed(() => {
     const path = currentRoute.path;
     const subNavName = currentRoute.query.subNavName || '';
 
-    // 只在/DemoForTTO/trips/freeinfo路径下判断
-    if (path === '/DemoForTTO/trips/freeinfo') {
+    // 只在免费信息路径下判断
+    if (path === '/trips/freeinfo') {
         if (subNavName === '特别活动') {
             return '特别推荐';
         } else if (subNavName === '景点') {
@@ -217,26 +210,6 @@ function showComingSoonDialog() {
         comingSoonDialogRef.value.showComingDialog = true;
     }
 }
-function showRefundPolicy() {
-    if (refundPolicyRef.value) {
-        refundPolicyRef.value.showRefundPolicyDialog = true;
-    }
-}
-function showPrivacyPolicy() {
-    if (privacyPolicyRef.value) {
-        privacyPolicyRef.value.showPrivacyPolicyDialog = true;
-    }
-}
-function showTermsandConditionsDialog() {
-    if (termsandConditionsDialogRef.value) {
-        termsandConditionsDialogRef.value.showTemrsDialog = true;
-    }
-}
-function showAboutUsDialog() {
-    if (aboutUsDialogRef.value) {
-        aboutUsDialogRef.value.showAboutUsDialog = true;
-    }
-}
 
 async function touchAuthSession() {
     if (!isApiEnabled() || !isLoggedIn.value) return
@@ -264,7 +237,7 @@ onMounted(() => {
         <el-header class="fs16 bgfff">
             <span class="logo fowe7 no-select pointer">
                 <!-- <RouterLink to="/DemoForTTO/trips/freeinfo"> -->
-                <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }">
+                <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }">
                     <img :src="headerLogo" alt="TasTrips.Online" class="logo-img logo-desktop" onerror="this.onerror=null; this.style.display='none'; 
                                  const span=document.createElement('span'); 
                                  span.innerText='TasTrips.Online'; 
@@ -278,7 +251,7 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css fs16 clearfix">
-                    <li class="pointer" @click="showAboutUsDialog">关于我们</li>
+                    <li class="pointer"><RouterLink :to="{ path: '/about', query: COMPANY_NAV_ENTRY }">关于我们</RouterLink></li>
                     <li class="pointer dropdown">
                         <el-dropdown class="language-dropdown">
                             <span class="el-dropdown-link">
@@ -305,7 +278,7 @@ onMounted(() => {
                         </RouterLink>
                     </li> -->
                     <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
-                    <li class="pointer" @click="onNavClick($event)">付款与退款</li>
+                    <li class="pointer"><RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }">付款与退款</RouterLink></li>
                     <li class="pointer" @click="onNavClick($event)">成为会员</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
@@ -320,7 +293,6 @@ onMounted(() => {
         <!-- <HomeView /> -->
         <RouterView />
         <ComingSoonDialog ref="comingSoonDialogRef" />
-        <AboutUsDialog ref="aboutUsDialogRef" />
         <LoginDialog v-model:visible="loginDialogVisible" />
         <FavoritesSyncOverlay />
 
@@ -496,7 +468,7 @@ onMounted(() => {
                     </div>
                     <div class="nav-links">
                         <div class="nav-item">
-                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
+                            <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="scrollToTop()">
                                 <!-- <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="navStore.saveSelectedSubNav('景点'); scrollToTop()">
@@ -515,13 +487,12 @@ onMounted(() => {
                         </div>
                         <div class="nav-item">
                             <!-- <RouterLink to="/DemoForTTO/service/ticket" @click="scrollToTop()"> -->
-                            <RouterLink :to="{ path: '/DemoForTTO/trips/freeinfo', query: { subNavName: '景点' } }"
+                            <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }"
                                 @click="scrollToTop()">
                                 八大服务 <span>Service</span>
                             </RouterLink>
                         </div>
-                        <div class="nav-item" @click="showAboutUsDialog">关于我们 <span>About
-                                us</span></div>
+                        <RouterLink class="nav-item" :to="{ path: '/about', query: COMPANY_NAV_ENTRY }">关于我们 <span>About us</span></RouterLink>
                         <div class="nav-item" @click="openContactDialog">联系我们 <span>Contact us</span></div>
                     </div>
                 </div>
@@ -541,14 +512,12 @@ onMounted(() => {
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
-                            <li @click="showRefundPolicy">退款政策</li>
+                            <li><RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }">退款政策</RouterLink></li>
                             <li @click="showDisclaimerModal = true">
-                                <!-- showDisclaimerModal -->
-                                <!-- <RouterLink to="/DemoForTTO/disclaimer">免责条款</RouterLink> -->
                                 免责条款
                             </li>
-                            <li @click="showPrivacyPolicy">隐私政策</li>
-                            <li @click="showTermsandConditionsDialog">条款与条件</li>
+                            <li><RouterLink :to="{ path: '/privacy', query: COMPANY_NAV_ENTRY }">隐私政策</RouterLink></li>
+                            <li><RouterLink :to="{ path: '/terms', query: COMPANY_NAV_ENTRY }">条款与条件</RouterLink></li>
                         </ul>
                     </div>
                     <div class="declaration center">TasTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>
@@ -573,12 +542,6 @@ onMounted(() => {
                 </div>
             </template>
         </el-dialog>
-        <!-- 退款政策弹窗 -->
-        <RefundPolicy ref="refundPolicyRef" />
-        <!-- 隐私政策弹窗 -->
-        <PrivacyPolicy ref="privacyPolicyRef" />
-        <!-- 条款与条件弹窗 -->
-        <TermsandConditionsDialog ref="termsandConditionsDialogRef" />
     </el-container>
 </template>
 
@@ -629,8 +592,14 @@ onMounted(() => {
     border-bottom: 1px #2da099 solid;
 }
 
+.ul-css li a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .el-container {
     min-height: 100vh;
+    overflow: visible;
 
     .el-header {
         position: sticky;
@@ -871,6 +840,8 @@ onMounted(() => {
                         margin-bottom: 10px;
                         cursor: pointer;
                         transition: color 0.3s ease;
+                        color: inherit;
+                        text-decoration: none;
 
                         &:hover {
                             color: #2da099;
@@ -942,6 +913,11 @@ onMounted(() => {
                         &:hover {
                             color: #111827;
                         }
+                    }
+
+                    a {
+                        color: inherit;
+                        text-decoration: none;
                     }
 
                     a:hover {

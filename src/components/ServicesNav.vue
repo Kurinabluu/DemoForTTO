@@ -93,26 +93,20 @@ function onClickTag(tag, event) {
     const tagData = data.find(item => item.tagName === tag)
 
     if (tagData && tagData.path) {
-      let fullPath = `/DemoForTTO/${tagData.path}`
+      const location = {
+        path: `/${String(tagData.path).replace(/^\/+/, '')}`,
+      }
 
       // 如果是freeinfo路径，添加subNavName参数
       if (tagData.path === 'trips/freeinfo') {
-        fullPath = `/DemoForTTO/${tagData.path}?subNavName=景点`
+        location.query = { subNavName: '景点' }
       }
       // 如果是一日游/多日游路径（trips/routes），添加dayTripTab参数
       else if (tagData.path === 'trips/routes') {
-        fullPath = `/DemoForTTO/${tagData.path}?dayTripTab=1`
+        location.query = { dayTripTab: '1' }
       }
 
-      // 在新窗口打开前，更新 tto_last_path，确保新窗口能正确渲染内容
-      localStorage.setItem('tto_last_path', fullPath)
-      // 同时更新 navStore
-      navStore.savePath(fullPath)
-
-      // 在新窗口打开
-      const baseUrl = window.location.origin
-      const newUrl = `${baseUrl}${fullPath}`
-      window.open(newUrl, '_blank')
+      window.open(router.resolve(location).href, '_blank')
     }
   } catch (error) {
   }
@@ -288,7 +282,7 @@ async function onSearch() {
       if (currentPage === 1) return
       markSearchPageReset()
       await router.replace({
-        path: '/DemoForTTO/search',
+        path: '/search',
         query: { s: keyword },
       })
       return
@@ -298,7 +292,7 @@ async function onSearch() {
     searchKeywordEdited.value = false
 
     await router.push({
-      path: '/DemoForTTO/search',
+      path: '/search',
       query: { s: keyword },
     })
   } catch (error) {

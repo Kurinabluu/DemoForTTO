@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 演示站 noindex，请勿提交 Search Console。正式域名上线后用 VITE_SITE_ORIGIN 重建，或改用后端 /api/tto/sitemap.xml。 -->
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/trips/freeinfo</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/trips/routes</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/about</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/privacy</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/terms</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/refund</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/ticket</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/car</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/pickup</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/guide</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/steward</loc></url>
+  <url><loc>https://kurinabluu.github.io/DemoForTTO/service/custom</loc></url>
+</urlset>

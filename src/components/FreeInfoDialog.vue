@@ -8,6 +8,8 @@ import { notifyFavoriteResult } from '@/utils/favoriteMessages'
 import { notifyApiError } from '@/utils/apiFeedback'
 import { ElMessage } from 'element-plus'
 import { loadCatalogItemDetail } from '@/utils/contentRepository'
+import { mergeImageSourceIntoTripData } from '@/utils/freeInfoImageUtils'
+import { pickRelatedSpotCoverPath } from '@/utils/freeInfoRelations'
 import { Z_INDEX } from '@/constants/zIndex'
 
 const props = defineProps({
@@ -97,10 +99,10 @@ function getDefaultFreeInfo(title = '未知信息') {
     }
 }
 
-function mergeTripData(detailTripData, propsTripData) {
+function mergeTripData(detailTripData, propsTripData, sourceItem = null) {
     const fromDetail = detailTripData && typeof detailTripData === 'object' ? detailTripData : {}
     const fromProps = propsTripData && typeof propsTripData === 'object' ? propsTripData : {}
-    return {
+    const merged = {
         ...fromProps,
         ...fromDetail,
         childSpots: Array.isArray(fromProps.childSpots) && fromProps.childSpots.length
@@ -116,11 +118,16 @@ function mergeTripData(detailTripData, propsTripData) {
         belongsToSpot: fromDetail.belongsToSpot || fromProps.belongsToSpot || '',
         parentItemId: fromDetail.parentItemId ?? fromProps.parentItemId ?? null,
     }
+    return mergeImageSourceIntoTripData(sourceItem, merged)
 }
 
 const routeInfo = computed(() => {
     if (resolvedDetailItem.value?.tripData) {
-        return mergeTripData(resolvedDetailItem.value.tripData, props.tripData)
+        return mergeTripData(
+            resolvedDetailItem.value.tripData,
+            props.tripData,
+            resolvedDetailItem.value,
+        )
     }
     if (props.tripData && Object.keys(props.tripData).length > 0) {
         const hasContent = props.tripData.route || props.tripData.desc
@@ -152,6 +159,8 @@ const sourceEntryName = computed(() => {
 
 const isScenicInfo = computed(() => resolvedItemType.value === '景点信息')
 const isRestaurantInfo = computed(() => resolvedItemType.value === '餐厅信息')
+const isLodgingInfo = computed(() => resolvedItemType.value === '住宿信息')
+const shouldAlignImageSourceRight = computed(() => isScenicInfo.value || isLodgingInfo.value)
 
 const scenicAddressText = computed(() => {
     if (!isScenicInfo.value) return ''
@@ -191,8 +200,8 @@ const parentSpotCard = computed(() => {
     return {
         id: props.parentSpotId,
         title: props.parentSpotTitle,
-        img: props.banner,
-        banner: props.banner,
+        img: '',
+        banner: '',
     }
 })
 
@@ -267,7 +276,7 @@ const loadDetailFromApi = async () => {
         }
         resolvedDetailItem.value = {
             ...detail,
-            tripData: mergeTripData(detail.tripData, props.tripData),
+            tripData: mergeTripData(detail.tripData, props.tripData, detail),
         }
         await nextTick()
         scheduleNotifyImagePathIssues()
@@ -277,7 +286,8 @@ const loadDetailFromApi = async () => {
 }
 
 const resolveChildSpotImage = (spot) => {
-    const raw = spot?.img || spot?.banner || ''
+    const raw = pickRelatedSpotCoverPath(spot)
+    if (!raw) return ''
     return resolveDataImageWithStatus(raw, { variant: 'thumb' }).src
 }
 
@@ -601,7 +611,7 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
                     </el-carousel-item>
                 </el-carousel>
             </div>
-            <p v-if="currentImageSourceMeta" :class="['img-source-note', { 'img-source-note--scenic': isScenicInfo }]">
+            <p v-if="currentImageSourceMeta" :class="['img-source-note', { 'img-source-note--align-right': shouldAlignImageSourceRight }]">
                 ※ Photo by
                 <el-link v-if="currentImageSourceMeta.photographerLink" :href="currentImageSourceMeta.photographerLink"
                     target="_blank" rel="noopener noreferrer" class="img-source-link">
@@ -910,6 +920,7 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
     text-align: left;
 }
 
+.img-source-note--align-right,
 .img-source-note--scenic {
     text-align: right;
 }
@@ -1331,6 +1342,7 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
         text-align: left;
     }
 
+    .img-source-note--align-right,
     .img-source-note--scenic {
         text-align: right;
     }

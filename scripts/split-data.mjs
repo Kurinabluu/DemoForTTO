@@ -60,9 +60,8 @@ function collectStrings(value, collector = [], key = '') {
 }
 
 function buildBasePath(sectionPath) {
-  if (!sectionPath) return '/DemoForTTO'
-  const normalized = sectionPath.startsWith('/') ? sectionPath : `/${sectionPath}`
-  return `/DemoForTTO${normalized}`
+  if (!sectionPath) return '/'
+  return sectionPath.startsWith('/') ? sectionPath : `/${sectionPath}`
 }
 
 function buildTargetUrl(basePath, params = {}) {

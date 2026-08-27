@@ -1,7 +1,9 @@
 import { buildSubNavKey } from '@/utils/subNavKey'
 import { formatLocationLabel } from '@/utils/tasLocationPostcodes'
+import { mergeImageSourceIntoTripData } from '@/utils/freeInfoImageUtils'
 import {
   fetchItemDetail,
+  fetchItemDetailByKey,
   fetchItemsBySubNavKey,
   fetchNavTree,
   fetchServiceByName,
@@ -121,21 +123,21 @@ function normalizeText(value) {
 function resolveTown(row = {}, extra = {}, tripData = {}) {
   return normalizeText(
     row?.townName
-      || row?.town
-      || extra?.townName
-      || extra?.town
-      || tripData?.townName
-      || tripData?.town
-      || ''
+    || row?.town
+    || extra?.townName
+    || extra?.town
+    || tripData?.townName
+    || tripData?.town
+    || ''
   )
 }
 
 function resolvePostcode(row = {}, extra = {}, tripData = {}) {
   return normalizeText(
     row?.postcode
-      || extra?.postcode
-      || tripData?.postcode
-      || ''
+    || extra?.postcode
+    || tripData?.postcode
+    || ''
   )
 }
 
@@ -183,7 +185,7 @@ export function buildTripDataFromDetailDto(dto, extra = {}) {
     tripData.images = dto.images
   }
 
-  return tripData
+  return mergeImageSourceIntoTripData(extra, tripData)
 }
 
 export function mapApiDetailToItem(dto) {
@@ -257,6 +259,7 @@ function mapApiItem(row) {
   if (row.parentItemId != null && tripData.parentItemId == null) tripData.parentItemId = row.parentItemId
 
   const itemType = resolveItemType(row, extra)
+  const mergedTripData = mergeImageSourceIntoTripData({ ...extra, ...row }, tripData)
 
   return {
     ...extra,
@@ -271,8 +274,8 @@ function mapApiItem(row) {
     town,
     townName: town,
     postcode,
-    locationLabel: tripData.locationLabel || locationLabel || '',
-    tripData,
+    locationLabel: mergedTripData.locationLabel || locationLabel || '',
+    tripData: mergedTripData,
     badge: row?.badge ?? extra.badge ?? extra.badgeText ?? '',
     badgeClass: row?.badgeClass ?? extra.badgeClass ?? extra.badge_class ?? '',
     cardClass: row?.cardClass ?? extra.cardClass ?? extra.card_class ?? '',
@@ -289,6 +292,47 @@ export async function loadCatalogItemDetail(itemId) {
   if (!isApiEnabled()) return null
   const dto = await fetchItemDetail(itemId)
   return mapApiDetailToItem(dto)
+}
+
+export async function loadCatalogItemByKey(itemKey) {
+  const key = String(itemKey || '').trim()
+  if (!key) return null
+
+  if (isApiEnabled()) {
+    try {
+      const dto = await fetchItemDetailByKey(key)
+      return mapApiDetailToItem(dto)
+    } catch (error) {
+      if (/^\d+$/.test(key)) {
+        return loadCatalogItemDetail(key)
+      }
+      throw error
+    }
+  }
+
+  if (!USE_LOCAL_JSON_FALLBACK) return null
+  const fallbackData = await loadFreeinfoFallbackData()
+  const subNavList = Array.isArray(fallbackData?.subNav) ? fallbackData.subNav : []
+  for (const subNav of subNavList) {
+    const items = Array.isArray(subNav?.items) ? subNav.items : []
+    const matched = items.find((item) => {
+      if (!item || typeof item !== 'object') return false
+      if (String(item.itemKey || '').trim() === key) return true
+      if (item.id != null && String(item.id) === key) return true
+      return false
+    })
+    if (matched) {
+      return {
+        ...matched,
+        itemKey: matched.itemKey || key,
+        itemType: matched.itemType || matched.tripType || `${subNav?.subNavName || ''}信息`,
+        tripType: matched.tripType || matched.itemType || `${subNav?.subNavName || ''}信息`,
+        subNavName: matched.subNavName || subNav?.subNavName || '',
+        tripData: matched.tripData && typeof matched.tripData === 'object' ? matched.tripData : {},
+      }
+    }
+  }
+  return null
 }
 
 export async function loadItemDetailById(itemId) {

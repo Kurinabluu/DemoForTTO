@@ -13,6 +13,58 @@ import {
 } from '@/utils/searchService'
 import { consumeSearchNavigationIntent } from '@/utils/searchNavigation'
 import { getApiErrorMessage, notifyApiError } from '@/utils/apiFeedback'
+import { normalizeAppPath } from '@/utils/appPath'
+
+function decodePathItemKey(raw) {
+  const value = String(raw || '').trim()
+  if (!value) return ''
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return value
+  }
+}
+
+function resolveSearchOpenHref(result, router, currentSearch) {
+  if (!result?.targetUrl) return ''
+  const normalized = normalizeAppPath(result.targetUrl)
+  if (!normalized) return ''
+
+  const parsed = new URL(normalized, 'http://tto.local')
+  const pathname = parsed.pathname
+
+  if (pathname.startsWith('/service/')) {
+    const targetUrl = new URL(router.resolve(normalized).href, window.location.origin)
+    if (currentSearch) {
+      targetUrl.searchParams.set('s', String(currentSearch))
+    }
+    return targetUrl.href
+  }
+
+  let itemKey = ''
+  if (pathname.startsWith('/info/')) {
+    itemKey = decodePathItemKey(pathname.slice('/info/'.length))
+  } else if (pathname.startsWith('/trips/freeinfo') || pathname.startsWith('/trips/routes')) {
+    itemKey = parsed.searchParams.get('dialogItemId') || ''
+  }
+
+  if (itemKey) {
+    const query = {}
+    const id = parsed.searchParams.get('id')
+    if (id && /^\d+$/.test(id)) query.id = id
+    return router.resolve({
+      name: 'ContentDetail',
+      params: { itemKey },
+      query,
+    }).href
+  }
+
+  const targetUrl = new URL(router.resolve(normalized).href, window.location.origin)
+  if (currentSearch) {
+    targetUrl.searchParams.set('s', String(currentSearch))
+  }
+  return targetUrl.href
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -252,40 +304,9 @@ const retrySearch = () => {
 }
 
 const openResult = (result) => {
-  if (!result?.targetUrl) return
-
-  // 确保 targetUrl 是绝对路径（以 / 开头）
-  let targetPath = result.targetUrl
-  if (!targetPath.startsWith('/')) {
-    targetPath = '/' + targetPath
-  }
-
-  // 解析查询参数，构建完整的路径
-  const url = new URL(targetPath, window.location.origin)
-  const fullPath = url.pathname + url.search
-
-  // 在新窗口打开前，更新 localStorage 中的 tto_last_path
-  // 这样可以确保新窗口打开后，路由守卫不会重定向回搜索结果页
-  try {
-    localStorage.setItem('tto_last_path', fullPath.split('#')[0])
-  } catch (e) {
-    // 忽略 localStorage 错误
-  }
-
-  // 构建完整的URL，直接使用正确的路由路径
-  const currentUrl = new URL(window.location.href)
-  const baseUrl = `${currentUrl.protocol}//${currentUrl.host}`
-
-  // 带上全站搜索词：目标页搜索框预填；有 dialogItemId 时仅定位条目，不缩小列表
-  const targetUrl = new URL(fullPath, baseUrl)
-  if (route.query.s) {
-    targetUrl.searchParams.set('s', String(route.query.s))
-  }
-
-  const fullUrl = targetUrl.href
-
-  // 打开新窗口
-  window.open(fullUrl, '_blank', 'noopener')
+  const href = resolveSearchOpenHref(result, router, route.query.s)
+  if (!href) return
+  window.open(href, '_blank', 'noopener')
 }
 
 watch(

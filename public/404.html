@@ -1,37 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>Redirecting...</title>
-  <script>
-    // 获取当前URL路径
-    const pathSegments = window.location.pathname.split('/');
-    
-    // 检查是否是GitHub Pages环境（包含DemoForTTO前缀）
-    const isGitHubPages = pathSegments.includes('DemoForTTO');
-    
-    // 构造重定向URL，保留路径信息
-    let redirectUrl = '/';
-    if (isGitHubPages) {
-      // GitHub Pages环境：保留DemoForTTO前缀
-      const demoIndex = pathSegments.indexOf('DemoForTTO');
-      const remainingPath = pathSegments.slice(demoIndex).join('/');
-      redirectUrl = '/' + remainingPath;
-    } else {
-      // 生产环境：使用完整路径
-      redirectUrl = window.location.pathname;
-    }
-    
-    // 添加查询参数
-    if (window.location.search) {
-      redirectUrl += window.location.search;
-    }
-    
-    // 重定向到index.html，并在URL hash中保留原始路径
-    window.location.replace('/DemoForTTO/index.html#' + redirectUrl);
-  </script>
+  <title>TasTrips.Online</title>
+  <meta name="robots" content="noindex, nofollow">
+  <!-- GitHub Pages 未知路径会返回本文件，且浏览器地址栏保持原 URL。
+       生产构建会在 closeBundle 用 dist/index.html 覆盖本文件，从而加载完整 SPA（history 模式，不再跳 hash）。 -->
 </head>
 <body>
-  <p>正在重定向...</p>
+  <p>页面加载中…</p>
 </body>
 </html>

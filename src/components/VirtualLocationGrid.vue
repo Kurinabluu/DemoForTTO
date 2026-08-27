@@ -67,12 +67,12 @@ onUnmounted(() => {
         transform: `translateY(${virtualRow.start - scrollMargin}px)`,
       }"
     >
-      <h1
+      <h2
         v-if="rowList[virtualRow.index]?.type === 'header'"
         class="region-title center"
       >
         {{ rowList[virtualRow.index].title }}
-      </h1>
+      </h2>
       <div
         v-else
         :class="gridClass"

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { normalizeAppPath } from '@/utils/appPath'
 
 const STORAGE_KEYS = {
     firstVisit: 'tto_first_visit_done',
@@ -11,7 +12,7 @@ const STORAGE_KEYS = {
 const MAX_SCROLL_PATH_ENTRIES = 30
 
 function normalizeRoutePath(path) {
-    return (path || '').split('#')[0]
+    return normalizeAppPath(path) || ''
 }
 
 function readScrollMap() {

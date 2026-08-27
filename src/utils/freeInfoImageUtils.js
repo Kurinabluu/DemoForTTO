@@ -22,6 +22,26 @@ export function itemTypeFromSubNavName(subNavName) {
 /** @deprecated 兼容旧引用 */
 export const tripTypeFromSubNavName = itemTypeFromSubNavName
 
+function normalizeImageSourceList(raw) {
+  if (!Array.isArray(raw)) return []
+  return raw.filter((entry) => entry && typeof entry === 'object')
+}
+
+/**
+ * 将条目根级 imgSource / imageSource 合并进 tripData，供详情弹窗展示图片来源。
+ */
+export function mergeImageSourceIntoTripData(sourceItem, tripData = {}) {
+  const nextTripData = tripData && typeof tripData === 'object' ? { ...tripData } : {}
+  const existing = normalizeImageSourceList(nextTripData.imgSource)
+  if (existing.length) return nextTripData
+
+  const fromRoot = normalizeImageSourceList(sourceItem?.imgSource ?? sourceItem?.imageSource)
+  if (fromRoot.length) {
+    nextTripData.imgSource = fromRoot
+  }
+  return nextTripData
+}
+
 export function resolveOriginalImages(paths) {
   return dedupePaths(paths)
     .map((path) => resolveDialogOriginal(path, ''))
@@ -198,7 +218,10 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
       favoriteItem.tripData,
     )
     const resolvedImages = resolveOriginalImages(imagePaths)
-    const tripData = { ...favoriteItem.tripData, displaySubNav: subNavName }
+    const tripData = mergeImageSourceIntoTripData(favoriteItem, {
+      ...favoriteItem.tripData,
+      displaySubNav: subNavName,
+    })
     if (imagePaths.length) {
       tripData.images = imagePaths
     } else if (resolvedImages.length) {
@@ -226,14 +249,13 @@ export function buildFreeInfoDialogPayload(favoriteItem) {
   )
   const resolvedImages = resolveOriginalImages(imagePaths)
 
-  const tripData = {
+  const tripData = mergeImageSourceIntoTripData(favoriteItem, {
     ...finalSourceTripData,
     ...(favoriteItem?.tripData && typeof favoriteItem.tripData === 'object' ? favoriteItem.tripData : {}),
     img: favoriteItem?.img ?? favoriteItem?.tripData?.img,
-    imgSource: favoriteItem?.tripData?.imgSource,
     cover: favoriteItem?.cover ?? favoriteItem?.tripData?.cover,
     displaySubNav: subNavName || favoriteItem?.tripData?.displaySubNav,
-  }
+  })
 
   if (imagePaths.length) {
     tripData.images = imagePaths

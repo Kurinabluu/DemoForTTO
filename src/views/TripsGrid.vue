@@ -4,16 +4,17 @@ import { useRoute } from 'vue-router'
 import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { loadFreeInfoData, loadDayTripData, loadCatalogItemDetail, searchItemsInSubNav, ensureFreeInfoSubNavLoaded } from '@/utils/contentRepository'
-import VirtualLocationGrid from '@/components/VirtualLocationGrid.vue'
-import { buildFlatVirtualRows, buildSectionVirtualRows } from '@/utils/virtualGridRows'
-import { resolveDayTripSubNavName } from '@/utils/subNavKey'
+import { extractDayTripTabKey, resolveDayTripSubNavName } from '@/utils/subNavKey'
 import { fetchLocationCatalog, fetchLocationSections, isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
 import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
 import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
+import { mergeImageSourceIntoTripData } from '@/utils/freeInfoImageUtils'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
 import { tourItemMatchesKeyword } from '@/utils/searchMatchUtils'
+import { getServiceFaqs } from '@/data/companyProfile'
+import { applyFaqJsonLd, applyPageSeo, removeFaqJsonLd } from '@/utils/pageSeo'
 import { useLoadingStore } from '@/stores/loadingStore'
 import {
     buildLocationCatalogFromItems,
@@ -155,6 +156,7 @@ const BACKEND_GRID_LOAD_TIMEOUT_MS = 15000
 let backendSectionsRequestSeq = 0
 const locationCatalogRevision = ref(0)
 const initialLoadSettled = ref(false)
+let skippedSubTabDuringInitialLoad = false
 
 function dispatchContentReady() {
     if (typeof window === 'undefined') return
@@ -256,13 +258,6 @@ const itemsPerPage = computed(() => {
         }
     }
     return 12
-})
-
-const gridColumnCount = computed(() => {
-    if (windowWidth.value <= PHONE_MAX_WIDTH) return 1
-    if (windowWidth.value <= 768) return 2
-    if (windowWidth.value <= 1024) return 3
-    return 4
 })
 
 // 根据屏幕尺寸动态计算分页组件尺寸
@@ -462,6 +457,20 @@ async function runInitialPageLoad() {
         }
     } finally {
         initialLoadSettled.value = true
+        const shouldReloadLocationGrid = skippedSubTabDuringInitialLoad
+            || (
+                isApiEnabled()
+                && FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
+                && !backendSectionsLoadSettled.value
+            )
+        skippedSubTabDuringInitialLoad = false
+        if (shouldReloadLocationGrid) {
+            void syncLocationCatalog({
+                silentCatalogError: true,
+                silentSectionError: true,
+                sectionRetries: 2,
+            })
+        }
     }
 }
 
@@ -1132,8 +1141,9 @@ watch(() => [selectedLocationLabel.value, selectedDistanceLabel.value, sortMode.
 })
 
 watch(() => props.subTab, (newTab, oldTab) => {
-    // 首屏加载进行中时不重置网格状态，避免打断 runInitialPageLoad 导致误报错
+    // 首屏加载进行中时先记下切 tab，等首屏结束后再拉对应分类
     if (!initialLoadSettled.value) {
+        skippedSubTabDuringInitialLoad = true
         return
     }
 
@@ -1329,60 +1339,6 @@ const scenicMainGridItems = computed(() => {
     return scenicCategorizedDisplayItems.value
 })
 
-function buildScenicSectionsFromItems(items) {
-    const sections = []
-    const sectionByLabel = new Map()
-    let startIndex = 0
-
-    for (const item of Array.isArray(items) ? items : []) {
-        const label = resolveLocationLabel(item)
-        if (!label) continue
-
-        if (!sectionByLabel.has(label)) {
-            const section = {
-                label,
-                title: getLocationDisplayName(item),
-                items: [],
-                startIndex,
-            }
-            sectionByLabel.set(label, section)
-            sections.push(section)
-        }
-
-        sectionByLabel.get(label).items.push(item)
-        startIndex += 1
-    }
-
-    return sections
-}
-
-function normalizeBackendScenicSections(sections) {
-    const rows = []
-    let startIndex = 0
-    for (const section of Array.isArray(sections) ? sections : []) {
-        const items = Array.isArray(section?.items) ? section.items : []
-        const label = String(section?.label || section?.locationLabel || section?.title || '').trim() || UNCATEGORIZED_LOCATION
-        rows.push({
-            label,
-            title: String(section?.title || label).trim() || label,
-            items,
-            startIndex,
-        })
-        startIndex += items.length
-    }
-    return rows
-}
-
-const scenicMainGridSections = computed(() => {
-    if (prefersBackendLocationGrid.value) {
-        if (!useBackendLocationSections.value) return []
-        return normalizeBackendScenicSections(backendLocationSections.value)
-    }
-    return buildScenicSectionsFromItems(scenicMainGridItems.value || [])
-})
-
-const scenicVirtualRows = computed(() => buildSectionVirtualRows(scenicMainGridSections.value, gridColumnCount.value))
-
 const restaurantDisplayItems = computed(() => {
     if (prefersBackendLocationGrid.value) {
         if (!useBackendLocationSections.value) return []
@@ -1406,22 +1362,6 @@ const hotelDisplayItems = computed(() => {
     return baseItems
 })
 
-const restaurantGridItems = computed(() => getPaginatedItems(restaurantDisplayItems.value))
-const hotelGridItems = computed(() => getPaginatedItems(hotelDisplayItems.value))
-
-const restaurantVirtualRows = computed(() => buildFlatVirtualRows(
-    restaurantGridItems.value,
-    gridColumnCount.value,
-    shouldShowLocationTitle,
-    getLocationDisplayName,
-))
-
-const hotelVirtualRows = computed(() => buildFlatVirtualRows(
-    hotelGridItems.value,
-    gridColumnCount.value,
-    shouldShowLocationTitle,
-    getLocationDisplayName,
-))
 
 // 派生数据 - 从data.json获取适合当前标签的数据
 const gridItems = computed(() => {
@@ -1763,29 +1703,7 @@ async function onOpenParentSpot(item) {
     const allItems = places.value?.items || []
     const parentItem = findParentSpotItemForChild(allItems, item)
     if (!parentItem) return
-
-    let sourceItem = parentItem
-    if (isApiEnabled() && parentItem?.id != null) {
-        try {
-            const enriched = await withLoading(
-                () => loadCatalogItemDetail(parentItem.id),
-                { text: '正在打开详情...' }
-            )
-            if (enriched) {
-                sourceItem = {
-                    ...parentItem,
-                    ...enriched,
-                    tripData: {
-                        ...(parentItem.tripData || {}),
-                        ...(enriched.tripData || {}),
-                    },
-                }
-            }
-        } catch (error) {
-            notifyApiError(error, { action: '详情', dedupeKey: 'trips:parent-detail' })
-        }
-    }
-    emit('openTourDialog', buildTourDialogPayload(sourceItem))
+    emit('openTourDialog', buildTourDialogPayload(parentItem))
 }
 
 function resolveSpecialBannerImage(item) {
@@ -1806,7 +1724,10 @@ function buildTourDialogPayload(item, options = {}) {
     let tripType = '一日游';
     const isSpecialContentSection = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
 
-    if (props.activeTag === '自助游/自驾游免费参考信息') {
+    if (props.activeTag === '一日游/多日游') {
+        const tabKey = Number(extractDayTripTabKey(props.dayTripTab))
+        tripType = Number.isFinite(tabKey) && tabKey > 1 ? '多日游' : '一日游'
+    } else if (props.activeTag === '自助游/自驾游免费参考信息') {
         if (props.subTab === '景点') {
             tripType = '景点信息';
         } else if (props.subTab === '餐厅') {
@@ -1888,6 +1809,10 @@ function buildTourDialogPayload(item, options = {}) {
         normalizedTripData.img = bannerImage
     }
 
+    if (normalizedTripData && typeof normalizedTripData === 'object') {
+        mergeImageSourceIntoTripData(item, normalizedTripData)
+    }
+
     const isFreeInfoScenic =
         props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点'
 
@@ -1918,7 +1843,9 @@ function buildTourDialogPayload(item, options = {}) {
         }
     }
 
-    const itemType = props.subTab === '景点' ? '景点信息' : (item?.itemType || item?.tripType || tripType)
+    const itemType = props.activeTag === '一日游/多日游'
+        ? tripType
+        : (props.subTab === '景点' ? '景点信息' : (item?.itemType || item?.tripType || tripType))
 
     return {
         ...item,
@@ -1934,30 +1861,7 @@ function buildTourDialogPayload(item, options = {}) {
 }
 
 async function onOpenTour(item) {
-    let sourceItem = item
-    const isSpecialContentItem = props.activeTag === '自助游/自驾游免费参考信息' && !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)
-    const isDayTripSection = props.activeTag === '一日游/多日游'
-    if (isApiEnabled() && item?.id != null && !isSpecialContentItem) {
-        try {
-            const enriched = await withLoading(
-                () => loadCatalogItemDetail(item.id),
-                { text: '正在打开详情...' }
-            )
-            if (enriched) {
-                sourceItem = {
-                    ...item,
-                    ...enriched,
-                    tripData: {
-                        ...(item.tripData || {}),
-                        ...(enriched.tripData || {}),
-                    },
-                }
-            }
-        } catch (error) {
-            notifyApiError(error, { action: '详情', dedupeKey: 'trips:detail' })
-        }
-    }
-    emit('openTourDialog', buildTourDialogPayload(sourceItem))
+    emit('openTourDialog', buildTourDialogPayload(item))
 }
 function onOpenPlace(groupName, itemType, items = []) {
     emit('openPlaceList', { placeName: groupName, itemType, items })
@@ -1986,6 +1890,20 @@ const dayTripFiltered = computed(() => {
 })
 
 const showDayTrip = computed(() => props.activeTag === '一日游/多日游')
+const dayTripFaqs = computed(() => (showDayTrip.value ? getServiceFaqs('一日游/多日游') : []))
+const dayTripFaqOpen = ref('0')
+
+watch(showDayTrip, (visible) => {
+    if (visible) {
+        applyPageSeo({
+            title: '一日游 / 多日游',
+            description: '塔斯马尼亚一日游与多日游行程，可按天数查看并咨询出发地、时长和包含项目。由 TASMANIA TRIPS PTY LTD 提供，服务区域为塔斯马尼亚。',
+        })
+        applyFaqJsonLd(dayTripFaqs.value)
+        return
+    }
+    removeFaqJsonLd()
+}, { immediate: true })
 
 watch(() => [searchQuery.value, searchKw.value], () => {
     void syncSubNavKeywordSearch()
@@ -1998,6 +1916,7 @@ onUnmounted(() => {
         loadMoreObserver.disconnect()
         loadMoreObserver = null
     }
+    removeFaqJsonLd()
 })
 
 </script>
@@ -2103,10 +2022,10 @@ onUnmounted(() => {
             <template v-if="scenicFiltered.length">
                 <div ref="gridRef" class="coming-grid coming-grid--scenic">
                     <template v-for="(item, i) in getPaginatedItems(scenicDisplayItems)" :key="'sc2-' + i">
-                        <h1 v-if="shouldShowLocationTitle(getPaginatedItems(scenicDisplayItems), i)"
+                        <h2 v-if="shouldShowLocationTitle(getPaginatedItems(scenicDisplayItems), i)"
                             class="region-title center">
                             {{ getLocationDisplayName(item) }}
-                        </h1>
+                        </h2>
                         <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                             @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
@@ -2150,10 +2069,10 @@ onUnmounted(() => {
             <template v-if="restaurantFiltered.length">
                 <div ref="gridRef" class="coming-grid">
                     <template v-for="(item, i) in getPaginatedItems(restaurantDisplayItems)" :key="'rt-search-' + i">
-                        <h1 v-if="shouldShowLocationTitle(getPaginatedItems(restaurantDisplayItems), i)"
+                        <h2 v-if="shouldShowLocationTitle(getPaginatedItems(restaurantDisplayItems), i)"
                             class="region-title center">
                             {{ getLocationDisplayName(item) }}
-                        </h1>
+                        </h2>
                         <div class="coming-card" @click="onOpenTour(item)"
                             :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
@@ -2186,10 +2105,10 @@ onUnmounted(() => {
             <template v-if="hotelFiltered.length">
                 <div ref="gridRef" class="coming-grid">
                     <template v-for="(item, i) in getPaginatedItems(hotelDisplayItems)" :key="'ht-search-' + i">
-                        <h1 v-if="shouldShowLocationTitle(getPaginatedItems(hotelDisplayItems), i)"
+                        <h2 v-if="shouldShowLocationTitle(getPaginatedItems(hotelDisplayItems), i)"
                             class="region-title center">
                             {{ getLocationDisplayName(item) }}
-                        </h1>
+                        </h2>
                         <div class="coming-card" @click="onOpenTour(item)"
                             :data-tour-title="getTourItemDialogKey(item)">
                             <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
@@ -2230,7 +2149,7 @@ onUnmounted(() => {
                         :class="['activity-card', item.cardClass, 'pointer']" @click="onOpenTour(item)"
                         :data-tour-title="getTourItemDialogKey(item)">
                         <div class="activity-image">
-                            <img :src="getActivityImage(item.img, i)" alt="特别活动" class="activity-img"
+                            <img :src="getActivityImage(item.img, i)" :alt="item.title || '特别活动'" class="activity-img"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div :class="['activity-badge', item.badgeClass]">{{ item.badge }}</div>
@@ -2272,38 +2191,36 @@ onUnmounted(() => {
         <!-- 底部网格：景点（无关键词） -->
         <template v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
             <template v-if="scenicFiltered.length">
-                <div ref="gridRef">
-                    <VirtualLocationGrid
-                        :rows="scenicVirtualRows"
-                        grid-class="coming-grid coming-grid--scenic"
-                        :columns="gridColumnCount"
-                    >
-                        <template #card="{ item, index }">
-                            <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
-                                @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
-                                <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
-                                    :loading="getImageLoading(index)" decoding="async"
-                                    :fetchpriority="getImageFetchPriority(index)">
-                                <div class="card-title" :title="item.title">{{ item.title }}</div>
-                                <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                                <div v-if="shouldShowBelongSpot(item)" class="card-belong">
-                                    <span class="card-belong-tag">所在景点</span>
-                                    <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
-                                        :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
-                                        {{ scenicParentDisplayName(item) }}
-                                    </button>
-                                    <span v-else class="card-belong-spot card-belong-spot--static"
-                                        :title="scenicParentDisplayName(item)">
-                                        {{ scenicParentDisplayName(item) }}
-                                    </span>
-                                </div>
+                <div ref="gridRef" class="coming-grid coming-grid--scenic">
+                    <template v-for="(item, i) in scenicDisplayItems" :key="'sc-grid-' + i">
+                        <h2 v-if="shouldShowLocationTitle(scenicDisplayItems, i)"
+                            class="region-title center">
+                            {{ getLocationDisplayName(item) }}
+                        </h2>
+                        <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
+                            @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                            <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
+                                :loading="getImageLoading(i)" decoding="async"
+                                :fetchpriority="getImageFetchPriority(i)">
+                            <div class="card-title" :title="item.title">{{ item.title }}</div>
+                            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
+                                <span class="card-belong-tag">所在景点</span>
+                                <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
+                                    :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
+                                    {{ scenicParentDisplayName(item) }}
+                                </button>
+                                <span v-else class="card-belong-spot card-belong-spot--static"
+                                    :title="scenicParentDisplayName(item)">
+                                    {{ scenicParentDisplayName(item) }}
+                                </span>
                             </div>
-                        </template>
-                    </VirtualLocationGrid>
+                        </div>
+                    </template>
                 </div>
                 <div v-if="!selectedLocationLabel && !useBackendLocationSections && scenicUncategorizedDisplayItems.length"
                     class="coming-grid coming-grid--scenic">
-                    <h1 class="region-title center">{{ UNCATEGORIZED_LOCATION }}</h1>
+                    <h2 class="region-title center">{{ UNCATEGORIZED_LOCATION }}</h2>
                     <template v-for="(item, i) in scenicUncategorizedDisplayItems" :key="'rt-uncategorized-' + i">
                         <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                             @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
@@ -2344,23 +2261,21 @@ onUnmounted(() => {
         <!-- 底部网格：餐厅（无关键词） -->
         <template v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
             <template v-if="restaurantDisplayItems.length">
-                <div ref="gridRef">
-                    <VirtualLocationGrid
-                        :rows="restaurantVirtualRows"
-                        grid-class="coming-grid"
-                        :columns="gridColumnCount"
-                    >
-                        <template #card="{ item, index }">
-                            <div class="coming-card" @click="onOpenTour(item)"
-                                :data-tour-title="getTourItemDialogKey(item)">
-                                <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
-                                    :loading="getImageLoading(index)" decoding="async"
-                                    :fetchpriority="getImageFetchPriority(index)">
-                                <div class="card-title" :title="item.title">{{ item.title }}</div>
-                                <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            </div>
-                        </template>
-                    </VirtualLocationGrid>
+                <div ref="gridRef" class="coming-grid">
+                    <template v-for="(item, i) in restaurantDisplayItems" :key="'rt-grid-' + i">
+                        <h2 v-if="shouldShowLocationTitle(restaurantDisplayItems, i)"
+                            class="region-title center">
+                            {{ getLocationDisplayName(item) }}
+                        </h2>
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
+                            <img :src="getRestaurantGridImageUrl(item)" :alt="item.title" class="w100"
+                                :loading="getImageLoading(i)" decoding="async"
+                                :fetchpriority="getImageFetchPriority(i)">
+                            <div class="card-title" :title="item.title">{{ item.title }}</div>
+                            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                        </div>
+                    </template>
                 </div>
             </template>
             <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{ getEmptyTipText() }}</div>
@@ -2382,23 +2297,21 @@ onUnmounted(() => {
         <!-- 底部网格：住宿（无关键词） -->
         <template v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip">
             <template v-if="hotelDisplayItems.length">
-                <div ref="gridRef">
-                    <VirtualLocationGrid
-                        :rows="hotelVirtualRows"
-                        grid-class="coming-grid"
-                        :columns="gridColumnCount"
-                    >
-                        <template #card="{ item, index }">
-                            <div class="coming-card" @click="onOpenTour(item)"
-                                :data-tour-title="getTourItemDialogKey(item)">
-                                <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
-                                    :loading="getImageLoading(index)" decoding="async"
-                                    :fetchpriority="getImageFetchPriority(index)">
-                                <div class="card-title" :title="item.title">{{ item.title }}</div>
-                                <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            </div>
-                        </template>
-                    </VirtualLocationGrid>
+                <div ref="gridRef" class="coming-grid">
+                    <template v-for="(item, i) in hotelDisplayItems" :key="'ht-grid-' + i">
+                        <h2 v-if="shouldShowLocationTitle(hotelDisplayItems, i)"
+                            class="region-title center">
+                            {{ getLocationDisplayName(item) }}
+                        </h2>
+                        <div class="coming-card" @click="onOpenTour(item)"
+                            :data-tour-title="getTourItemDialogKey(item)">
+                            <img :src="getHotelGridImageUrl(item)" :alt="item.title" class="w100"
+                                :loading="getImageLoading(i)" decoding="async"
+                                :fetchpriority="getImageFetchPriority(i)">
+                            <div class="card-title" :title="item.title">{{ item.title }}</div>
+                            <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
+                        </div>
+                    </template>
                 </div>
             </template>
             <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{ getEmptyTipText() }}</div>
@@ -2425,7 +2338,7 @@ onUnmounted(() => {
                     :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)"
                     :data-tour-title="getTourItemDialogKey(activity)">
                     <div class="activity-image">
-                        <img :src="getActivityImage(activity.img, index)" alt="特别活动" class="activity-img"
+                        <img :src="getActivityImage(activity.img, index)" :alt="activity.title || '特别活动'" class="activity-img"
                             :loading="getImageLoading(index)" decoding="async"
                             :fetchpriority="getImageFetchPriority(index)">
                         <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
@@ -2464,6 +2377,25 @@ onUnmounted(() => {
 
         <div v-if="hasMore" ref="loadMoreTriggerRef" class="load-more-trigger" aria-hidden="true"></div>
     </div>
+
+    <section v-if="showDayTrip && dayTripFaqs.length" class="trips-faq">
+        <h2 class="trips-faq-title">常见问题</h2>
+        <el-collapse v-model="dayTripFaqOpen" accordion>
+            <el-collapse-item v-for="(faq, index) in dayTripFaqs" :key="faq.q" :name="String(index)">
+                <template #title>
+                    <span class="trips-faq-q">{{ faq.q }}</span>
+                </template>
+                <p class="trips-faq-a">{{ faq.a }}</p>
+            </el-collapse-item>
+        </el-collapse>
+        <p class="trips-faq-links">
+            <RouterLink to="/refund">退款政策</RouterLink>
+            ·
+            <RouterLink to="/about">关于我们</RouterLink>
+            ·
+            <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }">免费参考信息</RouterLink>
+        </p>
+    </section>
 </template>
 
 <style lang="scss" scoped>
@@ -2515,6 +2447,12 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: visible;
+    min-height: 240px;
+
+    :deep(.el-loading-mask) {
+        position: absolute;
+    }
 
     .coming-grid {
         width: 90%;
@@ -3278,5 +3216,60 @@ onUnmounted(() => {
     width: 100%;
     height: 4px;
     pointer-events: none;
+}
+
+.trips-faq {
+    width: 90%;
+    max-width: 900px;
+    margin: 24px auto 64px;
+}
+
+.trips-faq :deep(.el-collapse) {
+    border: none;
+}
+
+.trips-faq :deep(.el-collapse-item) {
+    border-bottom: 1px solid #e5efec;
+}
+
+.trips-faq :deep(.el-collapse-item:last-child) {
+    border-bottom: none;
+}
+
+.trips-faq :deep(.el-collapse-item__header),
+.trips-faq :deep(.el-collapse-item__wrap) {
+    border-bottom: none;
+}
+
+.trips-faq-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 16px;
+}
+
+.trips-faq-q {
+    font-size: 16px;
+    font-weight: 700;
+    white-space: normal;
+    line-height: 1.5;
+}
+
+.trips-faq-a {
+    margin: 0;
+    color: #374151;
+    line-height: 1.7;
+}
+
+.trips-faq-links {
+    margin: 16px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.trips-faq-links a {
+    color: #1a7a6f;
+    font-weight: 700;
+    text-decoration: none;
 }
 </style>

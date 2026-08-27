@@ -134,6 +134,14 @@ export async function fetchItemDetail(itemId) {
   return requestJson(`/tto/items/${itemId}`)
 }
 
+export async function fetchItemDetailByKey(itemKey) {
+  return requestJson('/tto/items/by-key', {
+    params: {
+      itemKey,
+    },
+  })
+}
+
 export async function fetchLocationCatalog(subNavName, { sortMode } = {}) {
   return requestJson('/tto/locations', {
     params: {

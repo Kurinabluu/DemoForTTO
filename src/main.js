@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import { useNavStore } from '@/stores/nav'
+import { isSiteRootPath, shouldPinScrollToTop } from '@/utils/appPath'
 import './style.css'
 
 const app = createApp(App)
@@ -102,6 +103,12 @@ if (typeof window !== 'undefined') {
 
     const restoreScrollForRoute = (routeLike) => {
         const path = routeLike?.fullPath || routeLike?.path || ''
+        if (shouldPinScrollToTop(routeLike?.path || path)) {
+            cancelScrollRestore()
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+            nav.saveScroll(0, path)
+            return
+        }
         if (routeLike?.query?.s) {
             cancelScrollRestore()
             window.scrollTo({ top: 0, behavior: 'auto' })
@@ -122,7 +129,9 @@ if (typeof window !== 'undefined') {
     // 路由变更时记录最后路径和恢复滚动位置
     router.afterEach((to) => {
         const path = to.fullPath || to.path
-        nav.savePath(path)
+        if (!isSiteRootPath(to.path)) {
+            nav.savePath(path)
+        }
 
         requestAnimationFrame(() => {
             restoreScrollForRoute(to)
