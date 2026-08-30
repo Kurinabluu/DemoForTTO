@@ -48,14 +48,39 @@ async function request(path, { method = 'GET', body, token, expectStatus } = {})
 }
 
 async function login(username) {
-  const { json } = await request('/auth/login', {
-    method: 'POST',
-    body: { username, password: 'demo' },
-  })
-  if (json?.code !== 1 || !json?.data?.token) {
-    throw new Error(`登录失败: ${JSON.stringify(json)}`)
+  async function tryLogin() {
+    const { json } = await request('/auth/login', {
+      method: 'POST',
+      body: { username, password: 'demo' },
+    })
+    if (json?.code !== 1 || !json?.data?.token) {
+      throw new Error(`登录失败: ${JSON.stringify(json)}`)
+    }
+    return json.data.token
   }
-  return json.data.token
+
+  try {
+    return await tryLogin()
+  } catch (error) {
+    if (!String(error?.message || '').includes('尚未注册')) {
+      throw error
+    }
+    await request('/auth/register', {
+      method: 'POST',
+      body: { username, password: 'demo', displayName: username },
+    }).catch(() => null)
+    return tryLogin()
+  }
+}
+
+async function fetchItemsBySubNav(subNavKey) {
+  const { json } = await request('/tto/items?subNavKey=' + encodeURIComponent(subNavKey))
+  return Array.isArray(json?.data) ? json.data : []
+}
+
+async function findItemWithoutThumbnail(subNavKey) {
+  const items = await fetchItemsBySubNav(subNavKey)
+  return items.find((item) => item && !item.thumbnail) || null
 }
 
 // ─── 1.1 搜索页 ───────────────────────────────────────────
@@ -134,21 +159,26 @@ async function testDetail() {
     pass('不存在条目', missing.json?.msg || 'code=0')
   } else fail('不存在条目', JSON.stringify(missing.json))
 
-  const ok = await request('/tto/items/1443')
+  const restaurantItems = await fetchItemsBySubNav('trips/freeinfo:餐厅')
+  const sampleItem = restaurantItems.find((item) => item?.id) || null
+  const ok = sampleItem?.id ? await request(`/tto/items/${sampleItem.id}`) : { json: { code: 0 } }
   const d = ok.json?.data
   if (ok.json?.code === 1 && d?.title) {
     pass('正常详情', `title=${d.title}`)
   } else fail('正常详情')
 
-  // 缺图条目：id=2200 test-db 无 thumbnail
-  const noImg = await request('/tto/items/2200')
-  if (noImg.json?.code === 1) {
-    pass('缺图条目仍可返回', `thumbnail=${noImg.json.data?.thumbnail ?? 'null'}`)
+  const noImgItem = (await findItemWithoutThumbnail('trips/freeinfo:景点'))
+    || (await findItemWithoutThumbnail('trips/freeinfo:餐厅'))
+    || (await findItemWithoutThumbnail('trips/freeinfo:住宿'))
+  if (noImgItem?.id) {
+    const noImg = await request(`/tto/items/${noImgItem.id}`)
+    if (noImg.json?.code === 1) {
+      pass('缺图条目仍可返回', `thumbnail=${noImg.json.data?.thumbnail ?? 'null'}`)
+    } else fail('缺图条目')
   } else fail('缺图条目')
 
   // 列表 vs 详情字段
-  const list = await request('/tto/items?subNavKey=' + encodeURIComponent('trips/freeinfo:餐厅'))
-  const first = Array.isArray(list.json?.data) ? list.json.data[0] : null
+  const first = sampleItem
   if (first?.id) {
     const detail = await request(`/tto/items/${first.id}`)
     if (detail.json?.code === 1 && detail.json?.data?.title) {
@@ -236,10 +266,14 @@ async function testPagination() {
 async function testPriorityApis() {
   console.log('\n[2.1–2.2 优先 API]')
 
+  await login('api-ping')
+  const scenicItems = await fetchItemsBySubNav('trips/freeinfo:景点')
+  const apiDetailId = scenicItems.find((item) => item?.id)?.id
+
   const apis = [
     ['GET', '/common/ping', null, (j) => j?.code === 1],
     ['GET', '/tto/items?subNavKey=' + encodeURIComponent('trips/freeinfo:景点'), null, (j) => j?.code === 1],
-    ['GET', '/tto/items/1443', null, (j) => j?.code === 1],
+    ['GET', apiDetailId ? `/tto/items/${apiDetailId}` : '/tto/items/0', null, (j) => j?.code === 1],
     ['GET', '/tto/search?q=bruny&pageNum=1&pageSize=5', null, (j) => j?.code === 1],
     ['POST', '/auth/login', { username: 'api-ping', password: 'demo' }, (j) => j?.code === 1],
   ]
@@ -259,10 +293,16 @@ async function testPriorityApis() {
   if (favGet.json?.code === 1) pass('API GET /tto/favorites')
   else fail('API GET /tto/favorites')
 
+  const favItem = scenicItems.find((item) => item?.id) || null
   const add = await request('/tto/favorites', {
     method: 'POST',
     token,
-    body: { itemId: 1443, itemType: 'scenic', itemKey: 'test:p0-fav', title: 'P0 Test' },
+    body: {
+      itemId: favItem?.id,
+      itemType: favItem?.itemType || favItem?.tripType || 'scenic',
+      itemKey: favItem?.itemKey || 'test:p0-fav',
+      title: favItem?.title || 'P0 Test',
+    },
   })
   if (add.json?.code === 1) {
     pass('API POST /tto/favorites', `favoriteId=${add.json.data?.favoriteId ?? 'ok'}`)

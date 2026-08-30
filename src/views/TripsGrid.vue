@@ -21,11 +21,11 @@ import {
     buildLocationCascaderOptions,
     getGroupingTownFromItem,
     getLocationDisplayLabel,
-    getLocationSortOrder,
     getTownByLocationLabel,
     locationCascaderFilterMethod,
     resolveLocationLabel,
     setLocationCatalogEntries,
+    sortLocationItems,
     SORT_MODES,
     SORT_MODE_LABELS,
     UNCATEGORIZED_LOCATION,
@@ -1183,6 +1183,9 @@ watch(() => sortMode.value, async () => {
     if (!isApiEnabled() || !FREE_INFO_FILTER_SUBTABS.includes(props.subTab)) {
         return
     }
+    backendSectionsSynced.value = false
+    backendSectionsLoadSettled.value = false
+    backendLocationSections.value = []
     try {
         await syncLocationCatalogRows()
     } catch (error) {
@@ -1288,26 +1291,6 @@ function getLocationDisplayName(item) {
     return getLocationDisplayLabel(label, sortMode.value)
 }
 
-function sortByLocation(items) {
-    const list = Array.isArray(items) ? [...items] : []
-    return list.sort((a, b) => {
-        const leftLabel = resolveLocationLabel(a)
-        const rightLabel = resolveLocationLabel(b)
-        const leftOrder = getLocationSortOrder(a, sortMode.value)
-        const rightOrder = getLocationSortOrder(b, sortMode.value)
-        if (leftOrder !== rightOrder) return leftOrder - rightOrder
-
-        const leftTown = getTownByLocationLabel(leftLabel) || leftLabel
-        const rightTown = getTownByLocationLabel(rightLabel) || rightLabel
-        const townDiff = String(leftTown || '').localeCompare(String(rightTown || ''), 'en', { sensitivity: 'base' })
-        if (townDiff !== 0) return townDiff
-
-        const subSpotDiff = getSubSpotSortOrderFromDb(a) - getSubSpotSortOrderFromDb(b)
-        if (subSpotDiff !== 0) return subSpotDiff
-        return String(a?.title || '').localeCompare(String(b?.title || ''), 'zh-Hans-CN')
-    })
-}
-
 function shouldShowLocationTitle(list, index) {
     if (!Array.isArray(list) || !list.length) return false
     if (index === 0) return true
@@ -1319,7 +1302,7 @@ const scenicDisplayItems = computed(() => {
         if (!useBackendLocationSections.value) return []
         return scenicFiltered.value
     }
-    const baseItems = sortByLocation(scenicFiltered.value)
+    const baseItems = sortLocationItems(scenicFiltered.value, sortMode.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
@@ -1344,7 +1327,7 @@ const restaurantDisplayItems = computed(() => {
         if (!useBackendLocationSections.value) return []
         return flattenBackendSections(backendLocationSections.value)
     }
-    const baseItems = sortByLocation(restaurantFiltered.value)
+    const baseItems = sortLocationItems(restaurantFiltered.value, sortMode.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
@@ -1355,7 +1338,7 @@ const hotelDisplayItems = computed(() => {
         if (!useBackendLocationSections.value) return []
         return flattenBackendSections(backendLocationSections.value)
     }
-    const baseItems = sortByLocation(hotelFiltered.value)
+    const baseItems = sortLocationItems(hotelFiltered.value, sortMode.value)
     if (selectedDistanceLabel.value) {
         return sortByDistance(baseItems)
     }
@@ -1510,10 +1493,18 @@ function getItemIdentityKey(item) {
     const id = item?.id ?? tripData.id
     if (id != null && id !== '') return `id:${String(id)}`
 
+    const route = String(
+        item?.route
+            || tripData.route
+            || item?.location
+            || tripData.location
+            || ''
+    ).trim()
     return [
         String(item?.title || '').trim(),
         String(item?.enTitle || '').trim(),
         String(resolveLocationLabel(item) || '').trim(),
+        route,
     ].filter(Boolean).join('|')
 }
 

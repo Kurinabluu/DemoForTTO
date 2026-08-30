@@ -30,6 +30,12 @@ export const SORT_MODE_LABELS = {
 
 let LOCATION_CATALOG_ENTRIES = []
 
+function normalizeLocationNameZh(nameZh) {
+  const text = String(nameZh || '').trim()
+  if (!text) return ''
+  return /[\u3400-\u9fff]/.test(text) ? text : ''
+}
+
 function isValidLocationLabel(label) {
   if (!label || label === UNCATEGORIZED_LOCATION) return false
   const { postcode } = splitLocationLabel(label)
@@ -64,7 +70,7 @@ function normalizeLocationEntry(entry) {
   if (!resolvedLabel || resolvedLabel === UNCATEGORIZED_LOCATION) return null
   const resolvedPostcode = postcode || (resolvedLabel.match(/\b(\d{4})\b$/)?.[1] || '')
   if (!/^\d{4}$/.test(resolvedPostcode)) return null
-  const nameZh = String(entry.nameZh || entry.name_zh || '').trim()
+  const nameZh = normalizeLocationNameZh(entry.nameZh || entry.name_zh || '')
   return {
     label: resolvedLabel,
     town: town || resolvedLabel.replace(/\s+\d{4}$/, ''),
@@ -213,7 +219,8 @@ export function resolveBelongsToSpotDisplayName(spotKey) {
   if (SPOT_PARENT_DISPLAY_NAMES[key]) return SPOT_PARENT_DISPLAY_NAMES[key]
   if (REGIONAL_BELONGS_TO_SPOT_DISPLAY_NAMES[key]) return REGIONAL_BELONGS_TO_SPOT_DISPLAY_NAMES[key]
   const entry = TAS_LOCATION_POSTCODES.find((row) => row.town.toLowerCase() === key.toLowerCase())
-  if (entry?.nameZh) return entry.nameZh
+  const nameZh = normalizeLocationNameZh(entry?.nameZh)
+  if (nameZh) return nameZh
   return key
 }
 
@@ -225,7 +232,11 @@ const SORTED_BY_NAME_EN = [...TAS_LOCATION_POSTCODES].sort((a, b) =>
 )
 
 const SORTED_BY_NAME_ZH = [...TAS_LOCATION_POSTCODES].sort((a, b) =>
-  a.nameZh.localeCompare(b.nameZh, 'zh-Hans-CN')
+  getLocationDisplayLabel(a.label, SORT_MODES.NAME_ZH).localeCompare(
+    getLocationDisplayLabel(b.label, SORT_MODES.NAME_ZH),
+    'zh-Hans-CN',
+    { sensitivity: 'base' },
+  )
 )
 
 /** 构建排序映射（label → index） */
@@ -472,10 +483,17 @@ export function getLocationSortOrder(item, mode = SORT_MODES.POSTCODE) {
   const label = resolveLocationLabel(item)
   if (label === UNCATEGORIZED_LOCATION) return 9999
   const { town, postcode } = splitLocationLabel(label)
+  const orderMap = getOrderMap(mode)
+  if (orderMap.has(label)) {
+    return orderMap.get(label)
+  }
   if (mode === SORT_MODES.POSTCODE) {
     return /^\d{4}$/.test(postcode) ? parseInt(postcode, 10) : 9998
   }
-  const normalized = String(town || label).toLowerCase()
+  const fallbackLabel = mode === SORT_MODES.NAME_ZH
+    ? String(getLocationDisplayLabel(label, SORT_MODES.NAME_ZH) || label)
+    : String(town || label)
+  const normalized = fallbackLabel.toLowerCase()
   let score = 0
   for (const char of normalized.slice(0, 6)) {
     score = score * 100 + char.charCodeAt(0)
@@ -485,6 +503,38 @@ export function getLocationSortOrder(item, mode = SORT_MODES.POSTCODE) {
 
 export function getSubSpotSortOrder(item) {
   return isSubSpotItem(item) ? 1 : 0
+}
+
+export function sortLocationItems(items = [], mode = SORT_MODES.POSTCODE) {
+  const list = Array.isArray(items) ? [...items] : []
+  return list.sort((left, right) => {
+    const leftOrder = getLocationSortOrder(left, mode)
+    const rightOrder = getLocationSortOrder(right, mode)
+    if (leftOrder !== rightOrder) {
+      return leftOrder - rightOrder
+    }
+
+    const leftLabel = resolveLocationLabel(left)
+    const rightLabel = resolveLocationLabel(right)
+    const compareLocale = mode === SORT_MODES.NAME_ZH ? 'zh-Hans-CN' : 'en'
+    const leftSortLabel = mode === SORT_MODES.NAME_ZH
+      ? getLocationDisplayLabel(leftLabel, mode)
+      : (getTownByLocationLabel(leftLabel) || leftLabel)
+    const rightSortLabel = mode === SORT_MODES.NAME_ZH
+      ? getLocationDisplayLabel(rightLabel, mode)
+      : (getTownByLocationLabel(rightLabel) || rightLabel)
+    const labelDiff = String(leftSortLabel || '').localeCompare(String(rightSortLabel || ''), compareLocale, { sensitivity: 'base' })
+    if (labelDiff !== 0) {
+      return labelDiff
+    }
+
+    const subSpotDiff = getSubSpotSortOrder(left) - getSubSpotSortOrder(right)
+    if (subSpotDiff !== 0) {
+      return subSpotDiff
+    }
+
+    return String(left?.title || '').localeCompare(String(right?.title || ''), 'zh-Hans-CN')
+  })
 }
 
 export function buildLocationOptionsFromItems(items = [], mode = SORT_MODES.POSTCODE) {
@@ -520,6 +570,7 @@ function buildLocationLazyGroups(items = [], mode = SORT_MODES.POSTCODE) {
   const hasUncategorized = sortedEntries.some((entry) => entry.label === UNCATEGORIZED_LOCATION)
     || (Array.isArray(items) ? items : []).some((item) => resolveLocationLabel(item) === UNCATEGORIZED_LOCATION)
   const isPostcodeMode = mode === SORT_MODES.POSTCODE
+  const isNameZhMode = mode === SORT_MODES.NAME_ZH
   const groupMap = new Map()
 
   sortedEntries.forEach((entry) => {
@@ -527,6 +578,12 @@ function buildLocationLazyGroups(items = [], mode = SORT_MODES.POSTCODE) {
     let firstLevelKey
     if (isPostcodeMode) {
       firstLevelKey = postcode
+    } else if (isNameZhMode) {
+      const displayName = getLocationDisplayLabel(entry.label, mode)
+        || entry.nameZh
+        || entry.town
+        || entry.label
+      firstLevelKey = String(displayName || '').trim().charAt(0)
     } else {
       firstLevelKey = (entry.town || splitLocationLabel(entry.label).town || entry.label).charAt(0).toUpperCase()
     }
@@ -544,6 +601,9 @@ function buildLocationLazyGroups(items = [], mode = SORT_MODES.POSTCODE) {
       const numA = parseInt(a, 10)
       const numB = parseInt(b, 10)
       if (!isNaN(numA) && !isNaN(numB)) return numA - numB
+    }
+    if (isNameZhMode) {
+      return a.localeCompare(b, 'zh-Hans-CN')
     }
     return a.localeCompare(b, 'en')
   })
@@ -658,8 +718,9 @@ export function getLocationDisplayLabel(label, mode = SORT_MODES.POSTCODE) {
   if (mode !== SORT_MODES.NAME_ZH) return label
   const entry = getCatalogEntries().find((e) => e.label === label)
     || TAS_LOCATION_POSTCODES.find((e) => e.label === label)
-  if (entry?.nameZh) {
-    return `${entry.nameZh} ${label}`
+  const nameZh = normalizeLocationNameZh(entry?.nameZh)
+  if (nameZh) {
+    return `${nameZh} ${label}`
   }
   return label
 }
