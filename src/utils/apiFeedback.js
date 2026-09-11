@@ -1,4 +1,5 @@
 import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
 
 let lastNotifyKey = ''
 let lastNotifyAt = 0
@@ -73,11 +74,20 @@ export function notifyApiError(error, { action = '操作', dedupeKey } = {}) {
   const message = getApiErrorMessage(error)
   const key = dedupeKey || `error:${action}:${message}`
   if (!shouldNotify(key)) return
-  ElMessage.error({ message, duration: 5000, showClose: true })
+  ElMessage.error({ message, duration: 5000, showClose: true, offset: 80 })
 }
 
 export function notifyApiWarning(message, { dedupeKey } = {}) {
   const key = dedupeKey || `warn:${message}`
   if (!shouldNotify(key)) return
-  ElMessage.warning({ message, duration: 4500, showClose: true })
+  ElMessage.warning({ message, duration: 4500, showClose: true, offset: 80 })
+}
+
+export function notifySuccess(message) {
+  ElMessage.success({
+    message,
+    duration: 4000,
+    showClose: true,
+    offset: 80,
+  })
 }

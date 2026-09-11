@@ -68,7 +68,7 @@ export function isRestorableAppPath(raw) {
   if (!value) return false
   const pathname = value.split('?')[0]
   if (isSiteRootPath(pathname)) return false
-  return /^\/(trips|favorites|service|search|info|about|privacy|terms|refund)(\/|$)/.test(pathname)
+  return /^\/(trips|favorites|service|search|info|about|contact|privacy|terms|refund)(\/|$)/.test(pathname)
 }
 
 export function isContentDetailPath(raw) {
@@ -84,6 +84,7 @@ export function isFavoritesPath(raw) {
 export function isCompanyPagePath(raw) {
   const pathname = normalizeAppPath(raw).split('?')[0]
   return pathname === '/about'
+    || pathname === '/contact'
     || pathname === '/privacy'
     || pathname === '/terms'
     || pathname === '/refund'

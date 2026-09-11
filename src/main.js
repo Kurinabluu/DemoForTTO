@@ -4,12 +4,14 @@ import router from './router'
 import { createPinia } from 'pinia'
 import { useNavStore } from '@/stores/nav'
 import { isSiteRootPath, shouldPinScrollToTop } from '@/utils/appPath'
+import { bindCompanyPageRouteLoading } from '@/utils/loadingUtils'
 import './style.css'
 
 const app = createApp(App)
 const pinia = createPinia()
 app.use(router)
 app.use(pinia)
+bindCompanyPageRouteLoading(router)
 
 // 全局滚动记录（节流）
 if (typeof window !== 'undefined') {

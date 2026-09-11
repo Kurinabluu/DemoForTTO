@@ -983,7 +983,7 @@ const openOrderableDialog = (item) => {
                 ·
                 <RouterLink to="/refund">退款政策</RouterLink>
                 ·
-                <RouterLink to="/about">关于我们</RouterLink>
+                <RouterLink to="/about" target="_blank" rel="noopener noreferrer">关于我们</RouterLink>
             </p>
         </section>
 

@@ -5,7 +5,7 @@ export const COMPANY = {
   region: '塔斯马尼亚（Tasmania, Australia）',
   phone: '(+61) 0488 388 188',
   email: 'tto.advisory@gmail.com',
-  wechat: 'Tasmania Trips',
+  wechat: 'TasmaniaTrips',
   hoursAu: '周一至周五 9:00-17:00（塔斯马尼亚时间）',
   hoursCn: '周一至周五 10:00-18:00（中国时间）',
 }

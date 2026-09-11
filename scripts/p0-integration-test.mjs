@@ -206,8 +206,11 @@ async function testInquiry() {
     body: {
       contactName: '匿名测试',
       phone: '0400000000',
-      inquiryType: 'contact',
-      sourceSection: 'site-layout::header-contact-form',
+      inquiryType: '一日游 / 多日游',
+      sourceSection: 'contact-page::contact-form::hero',
+      sourcePageKey: 'contact-page',
+      sourceModuleKey: 'contact-form',
+      sourceEntryKey: 'hero',
       content: 'P0 匿名咨询测试',
     },
   })

@@ -107,6 +107,11 @@ const routes = [
         component: () => import('@/views/company/AboutView.vue'),
       },
       {
+        path: 'contact',
+        name: 'Contact',
+        component: () => import('@/views/company/ContactView.vue'),
+      },
+      {
         path: 'privacy',
         name: 'Privacy',
         component: () => import('@/views/company/LegalPageView.vue'),

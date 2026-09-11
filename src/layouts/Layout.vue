@@ -8,12 +8,9 @@ import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
 import LoginDialog from '@/components/LoginDialog.vue';
 import FavoritesSyncOverlay from '@/components/FavoritesSyncOverlay.vue';
 import { resolveDataImage } from '@/utils/dataImageResolver';
-import { buildInquirySourceSection } from '@/utils/inquirySource';
-import { fetchAuthSession, isApiEnabled, submitInquiry } from '@/utils/ttoApi';
-import { getAuthToken, isLoggedIn, getAuthUsername } from '@/utils/authStore';
+import { fetchAuthSession, isApiEnabled } from '@/utils/ttoApi';
+import { isLoggedIn, getAuthUsername } from '@/utils/authStore';
 import { registerLoginDialogOpener } from '@/utils/loginDialogBridge';
-import { ElMessage } from 'element-plus';
-import { getApiErrorMessage } from '@/utils/apiFeedback';
 import { COMPANY_NAV_ENTRY } from '@/data/companyProfile';
 
 const navStore = useNavStore();
@@ -94,75 +91,6 @@ function closeJoinUsDialog() {
     isJoinUsDialogVisible.value = false
 }
 
-// 联系我们弹窗
-const isContactDialogVisible = ref(false)
-const inquirySubmitting = ref(false)
-const pendingInquirySuccessMessage = ref(false)
-const inquiryFormRef = ref(null)
-const inquiryForm = ref({
-    contactName: '',
-    phone: '',
-    email: '',
-    content: '',
-})
-const inquiryRules = {
-    contactName: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
-    phone: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
-    content: [{ required: true, message: '该项不能为空', trigger: 'blur' }],
-}
-const canSubmitInquiry = computed(() => {
-    const form = inquiryForm.value
-    return Boolean(form.contactName.trim() && form.phone.trim() && form.content.trim())
-})
-const INQUIRY_SUCCESS_MESSAGE = '咨询已提交，我们会尽快联系你'
-const INQUIRY_SOURCE_SECTION = buildInquirySourceSection('site-layout', 'header-contact-form')
-
-function openContactDialog() {
-    pendingInquirySuccessMessage.value = false
-    isContactDialogVisible.value = true
-}
-
-function handleContactDialogClosed() {
-    inquiryFormRef.value?.clearValidate()
-    inquirySubmitting.value = false
-    if (!pendingInquirySuccessMessage.value) return
-    pendingInquirySuccessMessage.value = false
-    ElMessage.success({
-        message: INQUIRY_SUCCESS_MESSAGE,
-        grouping: true,
-    })
-}
-
-async function submitContactInquiry() {
-    if (inquirySubmitting.value || !inquiryFormRef.value || !canSubmitInquiry.value) return
-
-    const valid = await inquiryFormRef.value.validate().catch(() => false)
-    if (!valid) return
-
-    const form = inquiryForm.value
-    inquirySubmitting.value = true
-    pendingInquirySuccessMessage.value = false
-
-    try {
-        if (isApiEnabled()) {
-            await submitInquiry({
-                contactName: form.contactName.trim(),
-                phone: form.phone.trim(),
-                email: form.email.trim(),
-                inquiryType: 'contact',
-                sourceSection: INQUIRY_SOURCE_SECTION,
-                content: form.content.trim(),
-            }, getAuthToken())
-        }
-
-        inquiryForm.value = { contactName: '', phone: '', email: '', content: '' }
-        pendingInquirySuccessMessage.value = true
-        isContactDialogVisible.value = false
-    } catch (error) {
-        inquirySubmitting.value = false
-        ElMessage.error(getApiErrorMessage(error))
-    }
-}
 const headerLogo = resolveDataImage('@/assets/img/header_logo.png', '', { variant: 'thumb' }) || resolveDataImage('@/assets/img/header_logo.png')
 const footerImageNames = ['bgfooter1.jpg', 'bgfooter2.jpg', 'footer1.jpg', 'footer2.jpg', 'footer3.jpg', 'footer4.jpg']
 const footerSlides = footerImageNames
@@ -251,7 +179,11 @@ onMounted(() => {
             </span>
             <span class="btns no-select">
                 <ul class="ul-css fs16 clearfix">
-                    <li class="pointer"><RouterLink :to="{ path: '/about', query: COMPANY_NAV_ENTRY }">关于我们</RouterLink></li>
+                    <li class="pointer">
+                        <RouterLink :to="{ path: '/about', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                            关于我们
+                        </RouterLink>
+                    </li>
                     <li class="pointer dropdown">
                         <el-dropdown class="language-dropdown">
                             <span class="el-dropdown-link">
@@ -278,12 +210,20 @@ onMounted(() => {
                         </RouterLink>
                     </li> -->
                     <!-- <li class="pointer" @click="onNavClick($event)">特别推荐</li> -->
-                    <li class="pointer"><RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }">付款与退款</RouterLink></li>
+                    <li class="pointer">
+                        <RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                            付款与退款
+                        </RouterLink>
+                    </li>
                     <li class="pointer" @click="onNavClick($event)">成为会员</li>
                     <!-- <li class="pointer" @click="onNavClick($event)"><RouterLink to="/DemoForTTO/service">八大服务</RouterLink></li> -->
                     <!-- <li class="pointer" @click="onNavClick($event); openContactDialog()">联系我们</li> -->
                     <li class="pointer" @click="openJoinUsDialog()">加入我们</li>
-                    <li class="pointer" @click="openContactDialog()">联系我们</li>
+                    <li class="pointer">
+                        <RouterLink :to="{ path: '/contact', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                            联系我们
+                        </RouterLink>
+                    </li>
                     <li class="pointer header-user-login-wrap" :class="{ 'is-logged-in': isLoggedIn }" @click="openLoginDialog">{{ headerUserLabel }}</li>
                 </ul>
                 <!-- <i class="flri pointer" @click="onNavClick">Operating By WorldTrips.Online</i> -->
@@ -311,83 +251,6 @@ onMounted(() => {
                 <div style="display:flex; justify-content:flex-end; gap:8px;">
                     <!-- <el-button @click="closeContactDialog">关闭</el-button> -->
                     <el-button type="primary" @click="closeJoinUsDialog">确定</el-button>
-                </div>
-            </template>
-        </el-dialog>
-
-        <!-- 联系我们弹窗 -->
-        <el-dialog v-model="isContactDialogVisible" append-to-body align-center width="520px" class="contact-dialog"
-            @closed="handleContactDialogClosed">
-            <template #header>
-                <div style="font-weight:700; letter-spacing:2px; color:#33b1a3;">联系我们</div>
-            </template>
-            <div class="contact-modal">
-                <div class="contact-modal-info">
-                    <div class="item">
-                        <el-icon>
-                            <Phone />
-                        </el-icon>
-                        <span>电话：0488 388 188</span>
-                    </div>
-                    <div class="item">
-                        <el-icon>
-                            <Message />
-                        </el-icon>
-                        <span>邮箱：tto.operator@gmail.com（24 小时受理）</span>
-                    </div>
-                    <div class="item">
-                        <el-icon>
-                            <i></i>
-                        </el-icon>
-                        <span>微信咨询：TasmaniaTrips（欢迎添加微信号咨询）</span>
-                    </div>
-                    <div class="item">
-                        <el-icon>
-                            <i></i>
-                        </el-icon>
-                        <span>地址：1/18 WENDOVER PLACE NEW TOWN, TAS 7008, Australia</span>
-                    </div>
-                </div>
-                <el-form
-                    id="contact-inquiry-form"
-                    ref="inquiryFormRef"
-                    :model="inquiryForm"
-                    :rules="inquiryRules"
-                    label-position="top"
-                    class="contact-inquiry-form"
-                    @submit.prevent="submitContactInquiry"
-                >
-                    <div class="form-title">留言咨询</div>
-                    <el-form-item label="联系人" prop="contactName">
-                        <el-input v-model="inquiryForm.contactName" placeholder="请输入联系人" />
-                    </el-form-item>
-                    <el-form-item label="电话" prop="phone">
-                        <el-input v-model="inquiryForm.phone" placeholder="请输入电话" />
-                    </el-form-item>
-                    <el-form-item label="邮箱">
-                        <el-input v-model="inquiryForm.email" placeholder="邮箱（选填）" />
-                    </el-form-item>
-                    <el-form-item label="咨询内容" prop="content">
-                        <el-input
-                            v-model="inquiryForm.content"
-                            type="textarea"
-                            :rows="3"
-                            placeholder="请描述您的咨询内容"
-                        />
-                    </el-form-item>
-                </el-form>
-            </div>
-            <template #footer>
-                <div style="display:flex; justify-content:flex-end; gap:8px;">
-                    <el-button
-                        type="primary"
-                        native-type="submit"
-                        form="contact-inquiry-form"
-                        :loading="inquirySubmitting"
-                        :disabled="!canSubmitInquiry"
-                    >
-                        提交咨询
-                    </el-button>
                 </div>
             </template>
         </el-dialog>
@@ -492,8 +355,22 @@ onMounted(() => {
                                 八大服务 <span>Service</span>
                             </RouterLink>
                         </div>
-                        <RouterLink class="nav-item" :to="{ path: '/about', query: COMPANY_NAV_ENTRY }">关于我们 <span>About us</span></RouterLink>
-                        <div class="nav-item" @click="openContactDialog">联系我们 <span>Contact us</span></div>
+                        <RouterLink
+                            class="nav-item"
+                            :to="{ path: '/about', query: COMPANY_NAV_ENTRY }"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            关于我们 <span>About us</span>
+                        </RouterLink>
+                        <RouterLink
+                            class="nav-item"
+                            :to="{ path: '/contact', query: COMPANY_NAV_ENTRY }"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            联系我们 <span>Contact us</span>
+                        </RouterLink>
                     </div>
                 </div>
 
@@ -512,12 +389,24 @@ onMounted(() => {
                 <div class="web-msg">
                     <div class="important-msg">
                         <ul>
-                            <li><RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }">退款政策</RouterLink></li>
+                            <li>
+                                <RouterLink :to="{ path: '/refund', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                                    退款政策
+                                </RouterLink>
+                            </li>
                             <li @click="showDisclaimerModal = true">
                                 免责条款
                             </li>
-                            <li><RouterLink :to="{ path: '/privacy', query: COMPANY_NAV_ENTRY }">隐私政策</RouterLink></li>
-                            <li><RouterLink :to="{ path: '/terms', query: COMPANY_NAV_ENTRY }">条款与条件</RouterLink></li>
+                            <li>
+                                <RouterLink :to="{ path: '/privacy', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                                    隐私政策
+                                </RouterLink>
+                            </li>
+                            <li>
+                                <RouterLink :to="{ path: '/terms', query: COMPANY_NAV_ENTRY }" target="_blank" rel="noopener noreferrer">
+                                    条款与条件
+                                </RouterLink>
+                            </li>
                         </ul>
                     </div>
                     <div class="declaration center">TasTrips.Online由TASMANIA TRIPS PTY LTD（塔斯马尼亚旅行有限公司）运营</div>

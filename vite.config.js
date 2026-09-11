@@ -11,6 +11,7 @@ const SEO_HUB_PATHS = [
   '/trips/freeinfo',
   '/trips/routes',
   '/about',
+  '/contact',
   '/privacy',
   '/terms',
   '/refund',

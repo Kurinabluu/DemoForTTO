@@ -8,7 +8,7 @@ import { extractDayTripTabKey, resolveDayTripSubNavName } from '@/utils/subNavKe
 import { fetchLocationCatalog, fetchLocationSections, isApiEnabled } from '@/utils/ttoApi'
 import { resolveDataImage } from '@/utils/dataImageResolver'
 import { getTownCoordinates, getDistanceBetweenTowns } from '@/utils/distanceCalculator'
-import { waitRandomDelay, withLoading } from '@/utils/loadingUtils'
+import { withLoading } from '@/utils/loadingUtils'
 import { notifyApiError, notifyApiWarning } from '@/utils/apiFeedback'
 import { mergeImageSourceIntoTripData } from '@/utils/freeInfoImageUtils'
 import { getTourItemDialogKey, tourItemMatchesDialogKey } from '@/utils/searchItemKey'
@@ -105,7 +105,6 @@ const executeSearch = async () => {
     isSearching.value = true
 
     try {
-        await waitRandomDelay(180, 480)
         searchQuery.value = keyword
         currentPage.value = 1 // 重置到第一页
         await syncSubNavKeywordSearch()
@@ -150,7 +149,7 @@ const scenicBackendSections = shallowRef([])
 const backendLocationSections = scenicBackendSections
 const backendSectionsSynced = ref(false)
 const backendSectionsLoading = ref(false)
-/** 首次分区请求已结束（成功/失败/超时），避免失败后 loadingState 因 !synced 一直为 true */
+/** 首次分区请求已结束（成功/失败/超时），避免失败后网格 loading 因 !synced 一直为 true */
 const backendSectionsLoadSettled = ref(false)
 const BACKEND_GRID_LOAD_TIMEOUT_MS = 15000
 let backendSectionsRequestSeq = 0
@@ -214,13 +213,6 @@ const useBackendLocationSections = computed(() => {
         || backendLocationSections.value.length > 0
         || backendSectionsLoading.value
     )
-})
-
-const loadingState = computed(() => {
-    if (!prefersBackendLocationGrid.value) return false
-    if (backendSectionsLoading.value) return true
-    if (!backendSectionsLoadSettled.value) return true
-    return false
 })
 
 const gridLoadingState = computed(() => {
@@ -644,7 +636,6 @@ async function loadAllItems() {
         try {
             renderLimit.value = totalItems
             hasMore.value = false
-            await waitRandomDelay(220, 360)
         } finally {
             isLoading.value = false
         }
@@ -1943,10 +1934,6 @@ onUnmounted(() => {
         </template>
     </div>
 
-    <!-- 全屏加载
-    <div v-loading.fullscreen="loadingState" element-loading-spinner-color="#279486"
-        element-loading-background="rgba(255, 255, 255, 0.8)"></div> -->
-
     <div class="grid-content-loading" v-loading="gridLoadingState" element-loading-text="加载中..."
         element-loading-spinner-color="#279486" element-loading-background="rgba(255, 255, 255, 0.65)">
         <!-- 主内容区 -->
@@ -2324,40 +2311,46 @@ onUnmounted(() => {
                 <h2 class="activities-title">{{ currentSpecialTitle }}</h2>
                 <p class="activities-subtitle">{{ currentSpecialSubtitle }}</p>
             </div>
-            <div ref="gridRef" class="activities-grid">
-                <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
-                    :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)"
-                    :data-tour-title="getTourItemDialogKey(activity)">
-                    <div class="activity-image">
-                        <img :src="getActivityImage(activity.img, index)" :alt="activity.title || '特别活动'" class="activity-img"
-                            :loading="getImageLoading(index)" decoding="async"
-                            :fetchpriority="getImageFetchPriority(index)">
-                        <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
-                    </div>
-                    <div class="activity-content">
-                        <h3 class="activity-title">{{ activity.title }}</h3>
-                        <div class="activity-info">
-                            <div v-for="(infoItem, infoIndex) in activity.info" :key="infoIndex" class="info-item">
-                                <span class="info-label">{{ infoItem.label }}：</span>
-                                <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value }}</span>
-                            </div>
+            <template v-if="currentSpecialItems.length">
+                <div ref="gridRef" class="activities-grid">
+                    <div v-for="(activity, index) in getPaginatedItems(currentSpecialItems)" :key="'activity-' + index"
+                        :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)"
+                        :data-tour-title="getTourItemDialogKey(activity)">
+                        <div class="activity-image">
+                            <img :src="getActivityImage(activity.img, index)" :alt="activity.title || '特别活动'" class="activity-img"
+                                :loading="getImageLoading(index)" decoding="async"
+                                :fetchpriority="getImageFetchPriority(index)">
+                            <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
                         </div>
-                        <div class="tags">
-                            <div v-for="(tagItem, tagIndex) in activity.tagItems" :key="tagIndex"
-                                :class="tagItem.icon ? 'weather-note' : 'activity-description'">
-                                <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
-                                <span>{{ tagItem.text }}</span>
+                        <div class="activity-content">
+                            <h3 class="activity-title">{{ activity.title }}</h3>
+                            <div class="activity-info">
+                                <div v-for="(infoItem, infoIndex) in activity.info" :key="infoIndex" class="info-item">
+                                    <span class="info-label">{{ infoItem.label }}：</span>
+                                    <span :class="['info-value', infoItem.valueClass]">{{ infoItem.value }}</span>
+                                </div>
+                            </div>
+                            <div class="tags">
+                                <div v-for="(tagItem, tagIndex) in activity.tagItems" :key="tagIndex"
+                                    :class="tagItem.icon ? 'weather-note' : 'activity-description'">
+                                    <i v-if="tagItem.icon" class="weather-icon">{{ tagItem.icon }}</i>
+                                    <span>{{ tagItem.text }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
-            <div v-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
-                <div class="custom-pagination custom-pagination--fixed">
-                    <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
-                        mobileTotalPages }} 页</div>
+                <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
+                <div v-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
+                    <div class="custom-pagination custom-pagination--fixed">
+                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
+                            mobileTotalPages }} 页</div>
+                    </div>
                 </div>
+            </template>
+            <div v-else class="special-empty-state">
+                <div class="special-empty-state__title">敬请期待</div>
+                <p class="special-empty-state__desc">这里暂时没有特别活动内容，后续会更新为实时活动、节庆信息或观测提示。</p>
             </div>
             <div class="activities-footer">
                 <div class="update-info"><i class="update-icon">🔄</i><span>信息每2小时更新一次</span></div>
@@ -2382,7 +2375,7 @@ onUnmounted(() => {
         <p class="trips-faq-links">
             <RouterLink to="/refund">退款政策</RouterLink>
             ·
-            <RouterLink to="/about">关于我们</RouterLink>
+            <RouterLink to="/about" target="_blank" rel="noopener noreferrer">关于我们</RouterLink>
             ·
             <RouterLink :to="{ path: '/trips/freeinfo', query: { subNavName: '景点' } }">免费参考信息</RouterLink>
         </p>
@@ -2878,6 +2871,31 @@ onUnmounted(() => {
 
         .weather-icon {
             font-size: 16px;
+        }
+
+        .special-empty-state {
+            width: 100%;
+            margin: 0 0 30px;
+            padding: 28px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            text-align: center;
+
+            .special-empty-state__title {
+                margin-bottom: 8px;
+                font-size: 22px;
+                font-weight: 700;
+                color: #111827;
+            }
+
+            .special-empty-state__desc {
+                margin: 0;
+                font-size: 14px;
+                line-height: 1.8;
+                color: #6b7280;
+            }
         }
 
         .activities-footer {
