@@ -59,8 +59,14 @@ const togglePosition = () => {
 const goToFavorites = () => {
   const resolved = router.resolve({ name: 'Favorites' })
   const absoluteUrl = new URL(resolved.href, window.location.href).href
-  const opened = window.open(absoluteUrl, '_blank', 'noopener,noreferrer')
-  if (!opened) {
+  // 注意：不能在第三个参数里带 noopener——带了它 window.open 永远返回 null，
+  // 下面的拦截判断就会恒成立，导致新窗口开了、原页面也被 router.push 带走。
+  // 先拿到新窗口引用，再手动切断 opener，等价于 noopener 的安全防护。
+  const opened = window.open(absoluteUrl, '_blank')
+  if (opened) {
+    opened.opener = null
+  } else {
+    // 仅当弹窗确实被浏览器拦截时，才在当前标签页跳转兜底
     router.push({ name: 'Favorites' })
   }
 }
