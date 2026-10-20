@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, onActivated, nextTick } from 'vue';
-import { ElPagination, ElInput, ElButton, ElSelect, ElOption, ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
+import 'element-plus/theme-chalk/el-message.css';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import {
   favorites,
@@ -423,36 +424,36 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="favorites-page" :class="{ 'is-syncing': isFavoritesSyncing }" v-loading="remoteFavoritesLoading || isFavoritesSyncing"
-    element-loading-text="正在加载收藏...">
+  <div class="favorites-page" :class="{ 'is-syncing': isFavoritesSyncing }"
+    v-loading="remoteFavoritesLoading || isFavoritesSyncing" element-loading-text="正在加载收藏...">
     <!-- 页面标题 -->
     <div class="page-header">
       <div class="page-title-row">
         <h1 class="page-title">收藏项目</h1>
-        <ElButton class="migration-test-btn" size="small" text :loading="migrationTestLoading"
+        <el-button class="migration-test-btn" size="small" text :loading="migrationTestLoading"
           @click="handleMigrationTestPrep">
           迁移测试
-        </ElButton>
+        </el-button>
       </div>
       <div class="search-box">
-        <ElSelect v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable
+        <el-select v-model="sourceFilter" class="source-select" placeholder="来源筛选" clearable
           :disabled="isPageInteractionDisabled" @change="handleSourceChange">
-          <ElOption :label="'全部来源'" :value="ALL_SOURCE_VALUE" />
-          <ElOption v-for="source in sourceOptions" :key="source" :label="source" :value="source" />
-        </ElSelect>
-        <ElInput v-model="searchInput" placeholder="搜索收藏..." prefix-icon="Search" clearable class="search-input"
+          <el-option :label="'全部来源'" :value="ALL_SOURCE_VALUE" />
+          <el-option v-for="source in sourceOptions" :key="source" :label="source" :value="source" />
+        </el-select>
+        <el-input v-model="searchInput" placeholder="搜索收藏..." prefix-icon="Search" clearable class="search-input"
           :disabled="isPageInteractionDisabled" @keyup.enter="executeSearch" @clear="clearSearch" />
-        <ElButton type="primary" class="search-btn" :disabled="isPageInteractionDisabled" @click="executeSearch">
+        <el-button type="primary" class="search-btn" :disabled="isPageInteractionDisabled" @click="executeSearch">
           <el-icon>
             <Search />
           </el-icon>
-        </ElButton>
-        <ElButton class="refresh-btn" :disabled="isPageInteractionDisabled" :loading="remoteFavoritesLoading"
+        </el-button>
+        <el-button class="refresh-btn" :disabled="isPageInteractionDisabled" :loading="remoteFavoritesLoading"
           @click="retryLoadFavorites" title="从服务器同步最新数据">
           <el-icon>
             <Refresh />
           </el-icon>
-        </ElButton>
+        </el-button>
       </div>
     </div>
 
@@ -466,10 +467,12 @@ onUnmounted(() => {
           <h3 class="card-title">{{ item.title }}</h3>
           <p class="card-region">
             <template v-if="isFreeInfoFavorite(item)">
-              {{ item.locationLabel || item.tripData?.locationLabel || (item.tripData?.town && item.tripData?.postcode ? item.tripData.town + ' ' + item.tripData.postcode : '') || '暂未分类' }}
+              {{ item.locationLabel || item.tripData?.locationLabel || (item.tripData?.town && item.tripData?.postcode ?
+                item.tripData.town + ' ' + item.tripData.postcode : '') || '暂未分类' }}
             </template>
             <template v-else>
-              {{ item.locationLabel || item.tripData?.locationLabel || item.tripData?.route || item.tripData?.desc || item.subNavName || item.town || '' }}
+              {{ item.locationLabel || item.tripData?.locationLabel || item.tripData?.route || item.tripData?.desc ||
+                item.subNavName || item.town || '' }}
             </template>
           </p>
           <div class="card-actions">
@@ -482,9 +485,10 @@ onUnmounted(() => {
     </div>
 
     <!-- 加载失败 -->
-    <div v-if="remoteLoadError && useRemoteFavorites && favoriteTotalCount === 0 && !remoteFavoritesLoading" class="error-state">
+    <div v-if="remoteLoadError && useRemoteFavorites && favoriteTotalCount === 0 && !remoteFavoritesLoading"
+      class="error-state">
       <p>{{ remoteLoadError }}</p>
-      <ElButton type="primary" @click="retryLoadFavorites">重试</ElButton>
+      <el-button type="primary" @click="retryLoadFavorites">重试</el-button>
     </div>
 
     <!-- 空状态 -->
@@ -495,7 +499,7 @@ onUnmounted(() => {
 
     <!-- 分页组件 -->
     <div v-if="totalPages > 1" class="pagination-container">
-      <ElPagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="favoriteTotalCount"
+      <el-pagination v-model:current-page="currentPage" :page-size="itemsPerPage" :total="favoriteTotalCount"
         layout="prev, pager, next, jumper" :disabled="favoriteTotalCount === 0 || isPageInteractionDisabled"
         @current-change="handlePageChange" />
     </div>

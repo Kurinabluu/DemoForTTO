@@ -132,11 +132,11 @@ if (typeof window !== 'undefined') {
     router.afterEach((to) => {
         const path = to.fullPath || to.path
         if (!isSiteRootPath(to.path)) {
-            nav.savePath(path)
+            nav.savePath(path)  //更新书签
         }
 
         requestAnimationFrame(() => {
-            restoreScrollForRoute(to)
+            restoreScrollForRoute(to)   //判断关于页是需要强制滚到顶部的，所以不恢复位置
         })
     })
 }

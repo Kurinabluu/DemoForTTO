@@ -113,11 +113,11 @@ async function loadLocalFallbackBundle(sectionPath, { excludeSubNavNames = [] } 
     dataSource: 'local-json',
     subNav: Array.isArray(sectionNode.subNav)
       ? sectionNode.subNav
-          .filter((subNav) => !excludeSet.has(subNav?.subNavName))
-          .map((subNav) => ({
-            ...subNav,
-            items: Array.isArray(subNav?.items) ? subNav.items : [],
-          }))
+        .filter((subNav) => !excludeSet.has(subNav?.subNavName))
+        .map((subNav) => ({
+          ...subNav,
+          items: Array.isArray(subNav?.items) ? subNav.items : [],
+        }))
       : [],
   }
 }
@@ -357,24 +357,33 @@ export async function loadCatalogItemByKey(itemKey) {
   }
 
   if (!USE_LOCAL_JSON_FALLBACK) return null
-  const fallbackData = await loadFreeinfoFallbackData()
-  const subNavList = Array.isArray(fallbackData?.subNav) ? fallbackData.subNav : []
-  for (const subNav of subNavList) {
-    const items = Array.isArray(subNav?.items) ? subNav.items : []
-    const matched = items.find((item) => {
-      if (!item || typeof item !== 'object') return false
-      if (String(item.itemKey || '').trim() === key) return true
-      if (item.id != null && String(item.id) === key) return true
-      return false
-    })
-    if (matched) {
-      return {
-        ...matched,
-        itemKey: matched.itemKey || key,
-        itemType: matched.itemType || matched.tripType || `${subNav?.subNavName || ''}信息`,
-        tripType: matched.tripType || matched.itemType || `${subNav?.subNavName || ''}信息`,
-        subNavName: matched.subNavName || subNav?.subNavName || '',
-        tripData: matched.tripData && typeof matched.tripData === 'object' ? matched.tripData : {},
+  // 与列表页保持同一数据源 data.json，覆盖「信息」和「一日行程」两个板块
+  const root = await loadLocalDataRoot()
+  if (!Array.isArray(root)) return null
+
+  const localSections = ['trips/freeinfo', 'trips/routes']
+  for (const sectionNode of root) {
+    if (!sectionNode || !localSections.includes(sectionNode.path)) continue
+    const subNavList = Array.isArray(sectionNode.subNav) ? sectionNode.subNav : []
+    for (const subNav of subNavList) {
+      const items = Array.isArray(subNav?.items) ? subNav.items : []
+      const matched = items.find((item) => {
+        if (!item || typeof item !== 'object') return false
+        if (String(item.itemKey || '').trim() === key) return true
+        if (item.id != null && String(item.id) === key) return true
+        // 一日行程数据没有 itemKey/id，卡片用标题当 key（见 getTourItemDialogKey）
+        const label = item.title || item.place || item.name || item.route || ''
+        return String(label).trim() === key
+      })
+      if (matched) {
+        return {
+          ...matched,
+          itemKey: matched.itemKey || key,
+          itemType: matched.itemType || matched.tripType || `${subNav?.subNavName || ''}信息`,
+          tripType: matched.tripType || matched.itemType || `${subNav?.subNavName || ''}信息`,
+          subNavName: matched.subNavName || subNav?.subNavName || '',
+          tripData: matched.tripData && typeof matched.tripData === 'object' ? matched.tripData : {},
+        }
       }
     }
   }

@@ -1046,7 +1046,7 @@ const openOrderableDialog = (item) => {
     }
 
     .service-load-error {
-        color: #a94442;
+        color: #dc2626;
     }
 
     .service-title {

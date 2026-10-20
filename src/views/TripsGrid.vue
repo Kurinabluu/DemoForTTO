@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, shallowRef, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElPagination, ElInput, ElIcon } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { loadFreeInfoData, loadDayTripData, loadCatalogItemDetail, searchItemsInSubNav, ensureFreeInfoSubNavLoaded } from '@/utils/contentRepository'
 import { extractDayTripTabKey, resolveDayTripSubNavName } from '@/utils/subNavKey'
@@ -414,7 +413,7 @@ async function runInitialPageLoad() {
                     silentSectionError: true,
                     sectionRetries: 2,
                 })
-                void loadDayTripData().catch(() => {})
+                void loadDayTripData().catch(() => { })
                 return
             }
 
@@ -1282,6 +1281,7 @@ function getLocationDisplayName(item) {
     return getLocationDisplayLabel(label, sortMode.value)
 }
 
+// 和上一条地区不同才显示
 function shouldShowLocationTitle(list, index) {
     if (!Array.isArray(list) || !list.length) return false
     if (index === 0) return true
@@ -1486,10 +1486,10 @@ function getItemIdentityKey(item) {
 
     const route = String(
         item?.route
-            || tripData.route
-            || item?.location
-            || tripData.location
-            || ''
+        || tripData.route
+        || item?.location
+        || tripData.location
+        || ''
     ).trim()
     return [
         String(item?.title || '').trim(),
@@ -1921,12 +1921,12 @@ onUnmounted(() => {
         </el-input>
         <template v-if="shouldShowAreaFilters">
             <el-cascader v-model="selectedLocationKey" :options="locationCascaderOptions"
-                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable
-                filterable placeholder="地点（邮编）" class="area-select" size="large"
+                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable filterable
+                placeholder="地点（邮编）" class="area-select" size="large"
                 :key="'loc-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
             <el-cascader v-model="selectedDistance" :options="locationCascaderOptions"
-                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable
-                filterable placeholder="按距离排序" class="distance-select" size="large"
+                :props="locationCascaderFieldProps" :filter-method="locationCascaderFilterMethod" clearable filterable
+                placeholder="按距离排序" class="distance-select" size="large"
                 :key="'dist-' + subTab + '-' + sortMode + '-' + locationCatalogRevision" />
             <el-select v-model="sortMode" class="sort-select" size="large">
                 <el-option v-for="(label, value) in SORT_MODE_LABELS" :key="value" :label="label" :value="value" />
@@ -1965,7 +1965,7 @@ onUnmounted(() => {
                     <div v-if="dayTripFiltered.length > 0" class="pagination-section pagination-section--scenic">
                         <div class="custom-pagination custom-pagination--fixed">
                             <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage
-                            }}</span> /
+                                    }}</span> /
                                 {{
                                     mobileTotalPages }} 页</div>
                         </div>
@@ -2171,16 +2171,19 @@ onUnmounted(() => {
             <template v-if="scenicFiltered.length">
                 <div ref="gridRef" class="coming-grid coming-grid--scenic">
                     <template v-for="(item, i) in scenicDisplayItems" :key="'sc-grid-' + i">
-                        <h2 v-if="shouldShowLocationTitle(scenicDisplayItems, i)"
-                            class="region-title center">
+                        <h2 v-if="shouldShowLocationTitle(scenicDisplayItems, i)" class="region-title center">
+                            <!-- 地区分组标题，根据景点分类显示 -->
                             {{ getLocationDisplayName(item) }}
                         </h2>
                         <div class="coming-card" :class="{ 'coming-card--with-belong': shouldShowBelongSpot(item) }"
                             @click="onOpenTour(item)" :data-tour-title="getTourItemDialogKey(item)">
+                            <!-- 封面图 -->
                             <img :src="getScenicGridImageUrl(item)" :alt="item.title" class="w100"
                                 :loading="getImageLoading(i)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(i)">
+                            <!-- 中文标题 -->
                             <div class="card-title" :title="item.title">{{ item.title }}</div>
+                            <!-- 如果有英文标题，就显示英文标题 -->
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
                             <div v-if="shouldShowBelongSpot(item)" class="card-belong">
                                 <span class="card-belong-tag">所在景点</span>
@@ -2222,7 +2225,9 @@ onUnmounted(() => {
                     </template>
                 </div>
             </template>
-            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{ getEmptyTipText() }}</div>
+            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{
+                getEmptyTipText() }}
+            </div>
         </template>
         <!-- <div v-if="subTab === '景点' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...
@@ -2241,8 +2246,7 @@ onUnmounted(() => {
             <template v-if="restaurantDisplayItems.length">
                 <div ref="gridRef" class="coming-grid">
                     <template v-for="(item, i) in restaurantDisplayItems" :key="'rt-grid-' + i">
-                        <h2 v-if="shouldShowLocationTitle(restaurantDisplayItems, i)"
-                            class="region-title center">
+                        <h2 v-if="shouldShowLocationTitle(restaurantDisplayItems, i)" class="region-title center">
                             {{ getLocationDisplayName(item) }}
                         </h2>
                         <div class="coming-card" @click="onOpenTour(item)"
@@ -2256,7 +2260,9 @@ onUnmounted(() => {
                     </template>
                 </div>
             </template>
-            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{ getEmptyTipText() }}</div>
+            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{
+                getEmptyTipText() }}
+            </div>
         </template>
 
         <!-- <div v-if="subTab === '餐厅' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
@@ -2277,8 +2283,7 @@ onUnmounted(() => {
             <template v-if="hotelDisplayItems.length">
                 <div ref="gridRef" class="coming-grid">
                     <template v-for="(item, i) in hotelDisplayItems" :key="'ht-grid-' + i">
-                        <h2 v-if="shouldShowLocationTitle(hotelDisplayItems, i)"
-                            class="region-title center">
+                        <h2 v-if="shouldShowLocationTitle(hotelDisplayItems, i)" class="region-title center">
                             {{ getLocationDisplayName(item) }}
                         </h2>
                         <div class="coming-card" @click="onOpenTour(item)"
@@ -2292,7 +2297,9 @@ onUnmounted(() => {
                     </template>
                 </div>
             </template>
-            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{ getEmptyTipText() }}</div>
+            <div v-else-if="!prefersBackendLocationGrid || backendSectionsLoadSettled" class="empty-tip">{{
+                getEmptyTipText() }}
+            </div>
         </template>
         <!-- <div v-if="subTab === '住宿' && !isLocalSearch && !(s?.trim()) && !showDayTrip && isLoading" class="loading-tip">
         加载中...
@@ -2317,8 +2324,8 @@ onUnmounted(() => {
                         :class="['activity-card', activity.cardClass, 'pointer']" @click="onOpenTour(activity)"
                         :data-tour-title="getTourItemDialogKey(activity)">
                         <div class="activity-image">
-                            <img :src="getActivityImage(activity.img, index)" :alt="activity.title || '特别活动'" class="activity-img"
-                                :loading="getImageLoading(index)" decoding="async"
+                            <img :src="getActivityImage(activity.img, index)" :alt="activity.title || '特别活动'"
+                                class="activity-img" :loading="getImageLoading(index)" decoding="async"
                                 :fetchpriority="getImageFetchPriority(index)">
                             <div :class="['activity-badge', activity.badgeClass]">{{ activity.badge }}</div>
                         </div>
@@ -2343,8 +2350,9 @@ onUnmounted(() => {
                 <!-- <div v-if="isLoading" class="loading-tip">加载中...</div> -->
                 <div v-if="currentSpecialItems.length > 0" class="pagination-section pagination-section--scenic">
                     <div class="custom-pagination custom-pagination--fixed">
-                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> / {{
-                            mobileTotalPages }} 页</div>
+                        <div class="page-indicator fs14">第 <span class="page-num fowe7">{{ mobileScrollPage }}</span> /
+                            {{
+                                mobileTotalPages }} 页</div>
                     </div>
                 </div>
             </template>

@@ -1183,7 +1183,7 @@ onUnmounted(() => {
 }
 
 .detail-state--error {
-  color: #a94442;
+  color: #dc2626;
 }
 
 .detail-header {

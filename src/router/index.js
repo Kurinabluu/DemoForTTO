@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useNavStore } from '@/stores/nav'
 import { isSearchEngineReferrer, isSiteRootPath, isRestorableAppPath, normalizeAppPath } from '@/utils/appPath'
 
 const DEFAULT_FREEINFO_LOCATION = {
@@ -8,8 +9,11 @@ const DEFAULT_FREEINFO_LOCATION = {
 
 function processHashRedirect() {
   try {
+    // 检查现在地址栏里的hash是否存在，且是否以#/开头。
     if (window.location.hash && window.location.hash.startsWith('#/')) {
+      //  砍掉#
       const hashContent = window.location.hash.substring(1)
+      // 清掉哈希，URL会变干净
       window.location.hash = ''
       return normalizeAppPath(hashContent)
     }
@@ -18,7 +22,7 @@ function processHashRedirect() {
   }
   return null
 }
-
+// 模块加载时处理哈希重定向
 let pendingHashRedirect = typeof window !== 'undefined' ? processHashRedirect() : null
 
 const routes = [
@@ -138,6 +142,58 @@ const router = createRouter({
   routes,
 })
 
+// 发版后旧 hash 的 chunk 文件会被删除，仍停留在旧页面上的用户点击导航时，
+// 动态 import 会 404（Failed to fetch dynamically imported module）。
+// 整页跳到目标地址一次即可拿到新的 index.html 与新 chunk。
+// 用 sessionStorage 时间戳做一次性保护，避免刷新后仍失败时陷入无限刷新。
+const CHUNK_RELOAD_KEY = 'tto_chunk_reload_at'
+const CHUNK_RELOAD_GUARD_MS = 10000
+
+function isChunkLoadError(error) {
+  const message = String(error?.message || error || '')
+  return /dynamically imported module|importing a module script|loading (css )?chunk/i.test(message)
+}
+
+function readChunkReloadStamp() {
+  try {
+    return Number(sessionStorage.getItem(CHUNK_RELOAD_KEY)) || 0
+  } catch {
+    return 0
+  }
+}
+
+router.onError((error, to) => {
+  if (!isChunkLoadError(error)) return
+
+  // 刚刷新过仍失败（断网、部署本身损坏等），放弃自动刷新，避免无限循环
+  if (Date.now() - readChunkReloadStamp() < CHUNK_RELOAD_GUARD_MS) return
+
+  try {
+    sessionStorage.setItem(CHUNK_RELOAD_KEY, String(Date.now()))
+  } catch {
+    // 隐私模式等场景下 sessionStorage 不可用，仍尝试跳转刷新
+  }
+
+  // 动态 import 失败时浏览器地址栏尚未切换，直接 reload 会停在旧页面，
+  // 因此显式跳到目标路由的完整地址（含 BASE_URL 前缀）
+  if (to?.fullPath) {
+    window.location.assign(router.resolve(to.fullPath).href)
+  } else {
+    window.location.reload()
+  }
+})
+
+// 新页面正常启动后清除标记，之后再遇到 chunk 失效仍可自动恢复一次
+router.isReady().then(() => {
+  try {
+    sessionStorage.removeItem(CHUNK_RELOAD_KEY)
+  } catch {
+    // ignore
+  }
+}).catch(() => {
+  // 首次导航本身失败时保留标记，由上面的时间戳保护拦截循环
+})
+
 function readLastPath() {
   try {
     return normalizeAppPath(localStorage.getItem('tto_last_path') || '')
@@ -149,21 +205,25 @@ function readLastPath() {
 router.beforeEach((to, from, next) => {
   try {
     if (pendingHashRedirect) {
-      const target = pendingHashRedirect
-      pendingHashRedirect = null
-      if (target && target !== to.fullPath) {
-        return next(target)
+      const target = pendingHashRedirect  //目标路径存进局部变量
+      pendingHashRedirect = null  //清空，保证转换只发生一次，因为下面的next()会触发新的导航，新导航还会进这个守卫，导致无限重定向
+      if (target && target !== to.fullPath) { //后者是保证目标和当前要去的地址不一样，才跳，否则没必要
+        return next(target) //放行到新目标路由，导航中止，后面的首次访问分流和lastPath恢复都不执行
       }
     }
 
-    const firstVisit = !localStorage.getItem('tto_first_visit_done')
+    // const firstVisit = !localStorage.getItem('tto_first_visit_done')
+    // localStorage.setItem('tto_first_visit_done', '1')
+    // localStorage.setItem('tto_selected_subnav', '景点')
+    const nav = useNavStore()
+    const firstVisit = nav.isFirstVisit()
     if (firstVisit) {
-      localStorage.setItem('tto_first_visit_done', '1')
-      localStorage.setItem('tto_selected_subnav', '景点')
+      nav.markFirstVisitDone()
+      nav.saveSelectedSubNav('景点')
     }
 
     if (!isSiteRootPath(to.path)) {
-      return next()
+      return next() // 放行
     }
 
     if (firstVisit || isSearchEngineReferrer()) {

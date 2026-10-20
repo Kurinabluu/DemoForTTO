@@ -24,6 +24,11 @@ docs-private/
 docs/
 *.secret.*
 
+# 数据库脚本与内部维护资料：禁止上传
+*.sql
+*.dump
+src/data/*.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
