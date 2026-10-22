@@ -848,7 +848,12 @@ onUnmounted(() => {
       </el-carousel>
     </div>
 
-    <div v-if="loading" class="detail-state">正在加载详情...</div>
+    <div v-if="loading" class="detail-loading-overlay" role="status" aria-live="polite">
+      <div class="detail-loading-box">
+        <span class="detail-loading-spinner" aria-hidden="true"></span>
+        <p class="detail-loading-text">正在加载详情...</p>
+      </div>
+    </div>
     <div v-else-if="loadError" class="detail-state detail-state--error">{{ loadError }}</div>
     <template v-else>
 
@@ -1173,6 +1178,44 @@ onUnmounted(() => {
   height: 4px;
   border-radius: 50%;
   background: #33b1a3;
+}
+
+.detail-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.detail-loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.detail-loading-spinner {
+  width: 42px;
+  height: 42px;
+  border: 3px solid rgba(51, 177, 163, 0.2);
+  border-top-color: #33b1a3;
+  border-radius: 50%;
+  animation: detail-loading-spin 0.8s linear infinite;
+}
+
+.detail-loading-text {
+  margin: 0;
+  color: #666;
+  font-size: 15px;
+}
+
+@keyframes detail-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .detail-state {
