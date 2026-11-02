@@ -5,6 +5,7 @@ import { useNavStore } from '@/stores/nav'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import data from '@/data/split/nav.json'
 import ComingSoonDialog from '@/components/ComingSoonDialog.vue';
+import { isContentDetailPath } from '@/utils/appPath'
 import { getStoredSearchSession } from '@/utils/searchService'
 import { markSearchPageReset } from '@/utils/searchNavigation'
 import { notifyApiError } from '@/utils/apiFeedback'
@@ -106,7 +107,11 @@ function onClickTag(tag, event) {
         location.query = { dayTripTab: '1' }
       }
 
-      window.open(router.resolve(location).href, '_blank')
+      const resolved = router.resolve(location)
+      if (isContentDetailPath(route.path)) {
+        navStore.pinScrollTopForPath(resolved.fullPath)
+      }
+      window.open(resolved.href, '_blank')
     }
   } catch (error) {
   }

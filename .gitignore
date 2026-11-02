@@ -28,6 +28,7 @@ docs/
 *.sql
 *.dump
 src/data/*.md
+_*.mjs
 
 # Editor directories and files
 .vscode/*

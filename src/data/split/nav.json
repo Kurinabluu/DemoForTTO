@@ -98,8 +98,8 @@
     ]
   },
   {
-    "tagName": "行程管家",
-    "path": "service/steward",
+    "tagName": "热门项目",
+    "path": "service/ticket",
     "available": true,
     "hasSubNav": false,
     "isTrip": false,

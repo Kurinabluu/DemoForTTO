@@ -116,9 +116,9 @@ if (typeof window !== 'undefined') {
             window.scrollTo({ top: 0, behavior: 'auto' })
             return
         }
-        if (nav.consumeScrollResetForPath(path)) {
+        if (nav.consumeScrollResetForPath(path) || nav.consumeForceScrollTop(path)) {
             cancelScrollRestore()
-            window.scrollTo({ top: 0, behavior: 'auto' })
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
             return
         }
         restoreScrollPosition(nav.getScrollForPath(path), path)

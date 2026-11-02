@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
     lastPath: 'tto_last_path', // 保存完整路由路径（用于路由恢复）
     lastScrollY: 'tto_last_scroll_y', // 兼容旧版：最近一次滚动位置
     scrollByPath: 'tto_scroll_by_path', // 按路由保存滚动位置
+    forceScrollTop: 'tto_force_scroll_top', // 新开页时只生效一次，打开后滚到顶部
     selectedSubNav: 'tto_selected_subnav', // 保存选中的子导航（仍然需要用于子导航状态）
 }
 
@@ -152,6 +153,21 @@ export const useNavStore = defineStore('nav', {
 
         markScrollResetOnNextRoute() {
             this.resetScrollOnNextRoute = true
+        },
+
+        pinScrollTopForPath(path) {
+            const key = scrollKeyFromPath(path)
+            if (!key) return
+            this.safeSetItem(STORAGE_KEYS.forceScrollTop, key)
+        },
+
+        consumeForceScrollTop(path) {
+            const key = scrollKeyFromPath(path)
+            const pinned = localStorage.getItem(STORAGE_KEYS.forceScrollTop)
+            if (!key || !pinned || pinned !== key) return false
+            localStorage.removeItem(STORAGE_KEYS.forceScrollTop)
+            this.saveScroll(0, path)
+            return true
         },
 
         consumeScrollResetForPath(path) {

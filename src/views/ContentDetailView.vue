@@ -263,6 +263,11 @@ const relatedServiceLinks = computed(() =>
   ].includes(item.name))
 )
 
+function pinRelatedServiceScroll(item) {
+  const resolved = router.resolve({ path: item.path, query: item.query })
+  navStore.pinScrollTopForPath(resolved.fullPath)
+}
+
 function getSpotCarouselView(items, offset, visibleCount) {
   const list = Array.isArray(items) ? items : []
   const count = Math.max(1, Number(visibleCount) || 1)
@@ -1078,7 +1083,8 @@ onUnmounted(() => {
           <h2 class="faq-title">需要行程协助？</h2>
           <p>如果需要门票、包车、接送、地陪、行程管家或定制行程，可以查看这些服务页，或通过本页咨询。</p>
           <div class="service-cta-links">
-            <RouterLink v-for="item in relatedServiceLinks" :key="item.path" :to="item.path">{{ item.name }}
+            <RouterLink v-for="item in relatedServiceLinks" :key="item.path" :to="item.path" target="_blank"
+              rel="noopener noreferrer" @click="pinRelatedServiceScroll(item)">{{ item.name }}
             </RouterLink>
           </div>
         </section>
