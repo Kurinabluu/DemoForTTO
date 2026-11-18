@@ -1,5 +1,9 @@
 import { getTourItemDialogKey } from './searchItemKey.js'
 import { inferItemLocation, resolveBelongsToSpotDisplayName } from './tasLocationPostcodes.js'
+import {
+  SPOT_PARENT_DISPLAY_NAMES,
+  SPOT_PARENT_EN_TITLE_ALIASES,
+} from './scenicLocationMappings.js'
 
 function normalizeEnTitle(value) {
   return String(value || '').trim()
@@ -37,17 +41,37 @@ export function findParentSpotItemById(items, parentItemId) {
   return items.find((item) => String(item?.id) === String(parentItemId)) || null
 }
 
-/** 解析子景点对应的母景点卡片 */
-export function findParentSpotItemForChild(items, child) {
-  const byId = findParentSpotItemById(items, getParentItemIdFromDb(child))
-  if (byId) return byId
-
-  const spotKey = inferItemLocation(child).belongsToSpot.toLowerCase()
-  if (!spotKey || !Array.isArray(items)) return null
-  return items.find((row) => normalizeEnTitle(row?.enTitle).toLowerCase() === spotKey) || null
+function isSameSpot(left, right) {
+  const leftKey = getTourItemDialogKey(left)
+  const rightKey = getTourItemDialogKey(right)
+  return Boolean(leftKey) && leftKey === rightKey
 }
 
-/** 母景点展示名（含区域型 belongsToSpot，如 Hobart → 霍巴特） */
+/** 解析子景点对应的母景点卡片。不能解析成子景点自己。 */
+export function findParentSpotItemForChild(items, child) {
+  if (!Array.isArray(items) || !child) return null
+  const spotKey = inferItemLocation(child).belongsToSpot
+  const byId = findParentSpotItemById(items, getParentItemIdFromDb(child))
+  if (byId && !isSameSpot(byId, child)) return byId
+  if (!spotKey) return null
+
+  const candidates = new Set(
+    [spotKey, ...(SPOT_PARENT_EN_TITLE_ALIASES[spotKey] || [])]
+      .map((name) => normalizeEnTitle(name).toLowerCase())
+      .filter(Boolean),
+  )
+  const byEnTitle = items.find((row) => {
+    if (isSameSpot(row, child)) return false
+    return candidates.has(normalizeEnTitle(row?.enTitle).toLowerCase())
+  })
+  if (byEnTitle) return byEnTitle
+
+  const displayName = SPOT_PARENT_DISPLAY_NAMES[spotKey]
+  if (!displayName) return null
+  return items.find((row) => row?.title === displayName && !isSameSpot(row, child)) || null
+}
+
+/** 母景点展示名：有对应景区卡片时用卡片标题 */
 export function getSpotParentDisplayNameFromDb(item, items = []) {
   const parent = findParentSpotItemForChild(items, item)
   if (parent?.title) return parent.title

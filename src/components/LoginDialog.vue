@@ -262,13 +262,13 @@ function handleLogout() {
     </template>
 
     <div v-if="migrationWarningVisible && migrationOverflowInfo" class="login-body migration-warning-panel">
-        <el-alert type="warning" :closable="false" show-icon title="收藏数量将超过上限">
-          <p>
-            您的账号已有 {{ migrationOverflowInfo.remoteCount }} 个收藏，本地还有
-            {{ migrationOverflowInfo.localCount }} 个，合计将超过 {{ MAX_FAVORITES }} 个上限。
-          </p>
-          <p class="migration-warning-tip">选择「稍后操作」将取消本次登录并保留本地收藏；选择「继续登录」后将登录账号并仅保留云端收藏。</p>
-        </el-alert>
+      <el-alert type="warning" :closable="false" show-icon title="收藏数量将超过上限">
+        <p>
+          您的账号已有 {{ migrationOverflowInfo.remoteCount }} 个收藏，本地还有
+          {{ migrationOverflowInfo.localCount }} 个，合计将超过 {{ MAX_FAVORITES }} 个上限。
+        </p>
+        <p class="migration-warning-tip">选择「稍后操作」将取消本次登录并保留本地收藏；选择「继续登录」后将登录账号并仅保留云端收藏。</p>
+      </el-alert>
     </div>
 
     <div v-else-if="isLoggedIn" class="login-body">
@@ -307,82 +307,37 @@ function handleLogout() {
         </button>
       </div>
 
-      <el-form
-        ref="authFormRef"
-        :model="formState"
-        :rules="formRules"
-        :validate-on-rule-change="false"
-        label-position="top"
-        class="login-form"
-        @submit.prevent="handleSubmit"
-      >
-        <el-alert
-          v-if="submitError"
-          class="submit-error-alert"
-          :title="submitError"
-          type="error"
-          :closable="false"
-          show-icon
-        />
+      <el-form ref="authFormRef" :model="formState" :rules="formRules" :validate-on-rule-change="false"
+        label-position="top" class="login-form" @submit.prevent="handleSubmit">
+        <el-alert v-if="submitError" class="submit-error-alert" :title="submitError" type="error" :closable="false"
+          show-icon />
 
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="formState.username"
-            placeholder="3-32 位，支持中文、字母、数字、下划线"
-            autocomplete="username"
-            size="large"
-            :prefix-icon="User"
-            @input="submitError = ''"
-          />
+          <el-input v-model="formState.username" placeholder="3-32 位，支持中文、字母、数字、下划线" autocomplete="username"
+            size="large" :prefix-icon="User" @input="submitError = ''" />
         </el-form-item>
 
         <el-form-item v-if="authMode === 'register'" label="昵称（选填）" prop="displayName">
-          <el-input
-            v-model="formState.displayName"
-            placeholder="用于展示的称呼"
-            size="large"
-            :prefix-icon="User"
-            @input="submitError = ''"
-          />
+          <el-input v-model="formState.displayName" placeholder="用于展示的称呼" size="large" :prefix-icon="User"
+            @input="submitError = ''" />
         </el-form-item>
 
         <el-form-item v-if="authMode === 'register'" label="邮箱（选填）" prop="email">
-          <el-input
-            v-model="formState.email"
-            placeholder="用于接收通知"
-            autocomplete="email"
-            size="large"
-            :prefix-icon="Message"
-            @input="submitError = ''"
-          />
+          <el-input v-model="formState.email" placeholder="用于接收通知" autocomplete="email" size="large"
+            :prefix-icon="Message" @input="submitError = ''" />
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="formState.password"
-            type="password"
-            :placeholder="authMode === 'register' ? '至少 6 位' : '请输入密码'"
-            show-password
-            :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'"
-            size="large"
-            :prefix-icon="Lock"
-            @input="submitError = ''"
-            @keyup.enter="handleSubmit"
-          />
+          <el-input v-model="formState.password" type="password"
+            :placeholder="authMode === 'register' ? '至少 6 位' : '请输入密码'" show-password
+            :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'" size="large"
+            :prefix-icon="Lock" @input="submitError = ''" @keyup.enter="handleSubmit" />
         </el-form-item>
 
         <el-form-item v-if="authMode === 'register'" label="确认密码" prop="confirmPassword">
-          <el-input
-            v-model="formState.confirmPassword"
-            type="password"
-            placeholder="再次输入密码"
-            show-password
-            autocomplete="new-password"
-            size="large"
-            :prefix-icon="Lock"
-            @input="submitError = ''"
-            @keyup.enter="handleSubmit"
-          />
+          <el-input v-model="formState.confirmPassword" type="password" placeholder="再次输入密码" show-password
+            autocomplete="new-password" size="large" :prefix-icon="Lock" @input="submitError = ''"
+            @keyup.enter="handleSubmit" />
         </el-form-item>
       </el-form>
 
@@ -399,11 +354,15 @@ function handleLogout() {
           退出登录
         </el-button>
         <template v-else-if="migrationWarningVisible">
-          <el-button class="footer-btn migration-action-btn" :disabled="loading" @click="handleMigrationLater">稍后操作</el-button>
-          <el-button type="danger" class="footer-btn migration-action-btn force-login-btn" :disabled="loading" @click="handleMigrationForce">
+          <el-button class="footer-btn migration-action-btn" :disabled="loading"
+            @click="handleMigrationLater">稍后操作</el-button>
+          <el-button type="danger" class="footer-btn migration-action-btn force-login-btn" :disabled="loading"
+            @click="handleMigrationForce">
             <span class="auth-button-content">
               <span>继续登录</span>
-              <el-icon v-if="loading" class="auth-button-loading-icon"><Loading /></el-icon>
+              <el-icon v-if="loading" class="auth-button-loading-icon">
+                <Loading />
+              </el-icon>
             </span>
           </el-button>
         </template>
@@ -412,7 +371,9 @@ function handleLogout() {
           <el-button type="primary" class="footer-btn primary" :disabled="loading" @click="handleSubmit">
             <span class="auth-button-content">
               <span>{{ authMode === 'register' ? '注册并登录' : '登录' }}</span>
-              <el-icon v-if="loading" class="auth-button-loading-icon"><Loading /></el-icon>
+              <el-icon v-if="loading" class="auth-button-loading-icon">
+                <Loading />
+              </el-icon>
             </span>
           </el-button>
         </template>

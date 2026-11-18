@@ -412,7 +412,9 @@ export async function searchItemsInSubNav(sectionPath, subNavName, keyword) {
 
 export async function loadItemsBySubNav(sectionPath, subNavName) {
   if (!isApiEnabled()) {
-    return []
+    if (sectionPath !== 'trips/freeinfo') return []
+    const sub = await ensureFreeInfoSubNavLoaded(subNavName)
+    return Array.isArray(sub?.items) ? sub.items : []
   }
 
   const subNavMeta = { subNavName }

@@ -584,7 +584,7 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
             <div class="dlg-header">
                 <div class="dlg-title-wrap">
                     <span class="dlg-title">{{ dialogTitle }}<span v-if="dialogEnTitle">（{{ dialogEnTitle
-                    }}）</span></span>
+                            }}）</span></span>
                 </div>
                 <div class="dlg-header-right">
                     <el-button text class="favorite-btn" :disabled="favoriteSubmitting" :class="{ active: isFavorite }"
@@ -600,18 +600,18 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
             <div class="dlg-banner w100" v-if="dialogImageSlides.length">
                 <el-carousel ref="bannerCarouselRef" :autoplay="false" :interval="0" indicator-position="inside"
                     arrow="hover" height="400px" @change="handleBannerChange">
-                    <el-carousel-item v-for="(slide, index) in dialogImageSlides" :key="`${slide.originalPath}-${index}`">
+                    <el-carousel-item v-for="(slide, index) in dialogImageSlides"
+                        :key="`${slide.originalPath}-${index}`">
                         <el-image :src="getDialogImageDisplaySrc(index)" :alt="getImageAltText(index)"
-                            class="carousel-image pointer" fit="cover"
-                            :preview-src-list="dialogPreviewSrcList"
-                            :initial-index="index" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2"
-                            :lazy="index > 0" show-progress show-close show-toolbar show-index
-                            :preview-teleported="true" :z-index="Z_INDEX.dialog.imagePreview"
-                            @error="handleDialogImageError(index)" />
+                            class="carousel-image pointer" fit="cover" :preview-src-list="dialogPreviewSrcList"
+                            :initial-index="index" :zoom-rate="1.2" :max-scale="7" :min-scale="0.2" :lazy="index > 0"
+                            show-progress show-close show-toolbar show-index :preview-teleported="true"
+                            :z-index="Z_INDEX.dialog.imagePreview" @error="handleDialogImageError(index)" />
                     </el-carousel-item>
                 </el-carousel>
             </div>
-            <p v-if="currentImageSourceMeta" :class="['img-source-note', { 'img-source-note--align-right': shouldAlignImageSourceRight }]">
+            <p v-if="currentImageSourceMeta"
+                :class="['img-source-note', { 'img-source-note--align-right': shouldAlignImageSourceRight }]">
                 ※ Photo by
                 <el-link v-if="currentImageSourceMeta.photographerLink" :href="currentImageSourceMeta.photographerLink"
                     target="_blank" rel="noopener noreferrer" class="img-source-link">
@@ -718,7 +718,8 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
                         <div v-if="siblingSpots.length" class="sibling-others-block">
                             <span class="sibling-label">同区域其他景点</span>
                             <div class="spot-carousel">
-                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button"
+                                    class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !siblingSpotsCarouselView.canGoPrev }"
                                     :disabled="!siblingSpotsCarouselView.canGoPrev" aria-label="查看上一组"
                                     @click="shiftSiblingSpotsCarousel('prev')">
@@ -741,7 +742,8 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
                                             spot.enTitle }}</span>
                                     </button>
                                 </div>
-                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                <button v-if="siblingSpotsCarouselView.hasOverflow" type="button"
+                                    class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !siblingSpotsCarouselView.canGoNext }"
                                     :disabled="!siblingSpotsCarouselView.canGoNext" aria-label="查看更多"
                                     @click="shiftSiblingSpotsCarousel('next')">
@@ -755,7 +757,8 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
                         <div v-if="hasChildSpots" class="sibling-others-block sibling-children-block">
                             <span class="sibling-label">{{ childSpotsSectionTitle }}</span>
                             <div class="spot-carousel">
-                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button"
+                                    class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !subChildSpotsCarouselView.canGoPrev }"
                                     :disabled="!subChildSpotsCarouselView.canGoPrev" aria-label="查看上一组"
                                     @click="shiftChildSpotsCarousel('prev')">
@@ -778,7 +781,8 @@ watch([dialogImageSlides, failedDialogImageIndexesKey], () => {
                                             spot.enTitle }}</span>
                                     </button>
                                 </div>
-                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
+                                <button v-if="subChildSpotsCarouselView.hasOverflow" type="button"
+                                    class="spot-carousel-nav"
                                     :class="{ 'spot-carousel-nav--disabled': !subChildSpotsCarouselView.canGoNext }"
                                     :disabled="!subChildSpotsCarouselView.canGoNext" aria-label="查看更多"
                                     @click="shiftChildSpotsCarousel('next')">

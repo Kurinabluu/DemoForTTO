@@ -328,6 +328,15 @@ const siblingSpotsCarouselView = computed(() =>
   getSpotCarouselView(siblingSpots.value, siblingSpotsCarouselOffset.value, siblingVisibleCount.value)
 )
 
+const parentSpotColumnStyle = computed(() => {
+  if (!siblingSpots.value.length) return { flex: '0 1 280px' }
+  return { flex: '1 1 0' }
+})
+
+const siblingSpotsColumnStyle = computed(() => ({
+  flex: `${Math.max(1, siblingVisibleCount.value)} 1 0`,
+}))
+
 function shiftSpotCarousel(offsetRef, items, direction, visibleCount) {
   const list = Array.isArray(items) ? items : []
   const count = Math.max(1, Number(visibleCount) || 1)
@@ -696,9 +705,9 @@ function openParentSpot() {
 
 async function enrichIfScenic(item) {
   if (!item || !isScenicContentType(item)) return item
-  if (!isApiEnabled()) return item
   try {
     const scenicItems = await loadItemsBySubNav('trips/freeinfo', '景点')
+    if (!scenicItems.length) return item
     return enrichScenicRelations(item, scenicItems)
   } catch {
     return item
@@ -980,7 +989,7 @@ onUnmounted(() => {
 
         <div v-if="isScenicInfo && isSubSpotPage" class="sibling-spots-section">
           <div class="sibling-spots-layout">
-            <div class="sibling-parent-block">
+            <div class="sibling-parent-block" :style="parentSpotColumnStyle">
               <span class="sibling-parent-label">所属景点</span>
               <div class="sibling-spots-grid sibling-spots-grid--single">
                 <button v-if="parentSpotCard" type="button" class="child-spot-card" :title="parentSpotCard.title"
@@ -997,7 +1006,7 @@ onUnmounted(() => {
               </div>
             </div>
             <span v-if="siblingSpots.length" class="sibling-divider" aria-hidden="true"></span>
-            <div v-if="siblingSpots.length" class="sibling-others-block">
+            <div v-if="siblingSpots.length" class="sibling-others-block" :style="siblingSpotsColumnStyle">
               <span class="sibling-label">同区域其他景点</span>
               <div class="spot-carousel">
                 <button v-if="siblingSpotsCarouselView.hasOverflow" type="button" class="spot-carousel-nav"
@@ -1409,7 +1418,7 @@ onUnmounted(() => {
   font-weight: 700;
   color: #279486;
   letter-spacing: 0.5px;
-  line-height: 1;
+  line-height: 2;
 }
 
 .scenic-address-text {
@@ -1646,9 +1655,8 @@ onUnmounted(() => {
 }
 
 .sibling-spots-grid--single {
-  width: 240px;
-  max-width: 100%;
-  grid-template-columns: 240px;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .spot-carousel {

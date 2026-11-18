@@ -1669,8 +1669,14 @@ function buildRelatedSpotDialogPayload(child, options = {}) {
     }
 }
 
+function scenicLookupItems() {
+    const fromGrid = scenicFiltered.value
+    if (Array.isArray(fromGrid) && fromGrid.length) return fromGrid
+    return places.value?.items || []
+}
+
 function scenicParentDisplayName(item) {
-    return getSpotParentDisplayNameFromDb(item, places.value?.items || [])
+    return getSpotParentDisplayNameFromDb(item, scenicLookupItems())
 }
 
 function shouldShowBelongSpot(item) {
@@ -1678,12 +1684,16 @@ function shouldShowBelongSpot(item) {
 }
 
 function isParentSpotClickable(item) {
-    return Boolean(findParentSpotItemForChild(places.value?.items || [], item))
+    return Boolean(findParentSpotItemForChild(scenicLookupItems(), item))
+}
+
+function onBelongSpotClick(item) {
+    if (!isParentSpotClickable(item)) return
+    onOpenParentSpot(item)
 }
 
 async function onOpenParentSpot(item) {
-    const allItems = places.value?.items || []
-    const parentItem = findParentSpotItemForChild(allItems, item)
+    const parentItem = findParentSpotItemForChild(scenicLookupItems(), item)
     if (!parentItem) return
     emit('openTourDialog', buildTourDialogPayload(parentItem))
 }
@@ -1798,14 +1808,15 @@ function buildTourDialogPayload(item, options = {}) {
     const isFreeInfoScenic =
         props.activeTag === '自助游/自驾游免费参考信息' && props.subTab === '景点'
 
-    if (isFreeInfoScenic && places.value?.items) {
-        const childSpots = findChildSpotItems(places.value.items, item)
+    if (isFreeInfoScenic) {
+        const scenicItems = scenicLookupItems()
+        const childSpots = findChildSpotItems(scenicItems, item)
         let parentSpotTitle = ''
         let parentSpotId = null
         let parentItem = null
 
         if (shouldShowBelongSpot(item)) {
-            parentItem = findParentSpotItemForChild(places.value.items, item)
+            parentItem = findParentSpotItemForChild(scenicItems, item)
             if (parentItem) {
                 parentSpotTitle = parentItem.title || ''
                 parentSpotId = parentItem.id ?? null
@@ -2016,7 +2027,9 @@ onUnmounted(() => {
                                 </span>
                             </div>
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong"
+                                :class="{ 'card-belong--link': isParentSpotClickable(item) }"
+                                @click.stop="onBelongSpotClick(item)">
                                 <span class="card-belong-tag">所在景点</span>
                                 <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
                                     :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
@@ -2185,7 +2198,9 @@ onUnmounted(() => {
                             <div class="card-title" :title="item.title">{{ item.title }}</div>
                             <!-- 如果有英文标题，就显示英文标题 -->
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong"
+                                :class="{ 'card-belong--link': isParentSpotClickable(item) }"
+                                @click.stop="onBelongSpotClick(item)">
                                 <span class="card-belong-tag">所在景点</span>
                                 <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
                                     :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
@@ -2210,7 +2225,9 @@ onUnmounted(() => {
                                 :fetchpriority="getImageFetchPriority(i)">
                             <div class="card-title" :title="item.title">{{ item.title }}</div>
                             <div v-if="item.enTitle" class="card-sub" :title="item.enTitle">{{ item.enTitle }}</div>
-                            <div v-if="shouldShowBelongSpot(item)" class="card-belong">
+                            <div v-if="shouldShowBelongSpot(item)" class="card-belong"
+                                :class="{ 'card-belong--link': isParentSpotClickable(item) }"
+                                @click.stop="onBelongSpotClick(item)">
                                 <span class="card-belong-tag">所在景点</span>
                                 <button v-if="isParentSpotClickable(item)" type="button" class="card-belong-spot"
                                     :title="scenicParentDisplayName(item)" @click.stop="onOpenParentSpot(item)">
