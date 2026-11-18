@@ -1,0 +1,29 @@
+# TasTrips.Online
+
+TasTrips.Online is operated by TASMANIA TRIPS PTY LTD (塔斯马尼亚旅行有限公司).
+Service area: Tasmania, Australia.
+This GitHub Pages demo currently uses noindex. Do not submit it to Search Console. Replace origin after the official domain is live. Do not invent an ABN.
+
+## Site structure
+
+- `/about` company profile
+- `/privacy` `/terms` `/refund` legal pages
+- `/trips/routes` day trips and multi-day trips
+- `/trips/freeinfo` free reference info (scenic spots, restaurants, lodging, and other public notes). Not a booking or ticket system.
+- `/service/ticket` popular attractions and tickets
+- `/service/car` private car charter
+- `/service/pickup` business transfers
+- `/service/guide` local guide
+- `/service/steward` trip concierge
+- `/service/custom` custom itineraries
+- `/info/{itemKey}` content detail pages for trips and reference items
+
+## Do not treat as public landing pages
+
+- `/favorites`
+- `/search`
+
+## Contact
+
+- Email: tto.advisory@gmail.com
+- Phone: (+61) 0488 388 188
